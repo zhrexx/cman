@@ -1,0 +1,268 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:13 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>File::Basename</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">File::Basename</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::Basename
+− Parse file paths into directory, filename and
+suffix.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+File::Basename; <br/>
+my ($name, $path, $suffix) = fileparse($fullname,
+@suffixlist); <br/>
+my $name = fileparse($fullname, @suffixlist); <br/>
+my $basename = basename($fullname, @suffixlist); <br/>
+my $dirname = dirname($fullname);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These routines
+allow you to parse file paths into their directory, filename
+and suffix.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NOTE</b>:
+dirname() and basename() emulate the behaviours, and quirks,
+of the shell and C functions of the same name. See each
+function’s documentation for details. If your concern
+is just parsing paths it is safer to use File::Spec’s
+splitpath() and splitdir() methods.</p>
+<p style="margin-left:9%; margin-top: 1em">It is guaranteed
+that</p>
+<p style="margin-left:9%; margin-top: 1em"># Where
+$path_separator is / for Unix, \ for Windows, etc... <br/>
+dirname($path) . $path_separator . basename($path);</p>
+<p style="margin-left:9%; margin-top: 1em">is equivalent to
+the original path for all systems but VMS. <br/>
+"fileparse"</p>
+<p style="margin-left:14%;">my($filename, $dirs, $suffix) =
+fileparse($path); <br/>
+my($filename, $dirs, $suffix) = fileparse($path, @suffixes);
+<br/>
+my $filename = fileparse($path, @suffixes);</p>
+<p style="margin-left:14%; margin-top: 1em">The fileparse()
+routine divides a file path into its $dirs, $filename and
+(optionally) the filename $suffix.</p>
+<p style="margin-left:14%; margin-top: 1em">$dirs contains
+everything up to and including the last directory separator
+in the $path including the volume (if applicable). The
+remainder of the $path is the $filename.</p>
+<p style="margin-left:14%; margin-top: 1em"># On Unix
+returns ("baz", "/foo/bar/",
+"") <br/>
+fileparse("/foo/bar/baz"); <br/>
+# On Windows returns ("baz", 'C:\foo\bar\',
+"") <br/>
+fileparse('C:\foo\bar\baz'); <br/>
+# On Unix returns ("", "/foo/bar/baz/",
+"") <br/>
+fileparse("/foo/bar/baz/");</p>
+<p style="margin-left:14%; margin-top: 1em">If @suffixes
+are given each element is a pattern (either a string or a
+"qr//") matched against the end of the $filename.
+The matching portion is removed and becomes the $suffix.</p>
+<p style="margin-left:14%; margin-top: 1em"># On Unix
+returns ("baz", "/foo/bar/",
+".txt") <br/>
+fileparse("/foo/bar/baz.txt",
+qr/\.[ˆ.]*/);</p>
+<p style="margin-left:14%; margin-top: 1em">If type is
+non-Unix (see "fileparse_set_fstype") then the
+pattern matching for suffix removal is performed
+case-insensitively, since those systems are not
+case-sensitive when opening existing files.</p>
+<p style="margin-left:14%; margin-top: 1em">You are
+guaranteed that "$dirs . $filename . $suffix" will
+denote the same location as the original $path.</p>
+<p style="margin-left:9%;">"basename"</p>
+<p style="margin-left:14%;">my $filename = basename($path);
+<br/>
+my $filename = basename($path, @suffixes);</p>
+<p style="margin-left:14%; margin-top: 1em">This function
+is provided for compatibility with the Unix shell command
+basename(1). It does <b>NOT</b> always return the file name
+portion of a path as you might expect. To be safe, if you
+want the file name portion of a path use fileparse().</p>
+<p style="margin-left:14%; margin-top: 1em">basename()
+returns the last level of a filepath even if the last level
+is clearly directory. In effect, it is acting like pop() for
+paths. This differs from fileparse()’s behaviour.</p>
+<p style="margin-left:14%; margin-top: 1em"># Both return
+"bar" <br/>
+basename("/foo/bar"); <br/>
+basename("/foo/bar/");</p>
+<p style="margin-left:14%; margin-top: 1em">@suffixes work
+as in fileparse() except all regex metacharacters are
+quoted.</p>
+<p style="margin-left:14%; margin-top: 1em"># These two
+function calls are equivalent. <br/>
+my $filename = basename("/foo/bar/baz.txt",
+".txt"); <br/>
+my $filename = fileparse("/foo/bar/baz.txt",
+qr/\Q.txt\E/);</p>
+<p style="margin-left:14%; margin-top: 1em">Also note that
+in order to be compatible with the shell command, basename()
+does not strip off a suffix if it is identical to the
+remaining characters in the filename.</p>
+<p style="margin-left:9%;">"dirname"</p>
+<p style="margin-left:14%;">This function is provided for
+compatibility with the Unix shell command dirname(1) and has
+inherited some of its quirks. In spite of its name it does
+<b>NOT</b> always return the directory name as you might
+expect. To be safe, if you want the directory name of a path
+use fileparse().</p>
+<p style="margin-left:14%; margin-top: 1em">Only on VMS
+(where there is no ambiguity between the file and directory
+portions of a path) and AmigaOS (possibly due to an
+implementation quirk in this module) does dirname() work
+like fileparse($path), returning just the $dirs.</p>
+<p style="margin-left:14%; margin-top: 1em"># On VMS and
+AmigaOS <br/>
+my $dirs = dirname($path);</p>
+<p style="margin-left:14%; margin-top: 1em">When using Unix
+or MSDOS syntax this emulates the dirname(1) shell function
+which is subtly different from how fileparse() works. It
+returns all but the last level of a file path even if the
+last level is clearly a directory. In effect, it is not
+returning the directory portion but simply the path one
+level up acting like chop() for file paths.</p>
+<p style="margin-left:14%; margin-top: 1em">Also unlike
+fileparse(), dirname() does not include a trailing slash on
+its returned path.</p>
+<p style="margin-left:14%; margin-top: 1em"># returns
+/foo/bar. fileparse() would return /foo/bar/ <br/>
+dirname("/foo/bar/baz"); <br/>
+# also returns /foo/bar despite the fact that baz is clearly
+a <br/>
+# directory. fileparse() would return /foo/bar/baz/ <br/>
+dirname("/foo/bar/baz/"); <br/>
+# returns '.'. fileparse() would return 'foo/' <br/>
+dirname("foo/");</p>
+<p style="margin-left:14%; margin-top: 1em">Under VMS, if
+there is no directory information in the $path, then the
+current default device and directory is used.</p>
+<p style="margin-left:9%;">"fileparse_set_fstype"</p>
+<p style="margin-left:14%;">my $type =
+fileparse_set_fstype(); <br/>
+my $previous_type = fileparse_set_fstype($type);</p>
+<p style="margin-left:14%; margin-top: 1em">Normally
+File::Basename will assume a file path type native to your
+current operating system (ie. /foo/bar style on Unix,
+\foo\bar on Windows, etc...). With this function you can
+override that assumption.</p>
+<p style="margin-left:14%; margin-top: 1em">Valid $types
+are "MacOS", "VMS", "AmigaOS",
+"OS2", "RISCOS", "MSWin32",
+"DOS" (also "MSDOS" for backwards bug
+compatibility), "Epoc" and "Unix" (all
+case-insensitive). If an unrecognized $type is given
+"Unix" will be assumed.</p>
+<p style="margin-left:14%; margin-top: 1em">If you’ve
+selected VMS syntax, and the file specification you pass to
+one of these routines contains a "/", they assume
+you are using Unix emulation and apply the Unix syntax rules
+instead, for that function call only.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>dirname</b>(1),
+<b>basename</b>(1), File::Spec</p>
+<hr/>
+</body>
+</html>

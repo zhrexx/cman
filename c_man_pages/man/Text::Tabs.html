@@ -1,0 +1,189 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:11 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>lib.modern::Text::Tabs</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">lib.modern::Text::Tabs</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Text::Tabs
+− expand and unexpand tabs like unix expand(1) and
+unexpand(1)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Text::Tabs;
+<br/>
+$tabstop = 4; # default = 8 <br/>
+@lines_without_tabs = expand(@lines_with_tabs); <br/>
+@lines_with_tabs = unexpand(@lines_without_tabs);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Text::Tabs does
+most of what the unix utilities <b>expand</b>(1) and
+<b>unexpand</b>(1) do. Given a line with tabs in it,
+"expand" replaces those tabs with the appropriate
+number of spaces. Given a line with or without tabs in it,
+"unexpand" adds tabs when it can save bytes by
+doing so, like the "unexpand −a"
+command.</p>
+<p style="margin-left:9%; margin-top: 1em">Unlike the old
+unix utilities, this module correctly accounts for any
+Unicode combining characters (such as diacriticals) that may
+occur in each line for both expansion and unexpansion. These
+are overstrike characters that do not increment the logical
+position. Make sure you have the appropriate Unicode
+settings enabled.</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+are exported: <br/>
+expand <br/>
+unexpand <br/>
+$tabstop</p>
+<p style="margin-left:14%;">The $tabstop variable controls
+how many column positions apart each tabstop is. The default
+is 8.</p>
+<p style="margin-left:14%; margin-top: 1em">Please note
+that local($tabstop) doesn't do the right thing and if you
+want to use "local" to override $tabstop, you need
+to use local($Text::Tabs::tabstop).</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#!perl <br/>
+# unexpand −a <br/>
+use Text::Tabs; <br/>
+while (&lt;&gt;) { <br/>
+print unexpand $_; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Instead of the
+shell's "expand" command, use:</p>
+<p style="margin-left:9%; margin-top: 1em">perl
+−MText::Tabs −n −e 'print expand $_'</p>
+<p style="margin-left:9%; margin-top: 1em">Instead of the
+shell's "unexpand −a" command, use:</p>
+<p style="margin-left:9%; margin-top: 1em">perl
+−MText::Tabs −n −e 'print unexpand $_'</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Text::Tabs
+handles only tabs ("\t") and combining characters
+("/\pM/"). It doesn't count backwards for
+backspaces ("\t"), omit other non−printing
+control characters ("/\pC/"), or otherwise deal
+with any other zero−, half−, and
+full−width characters.</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+1996−2002,2005,2006 David Muir Sharnoff. Copyright (C)
+2005 Aristotle Pagaltzis Copyright (C) 2012−2013
+Google, Inc. This module may be modified, used, copied, and
+redistributed at your own risk. Although allowed by the
+preceding license, please do not publicly redistribute
+modified versions of this code with the name
+"Text::Tabs" unless it passes the unmodified
+Text::Tabs test suite.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,872 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:10 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test::Builder</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test::Builder</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Construction">Construction</a><br/>
+<a href="#Setting up tests">Setting up tests</a><br/>
+<a href="#Running tests">Running tests</a><br/>
+<a href="#Other Testing Methods">Other Testing Methods</a><br/>
+<a href="#Test building utility methods">Test building utility methods</a><br/>
+<a href="#Test style">Test style</a><br/>
+<a href="#Output">Output</a><br/>
+<a href="#Test Status and Info">Test Status and Info</a><br/>
+<a href="#EXIT CODES">EXIT CODES</a><br/>
+<a href="#THREADS">THREADS</a><br/>
+<a href="#MEMORY">MEMORY</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#INTERNALS">INTERNALS</a><br/>
+<a href="#LEGACY">LEGACY</a><br/>
+<a href="#EXTERNAL">EXTERNAL</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test::Builder
+− Backend for building test libraries</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">package
+My::Test::Module; <br/>
+use base 'Test::Builder::Module'; <br/>
+my $CLASS = __PACKAGE__; <br/>
+sub ok { <br/>
+my($test, $name) = @_; <br/>
+my $tb = $CLASS−&gt;builder; <br/>
+$tb−&gt;ok($test, $name); <br/>
+}</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test::Simple and
+Test::More have proven to be popular testing modules, but
+they're not always flexible enough. Test::Builder provides a
+building block upon which to write your own test libraries
+<i>which can work together</i>.</p>
+<h3>Construction
+<a name="Construction"></a>
+</h3>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p style="margin-top: 1em"><b>new</b></p></td>
+<td width="87%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">my $Test =
+Test::Builder−&gt;new;</p>
+<p style="margin-left:14%; margin-top: 1em">Returns a
+Test::Builder object representing the current state of the
+test.</p>
+<p style="margin-left:14%; margin-top: 1em">Since you only
+run one test per program "new" always returns the
+same Test::Builder object. No matter how many times you call
+new(), you're getting the same object. This is called a
+singleton. This is done so that multiple modules share such
+global information as the test counter and where test output
+is going.</p>
+<p style="margin-left:14%; margin-top: 1em">If you want a
+completely new Test::Builder object different from the
+singleton, use "create".</p>
+<p style="margin-left:9%;"><b>create</b></p>
+<p style="margin-left:14%;">my $Test =
+Test::Builder−&gt;create;</p>
+<p style="margin-left:14%; margin-top: 1em">Ok, so there
+can be more than one Test::Builder object and this is how
+you get it. You might use this instead of new() if you're
+testing a Test::Builder based module, but otherwise you
+probably want "new".</p>
+<p style="margin-left:14%; margin-top: 1em"><b>NOTE</b>:
+the implementation is not complete. "level", for
+example, is still shared by <b>all</b> Test::Builder
+objects, even ones created using this method. Also, the
+method name may change in the future.</p>
+<p style="margin-left:9%;"><b>subtest</b></p>
+<p style="margin-left:14%;">$builder−&gt;subtest($name,
+\&amp;subtests, @args);</p>
+<p style="margin-left:14%; margin-top: 1em">See
+documentation of "subtest" in Test::More.</p>
+<p style="margin-left:14%; margin-top: 1em">"subtest"
+also, and optionally, accepts arguments which will be passed
+to the subtests reference.</p>
+<p style="margin-left:9%;"><b>name</b></p>
+<p style="margin-left:14%;">diag
+$builder−&gt;name;</p>
+<p style="margin-left:14%; margin-top: 1em">Returns the
+name of the current builder. Top level builders default to
+$0 (the name of the executable). Child builders are named
+via the "child" method. If no name is supplied,
+will be named "Child of
+$parent−&gt;name".</p>
+<p style="margin-left:9%;"><b>reset</b></p>
+<p style="margin-left:14%;">$Test−&gt;reset;</p>
+<p style="margin-left:14%; margin-top: 1em">Reinitializes
+the Test::Builder singleton to its original state. Mostly
+useful for tests run in persistent environments where the
+same test might be run multiple times in the same
+process.</p>
+<h3>Setting up tests
+<a name="Setting up tests"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These methods
+are for setting up tests and declaring how many there are.
+You usually only want to call one of these methods. <b><br/>
+plan</b></p>
+<p style="margin-left:14%;">$Test−&gt;plan('no_plan');
+<br/>
+$Test−&gt;plan( skip_all =&gt; $reason ); <br/>
+$Test−&gt;plan( tests =&gt; $num_tests );</p>
+<p style="margin-left:14%; margin-top: 1em">A convenient
+way to set up your tests. Call this and Test::Builder will
+print the appropriate headers and take the appropriate
+actions.</p>
+<p style="margin-left:14%; margin-top: 1em">If you call
+plan(), don't call any of the other methods below.</p>
+<p style="margin-left:9%;"><b>expected_tests</b></p>
+<p style="margin-left:14%;">my $max =
+$Test−&gt;expected_tests; <br/>
+$Test−&gt;expected_tests($max);</p>
+<p style="margin-left:14%; margin-top: 1em">Gets/sets the
+number of tests we expect this test to run and prints out
+the appropriate headers.</p>
+<p style="margin-left:9%;"><b>no_plan</b></p>
+<p style="margin-left:14%;">$Test−&gt;no_plan;</p>
+<p style="margin-left:14%; margin-top: 1em">Declares that
+this test will run an indeterminate number of tests.</p>
+<p style="margin-left:9%;"><b>done_testing</b></p>
+<p style="margin-left:14%;">$Test−&gt;done_testing();
+<br/>
+$Test−&gt;done_testing($num_tests);</p>
+<p style="margin-left:14%; margin-top: 1em">Declares that
+you are done testing, no more tests will be run after this
+point.</p>
+<p style="margin-left:14%; margin-top: 1em">If a plan has
+not yet been output, it will do so.</p>
+<p style="margin-left:14%; margin-top: 1em">$num_tests is
+the number of tests you planned to run. If a numbered plan
+was already declared, and if this contradicts, a failing
+test will be run to reflect the planning mistake. If
+"no_plan" was declared, this will override.</p>
+<p style="margin-left:14%; margin-top: 1em">If
+done_testing() is called twice, the second call will issue a
+failing test.</p>
+<p style="margin-left:14%; margin-top: 1em">If $num_tests
+is omitted, the number of tests run will be used, like
+no_plan.</p>
+<p style="margin-left:14%; margin-top: 1em">done_testing()
+is, in effect, used when you'd want to use
+"no_plan", but safer. You'd use it like so:</p>
+<p style="margin-left:14%; margin-top: 1em">$Test−&gt;ok($a
+== $b); <br/>
+$Test−&gt;done_testing();</p>
+<p style="margin-left:14%; margin-top: 1em">Or to plan a
+variable number of tests:</p>
+<p style="margin-left:14%; margin-top: 1em">for my $test
+(@tests) { <br/>
+$Test−&gt;ok($test); <br/>
+} <br/>
+$Test−&gt;done_testing(scalar @tests);</p>
+<p style="margin-left:9%;"><b>has_plan</b></p>
+<p style="margin-left:14%;">$plan =
+$Test−&gt;has_plan</p>
+<p style="margin-left:14%; margin-top: 1em">Find out
+whether a plan has been defined. $plan is either
+"undef" (no plan has been set),
+"no_plan" (indeterminate # of tests) or an integer
+(the number of expected tests).</p>
+<p style="margin-left:9%;"><b>skip_all</b></p>
+<p style="margin-left:14%;">$Test−&gt;skip_all; <br/>
+$Test−&gt;skip_all($reason);</p>
+<p style="margin-left:14%; margin-top: 1em">Skips all the
+tests, using the given $reason. Exits immediately with
+0.</p>
+<p style="margin-left:9%;"><b>exported_to</b></p>
+<p style="margin-left:14%;">my $pack =
+$Test−&gt;exported_to; <br/>
+$Test−&gt;exported_to($pack);</p>
+<p style="margin-left:14%; margin-top: 1em">Tells
+Test::Builder what package you exported your functions
+to.</p>
+<p style="margin-left:14%; margin-top: 1em">This method
+isn't terribly useful since modules which share the same
+Test::Builder object might get exported to different
+packages and only the last one will be honored.</p>
+<h3>Running tests
+<a name="Running tests"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These actually
+run the tests, analogous to the functions in Test::More.</p>
+<p style="margin-left:9%; margin-top: 1em">They all return
+true if the test passed, false if the test failed.</p>
+<p style="margin-left:9%; margin-top: 1em">$name is always
+optional.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p><b>ok</b></p></td>
+<td width="88%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">$Test−&gt;ok($test,
+$name);</p>
+<p style="margin-left:14%; margin-top: 1em">Your basic
+test. Pass if $test is true, fail if $test is false. Just
+like Test::Simple's ok().</p>
+<p style="margin-left:9%;"><b>is_eq</b></p>
+<p style="margin-left:14%;">$Test−&gt;is_eq($got,
+$expected, $name);</p>
+<p style="margin-left:14%; margin-top: 1em">Like
+Test::More's is(). Checks if "$got eq $expected".
+This is the string version.</p>
+<p style="margin-left:14%; margin-top: 1em">"undef"
+only ever matches another "undef".</p>
+<p style="margin-left:9%;"><b>is_num</b></p>
+<p style="margin-left:14%;">$Test−&gt;is_num($got,
+$expected, $name);</p>
+<p style="margin-left:14%; margin-top: 1em">Like
+Test::More's is(). Checks if "$got == $expected".
+This is the numeric version.</p>
+<p style="margin-left:14%; margin-top: 1em">"undef"
+only ever matches another "undef".</p>
+<p style="margin-left:9%;"><b>isnt_eq</b></p>
+<p style="margin-left:14%;">$Test−&gt;isnt_eq($got,
+$dont_expect, $name);</p>
+<p style="margin-left:14%; margin-top: 1em">Like
+Test::More's isnt(). Checks if "$got ne
+$dont_expect". This is the string version.</p>
+<p style="margin-left:9%;"><b>isnt_num</b></p>
+<p style="margin-left:14%;">$Test−&gt;isnt_num($got,
+$dont_expect, $name);</p>
+<p style="margin-left:14%; margin-top: 1em">Like
+Test::More's isnt(). Checks if "$got ne
+$dont_expect". This is the numeric version.</p>
+<p style="margin-left:9%;"><b>like</b></p>
+<p style="margin-left:14%;">$Test−&gt;like($thing,
+qr/$regex/, $name); <br/>
+$Test−&gt;like($thing, '/$regex/', $name);</p>
+<p style="margin-left:14%; margin-top: 1em">Like
+Test::More's like(). Checks if $thing matches the given
+$regex.</p>
+<p style="margin-left:9%;"><b>unlike</b></p>
+<p style="margin-left:14%;">$Test−&gt;unlike($thing,
+qr/$regex/, $name); <br/>
+$Test−&gt;unlike($thing, '/$regex/', $name);</p>
+<p style="margin-left:14%; margin-top: 1em">Like
+Test::More's unlike(). Checks if $thing <b>does not
+match</b> the given $regex.</p>
+<p style="margin-left:9%;"><b>cmp_ok</b></p>
+<p style="margin-left:14%;">$Test−&gt;cmp_ok($thing,
+$type, $that, $name);</p>
+<p style="margin-left:14%; margin-top: 1em">Works just like
+Test::More's cmp_ok().</p>
+<p style="margin-left:14%; margin-top: 1em">$Test−&gt;cmp_ok($big_num,
+'!=', $other_big_num);</p>
+<h3>Other Testing Methods
+<a name="Other Testing Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These are
+methods which are used in the course of writing a test but
+are not themselves tests. <b><br/>
+BAIL_OUT</b></p>
+<p style="margin-left:14%;">$Test−&gt;BAIL_OUT($reason);</p>
+<p style="margin-left:14%; margin-top: 1em">Indicates to
+the Test::Harness that things are going so badly all testing
+should terminate. This includes running any additional test
+scripts.</p>
+<p style="margin-left:14%; margin-top: 1em">It will exit
+with 255.</p>
+<p style="margin-left:9%;"><b>skip</b></p>
+<p style="margin-left:14%;">$Test−&gt;skip; <br/>
+$Test−&gt;skip($why);</p>
+<p style="margin-left:14%; margin-top: 1em">Skips the
+current test, reporting $why.</p>
+<p style="margin-left:9%;"><b>todo_skip</b></p>
+<p style="margin-left:14%;">$Test−&gt;todo_skip; <br/>
+$Test−&gt;todo_skip($why);</p>
+<p style="margin-left:14%; margin-top: 1em">Like skip(),
+only it will declare the test as failing and TODO. Similar
+to</p>
+<p style="margin-left:14%; margin-top: 1em">print "not
+ok $tnum # TODO $why\n";</p>
+<h3>Test building utility methods
+<a name="Test building utility methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These methods
+are useful when writing your own test methods. <b><br/>
+maybe_regex</b></p>
+<p style="margin-left:14%;">$Test−&gt;maybe_regex(qr/$regex/);
+<br/>
+$Test−&gt;maybe_regex('/$regex/');</p>
+<p style="margin-left:14%; margin-top: 1em">This method
+used to be useful back when Test::Builder worked on Perls
+before 5.6 which didn't have qr//. Now its pretty
+useless.</p>
+<p style="margin-left:14%; margin-top: 1em">Convenience
+method for building testing functions that take regular
+expressions as arguments.</p>
+<p style="margin-left:14%; margin-top: 1em">Takes a quoted
+regular expression produced by "qr//", or a string
+representing a regular expression.</p>
+<p style="margin-left:14%; margin-top: 1em">Returns a Perl
+value which may be used instead of the corresponding regular
+expression, or "undef" if its argument is not
+recognized.</p>
+<p style="margin-left:14%; margin-top: 1em">For example, a
+version of like(), sans the useful diagnostic messages,
+could be written as:</p>
+<p style="margin-left:14%; margin-top: 1em">sub
+laconic_like { <br/>
+my ($self, $thing, $regex, $name) = @_; <br/>
+my $usable_regex = $self−&gt;maybe_regex($regex); <br/>
+die "expecting regex, found '$regex'\n" <br/>
+unless $usable_regex; <br/>
+$self−&gt;ok($thing =˜ m/$usable_regex/, $name);
+<br/>
+}</p>
+<p style="margin-left:9%;"><b>is_fh</b></p>
+<p style="margin-left:14%;">my $is_fh =
+$Test−&gt;is_fh($thing);</p>
+<p style="margin-left:14%; margin-top: 1em">Determines if
+the given $thing can be used as a filehandle.</p>
+<h3>Test style
+<a name="Test style"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>level</b></p>
+<p style="margin-left:14%;">$Test−&gt;level($how_high);</p>
+<p style="margin-left:14%; margin-top: 1em">How far up the
+call stack should $Test look when reporting where the test
+failed.</p>
+<p style="margin-left:14%; margin-top: 1em">Defaults to
+1.</p>
+<p style="margin-left:14%; margin-top: 1em">Setting
+$Test::Builder::Level overrides. This is typically useful
+localized:</p>
+<p style="margin-left:14%; margin-top: 1em">sub my_ok {
+<br/>
+my $test = shift; <br/>
+local $Test::Builder::Level = $Test::Builder::Level + 1;
+<br/>
+$TB−&gt;ok($test); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">To be polite to
+other functions wrapping your own you usually want to
+increment $Level rather than set it to a constant.</p>
+<p style="margin-left:9%;"><b>use_numbers</b></p>
+<p style="margin-left:14%;">$Test−&gt;use_numbers($on_or_off);</p>
+<p style="margin-left:14%; margin-top: 1em">Whether or not
+the test should output numbers. That is, this if true:</p>
+<p style="margin-left:14%; margin-top: 1em">ok 1 <br/>
+ok 2 <br/>
+ok 3</p>
+<p style="margin-left:14%; margin-top: 1em">or this if
+false</p>
+<p style="margin-left:14%; margin-top: 1em">ok <br/>
+ok <br/>
+ok</p>
+<p style="margin-left:14%; margin-top: 1em">Most useful
+when you can't depend on the test output order, such as when
+threads or forking is involved.</p>
+<p style="margin-left:14%; margin-top: 1em">Defaults to
+on.</p>
+<p style="margin-left:9%;"><b>no_diag</b></p>
+<p style="margin-left:14%;">$Test−&gt;no_diag($no_diag);</p>
+<p style="margin-left:14%; margin-top: 1em">If set true no
+diagnostics will be printed. This includes calls to
+diag().</p>
+<p style="margin-left:9%;"><b>no_ending</b></p>
+<p style="margin-left:14%;">$Test−&gt;no_ending($no_ending);</p>
+<p style="margin-left:14%; margin-top: 1em">Normally,
+Test::Builder does some extra diagnostics when the test
+ends. It also changes the exit code as described below.</p>
+<p style="margin-left:14%; margin-top: 1em">If this is
+true, none of that will be done.</p>
+<p style="margin-left:9%;"><b>no_header</b></p>
+<p style="margin-left:14%;">$Test−&gt;no_header($no_header);</p>
+<p style="margin-left:14%; margin-top: 1em">If set to true,
+no "1..N" header will be printed.</p>
+<h3>Output
+<a name="Output"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Controlling
+where the test output goes.</p>
+<p style="margin-left:9%; margin-top: 1em">It's ok for your
+test to change where STDOUT and STDERR point to,
+Test::Builder's default output settings will not be
+affected. <b><br/>
+diag</b></p>
+<p style="margin-left:14%;">$Test−&gt;diag(@msgs);</p>
+<p style="margin-left:14%; margin-top: 1em">Prints out the
+given @msgs. Like "print", arguments are simply
+appended together.</p>
+<p style="margin-left:14%; margin-top: 1em">Normally, it
+uses the failure_output() handle, but if this is for a TODO
+test, the todo_output() handle is used.</p>
+<p style="margin-left:14%; margin-top: 1em">Output will be
+indented and marked with a # so as not to interfere with
+test output. A newline will be put on the end if there isn't
+one already.</p>
+<p style="margin-left:14%; margin-top: 1em">We encourage
+using this rather than calling print directly.</p>
+<p style="margin-left:14%; margin-top: 1em">Returns false.
+Why? Because diag() is often used in conjunction with a
+failing test ("ok() || diag()") it "passes
+through" the failure.</p>
+<p style="margin-left:14%; margin-top: 1em">return ok(...)
+|| diag(...);</p>
+<p style="margin-left:9%;"><b>note</b></p>
+<p style="margin-left:14%;">$Test−&gt;note(@msgs);</p>
+<p style="margin-left:14%; margin-top: 1em">Like diag(),
+but it prints to the output() handle so it will not normally
+be seen by the user except in verbose mode.</p>
+<p style="margin-left:9%;"><b>explain</b></p>
+<p style="margin-left:14%;">my @dump =
+$Test−&gt;explain(@msgs);</p>
+<p style="margin-left:14%; margin-top: 1em">Will dump the
+contents of any references in a human readable format. Handy
+for things like...</p>
+<p style="margin-left:14%; margin-top: 1em">is_deeply($have,
+$want) || diag explain $have;</p>
+<p style="margin-left:14%; margin-top: 1em">or</p>
+<p style="margin-left:14%; margin-top: 1em">is_deeply($have,
+$want) || note explain $have;</p>
+<p style="margin-left:9%;"><b>output <br/>
+failure_output <br/>
+todo_output</b></p>
+<p style="margin-left:14%;">my $filehandle =
+$Test−&gt;output; <br/>
+$Test−&gt;output($filehandle); <br/>
+$Test−&gt;output($filename); <br/>
+$Test−&gt;output(\$scalar);</p>
+<p style="margin-left:14%; margin-top: 1em">These methods
+control where Test::Builder will print its output. They take
+either an open $filehandle, a $filename to open and write to
+or a $scalar reference to append to. It will always return a
+$filehandle.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>output</b>
+is where normal "ok/not ok" test output goes.</p>
+<p style="margin-left:14%; margin-top: 1em">Defaults to
+STDOUT.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>failure_output</b>
+is where diagnostic output on test failures and diag() goes.
+It is normally not read by Test::Harness and instead is
+displayed to the user.</p>
+<p style="margin-left:14%; margin-top: 1em">Defaults to
+STDERR.</p>
+<p style="margin-left:14%; margin-top: 1em">"todo_output"
+is used instead of failure_output() for the diagnostics of a
+failing TODO test. These will not be seen by the user.</p>
+<p style="margin-left:14%; margin-top: 1em">Defaults to
+STDOUT.</p>
+<p style="margin-left:9%;">reset_outputs</p>
+<p style="margin-left:14%;">$tb−&gt;reset_outputs;</p>
+<p style="margin-left:14%; margin-top: 1em">Resets all the
+output filehandles back to their defaults.</p>
+<p style="margin-left:9%;">carp</p>
+<p style="margin-left:14%;">$tb−&gt;carp(@message);</p>
+<p style="margin-left:14%; margin-top: 1em">Warns with
+@message but the message will appear to come from the point
+where the original test function was called
+("$tb−&gt;caller").</p>
+<p style="margin-left:9%;">croak</p>
+<p style="margin-left:14%;">$tb−&gt;croak(@message);</p>
+<p style="margin-left:14%; margin-top: 1em">Dies with
+@message but the message will appear to come from the point
+where the original test function was called
+("$tb−&gt;caller").</p>
+<h3>Test Status and Info
+<a name="Test Status and Info"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>no_log_results</b></p>
+<p style="margin-left:14%;">This will turn off result
+long−term storage. Calling this method will make
+"details" and "summary" useless. You may
+want to use this if you are running enough tests to fill up
+all available memory.</p>
+<p style="margin-left:14%; margin-top: 1em">Test::Builder−&gt;new−&gt;no_log_results();</p>
+<p style="margin-left:14%; margin-top: 1em">There is no way
+to turn it back on.</p>
+<p style="margin-left:9%;"><b>current_test</b></p>
+<p style="margin-left:14%;">my $curr_test =
+$Test−&gt;current_test; <br/>
+$Test−&gt;current_test($num);</p>
+<p style="margin-left:14%; margin-top: 1em">Gets/sets the
+current test number we're on. You usually shouldn't have to
+set this.</p>
+<p style="margin-left:14%; margin-top: 1em">If set forward,
+the details of the missing tests are filled in as 'unknown'.
+if set backward, the details of the intervening tests are
+deleted. You can erase history if you really want to.</p>
+<p style="margin-left:9%;"><b>is_passing</b></p>
+<p style="margin-left:14%;">my $ok =
+$builder−&gt;is_passing;</p>
+<p style="margin-left:14%; margin-top: 1em">Indicates if
+the test suite is currently passing.</p>
+<p style="margin-left:14%; margin-top: 1em">More formally,
+it will be false if anything has happened which makes it
+impossible for the test suite to pass. True otherwise.</p>
+<p style="margin-left:14%; margin-top: 1em">For example, if
+no tests have run is_passing() will be true because even
+though a suite with no tests is a failure you can add a
+passing test to it and start passing.</p>
+<p style="margin-left:14%; margin-top: 1em">Don't think
+about it too much.</p>
+<p style="margin-left:9%;"><b>summary</b></p>
+<p style="margin-left:14%;">my @tests =
+$Test−&gt;summary;</p>
+<p style="margin-left:14%; margin-top: 1em">A simple
+summary of the tests so far. True for pass, false for fail.
+This is a logical pass/fail, so todos are passes.</p>
+<p style="margin-left:14%; margin-top: 1em">Of course, test
+#1 is $tests[0], etc...</p>
+<p style="margin-left:9%;"><b>details</b></p>
+<p style="margin-left:14%;">my @tests =
+$Test−&gt;details;</p>
+<p style="margin-left:14%; margin-top: 1em">Like summary(),
+but with a lot more detail.</p>
+<p style="margin-left:14%; margin-top: 1em">$tests[$test_num
+− 1] = <br/>
+{ 'ok' =&gt; is the test considered a pass? <br/>
+actual_ok =&gt; did it literally say 'ok'? <br/>
+name =&gt; name of the test (if any) <br/>
+type =&gt; type of test (if any, see below). <br/>
+reason =&gt; reason for the above (if any) <br/>
+};</p>
+<p style="margin-left:14%; margin-top: 1em">'ok' is true if
+Test::Harness will consider the test to be a pass.</p>
+<p style="margin-left:14%; margin-top: 1em">'actual_ok' is
+a reflection of whether or not the test literally printed
+'ok' or 'not ok'. This is for examining the result of 'todo'
+tests.</p>
+<p style="margin-left:14%; margin-top: 1em">'name' is the
+name of the test.</p>
+<p style="margin-left:14%; margin-top: 1em">'type'
+indicates if it was a special test. Normal tests have a type
+of ''. Type can be one of the following:</p>
+<p style="margin-left:14%; margin-top: 1em">skip see skip()
+<br/>
+todo see todo() <br/>
+todo_skip see todo_skip() <br/>
+unknown see below</p>
+<p style="margin-left:14%; margin-top: 1em">Sometimes the
+Test::Builder test counter is incremented without it
+printing any test output, for example, when current_test()
+is changed. In these cases, Test::Builder doesn't know the
+result of the test, so its type is 'unknown'. These details
+for these tests are filled in. They are considered ok, but
+the name and actual_ok is left "undef".</p>
+<p style="margin-left:14%; margin-top: 1em">For example
+"not ok 23 − hole count # TODO insufficient
+donuts" would result in this structure:</p>
+<p style="margin-left:14%; margin-top: 1em">$tests[22] = #
+23 − 1, since arrays start from 0. <br/>
+{ ok =&gt; 1, # logically, the test passed since its todo
+<br/>
+actual_ok =&gt; 0, # in absolute terms, it failed <br/>
+name =&gt; 'hole count', <br/>
+type =&gt; 'todo', <br/>
+reason =&gt; 'insufficient donuts' <br/>
+};</p>
+<p style="margin-left:9%;"><b>todo</b></p>
+<p style="margin-left:14%;">my $todo_reason =
+$Test−&gt;todo; <br/>
+my $todo_reason = $Test−&gt;todo($pack);</p>
+<p style="margin-left:14%; margin-top: 1em">If the current
+tests are considered "TODO" it will return the
+reason, if any. This reason can come from a $TODO variable
+or the last call to todo_start().</p>
+<p style="margin-left:14%; margin-top: 1em">Since a TODO
+test does not need a reason, this function can return an
+empty string even when inside a TODO block. Use
+"$Test−&gt;in_todo" to determine if you are
+currently inside a TODO block.</p>
+<p style="margin-left:14%; margin-top: 1em">todo() is about
+finding the right package to look for $TODO in. It's pretty
+good at guessing the right package to look at. It first
+looks for the caller based on "$Level + 1", since
+todo() is usually called inside a test function. As a last
+resort it will use exported_to().</p>
+<p style="margin-left:14%; margin-top: 1em">Sometimes there
+is some confusion about where todo() should be looking for
+the $TODO variable. If you want to be sure, tell it
+explicitly what $pack to use.</p>
+<p style="margin-left:9%;"><b>find_TODO</b></p>
+<p style="margin-left:14%;">my $todo_reason =
+$Test−&gt;find_TODO(); <br/>
+my $todo_reason = $Test−&gt;find_TODO($pack);</p>
+<p style="margin-left:14%; margin-top: 1em">Like todo() but
+only returns the value of $TODO ignoring todo_start().</p>
+<p style="margin-left:14%; margin-top: 1em">Can also be
+used to set $TODO to a new value while returning the old
+value:</p>
+<p style="margin-left:14%; margin-top: 1em">my $old_reason
+= $Test−&gt;find_TODO($pack, 1, $new_reason);</p>
+<p style="margin-left:9%;"><b>in_todo</b></p>
+<p style="margin-left:14%;">my $in_todo =
+$Test−&gt;in_todo;</p>
+<p style="margin-left:14%; margin-top: 1em">Returns true if
+the test is currently inside a TODO block.</p>
+<p style="margin-left:9%;"><b>todo_start</b></p>
+<p style="margin-left:14%;">$Test−&gt;todo_start();
+<br/>
+$Test−&gt;todo_start($message);</p>
+<p style="margin-left:14%; margin-top: 1em">This method
+allows you declare all subsequent tests as TODO tests, up
+until the "todo_end" method has been called.</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"TODO:" and $TODO syntax is generally pretty good
+about figuring out whether or not we're in a TODO test.
+However, often we find that this is not possible to
+determine (such as when we want to use $TODO but the tests
+are being executed in other packages which can't be inferred
+beforehand).</p>
+<p style="margin-left:14%; margin-top: 1em">Note that you
+can use this to nest "todo" tests</p>
+<p style="margin-left:14%; margin-top: 1em">$Test−&gt;todo_start('working
+on this'); <br/>
+# lots of code <br/>
+$Test−&gt;todo_start('working on that'); <br/>
+# more code <br/>
+$Test−&gt;todo_end; <br/>
+$Test−&gt;todo_end;</p>
+<p style="margin-left:14%; margin-top: 1em">This is
+generally not recommended, but large testing systems often
+have weird internal needs.</p>
+<p style="margin-left:14%; margin-top: 1em">We've tried to
+make this also work with the TODO: syntax, but it's not
+guaranteed and its use is also discouraged:</p>
+<p style="margin-left:14%; margin-top: 1em">TODO: { <br/>
+local $TODO = 'We have work to do!'; <br/>
+$Test−&gt;todo_start('working on this'); <br/>
+# lots of code <br/>
+$Test−&gt;todo_start('working on that'); <br/>
+# more code <br/>
+$Test−&gt;todo_end; <br/>
+$Test−&gt;todo_end; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">Pick one style
+or another of "TODO" to be on the safe side.</p>
+<p style="margin-left:9%;">"todo_end"</p>
+<p style="margin-left:14%;">$Test−&gt;todo_end;</p>
+<p style="margin-left:14%; margin-top: 1em">Stops running
+tests as "TODO" tests. This method is fatal if
+called without a preceding "todo_start" method
+call.</p>
+<p style="margin-left:9%;"><b>caller</b></p>
+<p style="margin-left:14%;">my $package =
+$Test−&gt;caller; <br/>
+my($pack, $file, $line) = $Test−&gt;caller; <br/>
+my($pack, $file, $line) =
+$Test−&gt;caller($height);</p>
+<p style="margin-left:14%; margin-top: 1em">Like the normal
+caller(), except it reports according to your level().</p>
+<p style="margin-left:14%; margin-top: 1em">$height will be
+added to the level().</p>
+<p style="margin-left:14%; margin-top: 1em">If caller()
+winds up off the top of the stack it report the highest
+context.</p>
+<h2>EXIT CODES
+<a name="EXIT CODES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If all your
+tests passed, Test::Builder will exit with zero (which is
+normal). If anything failed it will exit with how many
+failed. If you run less (or more) tests than you planned,
+the missing (or extras) will be considered failures. If no
+tests were ever run Test::Builder will throw a warning and
+exit with 255. If the test died, even after having
+successfully completed all its tests, it will still be
+considered a failure and will exit with 255.</p>
+<p style="margin-left:9%; margin-top: 1em">So the exit
+codes are...</p>
+<p style="margin-left:9%; margin-top: 1em">0 all tests
+successful <br/>
+255 test died or all passed but wrong # of tests run <br/>
+any other number how many failed (including missing or
+extras)</p>
+<p style="margin-left:9%; margin-top: 1em">If you fail more
+than 254 tests, it will be reported as 254.</p>
+<h2>THREADS
+<a name="THREADS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">In perl 5.8.1
+and later, Test::Builder is thread−safe. The test
+number is shared by all threads. This means if one thread
+sets the test number using current_test() they will all be
+effected.</p>
+<p style="margin-left:9%; margin-top: 1em">While versions
+earlier than 5.8.1 had threads they contain too many bugs to
+support.</p>
+<p style="margin-left:9%; margin-top: 1em">Test::Builder is
+only thread−aware if threads.pm is loaded
+<i>before</i> Test::Builder.</p>
+<p style="margin-left:9%; margin-top: 1em">You can directly
+disable thread support with one of the following:</p>
+<p style="margin-left:9%; margin-top: 1em">$ENV{T2_NO_IPC}
+= 1</p>
+<p style="margin-left:9%; margin-top: 1em">or</p>
+<p style="margin-left:9%; margin-top: 1em">no
+Test2::IPC;</p>
+<p style="margin-left:9%; margin-top: 1em">or</p>
+<p style="margin-left:9%; margin-top: 1em">Test2::API::test2_ipc_disable()</p>
+<h2>MEMORY
+<a name="MEMORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">An informative
+hash, accessible via details(), is stored for each test you
+perform. So memory usage will scale linearly with each test
+run. Although this is not a problem for most test suites, it
+can become an issue if you do large (hundred thousands to
+million) combinatorics tests in the same run.</p>
+<p style="margin-left:9%; margin-top: 1em">In such cases,
+you are advised to either split the test file into smaller
+ones, or use a reverse approach, doing "normal"
+(code) compares and triggering fail() should anything go
+unexpected.</p>
+<p style="margin-left:9%; margin-top: 1em">Future versions
+of Test::Builder will have a way to turn history off.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CPAN can provide
+the best examples. Test::Simple, Test::More, Test::Exception
+and Test::Differences all use Test::Builder.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<h3>INTERNALS
+<a name="INTERNALS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Test2,
+Test2::API</p>
+<h3>LEGACY
+<a name="LEGACY"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Test::Simple,
+Test::More</p>
+<h3>EXTERNAL
+<a name="EXTERNAL"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Test::Harness</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Original code by
+chromatic, maintained by Michael G Schwern
+&lt;schwern@pobox.com&gt;</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2002−2008 by chromatic &lt;chromatic@wgz.org&gt; and
+<br/>
+Michael G Schwern &lt;schwern@pobox.com&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;https://dev.perl.org/licenses/&gt;</p>
+<hr/>
+</body>
+</html>

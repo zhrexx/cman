@@ -1,0 +1,246 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:00 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>libcurl-thread</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">libcurl-thread</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#Multi-threading with libcurl">Multi-threading with libcurl</a><br/>
+<a href="#Handles">Handles</a><br/>
+<a href="#Shared objects">Shared objects</a><br/>
+<a href="#TLS">TLS</a><br/>
+<a href="#Signals">Signals</a><br/>
+<a href="#Name resolving">Name resolving</a><br/>
+<a href="#curl_global_* functions">curl_global_* functions</a><br/>
+<a href="#Memory functions">Memory functions</a><br/>
+<a href="#Non-safe functions">Non-safe functions</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libcurl−thread
+− libcurl thread safety</p>
+<h2>Multi-threading with libcurl
+<a name="Multi-threading with libcurl"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libcurl is
+thread safe but has no internal thread synchronization. You
+may have to provide your own locking should you meet any of
+the thread safety exceptions below.</p>
+<h2>Handles
+<a name="Handles"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You must
+<b>never</b> share the same handle in multiple threads. You
+can pass the handles around among threads, but you must
+never use a single handle from more than one thread at any
+given time.</p>
+<h2>Shared objects
+<a name="Shared objects"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You can share
+certain data between multiple handles by using the share
+interface but you must provide your own locking and set
+<i>curl_share_setopt(3)</i> CURLSHOPT_LOCKFUNC and
+CURLSHOPT_UNLOCKFUNC.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that some
+items are specifically documented as not thread−safe
+in the share API (the connection pool and HSTS cache for
+example).</p>
+<h2>TLS
+<a name="TLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All current TLS
+libraries libcurl supports are thread−safe. <br/>
+OpenSSL</p>
+<p style="margin-left:18%;">OpenSSL 1.1.0+ can be safely
+used in multi−threaded applications provided that
+support for the underlying OS threading API is
+built−in. For older versions of OpenSSL, the user must
+set mutex callbacks.</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl may not
+be able to fully clean up after multi−threaded OpenSSL
+depending on how OpenSSL was built and loaded as a library.
+It is possible in some rare circumstances a memory leak
+could occur unless you implement your own OpenSSL thread
+cleanup.</p>
+<p style="margin-left:18%; margin-top: 1em">For example, on
+Windows if both libcurl and OpenSSL are linked statically to
+a DLL or application then OpenSSL may leak memory unless the
+DLL or application calls OPENSSL_thread_stop() before each
+thread terminates. If OpenSSL is built as a DLL then it does
+this cleanup automatically and there is no leak. If libcurl
+is built as a DLL and OpenSSL is linked statically to it
+then libcurl does this cleanup automatically and there is no
+leak (added in libcurl 8.8.0).</p>
+<p style="margin-left:18%; margin-top: 1em">Please review
+the OpenSSL documentation for a full list of circumstances:
+https://docs.openssl.org/3.0/man3/OPENSSL_init_crypto/#notes</p>
+<h2>Signals
+<a name="Signals"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Signals are used
+for timing out name resolves (during DNS lookup) −
+when built without using either the c−ares or threaded
+resolver backends. On systems that have a signal
+concept.</p>
+<p style="margin-left:9%; margin-top: 1em">When using
+multiple threads you should set the
+<i>CURLOPT_NOSIGNAL(3)</i> option to 1L for all handles.
+Everything works fine except that timeouts cannot be honored
+during DNS lookups − which you can work around by
+building libcurl with c−ares or
+threaded−resolver support. c−ares is a library
+that provides asynchronous name resolves. On some platforms,
+libcurl simply cannot function properly multi−threaded
+unless the <i>CURLOPT_NOSIGNAL(3)</i> option is set.</p>
+<p style="margin-left:9%; margin-top: 1em">When
+<i>CURLOPT_NOSIGNAL(3)</i> is set to 1L, your application
+needs to deal with the risk of a SIGPIPE (that at least the
+OpenSSL backend can trigger). Note that setting
+<i>CURLOPT_NOSIGNAL(3)</i> to 0L does not work in a threaded
+situation as there is a race condition where libcurl risks
+restoring the former signal handler while another thread
+should still ignore it.</p>
+<h2>Name resolving
+<a name="Name resolving"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>gethostbyname</b> or <b>getaddrinfo</b> and other name
+resolving system calls used by libcurl are provided by your
+operating system and must be thread safe. It is important
+that libcurl can find and use thread safe versions of these
+and other system calls, as otherwise it cannot function
+fully thread safe. Some operating systems are known to have
+faulty thread implementations. We have previously received
+problem reports on *BSD (at least in the past, they may be
+working fine these days). Some operating systems that are
+known to have solid and working thread support are Linux,
+Solaris and Windows.</p>
+<h2>curl_global_* functions
+<a name="curl_global_* functions"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+are thread−safe since libcurl 7.84.0 if
+<i>curl_version_info(3)</i> has the
+<b>CURL_VERSION_THREADSAFE</b> feature bit set (most
+platforms).</p>
+<p style="margin-left:9%; margin-top: 1em">If these
+functions are not thread−safe and you are using
+libcurl with multiple threads it is especially important
+that before use you call <i>curl_global_init(3)</i> or
+<i>curl_global_init_mem(3)</i> to explicitly initialize the
+library and its dependents, rather than rely on the
+"lazy" fail−safe initialization that takes
+place the first time <i>curl_easy_init(3)</i> is called. For
+an in−depth explanation refer to <i>libcurl(3)</i>
+section <b>GLOBAL CONSTANTS</b>.</p>
+<h2>Memory functions
+<a name="Memory functions"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions,
+provided either by your operating system or your own
+replacements, must be thread safe. You can use
+<i>curl_global_init_mem(3)</i> to set your own replacement
+memory functions.</p>
+<h2>Non-safe functions
+<a name="Non-safe functions"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>CURLOPT_DNS_USE_GLOBAL_CACHE(3)</i>
+is not thread−safe.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>curl_version_info(3)</i>
+is not thread−safe before libcurl initialization.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>libcurl-security</b>(3)</p>
+<hr/>
+</body>
+</html>

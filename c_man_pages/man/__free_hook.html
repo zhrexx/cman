@@ -1,0 +1,230 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:09 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>__malloc_hook</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">__malloc_hook</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">__malloc_hook,
+__malloc_initialize_hook, __memalign_hook, __free_hook,
+__realloc_hook, __after_morecore_hook − malloc
+debugging variables (DEPRECATED)</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;malloc.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+*(*volatile __malloc_hook)(size_t</b> <i>size</i><b>, const
+void *</b><i>caller</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+*(*volatile __realloc_hook)(void *</b><i>ptr</i><b>,
+size_t</b> <i>size</i><b>, <br/>
+const void *</b><i>caller</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+*(*volatile __memalign_hook)(size_t</b> <i>alignment</i><b>,
+size_t</b> <i>size</i><b>, <br/>
+const void *</b><i>caller</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+(*volatile __free_hook)(void *</b><i>ptr</i><b>, const void
+*</b><i>caller</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+(*__malloc_initialize_hook)(void);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+(*volatile __after_morecore_hook)(void);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The GNU C
+library lets you modify the behavior of <b>malloc</b>(3),
+<b>realloc</b>(3), and <b>free</b>(3) by specifying
+appropriate hook functions. You can use these hooks to help
+you debug programs that use dynamic memory allocation, for
+example.</p>
+<p style="margin-left:9%; margin-top: 1em">The variable
+<b>__malloc_initialize_hook</b> points at a function that is
+called once when the malloc implementation is initialized.
+This is a weak variable, so it can be overridden in the
+application with a definition like the following:</p>
+<p style="margin-left:14%; margin-top: 1em">void
+(*__malloc_initialize_hook)(void) = my_init_hook;</p>
+<p style="margin-left:9%; margin-top: 1em">Now the function
+<i>my_init_hook</i>() can do the initialization of all
+hooks.</p>
+<p style="margin-left:9%; margin-top: 1em">The four
+functions pointed to by <b>__malloc_hook</b>,
+<b>__realloc_hook</b>, <b>__memalign_hook</b>,
+<b>__free_hook</b> have a prototype like the functions
+<b>malloc</b>(3), <b>realloc</b>(3), <b>memalign</b>(3),
+<b>free</b>(3), respectively, except that they have a final
+argument <i>caller</i> that gives the address of the caller
+of <b>malloc</b>(3), etc.</p>
+<p style="margin-left:9%; margin-top: 1em">The variable
+<b>__after_morecore_hook</b> points at a function that is
+called each time after <b>sbrk</b>(2) was asked for more
+memory.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">GNU.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The use of these
+hook functions is not safe in multithreaded programs, and
+they are now deprecated. From glibc 2.24 onwards, the
+<b>__malloc_initialize_hook</b> variable has been removed
+from the API, and from glibc 2.34 onwards, all the hook
+variables have been removed from the API. Programmers should
+instead preempt calls to the relevant functions by defining
+and exporting <b>malloc</b>(), <b>free</b>(),
+<b>realloc</b>(), and <b>calloc</b>().</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Here is a short
+example of how to use these variables.</p>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;stdio.h&gt; <br/>
+#include &lt;malloc.h&gt; <br/>
+/* Prototypes for our hooks */ <br/>
+static void my_init_hook(void); <br/>
+static void *my_malloc_hook(size_t, const void *); <br/>
+/* Variables to save original hooks */ <br/>
+static void *(*old_malloc_hook)(size_t, const void *); <br/>
+/* Override initializing hook from the C library */ <br/>
+void (*__malloc_initialize_hook)(void) = my_init_hook; <br/>
+static void <br/>
+my_init_hook(void) <br/>
+{ <br/>
+old_malloc_hook = __malloc_hook; <br/>
+__malloc_hook = my_malloc_hook; <br/>
+} <br/>
+static void * <br/>
+my_malloc_hook(size_t size, const void *caller) <br/>
+{ <br/>
+void *result; <br/>
+/* Restore all old hooks */ <br/>
+__malloc_hook = old_malloc_hook; <br/>
+/* Call recursively */ <br/>
+result = malloc(size); <br/>
+/* Save underlying hooks */ <br/>
+old_malloc_hook = __malloc_hook; <br/>
+/* printf() might call malloc(), so protect it too */ <br/>
+printf("malloc(%zu) called from %p returns %p\n",
+<br/>
+size, caller, result); <br/>
+/* Restore our own hooks */ <br/>
+__malloc_hook = my_malloc_hook; <br/>
+return result; <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>mallinfo</b>(3),
+<b>malloc</b>(3), <b>mcheck</b>(3), <b>mtrace</b>(3)</p>
+<hr/>
+</body>
+</html>

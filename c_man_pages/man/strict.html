@@ -1,0 +1,216 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:44 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>strict</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">strict</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">strict −
+Perl pragma to restrict unsafe constructs</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use strict; <br/>
+use strict "vars"; <br/>
+use strict "refs"; <br/>
+use strict "subs"; <br/>
+use strict; <br/>
+no strict "vars";</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+"strict" pragma disables certain Perl expressions
+that could behave unexpectedly or are difficult to debug,
+turning them into errors. The effect of this pragma is
+limited to the current file or scope block.</p>
+<p style="margin-left:9%; margin-top: 1em">If no import
+list is supplied, all possible restrictions are assumed.
+(This is the safest mode to operate in, but is sometimes too
+strict for casual programming.) Currently, there are three
+possible things to be strict about: "subs",
+"vars", and "refs". <br/>
+"strict refs"</p>
+<p style="margin-left:17%;">This generates a runtime error
+if you use symbolic references (see perlref).</p>
+<p style="margin-left:17%; margin-top: 1em">use strict
+'refs'; <br/>
+$ref = \$foo; <br/>
+print $$ref; # ok <br/>
+$ref = "foo"; <br/>
+print $$ref; # runtime error; normally ok <br/>
+$file = "STDOUT"; <br/>
+print $file "Hi!"; # error; note: no comma after
+$file</p>
+<p style="margin-left:17%; margin-top: 1em">There is one
+exception to this rule:</p>
+<p style="margin-left:17%; margin-top: 1em">$bar =
+\&amp;{'foo'}; <br/>
+&amp;$bar;</p>
+<p style="margin-left:17%; margin-top: 1em">is allowed so
+that "goto &amp;$AUTOLOAD" would not break under
+stricture.</p>
+<p style="margin-left:9%;">"strict vars"</p>
+<p style="margin-left:17%;">This generates a compile-time
+error if you access a variable that was neither explicitly
+declared (using any of "my", "our",
+"state", or "use vars") nor fully
+qualified. (Because this is to avoid variable suicide
+problems and subtle dynamic scoping issues, a merely
+"local" variable isn’t good enough.) See
+"my" in perlfunc, "our" in perlfunc,
+"state" in perlfunc, "local" in
+perlfunc, and vars.</p>
+<p style="margin-left:17%; margin-top: 1em">use strict
+'vars'; <br/>
+$X::foo = 1; # ok, fully qualified <br/>
+my $foo = 10; # ok, my() var <br/>
+local $baz = 9; # blows up, $baz not declared before <br/>
+package Cinna; <br/>
+our $bar; # Declares $bar in current package <br/>
+$bar = 'HgS'; # ok, global declared via pragma</p>
+<p style="margin-left:17%; margin-top: 1em">The
+<b>local()</b> generated a compile-time error because you
+just touched a global name without fully qualifying it.</p>
+<p style="margin-left:17%; margin-top: 1em">Because of
+their special use by <b>sort()</b>, the variables $a and $b
+are exempted from this check.</p>
+<p style="margin-left:9%;">"strict subs"</p>
+<p style="margin-left:17%;">This disables the poetry
+optimization, generating a compile-time error if you try to
+use a bareword identifier that’s not a subroutine,
+unless it is a simple identifier (no colons) and that it
+appears in curly braces, on the left hand side of the
+"=&gt;" symbol, or has the unary minus operator
+applied to it.</p>
+<p style="margin-left:17%; margin-top: 1em">use strict
+'subs'; <br/>
+$SIG{PIPE} = Plumber; # blows up <br/>
+$SIG{PIPE} = "Plumber"; # fine: quoted string is
+always ok <br/>
+$SIG{PIPE} = \&amp;Plumber; # preferred form</p>
+<p style="margin-left:9%; margin-top: 1em">See
+"Pragmatic Modules" in perlmodlib.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"strict
+'subs'", with Perl 5.6.1, erroneously permitted to use
+an unquoted compound identifier (e.g. "Foo::Bar")
+as a hash key (before "=&gt;" or inside curlies),
+but without forcing it always to a literal string.</p>
+<p style="margin-left:9%; margin-top: 1em">Starting with
+Perl 5.8.1 strict is strict about its restrictions: if
+unknown restrictions are used, the strict pragma will abort
+with</p>
+<p style="margin-left:9%; margin-top: 1em">Unknown 'strict'
+tag(s) '...'</p>
+<p style="margin-left:9%; margin-top: 1em">As of version
+1.04 (Perl 5.10), strict verifies that it is used as
+"strict" to avoid the dreaded Strict trap on case
+insensitive file systems.</p>
+<p style="margin-left:9%; margin-top: 1em">Beginning with
+Perl 5.12, use of "use VERSION" (where VERSION
+&gt;= 5.11.0) now lexically enables strictures just like
+"use strict" (in addition to the normal "use
+VERSION" effects and features.) In other words,
+"use v5.011" or higher now implies "use
+strict" automatically, as noted in "Implicit
+strictures" in perl5120delta and "use
+VERSION".</p>
+<hr/>
+</body>
+</html>

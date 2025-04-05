@@ -1,0 +1,228 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:17 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Archive::Zip::MemberRead</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Archive::Zip::MemberRead</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Archive::Zip::MemberRead
+− A wrapper that lets you read Zip archive members as
+if they were files.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Archive::Zip; <br/>
+use Archive::Zip::MemberRead; <br/>
+$zip = Archive::Zip−&gt;new("file.zip");
+<br/>
+$fh = Archive::Zip::MemberRead−&gt;new($zip,
+"subdir/abc.txt"); <br/>
+while (defined($line = $fh−&gt;getline())) <br/>
+{ <br/>
+print $fh−&gt;input_line_number . "#:
+$line\n"; <br/>
+} <br/>
+$read = $fh−&gt;read($buffer, 32*1024); <br/>
+print "Read $read bytes as :$buffer:\n";</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+Archive::Zip::MemberRead module lets you read Zip archive
+member data just like you read data from files.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Archive::Zip::Member::readFileHandle()</b></p>
+<p style="margin-left:14%;">You can get a
+"Archive::Zip::MemberRead" from an archive member
+by calling readFileHandle():</p>
+<p style="margin-left:14%; margin-top: 1em">my $member =
+$zip−&gt;memberNamed('abc/def.c'); <br/>
+my $fh = $member−&gt;readFileHandle(); <br/>
+while (defined($line = $fh−&gt;getline())) <br/>
+{ <br/>
+# ... <br/>
+} <br/>
+$fh−&gt;close();</p>
+<p style="margin-left:9%;">Archive::Zip::MemberRead−&gt;new($zip,
+$fileName) <br/>
+Archive::Zip::MemberRead−&gt;new($zip, $member) <br/>
+Archive::Zip::MemberRead−&gt;new($member)</p>
+<p style="margin-left:14%;">Construct a new
+Archive::Zip::MemberRead on the specified member.</p>
+<p style="margin-left:14%; margin-top: 1em">my $fh =
+Archive::Zip::MemberRead−&gt;new($zip, 'fred.c')</p>
+<p style="margin-left:9%;">setLineEnd(expr)</p>
+<p style="margin-left:14%;">Set the line end character to
+use. This is set to \n by default except on Windows systems
+where it is set to \r\n. You will only need to set this on
+systems which are not Windows or Unix based and require a
+line end different from \n. This is a class method so call
+as
+"Archive::Zip::MemberRead"−&gt;setLineEnd($nl)</p>
+<p style="margin-left:9%;"><b>rewind()</b></p>
+<p style="margin-left:14%;">Rewinds an
+"Archive::Zip::MemberRead" so that you can read
+from it again starting at the beginning.</p>
+<p style="margin-left:9%;">input_record_separator(expr)</p>
+<p style="margin-left:14%;">If the argument is given,
+input_record_separator for this instance is set to it. The
+current setting (which may be the global $/) is always
+returned.</p>
+<p style="margin-left:9%;"><b>input_line_number()</b></p>
+<p style="margin-left:14%;">Returns the current line
+number, but only if you're using getline(). Using read()
+will not update the line number.</p>
+<p style="margin-left:9%;"><b>close()</b></p>
+<p style="margin-left:14%;">Closes the given file
+handle.</p>
+<p style="margin-left:9%;">buffer_size([ $size ])</p>
+<p style="margin-left:14%;">Gets or sets the buffer size
+used for reads. Default is the chunk size used by
+Archive::Zip.</p>
+<p style="margin-left:9%;"><b>getline()</b></p>
+<p style="margin-left:14%;">Returns the next line from the
+currently open member. Makes sense only for text files. A
+read error is considered fatal enough to die. Returns undef
+on eof. All subsequent calls would return undef, unless a
+<b>rewind()</b> is called. Note: The line returned has the
+input_record_separator (default: newline) removed.</p>
+<p style="margin-left:9%;">getline( { preserve_line_ending
+=&gt; 1 } )</p>
+<p style="margin-left:14%;">Returns the next line including
+the line ending.</p>
+<p style="margin-left:9%;">read($buffer,
+$num_bytes_to_read)</p>
+<p style="margin-left:14%;">Simulates a normal read()
+system call. Returns the no. of bytes read.
+"undef" on error, 0 on eof, <i>e.g.</i>:</p>
+<p style="margin-left:14%; margin-top: 1em">$fh =
+Archive::Zip::MemberRead−&gt;new($zip,
+"sreeji/secrets.bin"); <br/>
+while (1) <br/>
+{ <br/>
+$read = $fh−&gt;read($buffer, 1024); <br/>
+die "FATAL ERROR reading my secrets !\n" if
+(!defined($read)); <br/>
+last if (!$read); <br/>
+# Do processing. <br/>
+.... <br/>
+}</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Sreeji K. Das
+&lt;sreeji_k@yahoo.com&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">See Archive::Zip
+by Ned Konz without which this module does not make any
+sense!</p>
+<p style="margin-left:9%; margin-top: 1em">Minor mods by
+Ned Konz.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright 2002
+Sreeji K. Das.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

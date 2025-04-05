@@ -1,0 +1,278 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:58 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Lexical::Sub</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Lexical::Sub</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#PACKAGE METHODS">PACKAGE METHODS</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Lexical::Sub
+− subroutines without namespace pollution</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Lexical::Sub
+quux =&gt; sub { $_[0] + 1 }; <br/>
+use Lexical::Sub carp =&gt; \&amp;Carp::carp;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+implements lexical scoping of subroutines. Although it can
+be used directly, it is mainly intended to be infrastructure
+for modules that manage namespaces.</p>
+<p style="margin-left:9%; margin-top: 1em">This module
+influences the meaning of single−part subroutine names
+that appear directly in code, such as "&amp;foo"
+and "foo(123)". Normally, in the absence of any
+particular declaration, these would refer to the subroutine
+of that name located in the current package. A
+"Lexical::Sub" declaration can change this to
+refer to any particular subroutine, bypassing the package
+system entirely. A subroutine name that includes an explicit
+package part, such as "&amp;main::foo", always
+refers to the subroutine in the specified package, and is
+unaffected by this module. A symbolic reference through a
+string value, such as ""&amp;{'foo'}"",
+also looks in the package system, and so is unaffected by
+this module.</p>
+<p style="margin-left:9%; margin-top: 1em">Bareword
+references to subroutines, such as "foo(123)",
+only work on Perl 5.11.2 and later. On earlier Perls you
+must use the "&amp;" sigil, as in
+"&amp;foo(123)".</p>
+<p style="margin-left:9%; margin-top: 1em">A name
+definition supplied by this module takes effect from the end
+of the definition statement up to the end of the immediately
+enclosing block, except where it is shadowed within a nested
+block. This is the same lexical scoping that the
+"my", "our", and "state"
+keywords supply. Definitions from Lexical::Sub and from
+"my"/"our"/"state" can shadow
+each other, on Perl versions where these duration keywords
+can be applied to subroutines (5.17.4 and later), except
+that Lexical::Sub can't shadow a
+"my"/"our"/"state" subroutine
+prior to Perl 5.19.1. These lexical definitions propagate
+into string "eval"s, on Perl versions that support
+it (5.9.3 and later).</p>
+<p style="margin-left:9%; margin-top: 1em">This module only
+manages subroutines of static duration (the kind of duration
+that subroutines declared without "my" have). To
+get a fresh subroutine for each invocation of a function,
+use "my sub", on a Perl version that supports it
+(5.17.4 and later).</p>
+<p style="margin-left:9%; margin-top: 1em">This module is
+implemented through the mechanism of Lexical::Var. Its
+distinct name and declaration syntax exist to make
+Lexical::Var lexical subroutine declarations clearer.</p>
+<h2>PACKAGE METHODS
+<a name="PACKAGE METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These methods
+are meant to be invoked on the "Lexical::Sub"
+package. <br/>
+Lexical::Sub−&gt;import(NAME =&gt; REF, ...)</p>
+<p style="margin-left:14%;">Sets up lexical subroutine
+declarations, in the lexical environment that is currently
+compiling. Each <i>NAME</i> must be a bare subroutine name
+(e.g., "<b>foo</b>"), and each <i>REF</i> must be
+a reference to a subroutine. The name is lexically
+associated with the referenced subroutine.</p>
+<p style="margin-left:9%;">Lexical::Sub−&gt;unimport(NAME
+[=&gt; REF], ...)</p>
+<p style="margin-left:14%;">Sets up negative lexical
+subroutine declarations, in the lexical environment that is
+currently compiling. Each <i>NAME</i> must be a bare
+subroutine name (e.g., "<b>foo</b>"). If the name
+is given on its own, it is lexically dissociated from any
+subroutine. Within the resulting scope, the subroutine name
+will not be recognised. If a <i>REF</i> (which must be a
+reference to a subroutine) is specified with a name, the
+name will be dissociated if and only if it is currently
+associated with that subroutine.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Subroutine
+invocations without the "&amp;" sigil cannot be
+correctly processed on Perl versions earlier than 5.11.2.
+This is because the parser needs to look up the subroutine
+early, in order to let any prototype affect parsing, and it
+looks up the subroutine by a different mechanism than is
+used to generate the call op. (Some forms of sigilless call
+have other complications of a similar nature.) If an attempt
+is made to call a Lexical::Sub lexical subroutine via a
+bareword on an older Perl, this module will probably still
+be able to intercept the call op, and will throw an
+exception to indicate that the parsing has gone wrong.
+However, in some cases compilation goes further wrong before
+this module can catch it, resulting in either a confusing
+parse error or (in rare situations) silent compilation to an
+incorrect op sequence. On Perl 5.11.2 and later, sigilless
+subroutine calls work correctly, except for an issue noted
+below.</p>
+<p style="margin-left:9%; margin-top: 1em">Subroutine calls
+that have neither sigil nor parentheses (around the argument
+list) are subject to an ambiguity with indirect object
+syntax. If the first argument expression begins with a
+bareword or a scalar variable reference then the Perl parser
+is liable to interpret the call as an indirect method call.
+Normally this syntax would be interpreted as a subroutine
+call if the subroutine exists, but the parser doesn't look
+at lexically−defined subroutines for this purpose. The
+call interpretation can be forced by prefixing the first
+argument expression with a "+", or by wrapping the
+whole argument list in parentheses.</p>
+<p style="margin-left:9%; margin-top: 1em">In the earlier
+Perl versions that support
+"my"/"our"/"state"
+subroutines, starting from Perl 5.17.4, the mechanism for
+core lexical subroutines suffers a couple of bugs that mean
+that Lexical::Sub can't shadow subroutines declared that
+way. This was fixed in Perl 5.19.1.</p>
+<p style="margin-left:9%; margin-top: 1em">Package hash
+entries get created for subroutine names that are used, even
+though the subroutines are not actually being stored or
+looked up in the package. This can occasionally result in a
+"used only once" warning failing to occur when it
+should.</p>
+<p style="margin-left:9%; margin-top: 1em">On Perls prior
+to 5.15.5, if this package's "import" or
+"unimport" method is called from inside a string
+"eval" inside a "BEGIN" block, it does
+not have proper access to the compiling environment, and
+will complain that it is being invoked outside compilation.
+Calling from the body of a "require"d or
+"do"ed file causes the same problem on the same
+Perl versions. Other kinds of indirection within a
+"BEGIN" block, such as calling via a normal
+function, do not cause this problem.</p>
+<p style="margin-left:9%; margin-top: 1em">When judging
+whether the "unimport" method should hide a
+subroutine, this module can't distinguish between a lexical
+subroutine established by this module and a
+"state" subroutine. This may change in the
+future.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Lexical::Import,
+Lexical::Var</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Andrew Main
+(Zefram) &lt;zefram@fysh.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2009, 2010, 2011, 2012, 2013, 2023 Andrew Main (Zefram)
+&lt;zefram@fysh.org&gt;</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_COOKIE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_COOKIE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_COOKIE
+− HTTP Cookie header</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_COOKIE, char
+*cookie);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a pointer
+to a null−terminated string as parameter. It is used
+to set one or more cookies in the HTTP request. The format
+of the string should be NAME=CONTENTS, where NAME is the
+cookie name and CONTENTS is what the cookie should
+contain.</p>
+<p style="margin-left:9%; margin-top: 1em">To set multiple
+cookies, set them all using a single option concatenated
+like this: "name1=content1; name2=content2;"
+etc.</p>
+<p style="margin-left:9%; margin-top: 1em">This option sets
+the cookie header explicitly in the outgoing request(s). If
+multiple requests are done due to authentication, followed
+redirections or similar, they all get this cookie passed
+on.</p>
+<p style="margin-left:9%; margin-top: 1em">The cookies set
+by this option are separate from the internal cookie storage
+held by the cookie engine and they are not be modified by
+it. If you enable the cookie engine and either you have
+imported a cookie of the same name (e.g. 'foo') or the
+server has set one, it has no effect on the cookies you set
+here. A request to the server sends both the 'foo' held by
+the cookie engine and the 'foo' held by this option. To set
+a cookie that is instead held by the cookie engine and can
+be modified by the server use
+<i>CURLOPT_COOKIELIST(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Using this
+option multiple times makes the last set string override the
+previous ones.</p>
+<p style="margin-left:9%; margin-top: 1em">This option does
+not enable the cookie engine. Use
+<i>CURLOPT_COOKIEFILE(3)</i> or <i>CURLOPT_COOKIEJAR(3)</i>
+to enable parsing and sending cookies automatically.</p>
+<p style="margin-left:9%; margin-top: 1em">The application
+does not have to keep the string around after setting this
+option.</p>
+<p style="margin-left:9%; margin-top: 1em">If libcurl is
+built with PSL (<i>Public Suffix List</i>) support, it
+detects and discards cookies that are specified for such
+suffix domains that should not be allowed to have cookies.
+If libcurl is <i>not</i> built with PSL support, it has no
+ability to stop super cookies. PSL support is identified by
+the <b>CURL_VERSION_PSL</b> feature bit returned by
+<i>curl_version_info(3)</i>.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL, no
+cookies</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects http only</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+curl_easy_setopt(curl, CURLOPT_URL,
+"https://example.com");</p>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_setopt(curl,
+CURLOPT_COOKIE, "tool=curl; fun=yes;");</p>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_perform(curl);
+<br/>
+} <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.1</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLE_OK
+if HTTP is enabled, CURLE_UNKNOWN_OPTION if not, or
+CURLE_OUT_OF_MEMORY if there was insufficient heap
+space.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLINFO_COOKIELIST</b>(3),
+<b>CURLOPT_COOKIEFILE</b>(3), <b>CURLOPT_COOKIEJAR</b>(3),
+<b>CURLOPT_COOKIELIST</b>(3),
+<b>CURLOPT_HTTPHEADER</b>(3)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:57:17 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title></title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<hr/>
+<p><i>ZIP_SOURCE_FUNCTION</i>(3) Library Functions Manual
+<i>ZIP_SOURCE_FUNCTION</i>(3)</p>
+<p style="margin-top: 1em"><b>NAME</b></p>
+<p style="margin-left:9%;">zip_source_function,
+zip_source_function_create — create data source from
+function</p>
+<p style="margin-top: 1em"><b>LIBRARY</b></p>
+<p style="margin-left:9%;">libzip (-lzip)</p>
+<p style="margin-top: 1em"><b>SYNOPSIS</b></p>
+<p style="margin-left:9%;"><b>#include
+&lt;zip.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>zip_source_t
+*</i></p>
+<p style="margin-left:14%;"><b>zip_source_function</b>(<i>zip_t *archive</i>,
+<i>zip_source_callback fn</i>,
+<i>void *userdata</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>zip_source_t
+*</i></p>
+<p style="margin-left:14%;"><b>zip_source_function_create</b>(<i>zip_source_callback fn</i>,
+<i>void *userdata</i>,
+<i>zip_error_t *error</i>);</p>
+<p style="margin-top: 1em"><b>DESCRIPTION</b></p>
+<p style="margin-left:9%;">The functions
+<b>zip_source_function</b>() and
+<b>zip_source_function_create</b>() create a zip source from
+the user-provided function <i>fn</i>, which must be of the
+following type:</p>
+<p style="margin-left:9%; margin-top: 1em"><i>typedef
+zip_int64_t</i></p>
+<p>(*<b>zip_source_callback</b>)(<i>void *userdata</i>,
+<i>void *data</i>, <i>zip_uint64_t len</i>,
+<i>zip_source_cmd_t cmd</i>)</p>
+<p style="margin-left:9%; margin-top: 1em"><i>archive</i>
+or <i>error</i> are used for reporting errors and can be
+NULL.</p>
+<p style="margin-left:9%; margin-top: 1em">When called by
+the library, the first argument is the <i>userdata</i>
+argument supplied to the function. The next two arguments
+are a buffer <i>data</i> of size <i>len</i> when data is
+passed in or expected to be returned, or else NULL and 0.
+The last argument, <i>cmd</i>, specifies which action the
+function should perform.</p>
+<p style="margin-left:9%; margin-top: 1em">Depending on the
+uses, there are three useful sets of commands to be
+supported by a <b>zip_source_callback</b>():</p>
+<p style="margin-top: 1em">read source</p>
+<p style="margin-left:40%; margin-top: 1em">Providing
+streamed data (for file data added to archives). Must
+support ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE,
+ZIP_SOURCE_STAT, and ZIP_SOURCE_ERROR.</p>
+<p style="margin-left:40%; margin-top: 1em">If your source
+uses any allocated memory (including <i>userdata</i>) it
+should also implement ZIP_SOURCE_FREE to avoid memory
+leaks.</p>
+<p style="margin-top: 1em">seekable read source</p>
+<p style="margin-left:40%; margin-top: 1em">Same as
+previous, but from a source allowing reading from arbitrary
+offsets (also for read-only zip archive). Must additionally
+support ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL, and
+ZIP_SOURCE_SUPPORTS.</p>
+<p style="margin-top: 1em">read/write source</p>
+<p style="margin-left:40%; margin-top: 1em">Same as
+previous, but additionally allowing writing (also for
+writable zip archives). Must additionally support
+ZIP_SOURCE_BEGIN_WRITE, ZIP_SOURCE_COMMIT_WRITE,
+ZIP_SOURCE_ROLLBACK_WRITE, ZIP_SOURCE_SEEK_WRITE,
+ZIP_SOURCE_TELL_WRITE, and ZIP_SOURCE_REMOVE.</p>
+<p style="margin-left:40%; margin-top: 1em">On top of the
+above, supporting the pseudo-command
+ZIP_SOURCE_SUPPORTS_REOPEN allows calling
+<b>zip_source_open</b>() again after calling
+<b>zip_source_close</b>().</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_ACCEPT_EMPTY</p>
+<p style="margin-left:9%;">Return 1 if an empty source
+should be accepted as a valid zip archive. This is the
+default if this command is not supported by a source. File
+system backed sources should return 0.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_BEGIN_WRITE</p>
+<p style="margin-left:9%;">Prepare the source for writing.
+Use this to create any temporary file(s).</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_BEGIN_WRITE_CLONING</p>
+<p style="margin-left:9%;">Prepare the source for writing,
+keeping the first <i>len</i> bytes of the original file.
+Only implement this command if it is more efficient than
+copying the data, and if it does not destructively overwrite
+the original file (you still have to be able to execute
+ZIP_SOURCE_ROLLBACK_WRITE).</p>
+<p style="margin-left:9%; margin-top: 1em">The next write
+should happen at byte <i>offset</i>.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_CLOSE</p>
+<p style="margin-left:9%;">Reading is done.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_COMMIT_WRITE</p>
+<p style="margin-left:9%;">Finish writing to the source.
+Replace the original data with the newly written data. Clean
+up temporary files or internal buffers. Subsequently opening
+and reading from the source should return the newly written
+data.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_ERROR</p>
+<p style="margin-left:9%;">Get error information.
+<i>data</i> points to an array of two ints, which should be
+filled with the libzip error code and the corresponding
+system error code for the error that occurred. See
+<i>zip_errors</i>(3) for details on the error codes. If the
+source stores error information in a zip_error_t, use
+<i>zip_error_to_data</i>(3) and return its return value.
+Otherwise, return 2 * sizeof(int).</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_FREE</p>
+<p style="margin-left:9%;">Clean up and free all resources,
+including <i>userdata</i>. The callback function will not be
+called again.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_GET_FILE_ATTRIBUTES</p>
+<p style="margin-left:9%;">Provide information about
+various data. Then the data should be put in the appropriate
+entry in the passed <i>zip_file_attributes_t</i> argument,
+and the appropriate ZIP_FILE_ATTRIBUTES_* value must be
+or’ed into the <i>valid</i> member to denote that the
+corresponding data has been provided. A
+<i>zip_file_attributes_t</i> structure can be initialized
+using <i>zip_file_attributes_init</i>(3).</p>
+<p style="margin-top: 1em">ASCII mode</p>
+<p style="margin-left:24%; margin-top: 1em">If a file is a
+plaintext file in ASCII. Can be used by extraction tools to
+automatically convert line endings (part of the internal
+file attributes). Member <i>ascii</i>, flag
+ZIP_FILE_ATTRIBUTES_ASCII.</p>
+<p style="margin-top: 1em">General Purpose Bit Flags
+(limited to Compression Flags)</p>
+<p style="margin-left:24%;">The general purpose bit flag in
+the zip in the local and central directory headers contain
+information about the compression method. Member
+<i>general_purpose_bit_flags</i> and
+<i>general_purpose_bit_mask</i> to denote which members have
+been set; flag
+ZIP_FILE_ATTRIBUTES_GENERAL_PURPOSE_BIT_FLAGS.</p>
+<p style="margin-top: 1em">External File Attributes</p>
+<p style="margin-left:24%;">The external file attributes
+(usually operating system-specific). Member
+<i>external_file_attributes</i>, flag
+ZIP_FILE_ATTRIBUTES_EXTERNAL_FILE_ATTRIBUTES.</p>
+<p style="margin-top: 1em">Version Needed</p>
+<p style="margin-left:24%;">A minimum version needed
+required to unpack this entry (in the usual "major * 10
++ minor" format). Member <i>version_needed</i>, flag
+ZIP_FILE_ATTRIBUTES_VERSION_NEEDED.</p>
+<p style="margin-top: 1em">Operating System</p>
+<p style="margin-left:24%;">One of the operating systems as
+defined by the ZIP_OPSYS_* variables (see <i>zip.h</i>).
+This value affects the interpretation of the external file
+attributes. Member <i>host_system</i>, flag
+ZIP_FILE_ATTRIBUTES_HOST_SYSTEM.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_OPEN</p>
+<p style="margin-left:9%;">Prepare for reading.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_READ</p>
+<p style="margin-left:9%;">Read data into the buffer
+<i>data</i> of size <i>len</i>. Return the number of bytes
+placed into <i>data</i> on success, and zero for
+end-of-file.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_REMOVE</p>
+<p style="margin-left:9%;">Remove the underlying file. This
+is called if a zip archive is empty when closed.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_ROLLBACK_WRITE</p>
+<p style="margin-left:9%;">Abort writing to the source.
+Discard written data. Clean up temporary files or internal
+buffers. Subsequently opening and reading from the source
+should return the original data.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_SEEK</p>
+<p style="margin-left:9%;">Specify position to read next
+byte from, like <i>fseek</i>(3). Use
+<i>ZIP_SOURCE_GET_ARGS</i>(3) to decode the arguments into
+the following struct:</p>
+<p style="margin-left:9%; margin-top: 1em">struct
+zip_source_args_seek { <br/>
+zip_int64_t offset; <br/>
+int whence; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">If the size of
+the source’s data is known, use
+<i>zip_source_seek_compute_offset</i>(3) to validate the
+arguments and compute the new offset.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_SEEK_WRITE</p>
+<p style="margin-left:9%;">Specify position to write next
+byte to, like <i>fseek</i>(3). See ZIP_SOURCE_SEEK for
+details.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_STAT</p>
+<p style="margin-left:9%;">Get meta information for the
+input data. <i>data</i> points to an allocated <i>struct
+zip_stat</i>, which should be initialized using
+<i>zip_stat_init</i>(3) and then filled in.</p>
+<p style="margin-left:9%; margin-top: 1em">For
+uncompressed, unencrypted data, all information is optional.
+However, fill in as much information as is readily
+available.</p>
+<p style="margin-left:9%; margin-top: 1em">If the data is
+compressed, ZIP_STAT_COMP_METHOD, ZIP_STAT_SIZE, and
+ZIP_STAT_CRC must be filled in.</p>
+<p style="margin-left:9%; margin-top: 1em">If the data is
+encrypted, ZIP_STAT_ENCRYPTION_METHOD, ZIP_STAT_COMP_METHOD,
+ZIP_STAT_SIZE, and ZIP_STAT_CRC must be filled in.</p>
+<p style="margin-left:9%; margin-top: 1em">Information only
+available after the source has been read (e.g., size) can be
+omitted in an earlier call. <i>NOTE</i>:
+<b>zip_source_function</b>() may be called with this
+argument even after being called with ZIP_SOURCE_CLOSE.</p>
+<p style="margin-left:9%; margin-top: 1em">Return
+sizeof(struct zip_stat) on success.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_SUPPORTS</p>
+<p style="margin-left:9%;">Return bitmap specifying which
+commands are supported. Use
+<i>zip_source_make_command_bitmap</i>(3). If this command is
+not implemented, the source is assumed to be a read source
+without seek support.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_TELL</p>
+<p style="margin-left:9%;">Return the current read offset
+in the source, like <i>ftell</i>(3).</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_TELL_WRITE</p>
+<p style="margin-left:9%;">Return the current write offset
+in the source, like <i>ftell</i>(3).</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_WRITE</p>
+<p style="margin-left:9%;">Write data to the source. Return
+number of bytes written.</p>
+<p style="margin-left:4%; margin-top: 1em">ZIP_SOURCE_SUPPORTS_REOPEN</p>
+<p style="margin-left:9%;">This command is never actually
+invoked, support for it signals the ability to handle
+multiple open/read/close cycles.</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Return
+Values</b></p>
+<p style="margin-left:9%;">Commands should return −1
+on error. ZIP_SOURCE_ERROR will be called to retrieve the
+error code. On success, commands return 0, unless specified
+otherwise in the description above.</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Calling
+Conventions</b></p>
+<p style="margin-left:9%;">The library will always issue
+ZIP_SOURCE_OPEN before issuing ZIP_SOURCE_READ,
+ZIP_SOURCE_SEEK, or ZIP_SOURCE_TELL. When it no longer
+wishes to read from this source, it will issue
+ZIP_SOURCE_CLOSE. If the library wishes to read the data
+again, it will issue ZIP_SOURCE_OPEN a second time. If the
+function is unable to provide the data again, it should
+return −1.</p>
+<p style="margin-left:9%; margin-top: 1em">ZIP_SOURCE_BEGIN_WRITE
+or ZIP_SOURCE_BEGIN_WRITE_CLONING will be called before
+ZIP_SOURCE_WRITE, ZIP_SOURCE_SEEK_WRITE, or
+ZIP_SOURCE_TELL_WRITE. When writing is complete, either
+ZIP_SOURCE_COMMIT_WRITE or ZIP_SOURCE_ROLLBACK_WRITE will be
+called.</p>
+<p style="margin-left:9%; margin-top: 1em">ZIP_SOURCE_ACCEPT_EMPTY,
+ZIP_SOURCE_GET_FILE_ATTRIBUTES, and ZIP_SOURCE_STAT can be
+issued at any time.</p>
+<p style="margin-left:9%; margin-top: 1em">ZIP_SOURCE_ERROR
+will only be issued in response to the function returning
+−1.</p>
+<p style="margin-left:9%; margin-top: 1em">ZIP_SOURCE_FREE
+will be the last command issued; if ZIP_SOURCE_OPEN was
+called and succeeded, ZIP_SOURCE_CLOSE will be called before
+ZIP_SOURCE_FREE, and similarly for ZIP_SOURCE_BEGIN_WRITE or
+ZIP_SOURCE_BEGIN_WRITE_CLONING and ZIP_SOURCE_COMMIT_WRITE
+or ZIP_SOURCE_ROLLBACK_WRITE.</p>
+<p style="margin-top: 1em"><b>RETURN VALUES</b></p>
+<p style="margin-left:9%;">Upon successful completion, the
+created source is returned. Otherwise, NULL is returned and
+the error code in <i>archive</i> or <i>error</i> is set to
+indicate the error (unless it is NULL).</p>
+<p style="margin-top: 1em"><b>ERRORS</b></p>
+<p style="margin-left:9%;"><b>zip_source_function</b>()
+fails if:</p>
+<p style="margin-top: 1em">[ZIP_ER_MEMORY]</p>
+<p style="margin-left:33%; margin-top: 1em">Required memory
+could not be allocated.</p>
+<p style="margin-top: 1em"><b>SEE ALSO</b></p>
+<p style="margin-left:9%;"><i>libzip</i>(3),
+<i>zip_file_add</i>(3), <i>zip_file_attributes_init</i>(3),
+<i>zip_file_replace</i>(3), <i>zip_source</i>(3),
+<i>zip_stat_init</i>(3)</p>
+<p style="margin-top: 1em"><b>HISTORY</b></p>
+<p style="margin-left:9%;"><b>zip_source_function</b>() and
+<b>zip_source_function_create</b>() were added in libzip
+1.0.</p>
+<p style="margin-top: 1em"><b>AUTHORS</b></p>
+<p style="margin-left:9%;">Dieter Baron
+&lt;<i>dillo@nih.at</i>&gt; and Thomas Klausner
+&lt;<i>wiz@gatalith.at</i>&gt; GNU January 5, 2023
+<i>ZIP_SOURCE_FUNCTION</i>(3)</p>
+<hr/>
+</body>
+</html>

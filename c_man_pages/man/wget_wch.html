@@ -1,0 +1,299 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:49 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curs_get_wch</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curs_get_wch</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Reading Characters">Reading Characters</a><br/>
+<a href="#Ungetting Characters">Ungetting Characters</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXTENSIONS">EXTENSIONS</a><br/>
+<a href="#PORTABILITY">PORTABILITY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>get_wch</b>,
+<b>wget_wch</b>, <b>mvget_wch</b>, <b>mvwget_wch</b>,
+<b>unget_wch</b> − get (or push back) a wide character
+from <i>curses</i> terminal keyboard</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;curses.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+get_wch(wint_t *</b><i>wch</i><b>); <br/>
+int wget_wch(WINDOW *</b><i>win</i><b>, wint_t
+*</b><i>wch</i><b>); <br/>
+int mvget_wch(int</b> <i>y</i><b>, int</b> <i>x</i><b>,
+wint_t *</b><i>wch</i><b>); <br/>
+int mvwget_wch(WINDOW *</b><i>win</i><b>, int</b>
+<i>y</i><b>, int</b> <i>x</i><b>, wint_t
+*</b><i>wch</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+unget_wch(const wchar_t</b> <i>wc</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<h3>Reading Characters
+<a name="Reading Characters"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>wget_wch</b>
+gathers a key event from the terminal keyboard associated
+with a <i>curses</i> window <i>win</i>, returning <b>OK</b>
+if a wide character is read, <b>KEY_CODE_YES</b> if a
+function key is read, and <b>ERR</b> if no key event is
+available. <b>ncurses</b>(3X) describes the variants of this
+function.</p>
+<p style="margin-left:9%; margin-top: 1em">When input is
+pending, <b>wget_wch</b> stores an integer identifying the
+key event in <i>wch</i>; for alphanumeric and punctuation
+keys, this value corresponds to the character encoding used
+by the terminal. Use of the control key as a modifier, by
+holding it down while pressing and releasing another key,
+often results in a distinct code. The behavior of other keys
+depends on whether <i>win</i> is in keypad mode; see
+subsections “Keypad Mode” and “Predefined
+Key Codes” in <b>getch</b>(3X).</p>
+<p style="margin-left:9%; margin-top: 1em">If no input is
+pending, then if the no-delay flag is set in the window (see
+<b>nodelay</b>(3X)), the function returns <b>ERR</b>;
+otherwise, <i>curses</i> waits until the terminal has input.
+If <b>cbreak</b>(3X) has been called, this happens after one
+character is read. If <b>nocbreak</b>(3X) or
+<b>noraw</b>(3X) has been called, it occurs when the next
+newline is read. (Because the terminal’s normal or
+“cooked” mode is line-buffered, multiple
+<b>wget_wch</b> calls may then be necessary to empty the
+input queue.) If <b>halfdelay</b>(3X) has been called,
+<i>curses</i> waits until input is available or the
+specified delay elapses.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>echo</b>(3X) has been called, and the window is not a
+pad, <i>curses</i> writes the wide character from the input
+queue to the window (at the cursor position) per the
+following rules.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>If the wide character matches the terminal’s erase
+character (see <b>erasewchar</b>(3X)), the cursor moves
+leftward one position and the new position is erased as if
+<b>wmove</b>(3X) and then <b>wdelch</b>(3X) were called.
+When the window’s keypad mode is enabled (see below),
+<b>KEY_LEFT</b> and <b>KEY_BACKSPACE</b> are handled the
+same way.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p><i>curses</i> writes any other wide character to the
+window, as with <b>wecho_wchar</b>(3X).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>If the window <i>win</i> has been moved or modified
+since the last call to <b>wrefresh</b>(3X), <i>curses</i>
+calls <b>wrefresh</b> on it.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">If the wide
+character is a carriage return and <b>nl</b>(3X) has been
+called, <b>wgetch</b> stores the the wide character code for
+line feed in <i>wch</i> instead.</p>
+<h3>Ungetting Characters
+<a name="Ungetting Characters"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>unget_wch</b>
+places <i>wc</i> into the input queue to be retrieved by the
+next call to <b>wget_wch</b>. A single input queue serves
+all windows associated with the terminal.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>wget_wch</b>
+returns <b>OK</b> when it reads a wide character and
+<b>KEY_CODE_YES</b> when it reads a function key code. It
+returns <b>ERR</b> if</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">the <i>WINDOW</i> pointer is
+<b>NULL</b>, or</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>its timeout expires without any data arriving, or</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>execution was interrupted by a signal, in which case
+<b>errno</b> is set to <b>EINTR</b>.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Functions
+prefixed with “mv” first perform cursor movement
+and fail if the position (<i>y</i>, <i>x</i>) is outside the
+window boundaries.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>unget_wch</b>
+returns <b>OK</b> on success and <b>ERR</b> if there is no
+more room in the input queue.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the
+“NOTES” section of <b>wgetch</b>(3X).</p>
+<p style="margin-left:9%; margin-top: 1em">All of these
+functions except <b>wget_wch</b> and <b>unget_wch</b> may be
+implemented as macros.</p>
+<p style="margin-left:9%; margin-top: 1em">Unlike
+<b>wgetch</b>(3X), <b>wget_wch</b> and its variants store
+the value of the input character in an additional <i>wch</i>
+parameter instead of the return value.</p>
+<p style="margin-left:9%; margin-top: 1em">Unlike
+<b>ungetch</b>, <b>unget_wch</b> cannot distinguish function
+key codes from conventional character codes. An application
+can overcome this limitation by pushing function key codes
+with <b>ungetch</b> and subsequently checking the return
+value of <b>wget_wch</b> for a match with
+<b>KEY_CODE_YES</b>.</p>
+<h2>EXTENSIONS
+<a name="EXTENSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the
+“EXTENSIONS” section of <b>wgetch</b>(3X).</p>
+<h2>PORTABILITY
+<a name="PORTABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Applications
+employing <i>ncurses</i> extensions should condition their
+use on the visibility of the <b>NCURSES_VERSION</b>
+preprocessor macro.</p>
+<p style="margin-left:9%; margin-top: 1em">X/Open Curses,
+Issue 4 describes these functions. It specifies no error
+conditions for them.</p>
+<p style="margin-left:9%; margin-top: 1em">See the
+“PORTABILITY” section of <b>wgetch</b>(3X)
+regarding the interaction of <b>wget_wch</b> with signal
+handlers.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curs_getch</b>(3X)
+describes comparable functions of the <i>ncurses</i> library
+in its non-wide-character configuration.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>curses</b>(3X),
+<b>curs_add_wch</b>(3X), <b>curs_inopts</b>(3X),
+<b>curs_move</b>(3X), <b>curs_refresh</b>(3X)</p>
+<hr/>
+</body>
+</html>

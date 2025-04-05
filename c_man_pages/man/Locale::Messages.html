@@ -1,0 +1,760 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:04 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Locale::Messages</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Locale::Messages</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#CONSTANTS">CONSTANTS</a><br/>
+<a href="#EXPORT TAGS">EXPORT TAGS</a><br/>
+<a href="#OTHER EXPORTS">OTHER EXPORTS</a><br/>
+<a href="#USAGE">USAGE</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Locale::Messages
+− Gettext Like Message Retrieval</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Locale::Messages qw(:locale_h :libintl_h); <br/>
+gettext $msgid; <br/>
+dgettext $textdomain, $msgid; <br/>
+dcgettext $textdomain, $msgid, LC_MESSAGES; <br/>
+ngettext $msgid, $msgid_plural, $count; <br/>
+dngettext $textdomain, $msgid, $msgid_plural, $count; <br/>
+dcngettext $textdomain, $msgid, $msgid_plural, $count,
+LC_MESSAGES; <br/>
+pgettext $msgctxt, $msgid; <br/>
+dpgettext $textdomain, $msgctxt, $msgid; <br/>
+dcpgettext $textdomain, $msgctxt, $msgid, LC_MESSAGES; <br/>
+npgettext $msgctxt, $msgid, $msgid_plural, $count; <br/>
+dnpgettext $textdomain, $msgctxt, $msgid, $msgid_plural,
+$count; <br/>
+dcnpgettext $textdomain, $msgctxt, $msgid, $msgid_plural,
+$count, LC_MESSAGES; <br/>
+textdomain $textdomain; <br/>
+bindtextdomain $textdomain, $directory; <br/>
+bind_textdomain_codeset $textdomain, $encoding; <br/>
+bind_textdomain_filter $textdomain, \&amp;filter, $data;
+<br/>
+turn_utf_8_on ($variable); <br/>
+turn_utf_8_off ($variable); <br/>
+nl_putenv ('OUTPUT_CHARSET=koi8−r'); <br/>
+my $category = LC_CTYPE; <br/>
+my $category = LC_NUMERIC; <br/>
+my $category = LC_TIME; <br/>
+my $category = LC_COLLATE; <br/>
+my $category = LC_MONETARY; <br/>
+my $category = LC_MESSAGES; <br/>
+my $category = LC_ALL;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The module
+<b>Locale::Messages</b> is a wrapper around the interface to
+message translation according to the Uniforum approach that
+is for example used in GNU gettext and Sun's Solaris. It is
+intended to allow <b>Locale::Messages</b>(3) to switch
+between different implementations of the lower level
+libraries but this is not yet implemented.</p>
+<p style="margin-left:9%; margin-top: 1em">Normally you
+should not use this module directly, but the high level
+interface <b>Locale::TextDomain</b>(3) that provides a much
+simpler interface. This description is therefore
+deliberately kept brief. Please refer to the GNU gettext
+documentation available at
+&lt;http://www.gnu.org/manual/gettext/&gt; for
+in−depth and background information on the topic.</p>
+<p style="margin-left:9%; margin-top: 1em">The lower level
+module <b>Locale::gettext_pp</b>(3) provides the Perl
+implementation of <b>gettext()</b> and related
+functions.</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The module
+exports by default nothing. Every function has to be
+imported explicitely or via an export tag ("EXPORT
+TAGS"). <b><br/>
+gettext MSGID</b></p>
+<p style="margin-left:14%;">Returns the translation for
+<b>MSGID</b>. Example:</p>
+<p style="margin-left:14%; margin-top: 1em">print gettext
+"Hello World!\n";</p>
+<p style="margin-left:14%; margin-top: 1em">If no
+translation can be found, the unmodified <b>MSGID</b> is
+returned, i. e. the function can <i>never</i> fail, and will
+<i>never</i> mess up your original message.</p>
+<p style="margin-left:14%; margin-top: 1em">Note for Perl
+5.6 and later: The returned string will <i>always</i> have
+the UTF−8 flag off by default. See the documentation
+for function <b>bind_textdomain_filter()</b> for a way to
+change this behavior.</p>
+<p style="margin-left:14%; margin-top: 1em">One common
+mistake is this:</p>
+<p style="margin-left:14%; margin-top: 1em">print gettext
+"Hello $name!";</p>
+<p style="margin-left:14%; margin-top: 1em">Perl will
+interpolate the variable $name <i>before</i> the function
+will see the string. Unless the corresponding message
+catalog contains a message "Hello Tom!",
+"Hello Dick!" or "Hello Harry!", no
+translation will be found.</p>
+<p style="margin-left:14%; margin-top: 1em">Using
+<b>printf()</b> and friends has its own problems:</p>
+<p style="margin-left:14%; margin-top: 1em">print sprintf
+(gettext ("This is the %s %s."), $color,
+$thing);</p>
+<p style="margin-left:14%; margin-top: 1em">(The example is
+stupid because neither color nor thing will get translated
+here ...).</p>
+<p style="margin-left:14%; margin-top: 1em">In English the
+adjective (the color) will precede the noun, many other
+languages (for example French or Italian) differ here. The
+translator of the message may therefore have a hard time to
+find a translation that will still work and not sound stupid
+in the target language. Many C implementations of
+<b>printf()</b> allow to change the order of the arguments,
+and a French translator could then say:</p>
+<p style="margin-left:14%; margin-top: 1em">"C'est le
+%2$s %1$s."</p>
+<p style="margin-left:14%; margin-top: 1em">Perl
+<b>printf()</b> implements this feature as of version 5.8 or
+better. Consequently you can only use it, if you are sure
+that your software will run with Perl 5.8 or a later
+version.</p>
+<p style="margin-left:14%; margin-top: 1em">Another
+disadvantage of using <b>printf()</b> is its cryptic syntax
+(maybe not for you but translators of your software may have
+their own opinion).</p>
+<p style="margin-left:14%; margin-top: 1em">See the
+description of the function "__x()" in
+<b>Locale::TextDomain</b>(3) for a much better way to get
+around this problem.</p>
+<p style="margin-left:14%; margin-top: 1em">Non−ASCII
+message ids ...</p>
+<p style="margin-left:14%; margin-top: 1em">You should note
+that the function (and all other similar functions in this
+module) does a bytewise comparison of the <b>MSGID</b> for
+the lookup in the translation catalog, no matter whether
+obscure utf−8 flags are set on it, whether the string
+looks like utf−8, whether the <b>utf8</b>(3pm) pragma
+is used, or whatever other weird method past or future
+<b>perl</b>(1) versions invent for guessing character sets
+of strings.</p>
+<p style="margin-left:14%; margin-top: 1em">Using other
+than us−ascii characters in Perl source code is a call
+for trouble, a compatibility nightmare. Furthermore, GNU
+gettext only lately introduced support for non−ascii
+character sets in sources, and support for this feature may
+not be available everywhere. If you absolutely want to use
+<b>MSGID</b>s in non−ascii character sets, it is wise
+to choose utf−8. This will minimize the risk that
+<b>perl</b>(1) itself will mess with the strings, and it
+will also be a guaranty that you can later translate your
+project into arbitrary target languages.</p>
+<p style="margin-left:14%; margin-top: 1em">Other character
+sets can theoretically work. Yet, using another character
+set in the Perl source code than the one used in your
+message catalogs will <b>never</b> work, since the lookup is
+done bytewise, and all strings with non−ascii
+characters will not be found.</p>
+<p style="margin-left:14%; margin-top: 1em">Even if you
+have solved all these problems, there is still one show
+stopper left: The gettext runtime API lacks a possibility to
+specify the character set of the source code (including the
+original strings). Consequently − in absence of a hint
+for the input encoding − strings without a translation
+are not subject to output character set conversion. In other
+words: If the (non−determinable) output character set
+differs from the character set used in the source code,
+output can be a mixture of two character sets. There is no
+point in trying to address this problem in the pure Perl
+version of the gettext functions. because breaking
+compatibilty between the Perl and the C version is a price
+too high to pay.</p>
+<p style="margin-left:14%; margin-top: 1em">This all boils
+down to: Only use ASCII characters in your translatable
+strings!</p>
+<p style="margin-left:9%;"><b>dgettext TEXTDOMAIN,
+MSGID</b></p>
+<p style="margin-left:14%;">Like <b>gettext()</b>, but
+retrieves the message for the specified <b>TEXTDOMAIN</b>
+instead of the default domain. In case you wonder what a
+textdomain is, you should really read on with
+<b>Locale::TextDomain</b>(3).</p>
+<p style="margin-left:9%;"><b>dcgettext TEXTDOMAIN, MSGID,
+CATEGORY</b></p>
+<p style="margin-left:14%;">Like <b>dgettext()</b> but
+retrieves the message from the specified <b>CATEGORY</b>
+instead of the default category "LC_MESSAGES".</p>
+<p style="margin-left:9%;"><b>ngettext MSGID, MSGID_PLURAL,
+COUNT</b></p>
+<p style="margin-left:14%;">Retrieves the correct
+translation for <b>COUNT</b> items. In legacy software you
+will often find something like:</p>
+<p style="margin-left:14%; margin-top: 1em">print
+"$count file(s) deleted.\n";</p>
+<p style="margin-left:14%; margin-top: 1em">or</p>
+<p style="margin-left:14%; margin-top: 1em">printf
+"$count file%s deleted.\n", $count == 1 ? '' :
+'s';</p>
+<p style="margin-left:14%; margin-top: 1em">The first
+example looks awkward, the second will only work in English
+and languages with similar plural rules. Before
+<b>ngettext()</b> was introduced, the best practice for
+internationalized programs was:</p>
+<p style="margin-left:14%; margin-top: 1em">if ($count ==
+1) { <br/>
+print gettext "One file deleted.\n"; <br/>
+} else { <br/>
+printf gettext "%d files deleted.\n"; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">This is a
+nuisance for the programmer and often still not sufficient
+for an adequate translation. Many languages have completely
+different ideas on numerals. Some (French, Italian, ...)
+treat 0 and 1 alike, others make no distinction at all
+(Japanese, Korean, Chinese, ...), others have two or more
+plural forms (Russian, Latvian, Czech, Polish, ...). The
+solution is:</p>
+<p style="margin-left:14%; margin-top: 1em">printf
+(ngettext ("One file deleted.\n", <br/>
+"%d files deleted.\n", <br/>
+$count), # argument to ngettext! <br/>
+$count); # argument to printf!</p>
+<p style="margin-left:14%; margin-top: 1em">In English, or
+if no translation can be found, the first argument
+(<b>MSGID</b>) is picked if $count is one, the second one
+otherwise. For other languages, the correct plural form (of
+1, 2, 3, 4, ...) is automatically picked, too. You don't
+have to know anything about the plural rules in the target
+language, <b>ngettext()</b> will take care of that.</p>
+<p style="margin-left:14%; margin-top: 1em">This is most of
+the time sufficient but you will have to prove your
+creativity in cases like</p>
+<p style="margin-left:14%; margin-top: 1em">printf "%d
+file(s) deleted, and %d file(s) created.\n";</p>
+<p style="margin-left:9%;"><b>dngettext TEXTDOMAIN, MSGID,
+MSGID_PLURAL, COUNT</b></p>
+<p style="margin-left:14%;">Like <b>ngettext()</b> but
+retrieves the translation from the specified textdomain
+instead of the default domain.</p>
+<p style="margin-left:9%;"><b>dcngettext TEXTDOMAIN, MSGID,
+MSGID_PLURAL, COUNT, CATEGORY</b></p>
+<p style="margin-left:14%;">Like <b>dngettext()</b> but
+retrieves the translation from the specified category,
+instead of the default category "LC_MESSAGES".</p>
+<p style="margin-left:9%;"><b>pgettext MSGCTXT,
+MSGID</b></p>
+<p style="margin-left:14%;">Returns the translation of
+MSGID, given the context of MSGCTXT.</p>
+<p style="margin-left:14%; margin-top: 1em">Both items are
+used as a unique key into the message catalog.</p>
+<p style="margin-left:14%; margin-top: 1em">This allows the
+translator to have two entries for words that may translate
+to different foreign words based on their context. For
+example, the word "View" may be a noun or a verb,
+which may be used in a menu as File−&gt;View or
+View−&gt;Source.</p>
+<p style="margin-left:14%; margin-top: 1em">pgettext
+"Verb: To View", "View\n"; <br/>
+pgettext "Noun: A View", "View\n";</p>
+<p style="margin-left:14%; margin-top: 1em">The above will
+both lookup different entries in the message catalog.</p>
+<p style="margin-left:14%; margin-top: 1em">A typical usage
+are GUI programs. Imagine a program with a main menu and the
+notorious "Open" entry in the "File"
+menu. Now imagine, there is another menu entry
+Preferences−&gt;Advanced−&gt;Policy where you
+have a choice between the alternatives "Open" and
+"Closed". In English, "Open" is the
+adequate text at both places. In other languages, it is very
+likely that you need two different translations. Therefore,
+you would now write:</p>
+<p style="margin-left:14%; margin-top: 1em">pgettext
+"File|", "Open"; <br/>
+pgettext "Preferences|Advanced|Policy",
+"Open";</p>
+<p style="margin-left:14%; margin-top: 1em">In English, or
+if no translation can be found, the second argument (MSGID)
+is returned.</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+was introduced with libintl−perl version 1.17.</p>
+<p style="margin-left:9%;"><b>dpgettext TEXTDOMAIN,
+MSGCTXT, MSGID</b></p>
+<p style="margin-left:14%;">Like <b>pgettext()</b>, but
+retrieves the message for the specified <b>TEXTDOMAIN</b>
+instead of the default domain.</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+was introduced with libintl−perl version 1.17.</p>
+<p style="margin-left:9%;"><b>dcpgettext TEXTDOMAIN,
+MSGCTXT, MSGID, CATEGORY</b></p>
+<p style="margin-left:14%;">Like <b>dpgettext()</b> but
+retrieves the message from the specified <b>CATEGORY</b>
+instead of the default category "LC_MESSAGES".</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+was introduced with libintl−perl version 1.17.</p>
+<p style="margin-left:9%;"><b>npgettext MSGCTXT, MSGID,
+MSGID_PLURAL, COUNT</b></p>
+<p style="margin-left:14%;">Like <b>ngettext()</b> with the
+addition of context as in <b>pgettext()</b>.</p>
+<p style="margin-left:14%; margin-top: 1em">In English, or
+if no translation can be found, the second argument (MSGID)
+is picked if $count is one, the third one otherwise.</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+was introduced with libintl−perl version 1.17.</p>
+<p style="margin-left:9%;"><b>dnpgettext TEXTDOMAIN,
+MSGCTXT, MSGID, MSGID_PLURAL, COUNT</b></p>
+<p style="margin-left:14%;">Like <b>npgettext()</b> but
+retrieves the translation from the specified textdomain
+instead of the default domain.</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+was introduced with libintl−perl version 1.17.</p>
+<p style="margin-left:9%;"><b>dcnpgettext TEXTDOMAIN,
+MSGCTXT, MSGID, MSGID_PLURAL, COUNT, CATEGORY</b></p>
+<p style="margin-left:14%;">Like <b>dnpgettext()</b> but
+retrieves the translation from the specified category,
+instead of the default category "LC_MESSAGES".</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+was introduced with libintl−perl version 1.17.</p>
+<p style="margin-left:9%;"><b>textdomain TEXTDOMAIN</b></p>
+<p style="margin-left:14%;">Sets the default textdomain
+(initially 'messages').</p>
+<p style="margin-left:9%;"><b>bindtextdomain TEXTDOMAIN,
+DIRECTORY</b></p>
+<p style="margin-left:14%;">Binds <b>TEXTDOMAIN</b> to
+<b>DIRECTORY</b>. Huh? An example:</p>
+<p style="margin-left:14%; margin-top: 1em">bindtextdomain
+"my−package", "./mylocale";</p>
+<p style="margin-left:14%; margin-top: 1em">Say, the
+selected locale (actually the selected locale for category
+"LC_MESSAGES") of the program is 'fr_CH', then the
+message catalog will be expected in
+<i>./mylocale/fr_CH/LC_MESSAGES/my−package.mo</i>.</p>
+<p style="margin-left:9%;"><b>bind_textdomain_codeset
+TEXTDOMAIN, ENCODING</b></p>
+<p style="margin-left:14%;">Sets the output encoding for
+<b>TEXTDOMAIN</b> to <b>ENCODING</b>.</p>
+<p style="margin-left:9%;"><b>bind_textdomain_filter
+TEXTDOMAN, CODEREF, DATA <br/>
+bind_textdomain_filter TEXTDOMAN, CODEREF</b></p>
+<p style="margin-left:14%;">By default, Locale::Messages
+will turn the utf−8 flag of all returned messages off.
+If you want to change this behavior, you can pass a
+reference to a subroutine that does different things −
+for example turn the utf−8 flag on, or leave it
+untouched. The callback function will be called with
+<b>DATA</b> as the first, and the possibly translated string
+as the second argument. It should return the possibly
+modified string.</p>
+<p style="margin-left:14%; margin-top: 1em">If you want an
+object method to be called, pass the object itself in the
+data parameter and write a wrapper function. Example:</p>
+<p style="margin-left:14%; margin-top: 1em">sub wrapper {
+<br/>
+my ($string, $obj) = @_; <br/>
+$obj−&gt;filterMethod ($string); <br/>
+} <br/>
+my $obj = MyPackage−&gt;new; <br/>
+bind_textdomain_filter ('mydomain', \&amp;wrapper,
+$obj);</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+cannot fail and always returns a true value.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Attention:</b>
+If you use the function for setting the utf−8 flag, it
+is <b>your</b> responsability to ensure that the output is
+really utf−8. You should only use it, if you have set
+the environment variable <b>OUTPUT_CHARSET</b> to
+"utf−8". Additionally you should call
+<b>bind_textdomain_codeset()</b> with
+"utf−8" as the second argument.</p>
+<p style="margin-left:14%; margin-top: 1em">Steven Haryanto
+has written a module <b>Locale::TextDomain::UTF8</b>(3pm)
+that addresses the same problem.</p>
+<p style="margin-left:14%; margin-top: 1em">This function
+has been introduced in libintl−perl 1.16 and it is
+<b>not</b> part of the standard gettext API.</p>
+<p style="margin-left:9%;"><b>turn_utf_8_on
+VARIABLE</b></p>
+<p style="margin-left:14%;">Returns VARIABLE but with the
+UTF−8 flag (only known in Perl &gt;=5.6) guaranteed to
+be turned on. This function does not really fit into the
+module, but it is often handy nevertheless.</p>
+<p style="margin-left:14%; margin-top: 1em">The flag does
+<b>not</b> mean that the string is in fact valid
+utf−8!</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+was introduced with libintl−perl version 1.16.</p>
+<p style="margin-left:9%;"><b>turn_utf_8_off
+VARIABLE</b></p>
+<p style="margin-left:14%;">Returns VARIABLE but with the
+UTF−8 flag (only known in Perl &gt;=5.6) guaranteed to
+be turned off. This function does not really fit into the
+module, but it is often handy nevertheless.</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+was introduced with libintl−perl version 1.07.</p>
+<p style="margin-left:9%;"><b>select_package
+PACKAGE</b></p>
+<p style="margin-left:14%;">By default,
+<b>Locale::Messages</b> will try to load the XS version of
+the gettext implementation, i. e.
+<b>Locale::gettext_xs</b>(3) and will fall back to the pure
+Perl implementation <b>Locale::gettext_pp</b>(3). You can
+override this behavior by passing the string
+"gettext_pp" or "gettext_xs" to the
+function <b>select_package()</b>. Passing
+"gettext_pp" here, will prefer the pure Perl
+implementation.</p>
+<p style="margin-left:14%; margin-top: 1em">You will
+normally want to use that in a BEGIN block of your main
+script.</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+was introduced with libintl−perl version 1.03 and is
+not part of the standard gettext API.</p>
+<p style="margin-left:14%; margin-top: 1em">Beginning with
+version 1.22 you can pass other package names than
+"gettext_pp" or "gettext_xs" and use a
+completely different backend. It is the caller's
+responsability to make sure that the selected package offers
+the same interface as the two standard packages.</p>
+<p style="margin-left:14%; margin-top: 1em">One package
+that offers that functionality is
+<b>Locale::gettext_dumb</b>(3pm).</p>
+<p style="margin-left:9%;"><b>nl_putenv ENVSPEC</b></p>
+<p style="margin-left:14%;">Resembles the ANSI C
+<b>putenv</b>(3) function. The sole purpose of this function
+is to work around some ideosyncrasies in the environment
+processing of Windows systems. If you want to portably set
+or unset environment variables, use this function instead of
+directly manipulating %ENV.</p>
+<p style="margin-left:14%; margin-top: 1em">The argument
+<b>ENVSPEC</b> may have three different forms. <b><br/>
+LANGUAGE=fr_CH</b></p>
+<p style="margin-left:24%;">This would set the environment
+variable "LANGUAGE" to "fr_CH".</p>
+<p style="margin-left:14%;"><b>LANGUAGE=</b></p>
+<p style="margin-left:24%;">Normally, this will set the
+environment variable "LANGUAGE" to an empty
+string. Under Windows, however, the environment variable
+will be deleted instead (and is no longer present in %ENV).
+Since within libintl−perl empty environment variables
+are useless, consider this usage as deprecated.</p>
+<p style="margin-left:14%;"><b>LANGUAGE</b></p>
+<p style="margin-left:24%;">This will delete the
+environment variable <b>LANGUAGE</b>. If you are familiar
+with the brain−damaged implementation of
+<b>putenv</b>(3) (resp. <b>_putenv()</b>) in the
+so−called standard C library of MS−Windows, you
+may suspect that this is an invalid argument. This is not
+the case! Passing a variable name not followed by an equal
+sign will always delete the variable, no matter which
+operating system you use.</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+returns true for success, and false for failure. Possible
+reasons for failure are an invalid syntax or − only
+under Windows − failure to allocate space for the new
+environment entry ($! will be set accordingly in this
+case).</p>
+<p style="margin-left:14%; margin-top: 1em">Why all this
+hassle? The 32−bit versions of MS−DOS (currently
+Windows 95/98/ME/NT/2000/XP/CE/.NET) maintain two distinct
+blocks of environment variables per process. Which block is
+considered the "correct" environment is a
+compile−time option of the Perl interpreter.
+Unfortunately, if you have build the XS version
+<b>Locale::gettext_xs</b>(3) under Windows, the underlying
+library may use a different environment block, and changes
+you make to %ENV may not be visible to the library.</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+<b>nl_putenv()</b> is mostly a funny way of saying</p>
+<p style="margin-left:14%; margin-top: 1em">LANGUAGE=some_value</p>
+<p style="margin-left:14%; margin-top: 1em">but it does its
+best, to pass this information to the gettext library. Under
+other operating systems than Windows, it only operates on
+%ENV, under Windows it will call the C library function
+<b>_putenv()</b> (after doing some cleanup to its
+arguments), before manipulating %ENV.</p>
+<p style="margin-left:14%; margin-top: 1em">Please note,
+that your %ENV is updated by <b>nl_putenv()</b>
+automatically.</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+has been introduced in libintl−perl version 1.10.</p>
+<p style="margin-left:9%;">setlocale</p>
+<p style="margin-left:14%;">Modifies and queries program's
+locale, see the documentation for <b>setlocale()</b> in
+<b>POSIX</b>(3pm) instead.</p>
+<p style="margin-left:14%; margin-top: 1em">On some
+systems, when using GNU gettext, a call from C to
+<b>setlocale()</b> is − with the help of the C
+preprocessor − really a call to
+<b>libintl_setlocale()</b>, which is in turn a wrapper
+around the system <b>setlocale</b>(3). Failure to call
+<b>libintl_setlocale()</b> may lead to certain malfunctions.
+On such systems, <b>Locale::Messages::setlocale()</b> will
+call the wrapper <b>libintl_setlocale()</b>. If you want to
+avoid problems, you should therefore always call the
+<b>setlocale()</b> implementation in
+<b>Locale::Messages</b>(3pm).</p>
+<p style="margin-left:14%; margin-top: 1em">See
+&lt;https://rt.cpan.org/Public/Bug/Display.html?id=83980&gt;
+or &lt;https://savannah.gnu.org/bugs/?38162&gt;, and
+&lt;https://savannah.gnu.org/bugs/?func=detailitem&amp;item_id=44645&gt;
+for a discussion of the problem.</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+has been introduced in libintl−perl version 1.24.</p>
+<h2>CONSTANTS
+<a name="CONSTANTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You can (maybe)
+get the same constants from <b>POSIX</b>(3); see there for a
+detailed description <b><br/>
+LC_CTYPE <br/>
+LC_NUMERIC <br/>
+LC_TIME <br/>
+LC_COLLATE <br/>
+LC_MONETARY <br/>
+LC_MESSAGES</b></p>
+<p style="margin-left:14%;">This locale category was the
+reason that these constants from <b>POSIX</b>(3) were
+included here. Even if it was present in your systems C
+include file <i>locale.h</i>, it was not provided by
+<b>POSIX</b>(3). Perl 5.8 and later seems to export the
+constant if available, although it is not documented in
+<b>POSIX</b>(3).</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Locale::Messages</b>(3)
+makes an attempt to guess the value of this category for all
+systems, and assumes the arbitrary value 1729 otherwise.</p>
+<p style="margin-left:9%;"><b>LC_ALL</b></p>
+<p style="margin-left:14%;">If you specify the category
+<b>LC_ALL</b> as the first argument to
+<b>POSIX::setlocale()</b>, <i>all</i> locale categories will
+be affected at once.</p>
+<h2>EXPORT TAGS
+<a name="EXPORT TAGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The module does
+not export anything unless explicitely requested. You can
+import groups of functions via two tags: <b><br/>
+use Locale::Messages (':locale_h')</b></p>
+<p style="margin-left:14%;">Imports the functions that are
+normally defined in the C include file <i>locale.h</i>:
+<b><br/>
+gettext() <br/>
+dgettext() <br/>
+dcgettext() <br/>
+ngettext() <br/>
+dngettext() <br/>
+dcngettext() <br/>
+pgettext() <br/>
+dpgettext() <br/>
+dcpgettext() <br/>
+npgettext() <br/>
+dnpgettext() <br/>
+dcnpgettext() <br/>
+textdomain() <br/>
+bindtextdomain() <br/>
+bind_textdomain_codeset()</b></p>
+<p style="margin-left:9%;"><b>use Locale::Messages
+(':libintl_h')</b></p>
+<p style="margin-left:14%;">Imports the locale category
+constants: <b><br/>
+LC_CTYPE <br/>
+LC_NUMERIC</b></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="9%">
+<p><b>LC_TIME</b></p></td>
+<td width="77%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em"><b>LC_COLLATE
+<br/>
+LC_MONETARY <br/>
+LC_MESSAGES</b></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="8%">
+<p><b>LC_ALL</b></p></td>
+<td width="78%">
+</td></tr>
+</table>
+<h2>OTHER EXPORTS
+<a name="OTHER EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>select_package
+PACKAGE</b></p>
+<h2>USAGE
+<a name="USAGE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A complete
+example:</p>
+<p style="margin-left:9%; margin-top: 1em">1: use
+Locale::Messages qw(:locale_h :libintl_h); <br/>
+2: use POSIX qw (setlocale); <br/>
+3: setlocale (LC_MESSAGES, ''); <br/>
+4: textdomain ('my−package'); <br/>
+5: bindtextdomain ('my−package' =&gt;
+'/usr/local/share/locale'); <br/>
+6: <br/>
+7: print gettext ("Hello world!\n");</p>
+<p style="margin-left:9%; margin-top: 1em">Step by step:
+Line 1 imports the necessary functions and constants. In
+line 3 we set the locale for category LC_MESSAGES to the
+default user settings. For C programs you will often read
+that LC_ALL is the best category here but this will also
+change the locale for LC_NUMERIC and many programs will not
+work reliably after changing that category in Perl; choose
+your own poison!</p>
+<p style="margin-left:9%; margin-top: 1em">In line 4 we say
+that all messages (translations) without an explicit domain
+specification should be retrieved from the message catalog
+for the domain 'my−package'. Line 5 has the effect
+that the message catalog will be searched under the
+directory <i>/usr/local/share/locale</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">If the user has
+selected the locale 'fr_CH', and if the file
+<i>/usr/local/share/locale/fr_CH/LC_MESSAGES/my−package.mo</i>
+exists, and if it contains a GNU message object file with a
+translation for the string "Hello world!\n", then
+line 7 will print the French translation (for Switzerland
+CH) to STDOUT.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+documentation for GNU gettext explains how to extract
+translatable strings from your Perl files and how to create
+message catalogs.</p>
+<p style="margin-left:9%; margin-top: 1em">Another less
+portable example: If your system uses the GNU libc you
+should be able to find various files with the name
+<i>libc.mo</i>, the message catalog for the library itself.
+If you have found these files under
+<i>/usr/share/locale</i>, then you can try the
+following:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Locale::Messages qw(:locale_h :libintl_h); <br/>
+use POSIX qw (setlocale); <br/>
+setlocale LC_MESSAGES, ""; <br/>
+textdomain "libc"; <br/>
+# The following is actually not needed, since this is <br/>
+# one of the default search directories. <br/>
+bindtextdomain libc =&gt; '/usr/share/locale'; <br/>
+bind_textdomain_codeset libc =&gt; 'iso−8859−1';
+<br/>
+print gettext ("No such file or directory");</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<b>Locale::TextDomain</b>(3) for much simpler ways.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2002−2017 Guido Flohr
+&lt;http://www.guido-flohr.net/&gt;
+(&lt;mailto:guido.flohr@cantanea.com&gt;), all rights
+reserved. See the source code for details!code for
+details!</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Locale::TextDomain</b>(3pm),
+<b>Locale::gettext_pp</b>(3pm), <b>Encode</b>(3pm),
+<b>perllocale</b>(3pm), <b>POSIX</b>(3pm), <b>perl</b>(1),
+<b>gettext</b>(1), <b>gettext</b>(3)</p>
+<hr/>
+</body>
+</html>

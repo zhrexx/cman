@@ -1,0 +1,494 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:14 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>File::ShareDir</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">File::ShareDir</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Using Data in your Module">Using Data in your Module</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#dist_dir">dist_dir</a><br/>
+<a href="#module_dir">module_dir</a><br/>
+<a href="#dist_file">dist_file</a><br/>
+<a href="#module_file">module_file</a><br/>
+<a href="#class_file">class_file</a><br/>
+<a href="#EXTENDING">EXTENDING</a><br/>
+<a href="#Overriding Directory Resolution">Overriding Directory Resolution</a><br/>
+<a href="#SUPPORT">SUPPORT</a><br/>
+<a href="#Where can I go for other help?">Where can I go for other help?</a><br/>
+<a href="#Where can I go for help with a concrete version?">Where can I go for help with a concrete version?</a><br/>
+<a href="#Business support and maintenance">Business support and maintenance</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#MAINTAINER">MAINTAINER</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::ShareDir
+− Locate per−dist and per−module shared
+files</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+File::ShareDir ':ALL'; <br/>
+# Where are distribution−level shared data files kept
+<br/>
+$dir = dist_dir('File−ShareDir'); <br/>
+# Where are module−level shared data files kept <br/>
+$dir = module_dir('File::ShareDir'); <br/>
+# Find a specific file in our dist/module shared dir <br/>
+$file = dist_file( 'File−ShareDir', 'file/name.txt');
+<br/>
+$file = module_file('File::ShareDir', 'file/name.txt'); <br/>
+# Like module_file, but search up the inheritance tree <br/>
+$file = class_file( 'Foo::Bar', 'file/name.txt' );</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The intent of
+File::ShareDir is to provide a companion to Class::Inspector
+and File::HomeDir, modules that take a process that is
+well−known by advanced Perl developers but gets a
+little tricky, and make it more available to the larger Perl
+community.</p>
+<p style="margin-left:9%; margin-top: 1em">Quite often you
+want or need your Perl module (CPAN or otherwise) to have
+access to a large amount of read−only data that is
+stored on the file−system at run−time.</p>
+<p style="margin-left:9%; margin-top: 1em">On a
+linux−like system, this would be in a place such as
+/usr/share, however Perl runs on a wide variety of different
+systems, and so the use of any one location is
+unreliable.</p>
+<p style="margin-left:9%; margin-top: 1em">Perl provides a
+little−known method for doing this, but almost nobody
+is aware that it exists. As a result, module authors often
+go through some very strange ways to make the data available
+to their code.</p>
+<p style="margin-left:9%; margin-top: 1em">The most common
+of these is to dump the data out to an enormous Perl data
+structure and save it into the module itself. The result are
+enormous multi−megabyte .pm files that chew up a lot
+of memory needlessly.</p>
+<p style="margin-left:9%; margin-top: 1em">Another method
+is to put the data "file" after the __DATA__
+compiler tag and limit yourself to access as a
+filehandle.</p>
+<p style="margin-left:9%; margin-top: 1em">The problem to
+solve is really quite simple.</p>
+<p style="margin-left:9%; margin-top: 1em">1. Write the
+data files to the system at install time. <br/>
+2. Know where you put them at run−time.</p>
+<p style="margin-left:9%; margin-top: 1em">Perl's install
+system creates an "auto" directory for both every
+distribution and for every module file.</p>
+<p style="margin-left:9%; margin-top: 1em">These are used
+by a couple of different auto−loading systems to store
+code fragments generated at install time, and various other
+modules written by the Perl "ancient masters".</p>
+<p style="margin-left:9%; margin-top: 1em">But the same
+mechanism is available to any dist or module to store any
+sort of data.</p>
+<h3>Using Data in your Module
+<a name="Using Data in your Module"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"File::ShareDir"
+forms one half of a two part solution.</p>
+<p style="margin-left:9%; margin-top: 1em">Once the files
+have been installed to the correct directory, you can use
+"File::ShareDir" to find your files again after
+the installation.</p>
+<p style="margin-left:9%; margin-top: 1em">For the
+installation half of the solution, see
+File::ShareDir::Install and its "install_share"
+directive.</p>
+<p style="margin-left:9%; margin-top: 1em">Using
+File::ShareDir::Install together with File::ShareDir allows
+one to rely on the files in appropriate dist_dir() or
+module_dir() in development phase, too.</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"File::ShareDir"
+provides four functions for locating files and
+directories.</p>
+<p style="margin-left:9%; margin-top: 1em">For greater
+maintainability, none of these are exported by default and
+you are expected to name the ones you want at
+use−time, or provide the ':ALL' tag. All of the
+following are equivalent.</p>
+<p style="margin-left:9%; margin-top: 1em"># Load but don't
+import, and then call directly <br/>
+use File::ShareDir; <br/>
+$dir = File::ShareDir::dist_dir('My−Dist'); <br/>
+# Import a single function <br/>
+use File::ShareDir 'dist_dir'; <br/>
+dist_dir('My−Dist'); <br/>
+# Import all the functions <br/>
+use File::ShareDir ':ALL'; <br/>
+dist_dir('My−Dist');</p>
+<p style="margin-left:9%; margin-top: 1em">All of the
+functions will check for you that the dir/file actually
+exists, and that you have read permissions, or they will
+throw an exception.</p>
+<h3>dist_dir
+<a name="dist_dir"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"># Get a
+distribution's shared files directory <br/>
+my $dir = dist_dir('My−Distribution');</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"dist_dir" function takes a single parameter of
+the name of an installed (CPAN or otherwise) distribution,
+and locates the shared data directory created at install
+time for it.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+directory path as a string, or dies if it cannot be located
+or is not readable.</p>
+<h3>module_dir
+<a name="module_dir"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"># Get a module's
+shared files directory <br/>
+my $dir = module_dir('My::Module');</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"module_dir" function takes a single parameter of
+the name of an installed (CPAN or otherwise) module, and
+locates the shared data directory created at install time
+for it.</p>
+<p style="margin-left:9%; margin-top: 1em">In order to find
+the directory, the module <b>must</b> be loaded when calling
+this function.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+directory path as a string, or dies if it cannot be located
+or is not readable.</p>
+<h3>dist_file
+<a name="dist_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"># Find a file in
+our distribution shared dir <br/>
+my $dir = dist_file('My−Distribution',
+'file/name.txt');</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"dist_file" function takes two parameters of the
+distribution name and file name, locates the dist directory,
+and then finds the file within it, verifying that the file
+actually exists, and that it is readable.</p>
+<p style="margin-left:9%; margin-top: 1em">The filename
+should be a relative path in the format of your local
+filesystem. It will simply added to the directory using
+File::Spec's "catfile" method.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the file
+path as a string, or dies if the file or the dist's
+directory cannot be located, or the file is not
+readable.</p>
+<h3>module_file
+<a name="module_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"># Find a file in
+our module shared dir <br/>
+my $dir = module_file('My::Module', 'file/name.txt');</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"module_file" function takes two parameters of the
+module name and file name. It locates the module directory,
+and then finds the file within it, verifying that the file
+actually exists, and that it is readable.</p>
+<p style="margin-left:9%; margin-top: 1em">In order to find
+the directory, the module <b>must</b> be loaded when calling
+this function.</p>
+<p style="margin-left:9%; margin-top: 1em">The filename
+should be a relative path in the format of your local
+filesystem. It will simply added to the directory using
+File::Spec's "catfile" method.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the file
+path as a string, or dies if the file or the dist's
+directory cannot be located, or the file is not
+readable.</p>
+<h3>class_file
+<a name="class_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"># Find a file in
+our module shared dir, or in our parent class <br/>
+my $dir = class_file('My::Module', 'file/name.txt');</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"module_file" function takes two parameters of the
+module name and file name. It locates the module directory,
+and then finds the file within it, verifying that the file
+actually exists, and that it is readable.</p>
+<p style="margin-left:9%; margin-top: 1em">In order to find
+the directory, the module <b>must</b> be loaded when calling
+this function.</p>
+<p style="margin-left:9%; margin-top: 1em">The filename
+should be a relative path in the format of your local
+filesystem. It will simply added to the directory using
+File::Spec's "catfile" method.</p>
+<p style="margin-left:9%; margin-top: 1em">If the file is
+NOT found for that module, "class_file" will scan
+up the module's @ISA tree, looking for the file in all of
+the parent classes.</p>
+<p style="margin-left:9%; margin-top: 1em">This allows you
+to, in effect, "subclass" shared files.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the file
+path as a string, or dies if the file or the dist's
+directory cannot be located, or the file is not
+readable.</p>
+<h2>EXTENDING
+<a name="EXTENDING"></a>
+</h2>
+<h3>Overriding Directory Resolution
+<a name="Overriding Directory Resolution"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"File::ShareDir"
+has two convenience hashes for people who have advanced
+usage requirements of "File::ShareDir" such as
+using uninstalled "share" directories during
+development.</p>
+<p style="margin-left:9%; margin-top: 1em"># <br/>
+# Dist−Name =&gt;
+/absolute/path/for/DistName/share/dir <br/>
+# <br/>
+%File::ShareDir::DIST_SHARE <br/>
+# <br/>
+# Module::Name =&gt;
+/absolute/path/for/Module/Name/share/dir <br/>
+# <br/>
+%File::ShareDir::MODULE_SHARE</p>
+<p style="margin-left:9%; margin-top: 1em">Setting these
+values any time before the corresponding calls</p>
+<p style="margin-left:9%; margin-top: 1em">dist_dir('Dist−Name')
+<br/>
+dist_file('Dist−Name','some/file'); <br/>
+module_dir('Module::Name'); <br/>
+module_file('Module::Name','some/file');</p>
+<p style="margin-left:9%; margin-top: 1em">Will override
+the base directory for resolving those calls.</p>
+<p style="margin-left:9%; margin-top: 1em">An example of
+where this would be useful is in a test for a module that
+depends on files installed into a share directory, to enable
+the tests to use the development copy without needing to
+install them first.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+File::ShareDir; <br/>
+use Cwd qw( getcwd ); <br/>
+use File::Spec::Functions qw( rel2abs catdir ); <br/>
+$File::ShareDir::MODULE_SHARE{'Foo::Module'} =
+rel2abs(catfile(getcwd,'share')); <br/>
+use Foo::Module; <br/>
+# internal calls in Foo::Module to
+module_file('Foo::Module','bar') now resolves to <br/>
+# the source trees share/ directory instead of something in
+@INC</p>
+<h2>SUPPORT
+<a name="SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Bugs should
+always be submitted via the CPAN request tracker, see
+below.</p>
+<p style="margin-left:9%; margin-top: 1em">You can find
+documentation for this module with the perldoc command.</p>
+<p style="margin-left:9%; margin-top: 1em">perldoc
+File::ShareDir</p>
+<p style="margin-left:9%; margin-top: 1em">You can also
+look for information at:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="33%">
+<p>RT: CPAN's request tracker</p></td>
+<td width="53%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;http://rt.cpan.org/NoAuth/Bugs.html?Dist=File−ShareDir&gt;</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="49%">
+<p style="margin-top: 1em">AnnoCPAN: Annotated CPAN
+documentation</p> </td>
+<td width="37%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;http://annocpan.org/dist/File−ShareDir&gt;</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="15%">
+<p style="margin-top: 1em">CPAN Ratings</p></td>
+<td width="71%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;http://cpanratings.perl.org/s/File−ShareDir&gt;</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="14%">
+<p style="margin-top: 1em">CPAN Search</p></td>
+<td width="72%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;http://search.cpan.org/dist/File−ShareDir/&gt;</p>
+<h3>Where can I go for other help?
+<a name="Where can I go for other help?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If you have a
+bug report, a patch or a suggestion, please open a new
+report ticket at CPAN (but please check previous reports
+first in case your issue has already been addressed).</p>
+<p style="margin-left:9%; margin-top: 1em">Report tickets
+should contain a detailed description of the bug or
+enhancement request and at least an easily verifiable way of
+reproducing the issue or fix. Patches are always welcome,
+too.</p>
+<h3>Where can I go for help with a concrete version?
+<a name="Where can I go for help with a concrete version?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Bugs and feature
+requests are accepted against the latest version only. To
+get patches for earlier versions, you need to get an
+agreement with a developer of your choice − who may or
+not report the issue and a suggested fix upstream (depends
+on the license you have chosen).</p>
+<h3>Business support and maintenance
+<a name="Business support and maintenance"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">For business
+support you can contact the maintainer via his CPAN email
+address. Please keep in mind that business support is
+neither available for free nor are you eligible to receive
+any support based on the license distributed with this
+package.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Adam Kennedy
+&lt;adamk@cpan.org&gt;</p>
+<h3>MAINTAINER
+<a name="MAINTAINER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Jens Rehsack
+&lt;rehsack@cpan.org&gt;</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::ShareDir::Install,
+File::ConfigDir, File::HomeDir, Module::Install,
+Module::Install::Share, File::ShareDir::PAR,
+Dist::Zilla::Plugin::ShareDir</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright 2005
+− 2011 Adam Kennedy, Copyright 2014 − 2018 Jens
+Rehsack.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">The full text of
+the license can be found in the LICENSE file included with
+this module.</p>
+<hr/>
+</body>
+</html>

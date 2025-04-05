@@ -1,0 +1,243 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:49 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>landlock_restrict_self</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">landlock_restrict_self</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">landlock_restrict_self
+− enforce a Landlock ruleset</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;linux/landlock.h&gt;</b> /* Definition of
+<b>LANDLOCK_*</b> constants */ <b><br/>
+#include &lt;sys/syscall.h&gt;</b> /* Definition of
+<b>SYS_*</b> constants */</p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+syscall(SYS_landlock_restrict_self, int</b>
+<i>ruleset_fd</i><b>, <br/>
+uint32_t</b> <i>flags</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Once a Landlock
+ruleset is populated with the desired rules, the
+<b>landlock_restrict_self</b>() system call enables
+enforcing this ruleset on the calling thread. See
+<b>landlock</b>(7) for a global overview.</p>
+<p style="margin-left:9%; margin-top: 1em">A thread can be
+restricted with multiple rulesets that are then composed
+together to form the thread’s Landlock domain. This
+can be seen as a stack of rulesets but it is implemented in
+a more efficient way. A domain can only be updated in such a
+way that the constraints of each past and future composed
+rulesets will restrict the thread and its future children
+for their entire life. It is then possible to gradually
+enforce tailored access control policies with multiple
+independent rulesets coming from different sources (e.g.,
+init system configuration, user session policy, built-in
+application policy). However, most applications should only
+need one call to <b>landlock_restrict_self</b>() and they
+should avoid arbitrary numbers of such calls because of the
+composed rulesets limit. Instead, developers are encouraged
+to build a tailored ruleset thanks to multiple calls to
+<b>landlock_add_rule</b>(2).</p>
+<p style="margin-left:9%; margin-top: 1em">In order to
+enforce a ruleset, either the caller must have the
+<b>CAP_SYS_ADMIN</b> capability in its user namespace, or
+the thread must already have the <i>no_new_privs</i> bit
+set. As for <b>seccomp</b>(2), this avoids scenarios where
+unprivileged processes can affect the behavior of privileged
+children (e.g., because of set-user-ID binaries). If that
+bit was not already set by an ancestor of this thread, the
+thread must make the following call:</p>
+<p style="margin-left:18%; margin-top: 1em">prctl(PR_SET_NO_NEW_PRIVS,
+1, 0, 0, 0);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>ruleset_fd</i>
+is a Landlock ruleset file descriptor obtained with
+<b>landlock_create_ruleset</b>(2) and fully populated with a
+set of calls to <b>landlock_add_rule</b>(2).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>flags</i>
+must be 0.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>landlock_restrict_self</b>() returns 0.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>landlock_restrict_self</b>()
+can fail for the following reasons: <b><br/>
+EOPNOTSUPP</b></p>
+<p style="margin-left:18%;">Landlock is supported by the
+kernel but disabled at boot time.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><i>flags</i> is not 0.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EBADF</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><i>ruleset_fd</i> is not a file descriptor for the
+current thread.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EBADFD</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><i>ruleset_fd</i> is not a ruleset file descriptor.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EPERM</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><i>ruleset_fd</i> has no read access to the underlying
+ruleset, or the calling thread is not running with
+<i>no_new_privs</i>, or it doesn’t have the
+<b>CAP_SYS_ADMIN</b> in its user namespace.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>E2BIG</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The maximum number of composed rulesets is reached for
+the calling thread. This limit is currently 64.</p></td></tr>
+</table>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux 5.13.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See
+<b>landlock</b>(7).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>landlock_create_ruleset</b>(2),
+<b>landlock_add_rule</b>(2), <b>landlock</b>(7)</p>
+<hr/>
+</body>
+</html>

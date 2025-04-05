@@ -1,0 +1,674 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:47 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>encoding</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">encoding</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#WARNING">WARNING</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#OPTIONS">OPTIONS</a><br/>
+<a href='#Setting "STDIN" and/or "STDOUT" individually'>Setting "STDIN" and/or "STDOUT" individually</a><br/>
+<a href='#The ":locale" sub−pragma'>The ":locale" sub−pragma</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#SIDE EFFECTS">SIDE EFFECTS</a><br/>
+<a href="#DO NOT MIX MULTIPLE ENCODINGS">DO NOT MIX MULTIPLE ENCODINGS</a><br/>
+<a href="#Prior to Perl v5.22">Prior to Perl v5.22</a><br/>
+<a href="#Prior to Encode version 1.87">Prior to Encode version 1.87</a><br/>
+<a href="#Prior to Perl v5.8.1">Prior to Perl v5.8.1</a><br/>
+<a href="#EXAMPLE − Greekperl">EXAMPLE − Greekperl</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">encoding −
+allows you to write your script in non−ASCII and
+non−UTF−8</p>
+<h2>WARNING
+<a name="WARNING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module has
+been deprecated since perl v5.18. See
+"DESCRIPTION" and "BUGS".</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use encoding
+"greek"; # Perl like Greek to you? <br/>
+use encoding "euc−jp"; # Jperl! <br/>
+# or you can even do this if your shell supports your native
+encoding <br/>
+perl −Mencoding=latin2 −e'...' # Feeling
+centrally European? <br/>
+perl −Mencoding=euc−kr −e'...' # Or
+Korean? <br/>
+# more control <br/>
+# A simple euc−cn =&gt; utf−8 converter <br/>
+use encoding "euc−cn", STDOUT =&gt;
+"utf8"; while(&lt;&gt;){print}; <br/>
+# "no encoding;" supported <br/>
+no encoding; <br/>
+# an alternate way, Filter <br/>
+use encoding "euc−jp", Filter=&gt;1; <br/>
+# now you can use kanji identifiers −− in
+euc−jp! <br/>
+# encode based on the current locale − specialized
+purposes only; <br/>
+# fraught with danger!! <br/>
+use encoding ':locale';</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This pragma is
+used to enable a Perl script to be written in encodings that
+aren't strictly ASCII nor UTF−8. It translates all or
+portions of the Perl program script from a given encoding
+into UTF−8, and changes the PerlIO layers of
+"STDIN" and "STDOUT" to the encoding
+specified.</p>
+<p style="margin-left:9%; margin-top: 1em">This pragma
+dates from the days when UTF−8−enabled editors
+were uncommon. But that was long ago, and the need for it is
+greatly diminished. That, coupled with the fact that it
+doesn't work with threads, along with other problems, (see
+"BUGS") have led to its being deprecated. It is
+planned to remove this pragma in a future Perl version. New
+code should be written in UTF−8, and the "use
+utf8" pragma used instead (see perluniintro and utf8
+for details). Old code should be converted to UTF−8,
+via something like the recipe in the "SYNOPSIS"
+(though this simple approach may require manual adjustments
+afterwards).</p>
+<p style="margin-left:9%; margin-top: 1em">If UTF−8
+is not an option, it is recommended that one use a simple
+source filter, such as that provided by Filter::Encoding on
+CPAN or this pragma's own "Filter" option (see
+below).</p>
+<p style="margin-left:9%; margin-top: 1em">The only
+legitimate use of this pragma is almost certainly just one
+per file, near the top, with file scope, as the file is
+likely going to only be written in one encoding. Further
+restrictions apply in Perls before v5.22 (see "Prior to
+Perl v5.22").</p>
+<p style="margin-left:9%; margin-top: 1em">There are two
+basic modes of operation (plus turning if off): <br/>
+"use encoding ['<i>ENCNAME</i>'] ;"</p>
+<p style="margin-left:14%;">Please note: This mode of
+operation is no longer supported as of Perl v5.26.</p>
+<p style="margin-left:14%; margin-top: 1em">This is the
+normal operation. It translates various literals encountered
+in the Perl source file from the encoding <i>ENCNAME</i>
+into UTF−8, and similarly converts character code
+points. This is used when the script is a combination of
+ASCII (for the variable names and punctuation, <i>etc</i>),
+but the literal data is in the specified encoding.</p>
+<p style="margin-left:14%; margin-top: 1em"><i>ENCNAME</i>
+is optional. If omitted, the encoding specified in the
+environment variable "PERL_ENCODING" is used. If
+this isn't set, or the resolved−to encoding is not
+known to "Encode", the error "Unknown
+encoding '<i>ENCNAME</i>'" will be thrown.</p>
+<p style="margin-left:14%; margin-top: 1em">Starting in
+Perl v5.8.6 ("Encode" version 2.0.1),
+<i>ENCNAME</i> may be the name ":locale". This is
+for very specialized applications, and is documented in
+"The ":locale" sub−pragma"
+below.</p>
+<p style="margin-left:14%; margin-top: 1em">The literals
+that are converted are "q//, qq//, qr//, qw///,
+qx//", and starting in v5.8.1, "tr///".
+Operations that do conversions include "chr",
+"ord", "utf8::upgrade" (but not
+"utf8::downgrade"), and "chomp".</p>
+<p style="margin-left:14%; margin-top: 1em">Also starting
+in v5.8.1, the "DATA" pseudo−filehandle is
+translated from the encoding into UTF−8.</p>
+<p style="margin-left:14%; margin-top: 1em">For example,
+you can write code in EUC−JP as follows:</p>
+<p style="margin-left:14%; margin-top: 1em">my $Rakuda =
+"\xF1\xD1\xF1\xCC"; # Camel in Kanji <br/>
+#&lt;−char−&gt;&lt;−char−&gt; # 4
+octets <br/>
+s/\bCamel\b/$Rakuda/;</p>
+<p style="margin-left:14%; margin-top: 1em">And with
+"use encoding "euc−jp"" in effect,
+it is the same thing as that code in UTF−8:</p>
+<p style="margin-left:14%; margin-top: 1em">my $Rakuda =
+"\x{99F1}\x{99DD}"; # two Unicode Characters <br/>
+s/\bCamel\b/$Rakuda/;</p>
+<p style="margin-left:14%; margin-top: 1em">See
+"EXAMPLE" below for a more complete example.</p>
+<p style="margin-left:14%; margin-top: 1em">Unless
+"${ˆUNICODE}" (available starting in v5.8.2)
+exists and is non−zero, the PerlIO layers of
+"STDIN" and "STDOUT" are set to
+":encoding(<i>ENCNAME</i>)". Therefore,</p>
+<p style="margin-left:14%; margin-top: 1em">use encoding
+"euc−jp"; <br/>
+my $message = "Camel is the symbol of perl.\n";
+<br/>
+my $Rakuda = "\xF1\xD1\xF1\xCC"; # Camel in Kanji
+<br/>
+$message =˜ s/\bCamel\b/$Rakuda/; <br/>
+print $message;</p>
+<p style="margin-left:14%; margin-top: 1em">will print</p>
+<p style="margin-left:14%; margin-top: 1em">"\xF1\xD1\xF1\xCC
+is the symbol of perl.\n"</p>
+<p style="margin-left:14%; margin-top: 1em">not</p>
+<p style="margin-left:14%; margin-top: 1em">"\x{99F1}\x{99DD}
+is the symbol of perl.\n"</p>
+<p style="margin-left:14%; margin-top: 1em">You can
+override this by giving extra arguments; see below.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that
+"STDERR" WILL NOT be changed, regardless.</p>
+<p style="margin-left:14%; margin-top: 1em">Also note that
+non−STD file handles remain unaffected. Use "use
+open" or "binmode" to change the layers of
+those.</p>
+<p style="margin-left:9%;">"use encoding
+<i>ENCNAME</i>, Filter=&gt;1;"</p>
+<p style="margin-left:14%;">This operates as above, but the
+"Filter" argument with a non−zero value
+causes the entire script, and not just literals, to be
+translated from the encoding into UTF−8. This allows
+identifiers in the source to be in that encoding as well.
+(Problems may occur if the encoding is not a superset of
+ASCII; imagine all your semi−colons being translated
+into something different.) One can use this form to make</p>
+<p style="margin-left:14%; margin-top: 1em">${"\x{4eba}"}++</p>
+<p style="margin-left:14%; margin-top: 1em">work. (This is
+equivalent to "$<i>human</i>++", where
+<i>human</i> is a single Han ideograph).</p>
+<p style="margin-left:14%; margin-top: 1em">This
+effectively means that your source code behaves as if it
+were written in UTF−8 with "'use utf8"' in
+effect. So even if your editor only supports Shift_JIS, for
+example, you can still try examples in Chapter 15 of
+"Programming Perl, 3rd Ed.".</p>
+<p style="margin-left:14%; margin-top: 1em">This option is
+significantly slower than the other one.</p>
+<p style="margin-left:9%;">"no encoding;"</p>
+<p style="margin-left:14%;">Unsets the script encoding. The
+layers of "STDIN", "STDOUT" are reset to
+"":raw"" (the default unprocessed raw
+stream of bytes).</p>
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+<h3>Setting "STDIN" and/or "STDOUT" individually
+<a name='Setting "STDIN" and/or "STDOUT" individually'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The encodings of
+"STDIN" and "STDOUT" are individually
+settable by parameters to the pragma:</p>
+<p style="margin-left:9%; margin-top: 1em">use encoding
+'euc−tw', STDIN =&gt; 'greek' ...;</p>
+<p style="margin-left:9%; margin-top: 1em">In this case,
+you cannot omit the first <i>ENCNAME</i>. "STDIN =&gt;
+undef" turns the I/O transcoding completely off for
+that filehandle.</p>
+<p style="margin-left:9%; margin-top: 1em">When
+"${ˆUNICODE}" (available starting in v5.8.2)
+exists and is non−zero, these options will be
+completely ignored. See
+""${ˆUNICODE}"" in perlvar and
+""−C"" in perlrun for details.</p>
+<h3>The ":locale" sub−pragma
+<a name='The ":locale" sub−pragma'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Starting in
+v5.8.6, the encoding name may be ":locale". This
+means that the encoding is taken from the current locale,
+and not hard−coded by the pragma. Since a script
+really can only be encoded in exactly one encoding, this
+option is dangerous. It makes sense only if the script
+itself is written in ASCII, and all the possible locales
+that will be in use when the script is executed are
+supersets of ASCII. That means that the script itself
+doesn't get changed, but the I/O handles have the specified
+encoding added, and the operations like "chr" and
+"ord" use that encoding.</p>
+<p style="margin-left:9%; margin-top: 1em">The logic of
+finding which locale ":locale" uses is as
+follows:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>1.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>If the platform supports the langinfo(CODESET)
+interface, the codeset returned is used as the default
+encoding for the open pragma.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>2.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>If 1. didn't work but we are under the locale pragma,
+the environment variables "LC_ALL" and
+"LANG" (in that order) are matched for encodings
+(the part after ""."", if any), and if
+any found, that is used as the default encoding for the open
+pragma.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>3.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>If 1. and 2. didn't work, the environment variables
+"LC_ALL" and "LANG" (in that order) are
+matched for anything looking like UTF−8, and if any
+found, ":utf8" is used as the default encoding for
+the open pragma.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">If your locale
+environment variables ("LC_ALL",
+"LC_CTYPE", "LANG") contain the strings
+'UTF−8' or 'UTF8' (case−insensitive matching),
+the default encoding of your "STDIN",
+"STDOUT", and "STDERR", and of <b>any
+subsequent file open</b>, is UTF−8.</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<h3>SIDE EFFECTS
+<a name="SIDE EFFECTS"></a>
+</h3>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p style="margin-top: 1em">If the "encoding"
+pragma is in scope then the lengths returned are calculated
+from the length of $/ in Unicode characters, which is not
+always the same as the length of $/ in the native
+encoding.</p> </td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>Without this pragma, if strings operating under byte
+semantics and strings with Unicode character data are
+concatenated, the new string will be created by decoding the
+byte strings as <i>ISO 8859−1 (Latin−1)</i>.</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+<b>encoding</b> pragma changes this to use the specified
+encoding instead. For example:</p>
+<p style="margin-left:14%; margin-top: 1em">use encoding
+'utf8'; <br/>
+my $string = chr(20000); # a Unicode string <br/>
+utf8::encode($string); # now it's a UTF−8 encoded byte
+string <br/>
+# concatenate with another Unicode string <br/>
+print length($string . chr(20000));</p>
+<p style="margin-left:14%; margin-top: 1em">Will print 2,
+because $string is upgraded as UTF−8. Without
+"use encoding 'utf8';", it will print 4 instead,
+since $string is three octets when interpreted as
+Latin−1.</p>
+<h3>DO NOT MIX MULTIPLE ENCODINGS
+<a name="DO NOT MIX MULTIPLE ENCODINGS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Notice that only
+literals (string or regular expression) having only legacy
+code points are affected: if you mix data like this</p>
+<p style="margin-left:9%; margin-top: 1em">\x{100}\xDF <br/>
+\xDF\x{100}</p>
+<p style="margin-left:9%; margin-top: 1em">the data is
+assumed to be in (Latin 1 and) Unicode, not in your native
+encoding. In other words, this will match in
+"greek":</p>
+<p style="margin-left:9%; margin-top: 1em">"\xDF"
+=˜ /\x{3af}/</p>
+<p style="margin-left:9%; margin-top: 1em">but this will
+not</p>
+<p style="margin-left:9%; margin-top: 1em">"\xDF\x{100}"
+=˜ /\x{3af}\x{100}/</p>
+<p style="margin-left:9%; margin-top: 1em">since the
+"\xDF" (ISO 8859−7 GREEK SMALL LETTER IOTA
+WITH TONOS) on the left will <b>not</b> be upgraded to
+"\x{3af}" (Unicode GREEK SMALL LETTER IOTA WITH
+TONOS) because of the "\x{100}" on the left. You
+should not be mixing your legacy data and Unicode in the
+same string.</p>
+<p style="margin-left:9%; margin-top: 1em">This pragma also
+affects encoding of the 0x80..0xFF code point range:
+normally characters in that range are left as
+eight−bit bytes (unless they are combined with
+characters with code points 0x100 or larger, in which case
+all characters need to become UTF−8 encoded), but if
+the "encoding" pragma is present, even the
+0x80..0xFF range always gets UTF−8 encoded.</p>
+<p style="margin-left:9%; margin-top: 1em">After all, the
+best thing about this pragma is that you don't have to
+resort to \x{....} just to spell your name in a native
+encoding. So feel free to put your strings in your encoding
+in quotes and regexes.</p>
+<h3>Prior to Perl v5.22
+<a name="Prior to Perl v5.22"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The pragma was a
+per script, not a per block lexical. Only the last "use
+encoding" or "no encoding" mattered, and it
+affected <b>the whole script</b>. However, the "no
+encoding" pragma was supported and "use
+encoding" could appear as many times as you want in a
+given script (though only the last was effective).</p>
+<p style="margin-left:9%; margin-top: 1em">Since the scope
+wasn't lexical, other modules' use of "chr",
+"ord", <i>etc.</i> were affected. This leads to
+spooky, incorrect action at a distance that is hard to
+debug.</p>
+<p style="margin-left:9%; margin-top: 1em">This means you
+would have to be very careful of the load order:</p>
+<p style="margin-left:9%; margin-top: 1em"># called module
+<br/>
+package Module_IN_BAR; <br/>
+use encoding "bar"; <br/>
+# stuff in "bar" encoding here <br/>
+1; <br/>
+# caller script <br/>
+use encoding "foo" <br/>
+use Module_IN_BAR; <br/>
+# surprise! use encoding "bar" is in effect.</p>
+<p style="margin-left:9%; margin-top: 1em">The best way to
+avoid this oddity is to use this pragma RIGHT AFTER other
+modules are loaded. i.e.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Module_IN_BAR; <br/>
+use encoding "foo";</p>
+<h3>Prior to Encode version 1.87
+<a name="Prior to Encode version 1.87"></a>
+</h3>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p style="margin-top: 1em">"STDIN" and
+"STDOUT" were not set under the filter option. And
+"STDIN=&gt;<i>ENCODING</i>" and
+"STDOUT=&gt;<i>ENCODING</i>" didn't work like
+non−filter version.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>"use utf8" wasn't implicitly declared so you
+have to "use utf8" to do</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">${"\x{4eba}"}++</p>
+<h3>Prior to Perl v5.8.1
+<a name="Prior to Perl v5.8.1"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"NON−EUC"
+doublebyte encodings</p>
+<p style="margin-left:14%;">Because perl needs to parse the
+script before applying this pragma, such encodings as
+Shift_JIS and Big−5 that may contain '\' (BACKSLASH;
+"\x5c") in the second byte fail because the second
+byte may accidentally escape the quoting character that
+follows.</p>
+<p style="margin-left:9%;">"tr///"</p>
+<p style="margin-left:14%;">The <b>encoding</b> pragma
+works by decoding string literals in
+"q//,qq//,qr//,qw///, qx//" and so forth. In perl
+v5.8.0, this does not apply to "tr///".
+Therefore,</p>
+<p style="margin-left:14%; margin-top: 1em">use encoding
+'euc−jp'; <br/>
+#.... <br/>
+$kana =˜
+tr/\xA4\xA1−\xA4\xF3/\xA5\xA1−\xA5\xF3/; <br/>
+# −−−−−−−−
+−−−−−−−−
+−−−−−−−−
+−−−−−−−−</p>
+<p style="margin-left:14%; margin-top: 1em">Does not work
+as</p>
+<p style="margin-left:14%; margin-top: 1em">$kana =˜
+tr/\x{3041}−\x{3093}/\x{30a1}−\x{30f3}/; <br/>
+Legend of characters above</p>
+<p style="margin-left:19%;">utf8 euc−jp
+charnames::viacode() <br/>
+
+−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
+<br/>
+\x{3041} \xA4\xA1 HIRAGANA LETTER SMALL A <br/>
+\x{3093} \xA4\xF3 HIRAGANA LETTER N <br/>
+\x{30a1} \xA5\xA1 KATAKANA LETTER SMALL A <br/>
+\x{30f3} \xA5\xF3 KATAKANA LETTER N</p>
+<p style="margin-left:14%; margin-top: 1em">This
+counterintuitive behavior has been fixed in perl v5.8.1.</p>
+<p style="margin-left:14%; margin-top: 1em">In perl v5.8.0,
+you can work around this as follows;</p>
+<p style="margin-left:14%; margin-top: 1em">use encoding
+'euc−jp'; <br/>
+# .... <br/>
+eval qq{ \$kana =˜
+tr/\xA4\xA1−\xA4\xF3/\xA5\xA1−\xA5\xF3/ };</p>
+<p style="margin-left:14%; margin-top: 1em">Note the
+"tr//" expression is surrounded by
+"qq{}". The idea behind this is the same as the
+classic idiom that makes "tr///"
+'interpolate':</p>
+<p style="margin-left:14%; margin-top: 1em">tr/$from/$to/;
+# wrong! <br/>
+eval qq{ tr/$from/$to/ }; # workaround.</p>
+<h2>EXAMPLE − Greekperl
+<a name="EXAMPLE − Greekperl"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use encoding
+"iso 8859−7"; <br/>
+# \xDF in ISO 8859−7 (Greek) is \x{3af} in Unicode.
+<br/>
+$a = "\xDF"; <br/>
+$b = "\x{100}"; <br/>
+printf "%#x\n", ord($a); # will print 0x3af, not
+0xdf <br/>
+$c = $a . $b; <br/>
+# $c will be "\x{3af}\x{100}", not
+"\x{df}\x{100}". <br/>
+# chr() is affected, and ... <br/>
+print "mega\n" if ord(chr(0xdf)) == 0x3af; <br/>
+# ... ord() is affected by the encoding pragma ... <br/>
+print "tera\n" if ord(pack("C", 0xdf))
+== 0x3af; <br/>
+# ... as are eq and cmp ... <br/>
+print "peta\n" if "\x{3af}" eq
+pack("C", 0xdf); <br/>
+print "exa\n" if "\x{3af}" cmp
+pack("C", 0xdf) == 0; <br/>
+# ... but pack/unpack C are not affected, in case you still
+<br/>
+# want to go back to your native encoding <br/>
+print "zetta\n" if unpack("C",
+(pack("C", 0xdf))) == 0xdf;</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Thread
+safety</p>
+<p style="margin-left:14%;">"use encoding ..." is
+not thread−safe (i.e., do not use in threaded
+applications).</p>
+<p style="margin-left:9%;">Can't be used by more than one
+module in a single program.</p>
+<p style="margin-left:14%;">Only one encoding is allowed.
+If you combine modules in a program that have different
+encodings, only one will be actually used.</p>
+<p style="margin-left:9%;">Other modules using
+"STDIN" and "STDOUT" get the encoded
+stream</p>
+<p style="margin-left:14%;">They may be expecting something
+completely different.</p>
+<p style="margin-left:9%;">literals in regex that are
+longer than 127 bytes</p>
+<p style="margin-left:14%;">For native multibyte encodings
+(either fixed or variable length), the current
+implementation of the regular expressions may introduce
+recoding errors for regular expression literals longer than
+127 bytes.</p>
+<p style="margin-left:9%;">EBCDIC</p>
+<p style="margin-left:14%;">The encoding pragma is not
+supported on EBCDIC platforms.</p>
+<p style="margin-left:9%;">"format"</p>
+<p style="margin-left:14%;">This pragma doesn't work well
+with "format" because PerlIO does not get along
+very well with it. When "format" contains
+non−ASCII characters it prints funny or gets
+"wide character warnings". To understand it, try
+the code below.</p>
+<p style="margin-left:14%; margin-top: 1em"># Save this one
+in utf8 <br/>
+# replace *non−ascii* with a non−ascii string
+<br/>
+my $camel; <br/>
+format STDOUT = <br/>
+*non−ascii*@&gt;&gt;&gt;&gt;&gt;&gt;&gt; <br/>
+$camel <br/>
+. <br/>
+$camel = "*non−ascii*"; <br/>
+binmode(STDOUT=&gt;':encoding(utf8)'); # bang! <br/>
+write; # funny <br/>
+print $camel, "\n"; # fine</p>
+<p style="margin-left:14%; margin-top: 1em">Without binmode
+this happens to work but without binmode, <b>print()</b>
+fails instead of <b>write()</b>.</p>
+<p style="margin-left:14%; margin-top: 1em">At any rate,
+the very use of "format" is questionable when it
+comes to unicode characters since you have to consider such
+things as character width (i.e. double−width for
+ideographs) and directions (i.e. BIDI for Arabic and
+Hebrew).</p>
+<p style="margin-left:9%;">See also "CAVEATS"</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This pragma
+first appeared in Perl v5.8.0. It has been enhanced in later
+releases as specified above.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">perlunicode,
+Encode, open, Filter::Util::Call,</p>
+<p style="margin-left:9%; margin-top: 1em">Ch. 15 of
+"Programming Perl (3rd Edition)" by Larry Wall,
+Tom Christiansen, Jon Orwant; O'Reilly &amp; Associates;
+ISBN 0−596−00027−8</p>
+<hr/>
+</body>
+</html>

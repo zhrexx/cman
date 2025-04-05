@@ -1,0 +1,176 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:57 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>X509_CHECK_PURPOSE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">X509_CHECK_PURPOSE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">X509_check_purpose
+− Check the purpose of a certificate</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/x509v3.h&gt; <br/>
+int X509_check_purpose(X509 *x, int id, int ca);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function
+checks if certificate <i>x</i> was created with the purpose
+represented by <i>id</i>. If <i>ca</i> is nonzero, then
+certificate <i>x</i> is checked to determine if it's a
+possible CA with various levels of certainty possibly
+returned. The certificate <i>x</i> must be a complete
+certificate otherwise the function returns an error.</p>
+<p style="margin-left:9%; margin-top: 1em">Below are the
+potential ID's that can be checked:</p>
+<p style="margin-left:9%; margin-top: 1em"># define
+X509_PURPOSE_SSL_CLIENT 1 <br/>
+# define X509_PURPOSE_SSL_SERVER 2 <br/>
+# define X509_PURPOSE_NS_SSL_SERVER 3 <br/>
+# define X509_PURPOSE_SMIME_SIGN 4 <br/>
+# define X509_PURPOSE_SMIME_ENCRYPT 5 <br/>
+# define X509_PURPOSE_CRL_SIGN 6 <br/>
+# define X509_PURPOSE_ANY 7 <br/>
+# define X509_PURPOSE_OCSP_HELPER 8 <br/>
+# define X509_PURPOSE_TIMESTAMP_SIGN 9 <br/>
+# define X509_PURPOSE_CODE_SIGN 10</p>
+<p style="margin-left:9%; margin-top: 1em">The checks
+performed take into account the X.509 extensions keyUsage,
+extendedKeyUsage, and basicConstraints.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For non−CA
+checks <br/>
+−1 an error condition has occurred <br/>
+1 if the certificate was created to perform the purpose
+represented by <i><br/>
+id</i> <br/>
+0 if the certificate was not created to perform the purpose
+<br/>
+represented by <i>id</i></p>
+<p style="margin-left:9%; margin-top: 1em">For CA checks
+the below integers could be returned with the following
+meanings: <br/>
+−1 an error condition has occurred <br/>
+0 not a CA or does not have the purpose represented by
+<i>id</i> <br/>
+1 is a CA. <br/>
+2 Only possible in old versions of openSSL when
+basicConstraints are <br/>
+absent. New versions will not return this value. May be a CA
+<br/>
+3 basicConstraints absent but self signed V1. <br/>
+4 basicConstraints absent but keyUsage present and
+keyCertSign <br/>
+asserted. <br/>
+5 legacy Netscape specific CA Flags present</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2019−2021 The OpenSSL Project Authors. All Rights
+Reserved. Licensed under the Apache License 2.0 (the
+"License"). You may not use this file except in
+compliance with the License. You can obtain a copy in the
+file LICENSE in the source distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

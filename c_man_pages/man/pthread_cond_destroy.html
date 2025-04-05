@@ -1,0 +1,340 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:17 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>pthread_cond_init</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">pthread_cond_init</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CANCELLATION">CANCELLATION</a><br/>
+<a href="#ASYNC-SIGNAL SAFETY">ASYNC-SIGNAL SAFETY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">pthread_cond_init,
+pthread_cond_signal, pthread_cond_broadcast,
+pthread_cond_wait, pthread_cond_timedwait,
+pthread_cond_destroy − operations on conditions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;pthread.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cond_t</b>
+<i>cond</i> <b>= PTHREAD_COND_INITIALIZER;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+pthread_cond_init(pthread_cond_t *</b><i>cond</i><b>, <br/>
+pthread_condattr_t *</b><i>cond_attr</i><b>); <br/>
+int pthread_cond_signal(pthread_cond_t *</b><i>cond</i><b>);
+<br/>
+int pthread_cond_broadcast(pthread_cond_t
+*</b><i>cond</i><b>); <br/>
+int pthread_cond_wait(pthread_cond_t *</b><i>cond</i><b>,
+pthread_mutex_t *</b><i>mutex</i><b>); <br/>
+int pthread_cond_timedwait(pthread_cond_t
+*</b><i>cond</i><b>, pthread_mutex_t *</b><i>mutex</i><b>,
+<br/>
+const struct timespec *</b><i>abstime</i><b>); <br/>
+int pthread_cond_destroy(pthread_cond_t
+*</b><i>cond</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A condition
+(short for ‘‘condition variable’’)
+is a synchronization device that allows threads to suspend
+execution and relinquish the processors until some predicate
+on shared data is satisfied. The basic operations on
+conditions are: signal the condition (when the predicate
+becomes true), and wait for the condition, suspending the
+thread execution until another thread signals the
+condition.</p>
+<p style="margin-left:9%; margin-top: 1em">A condition
+variable must always be associated with a mutex, to avoid
+the race condition where a thread prepares to wait on a
+condition variable and another thread signals the condition
+just before the first thread actually waits on it.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cond_init</b>
+initializes the condition variable <i>cond</i>, using the
+condition attributes specified in <i>cond_attr</i>, or
+default attributes if <i>cond_attr</i> is <b>NULL</b>. The
+LinuxThreads implementation supports no attributes for
+conditions, hence the <i>cond_attr</i> parameter is actually
+ignored.</p>
+<p style="margin-left:9%; margin-top: 1em">Variables of
+type <b>pthread_cond_t</b> can also be initialized
+statically, using the constant
+<b>PTHREAD_COND_INITIALIZER</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cond_signal</b>
+restarts one of the threads that are waiting on the
+condition variable <i>cond</i>. If no threads are waiting on
+<i>cond</i>, nothing happens. If several threads are waiting
+on <i>cond</i>, exactly one is restarted, but it is not
+specified which.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cond_broadcast</b>
+restarts all the threads that are waiting on the condition
+variable <i>cond</i>. Nothing happens if no threads are
+waiting on <i>cond</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cond_wait</b>
+atomically unlocks the <i>mutex</i> (as per
+<b>pthread_unlock_mutex</b>) and waits for the condition
+variable <i>cond</i> to be signaled. The thread execution is
+suspended and does not consume any CPU time until the
+condition variable is signaled. The <i>mutex</i> must be
+locked by the calling thread on entrance to
+<b>pthread_cond_wait</b>. Before returning to the calling
+thread, <b>pthread_cond_wait</b> re-acquires <i>mutex</i>
+(as per <b>pthread_lock_mutex</b>).</p>
+<p style="margin-left:9%; margin-top: 1em">Unlocking the
+mutex and suspending on the condition variable is done
+atomically. Thus, if all threads always acquire the mutex
+before signaling the condition, this guarantees that the
+condition cannot be signaled (and thus ignored) between the
+time a thread locks the mutex and the time it waits on the
+condition variable.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cond_timedwait</b>
+atomically unlocks <i>mutex</i> and waits on <i>cond</i>, as
+<b>pthread_cond_wait</b> does, but it also bounds the
+duration of the wait. If <i>cond</i> has not been signaled
+within the amount of time specified by <i>abstime</i>, the
+mutex <i>mutex</i> is re-acquired and
+<b>pthread_cond_timedwait</b> returns the error
+<b>ETIMEDOUT</b>. The <i>abstime</i> parameter specifies an
+absolute time, with the same origin as <b>time</b>(2) and
+<b>gettimeofday</b>(2): an <i>abstime</i> of 0 corresponds
+to 00:00:00 GMT, January 1, 1970.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cond_destroy</b>
+destroys a condition variable, freeing the resources it
+might hold. No threads must be waiting on the condition
+variable on entrance to <b>pthread_cond_destroy</b>. In the
+LinuxThreads implementation, no resources are associated
+with condition variables, thus <b>pthread_cond_destroy</b>
+actually does nothing except checking that the condition has
+no waiting threads.</p>
+<h2>CANCELLATION
+<a name="CANCELLATION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cond_wait</b>
+and <b>pthread_cond_timedwait</b> are cancelation points. If
+a thread is cancelled while suspended in one of these
+functions, the thread immediately resumes execution, then
+locks again the <i>mutex</i> argument to
+<b>pthread_cond_wait</b> and <b>pthread_cond_timedwait</b>,
+and finally executes the cancelation. Consequently, cleanup
+handlers are assured that <i>mutex</i> is locked when they
+are called.</p>
+<h2>ASYNC-SIGNAL SAFETY
+<a name="ASYNC-SIGNAL SAFETY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The condition
+functions are not async-signal safe, and should not be
+called from a signal handler. In particular, calling
+<b>pthread_cond_signal</b> or <b>pthread_cond_broadcast</b>
+from a signal handler may deadlock the calling thread.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All condition
+variable functions return 0 on success and a non-zero error
+code on error.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cond_init</b>,
+<b>pthread_cond_signal</b>, <b>pthread_cond_broadcast</b>,
+and <b>pthread_cond_wait</b> never return an error code.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pthread_cond_timedwait</b> function returns the following
+error codes on error:</p>
+<p style="margin-left:18%;"><b>ETIMEDOUT</b></p>
+<p style="margin-left:27%;">The condition variable was not
+signaled until the timeout specified by <i>abstime</i>.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="6%">
+<p><b>EINTR</b></p></td>
+<td width="3%"></td>
+<td width="65%">
+<p><b>pthread_cond_timedwait</b> was interrupted by a
+signal.</p> </td>
+<td width="8%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pthread_cond_destroy</b> function returns the following
+error code on error:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="6%">
+<p style="margin-top: 1em"><b>EBUSY</b></p></td>
+<td width="3%"></td>
+<td width="55%">
+<p style="margin-top: 1em">Some threads are currently
+waiting on <i>cond</i>.</p></td>
+<td width="18%">
+</td></tr>
+</table>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_condattr_init</b>(3),
+<b>pthread_mutex_lock</b>(3),
+<b>pthread_mutex_unlock</b>(3), <b>gettimeofday</b>(2),
+<b>nanosleep</b>(2).</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Consider two
+shared variables <i>x</i> and <i>y</i>, protected by the
+mutex <i>mut</i>, and a condition variable <i>cond</i> that
+is to be signaled whenever <i>x</i> becomes greater than
+<i>y</i>.</p>
+<p style="margin-left:18%; margin-top: 1em"><b>int x,y;
+<br/>
+pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER; <br/>
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;</b></p>
+<p style="margin-left:9%; margin-top: 1em">Waiting until
+<i>x</i> is greater than <i>y</i> is performed as
+follows:</p>
+<p style="margin-left:18%; margin-top: 1em"><b>pthread_mutex_lock(&amp;mut);
+<br/>
+while (x &lt;= y) { <br/>
+pthread_cond_wait(&amp;cond, &amp;mut); <br/>
+} <br/>
+/* operate on x and y */ <br/>
+pthread_mutex_unlock(&amp;mut);</b></p>
+<p style="margin-left:9%; margin-top: 1em">Modifications on
+<i>x</i> and <i>y</i> that may cause <i>x</i> to become
+greater than <i>y</i> should signal the condition if
+needed:</p>
+<p style="margin-left:18%; margin-top: 1em"><b>pthread_mutex_lock(&amp;mut);
+<br/>
+/* modify x and y */ <br/>
+if (x &gt; y) pthread_cond_broadcast(&amp;cond); <br/>
+pthread_mutex_unlock(&amp;mut);</b></p>
+<p style="margin-left:9%; margin-top: 1em">If it can be
+proved that at most one waiting thread needs to be waken up
+(for instance, if there are only two threads communicating
+through <i>x</i> and <i>y</i>), <b>pthread_cond_signal</b>
+can be used as a slightly more efficient alternative to
+<b>pthread_cond_broadcast</b>. In doubt, use
+<b>pthread_cond_broadcast</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">To wait for
+<i>x</i> to become greater than <i>y</i> with a timeout of 5
+seconds, do:</p>
+<p style="margin-left:18%; margin-top: 1em"><b>struct
+timeval now; <br/>
+struct timespec timeout; <br/>
+int retcode; <br/>
+pthread_mutex_lock(&amp;mut); <br/>
+gettimeofday(&amp;now); <br/>
+timeout.tv_sec = now.tv_sec + 5; <br/>
+timeout.tv_nsec = now.tv_usec * 1000; <br/>
+retcode = 0; <br/>
+while (x &lt;= y &amp;&amp; retcode != ETIMEDOUT) { <br/>
+retcode = pthread_cond_timedwait(&amp;cond, &amp;mut,
+&amp;timeout); <br/>
+} <br/>
+if (retcode == ETIMEDOUT) { <br/>
+/* timeout occurred */ <br/>
+} else { <br/>
+/* operate on x and y */ <br/>
+} <br/>
+ pthread_mutex_unlock(&amp;mut);</b></p>
+<hr/>
+</body>
+</html>

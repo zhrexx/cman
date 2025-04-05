@@ -1,0 +1,255 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:23 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ttyslot</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">ttyslot</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Ancient history">Ancient history</a><br/>
+<a href="#Ancient history (2)">Ancient history (2)</a><br/>
+<a href="#The semantics of ttyslot">The semantics of ttyslot</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#VERSIONS">VERSIONS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">ttyslot −
+find the slot of the current user’s terminal in some
+file</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;unistd.h&gt;</b> /* See NOTES */</p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+ttyslot(void);</b></p>
+<p style="margin-left:4%; margin-top: 1em">Feature Test
+Macro Requirements for glibc (see
+<b>feature_test_macros</b>(7)):</p>
+<p style="margin-left:9%; margin-top: 1em"><b>ttyslot</b>():
+<br/>
+Since glibc 2.24: <br/>
+_DEFAULT_SOURCE <br/>
+From glibc 2.20 to glibc 2.23: <br/>
+_DEFAULT_SOURCE || (_XOPEN_SOURCE &amp;&amp; _XOPEN_SOURCE
+&lt; 500) <br/>
+glibc 2.19 and earlier: <br/>
+_BSD_SOURCE || (_XOPEN_SOURCE &amp;&amp; _XOPEN_SOURCE &lt;
+500)</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The legacy
+function <b>ttyslot</b>() returns the index of the current
+user’s entry in some file.</p>
+<p style="margin-left:9%; margin-top: 1em">Now "What
+file?" you ask. Well, let’s first look at some
+history.</p>
+<h3>Ancient history
+<a name="Ancient history"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">There used to be
+a file <i>/etc/ttys</i> in UNIX V6, that was read by
+the <b>init</b>(1) program to find out what to do with each
+terminal line. Each line consisted of three characters. The
+first character was either '0' or '1', where '0' meant
+"ignore". The second character denoted the
+terminal: '8' stood for "/dev/tty8". The third
+character was an argument to <b>getty</b>(8) indicating the
+sequence of line speeds to try ('−' was: start trying
+110 baud). Thus a typical line was "18−". A
+hang on some line was solved by changing the '1' to a '0',
+signaling init, changing back again, and signaling init
+again.</p>
+<p style="margin-left:9%; margin-top: 1em">In UNIX V7
+the format was changed: here the second character was the
+argument to <b>getty</b>(8) indicating the sequence of line
+speeds to try ('0' was: cycle through 300-1200-150-110 baud;
+'4' was for the on-line console DECwriter) while the rest of
+the line contained the name of the tty. Thus a typical line
+was "14console".</p>
+<p style="margin-left:9%; margin-top: 1em">Later systems
+have more elaborate syntax. System V-like systems have
+<i>/etc/inittab</i> instead.</p>
+<h3>Ancient history (2)
+<a name="Ancient history (2)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">On the other
+hand, there is the file <i>/etc/utmp</i> listing the people
+currently logged in. It is maintained by <b>login</b>(1). It
+has a fixed size, and the appropriate index in the file was
+determined by <b>login</b>(1) using the <b>ttyslot</b>()
+call to find the number of the line in <i>/etc/ttys</i>
+(counting from 1).</p>
+<h3>The semantics of ttyslot
+<a name="The semantics of ttyslot"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Thus, the
+function <b>ttyslot</b>() returns the index of the
+controlling terminal of the calling process in the file
+<i>/etc/ttys</i>, and that is (usually) the same as the
+index of the entry for the current user in the file
+<i>/etc/utmp</i>. BSD still has the <i>/etc/ttys</i> file,
+but System V-like systems do not, and hence cannot refer to
+it. Thus, on such systems the documentation says that
+<b>ttyslot</b>() returns the current user’s index in
+the user accounting data base.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+this function returns the slot number. On error (e.g., if
+none of the file descriptors 0, 1, or 2 is associated with a
+terminal that occurs in this data base) it returns 0 on
+UNIX V6 and V7 and BSD-like systems, but −1 on
+System V-like systems.</p>
+<h2>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For an
+explanation of the terms used in this section, see
+<b>attributes</b>(7).</p>
+<h2>VERSIONS
+<a name="VERSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The utmp file is
+found in various places on various systems, such as
+<i>/etc/utmp</i>, <i>/var/adm/utmp</i>,
+<i>/var/run/utmp</i>.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">None.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SUSv1; marked as
+LEGACY in SUSv2; removed in POSIX.1-2001. SUSv2 requires
+−1 on error.</p>
+<p style="margin-left:9%; margin-top: 1em">The glibc2
+implementation of this function reads the file
+<b>_PATH_TTYS</b>, defined in <i>&lt;ttyent.h&gt;</i> as
+"/etc/ttys". It returns 0 on error. Since Linux
+systems do not usually have "/etc/ttys", it will
+always return 0.</p>
+<p style="margin-left:9%; margin-top: 1em">On BSD-like
+systems and Linux, the declaration of <b>ttyslot</b>() is
+provided by <i>&lt;unistd.h&gt;</i>. On System V-like
+systems, the declaration is provided by
+<i>&lt;stdlib.h&gt;</i>. Since glibc 2.24,
+<i>&lt;stdlib.h&gt;</i> also provides the declaration with
+the following feature test macro definitions:</p>
+<p style="margin-left:14%; margin-top: 1em">(_XOPEN_SOURCE
+&gt;= 500 || <br/>
+(_XOPEN_SOURCE &amp;&amp; _XOPEN_SOURCE_EXTENDED)) <br/>
+&amp;&amp; ! (_POSIX_C_SOURCE &gt;= 200112L || _XOPEN_SOURCE
+&gt;= 600)</p>
+<p style="margin-left:9%; margin-top: 1em">Minix also has
+<i>fttyslot</i>(<i>fd</i>).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>getttyent</b>(3),
+<b>ttyname</b>(3), <b>utmp</b>(5)</p>
+<hr/>
+</body>
+</html>

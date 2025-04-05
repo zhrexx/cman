@@ -1,0 +1,227 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:49 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OPENSSL_IA32CAP</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OPENSSL_IA32CAP</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OPENSSL_ia32cap
+− the x86[_64] processor capabilities vector</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">env
+OPENSSL_ia32cap=... &lt;application&gt;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OpenSSL supports
+a range of x86[_64] instruction set extensions. These
+extensions are denoted by individual bits in capability
+vector returned by processor in EDX:ECX register pair after
+executing CPUID instruction with EAX=1 input value (see
+Intel Application Note #241618). This vector is copied to
+memory upon toolkit initialization and used to choose
+between different code paths to provide optimal performance
+across wide range of processors. For the moment of this
+writing following bits are significant: <br/>
+bit #4 denoting presence of Time−Stamp Counter. <br/>
+bit #19 denoting availability of CLFLUSH instruction; <br/>
+bit #20, reserved by Intel, is used to choose among RC4 code
+paths; <br/>
+bit #23 denoting MMX support; <br/>
+bit #24, FXSR bit, denoting availability of XMM registers;
+<br/>
+bit #25 denoting SSE support; <br/>
+bit #26 denoting SSE2 support; <br/>
+bit #28 denoting Hyperthreading, which is used to
+distinguish cores <br/>
+with shared cache; <br/>
+bit #30, reserved by Intel, denotes specifically Intel CPUs;
+<br/>
+bit #33 denoting availability of PCLMULQDQ instruction; <br/>
+bit #41 denoting SSSE3, Supplemental SSE3, support; <br/>
+bit #43 denoting AMD XOP support (forced to zero on
+non−AMD CPUs); <br/>
+bit #54 denoting availability of MOVBE instruction; <br/>
+bit #57 denoting AES−NI instruction set extension;
+<br/>
+bit #58, XSAVE bit, lack of which in combination with MOVBE
+is used to <br/>
+identify Atom Silvermont core; <br/>
+bit #59, OSXSAVE bit, denoting availability of YMM
+registers; <br/>
+bit #60 denoting AVX extension; <br/>
+bit #62 denoting availability of RDRAND instruction;</p>
+<p style="margin-left:9%; margin-top: 1em">For example, in
+32−bit application context clearing bit #26 at
+run−time disables high−performance SSE2 code
+present in the crypto library, while clearing bit #24
+disables SSE2 code operating on 128−bit XMM register
+bank. You might have to do the latter if target OpenSSL
+application is executed on SSE2 capable CPU, but under
+control of OS that does not enable XMM registers.
+Historically address of the capability vector copy was
+exposed to application through <b>OPENSSL_ia32cap_loc()</b>,
+but not anymore. Now the only way to affect the capability
+detection is to set <b>OPENSSL_ia32cap</b> environment
+variable prior target application start. To give a specific
+example, on Intel P4 processor "env
+OPENSSL_ia32cap=0x16980010 apps/openssl", or better yet
+"env OPENSSL_ia32cap=˜0x1000000 apps/openssl"
+would achieve the desired effect. Alternatively you can
+reconfigure the toolkit with no−sse2 option and
+recompile.</p>
+<p style="margin-left:9%; margin-top: 1em">Less intuitive
+is clearing bit #28, or ˜0x10000000 in the
+"environment variable" terms. The truth is that
+it's not copied from CPUID output verbatim, but is adjusted
+to reflect whether or not the data cache is actually shared
+between logical cores. This in turn affects the decision on
+whether or not expensive countermeasures against
+cache−timing attacks are applied, most notably in AES
+assembler module.</p>
+<p style="margin-left:9%; margin-top: 1em">The capability
+vector is further extended with EBX value returned by CPUID
+with EAX=7 and ECX=0 as input. Following bits are
+significant: <br/>
+bit #64+3 denoting availability of BMI1 instructions, e.g.
+ANDN; <br/>
+bit #64+5 denoting availability of AVX2 instructions; <br/>
+bit #64+8 denoting availability of BMI2 instructions, e.g.
+MULX and <br/>
+RORX; <br/>
+bit #64+16 denoting availability of AVX512F extension; <br/>
+bit #64+17 denoting availability of AVX512DQ extension; <br/>
+bit #64+18 denoting availability of RDSEED instruction; <br/>
+bit #64+19 denoting availability of ADCX and ADOX
+instructions; <br/>
+bit #64+21 denoting availability of VPMADD52[LH]UQ
+instructions, aka <br/>
+AVX512IFMA extension; <br/>
+bit #64+29 denoting availability of SHA extension; <br/>
+bit #64+30 denoting availability of AVX512BW extension; <br/>
+bit #64+31 denoting availability of AVX512VL extension; <br/>
+bit #64+41 denoting availability of VAES extension; <br/>
+bit #64+42 denoting availability of VPCLMULQDQ
+extension;</p>
+<p style="margin-left:9%; margin-top: 1em">To control this
+extended capability word use ":" as delimiter when
+setting up <b>OPENSSL_ia32cap</b> environment variable. For
+example assigning ":˜0x20" would disable AVX2
+code paths, and ":0" − all post−AVX
+extensions.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Not
+available.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2004−2021 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

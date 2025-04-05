@@ -1,0 +1,402 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:15 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>File::Which</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">File::Which</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Implementations">Implementations</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#which">which</a><br/>
+<a href="#where">where</a><br/>
+<a href="#GLOBALS">GLOBALS</a><br/>
+<a href="#$IMPLICIT_CURRENT_DIR">$IMPLICIT_CURRENT_DIR</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#SUPPORT">SUPPORT</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::Which
+− Perl implementation of the which utility as an
+API</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version 1.27</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use File::Which;
+# exports which() <br/>
+use File::Which qw(which where); # exports which() and
+where() <br/>
+my $exe_path = which 'perldoc'; <br/>
+my @paths = where 'perl'; <br/>
+# Or <br/>
+my @paths = which 'perl'; # an array forces search for all
+of them</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::Which
+finds the full or relative paths to executable programs on
+the system. This is normally the function of
+"which" utility. "which" is typically
+implemented as either a program or a built in shell command.
+On some platforms, such as Microsoft Windows it is not
+provided as part of the core operating system. This module
+provides a consistent API to this functionality regardless
+of the underlying platform.</p>
+<p style="margin-left:9%; margin-top: 1em">The focus of
+this module is correctness and portability. As a consequence
+platforms where the current directory is implicitly part of
+the search path such as Microsoft Windows will find
+executables in the current directory, whereas on platforms
+such as UNIX where this is not the case executables in the
+current directory will only be found if the current
+directory is explicitly added to the path.</p>
+<p style="margin-left:9%; margin-top: 1em">If you need a
+portable "which" on the command line in an
+environment that does not provide it, install App::pwhich
+which provides a command line interface to this API.</p>
+<h3>Implementations
+<a name="Implementations"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">File::Which
+searches the directories of the user's "PATH" (the
+current implementation uses File::Spec#path to determine the
+correct "PATH"), looking for executable files
+having the name specified as a parameter to
+"which". Under Win32 systems, which do not have a
+notion of directly executable files, but uses special
+extensions such as ".exe" and ".bat" to
+identify them, "File::Which" takes extra steps to
+assure that you will find the correct file (so for example,
+you might be searching for "perl", it'll try
+<i>perl.exe</i>, <i>perl.bat</i>, etc.)</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Linux, *BSD
+and other UNIXes</i></p>
+<p style="margin-left:9%; margin-top: 1em">There should not
+be any surprises here. The current directory will not be
+searched unless it is explicitly added to the path.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Modern
+Windows (including NT, XP, Vista, 7, 8, 10 etc)</i></p>
+<p style="margin-left:9%; margin-top: 1em">Windows NT has a
+special environment variable called "PATHEXT",
+which is used by the shell to look for executable files.
+Usually, it will contain a list in the form
+".EXE;.BAT;.COM;.JS;.VBS" etc. If
+"File::Which" finds such an environment variable,
+it parses the list and uses it as the different
+extensions.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Cygwin</i></p>
+<p style="margin-left:9%; margin-top: 1em">Cygwin provides
+a Unix−like environment for Microsoft Windows users.
+In most ways it works like other Unix and Unix−like
+environments, but in a few key aspects it works like
+Windows. As with other Unix environments, the current
+directory is not included in the search unless it is
+explicitly included in the search path. Like on Windows,
+files with ".EXE" or &lt;.BAT&gt; extensions will
+be discovered even if they are not part of the query.
+".COM" or extensions specified using the
+"PATHEXT" environment variable will NOT be
+discovered without the fully qualified name, however.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Windows ME,
+98, 95, MS−DOS, OS/2</i></p>
+<p style="margin-left:9%; margin-top: 1em">This set of
+operating systems don't have the "PATHEXT"
+variable, and usually you will find executable files there
+with the extensions ".exe", ".bat" and
+(less likely) ".com". "File::Which" uses
+this hardcoded list if it's running under Win32 but does not
+find a "PATHEXT" variable.</p>
+<p style="margin-left:9%; margin-top: 1em">As of 2015 none
+of these platforms are tested frequently (or perhaps ever),
+but the current maintainer is determined not to
+intentionally remove support for older operating
+systems.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>VMS</i></p>
+<p style="margin-left:9%; margin-top: 1em">Same case as
+Windows 9x: uses ".exe" and ".com" (in
+that order).</p>
+<p style="margin-left:9%; margin-top: 1em">As of 2015 the
+current maintainer does not test on VMS, and is in fact not
+certain it has ever been tested on VMS. If this platform is
+important to you and you can help me verify and or support
+it on that platform please contact me.</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<h3>which
+<a name="which"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $path = which
+$short_exe_name; <br/>
+my @paths = which $short_exe_name;</p>
+<p style="margin-left:9%; margin-top: 1em">Exported by
+default.</p>
+<p style="margin-left:9%; margin-top: 1em">$short_exe_name
+is the name used in the shell to call the program (for
+example, "perl").</p>
+<p style="margin-left:9%; margin-top: 1em">If it finds an
+executable with the name you specified, which() will return
+the absolute path leading to this executable (for example,
+<i>/usr/bin/perl</i> or <i>C:\Perl\Bin\perl.exe</i>).</p>
+<p style="margin-left:9%; margin-top: 1em">If it does
+<i>not</i> find the executable, it returns
+"undef".</p>
+<p style="margin-left:9%; margin-top: 1em">If which() is
+called in list context, it will return <i>all</i> the
+matches.</p>
+<h3>where
+<a name="where"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @paths =
+where $short_exe_name;</p>
+<p style="margin-left:9%; margin-top: 1em">Not exported by
+default.</p>
+<p style="margin-left:9%; margin-top: 1em">Same as
+"which" in array context. Similar to the
+"where" csh built−in command or "which
+−a" command for platforms that support the
+"−a" option. Will return an array containing
+all the path names matching $short_exe_name.</p>
+<h2>GLOBALS
+<a name="GLOBALS"></a>
+</h2>
+<h3>$IMPLICIT_CURRENT_DIR
+<a name="$IMPLICIT_CURRENT_DIR"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">True if the
+current directory is included in the search implicitly on
+whatever platform you are using. Normally the default is
+reasonable, but on Windows the current directory is included
+implicitly for older shells like "cmd.exe" and
+"command.com", but not for newer shells like
+PowerShell. If you overrule this default, you should ALWAYS
+localize the variable to the tightest scope possible, since
+setting this variable from a module can affect other
+modules. Thus on Windows you can get the correct result if
+the user is running either "cmd.exe" or PowerShell
+on Windows you can do this:</p>
+<p style="margin-left:9%; margin-top: 1em">use File::Which
+qw( which ); <br/>
+use Shell::Guess; <br/>
+my $path = do { <br/>
+my $is_power =
+Shell::Guess−&gt;running_shell−&gt;is_power;
+<br/>
+local $File::Which::IMPLICIT_CURRENT_DIR = !$is_power; <br/>
+which 'foo'; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">For a variety of
+reasons it is difficult to accurately compute the shell that
+a user is using, but Shell::Guess makes a reasonable
+effort.</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module has
+no non−core requirements for Perl 5.6.2 and
+better.</p>
+<p style="margin-left:9%; margin-top: 1em">This module is
+fully supported back to Perl 5.8.1. It may work on 5.8.0. It
+should work on Perl 5.6.x and I may even test on 5.6.2. I
+will accept patches to maintain compatibility for such older
+Perls, but you may need to fix it on 5.6.x / 5.8.0 and send
+me a patch.</p>
+<p style="margin-left:9%; margin-top: 1em">Not tested on
+VMS although there is platform specific code for those.
+Anyone who haves a second would be very kind to send me a
+report of how it went.</p>
+<h2>SUPPORT
+<a name="SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Bugs should be
+reported via the GitHub issue tracker</p>
+<p style="margin-left:9%; margin-top: 1em">&lt;https://github.com/uperl/File−Which/issues&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">For other
+issues, contact the maintainer.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">pwhich,
+App::pwhich</p>
+<p style="margin-left:14%;">Command line interface to this
+module.</p>
+<p style="margin-left:9%;">IPC::Cmd</p>
+<p style="margin-left:14%;">Requires Perl 5.8.3. Included
+as part of the Perl core as of 5.9.5.</p>
+<p style="margin-left:14%; margin-top: 1em">This module
+provides (among other things) a "can_run"
+function, which is similar to "which". It is a
+much heavier module since it does a lot more, and if you use
+"can_run" it pulls in ExtUtils::MakeMaker. This
+combination may be overkill for applications which do not
+need IPC::Cmd's complicated interface for running programs,
+or do not need the memory overhead required for installing
+Perl modules.</p>
+<p style="margin-left:14%; margin-top: 1em">At least some
+older versions will find executables in the current
+directory, even if the current directory is not in the
+search path (which is the default on modern Unix).</p>
+<p style="margin-left:14%; margin-top: 1em">"can_run"
+converts directory path name to the 8.3 version on Windows
+using "Win32::GetShortPathName" in some cases.
+This is frequently useful for tools that just need to run
+something using "system" in scalar mode, but may
+be inconvenient for tools like App::pwhich where user
+readability is a premium. Relying on
+"Win32::GetShortPathName" to produce filenames
+without spaces is problematic, as 8.3 filenames can be
+turned off with tweaks to the registry (see
+&lt;https://technet.microsoft.com/en−us/library/cc959352.aspx&gt;).</p>
+<p style="margin-left:9%;">Devel::CheckBin</p>
+<p style="margin-left:14%;">Requires Perl 5.8.1.</p>
+<p style="margin-left:14%; margin-top: 1em">This module
+purports to "check that a command is available",
+but does not provide any documentation on how you might use
+it.</p>
+<p style="margin-left:14%; margin-top: 1em">This module
+also relies on ExtUtils::MakeMaker so has the same overhead
+burdens as IPC::Cmd.</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="49%">
+<p style="margin-top: 1em">Per Einar Ellefsen
+&lt;pereinar@cpan.org&gt;</p> </td>
+<td width="37%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="49%">
+<p>Adam Kennedy &lt;adamk@cpan.org&gt;</p></td>
+<td width="37%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="49%">
+<p>Graham Ollis &lt;plicease@cpan.org&gt;</p></td>
+<td width="37%">
+</td></tr>
+</table>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2002 by Per Einar Ellefsen
+&lt;pereinar@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

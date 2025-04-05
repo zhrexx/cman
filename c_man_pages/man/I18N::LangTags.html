@@ -1,0 +1,751 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:14 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>I18N::LangTags</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">I18N::LangTags</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#ABOUT LOWERCASING">ABOUT LOWERCASING</a><br/>
+<a href="#ABOUT UNICODE PLAINTEXT LANGUAGE TAGS">ABOUT UNICODE PLAINTEXT LANGUAGE TAGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">I18N::LangTags
+− functions for dealing with RFC3066−style
+language tags</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+I18N::LangTags();</p>
+<p style="margin-left:9%; margin-top: 1em">...or specify
+whichever of those functions you want to import, like
+so:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+I18N::LangTags qw(implicate_supers
+similarity_language_tag);</p>
+<p style="margin-left:9%; margin-top: 1em">All the
+exportable functions are listed below −−
+you’re free to import only some, or none at all. By
+default, none are imported. If you say:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+I18N::LangTags qw(:ALL)</p>
+<p style="margin-left:9%; margin-top: 1em">...then all are
+exported. (This saves you from having to use something less
+obvious like "use I18N::LangTags qw(/./)".)</p>
+<p style="margin-left:9%; margin-top: 1em">If you
+don’t import any of these functions, assume a
+&amp;I18N::LangTags:: in front of all the function names in
+the following examples.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Language tags
+are a formalism, described in RFC 3066 (obsoleting 1766),
+for declaring what language form (language and possibly
+dialect) a given chunk of information is in.</p>
+<p style="margin-left:9%; margin-top: 1em">This library
+provides functions for common tasks involving language tags
+as they are needed in a variety of protocols and
+applications.</p>
+<p style="margin-left:9%; margin-top: 1em">Please see the
+"See Also" references for a thorough explanation
+of how to correctly use language tags.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p>the function is_language_tag($lang1)</p></td>
+<td width="40%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Returns true
+iff $lang1 is a formally valid language tag.</p>
+<p style="margin-left:14%; margin-top: 1em">is_language_tag("fr")
+is TRUE <br/>
+is_language_tag("x−jicarilla") is FALSE <br/>
+(Subtags can be 8 chars long at most −−
+'jicarilla' is 9) <br/>
+is_language_tag("sgn−US") is TRUE <br/>
+(That's American Sign Language) <br/>
+is_language_tag("i−Klikitat") is TRUE <br/>
+(True without regard to the fact noone has actually <br/>
+registered Klikitat −− it's a formally valid
+tag) <br/>
+is_language_tag("fr−patois") is TRUE <br/>
+(Formally valid −− altho descriptively weak!)
+<br/>
+is_language_tag("Spanish") is FALSE <br/>
+is_language_tag("french−patois") is FALSE
+<br/>
+(No good −− first subtag has to match <br/>
+/ˆ([xXiI]|[a−zA−Z]{2,3})$/ −−
+see RFC3066) <br/>
+is_language_tag("x−borg−prot2532") is
+TRUE <br/>
+(Yes, subtags can contain digits, as of RFC3066)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="58%">
+<p style="margin-top: 1em">the function
+extract_language_tags($whatever)</p> </td>
+<td width="28%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Returns a list
+of whatever looks like formally valid language tags in
+$whatever. Not very smart, so don’t get too creative
+with what you want to feed it.</p>
+<p style="margin-left:14%; margin-top: 1em">extract_language_tags("fr,
+fr−ca, i−mingo") <br/>
+returns: ('fr', 'fr−ca', 'i−mingo') <br/>
+extract_language_tags("It's like this: I'm in fr
+−− French!") <br/>
+returns: ('It', 'in', 'fr') <br/>
+(So don't just feed it any old thing.)</p>
+<p style="margin-left:14%; margin-top: 1em">The output is
+untainted. If you don’t know what tainting is,
+don’t worry about it.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="59%">
+<p style="margin-top: 1em">the function
+same_language_tag($lang1, $lang2)</p></td>
+<td width="27%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Returns true
+iff $lang1 and $lang2 are acceptable variant tags
+representing the same language-form.</p>
+<p style="margin-left:14%; margin-top: 1em">same_language_tag('x−kadara',
+'i−kadara') is TRUE <br/>
+(The x/i− alternation doesn't matter) <br/>
+same_language_tag('X−KADARA', 'i−kadara') is
+TRUE <br/>
+(...and neither does case) <br/>
+same_language_tag('en', 'en−US') is FALSE <br/>
+(all−English is not the SAME as US English) <br/>
+same_language_tag('x−kadara', 'x−kadar') is
+FALSE <br/>
+(these are totally unrelated tags) <br/>
+same_language_tag('no−bok', 'nb') is TRUE <br/>
+(no−bok is a legacy tag for nb (Norwegian Bokmal))</p>
+<p style="margin-left:14%; margin-top: 1em">"same_language_tag"
+works by just seeing whether encode_language_tag($lang1) is
+the same as encode_language_tag($lang2).</p>
+<p style="margin-left:14%; margin-top: 1em">(Yes, I know
+this function is named a bit oddly. Call it historic
+reasons.)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="67%">
+<p style="margin-top: 1em">the function
+similarity_language_tag($lang1, $lang2)</p></td>
+<td width="19%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Returns an
+integer representing the degree of similarity between tags
+$lang1 and $lang2 (the order of which does not matter),
+where similarity is the number of common elements on the
+left, without regard to case and to x/i−
+alternation.</p>
+<p style="margin-left:14%; margin-top: 1em">similarity_language_tag('fr',
+'fr−ca') is 1 <br/>
+(one element in common) <br/>
+similarity_language_tag('fr−ca', 'fr−FR') is 1
+<br/>
+(one element in common) <br/>
+similarity_language_tag('fr−CA−joual', <br/>
+'fr−CA−PEI') is 2 <br/>
+similarity_language_tag('fr−CA−joual',
+'fr−CA') is 2 <br/>
+(two elements in common) <br/>
+similarity_language_tag('x−kadara', 'i−kadara')
+is 1 <br/>
+(x/i− doesn't matter) <br/>
+similarity_language_tag('en', 'x−kadar') is 0 <br/>
+similarity_language_tag('x−kadara', 'x−kadar')
+is 0 <br/>
+(unrelated tags −− no similarity) <br/>
+similarity_language_tag('i−cree−syllabic', <br/>
+'i−cherokee−syllabic') is 0 <br/>
+(no B&lt;leftmost&gt; elements in common!)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="54%">
+<p style="margin-top: 1em">the function
+is_dialect_of($lang1, $lang2)</p></td>
+<td width="32%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Returns true
+iff language tag $lang1 represents a subform of language tag
+$lang2.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Get the
+order right! It doesn’t work the other way
+around!</b></p>
+<p style="margin-left:14%; margin-top: 1em">is_dialect_of('en−US',
+'en') is TRUE <br/>
+(American English IS a dialect of all−English) <br/>
+is_dialect_of('fr−CA−joual', 'fr−CA') is
+TRUE <br/>
+is_dialect_of('fr−CA−joual', 'fr') is TRUE <br/>
+(Joual is a dialect of (a dialect of) French) <br/>
+is_dialect_of('en', 'en−US') is FALSE <br/>
+(all−English is a NOT dialect of American English)
+<br/>
+is_dialect_of('fr', 'en−CA') is FALSE <br/>
+is_dialect_of('en', 'en' ) is TRUE <br/>
+is_dialect_of('en−US', 'en−US') is TRUE <br/>
+(B&lt;Note:&gt; these are degenerate cases) <br/>
+is_dialect_of('i−mingo−tom', 'x−Mingo') is
+TRUE <br/>
+(the x/i thing doesn't matter, nor does case) <br/>
+is_dialect_of('nn', 'no') is TRUE <br/>
+(because 'nn' (New Norse) is aliased to 'no−nyn', <br/>
+as a special legacy case, and 'no−nyn' is a <br/>
+subform of 'no' (Norwegian))</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p style="margin-top: 1em">the function
+super_languages($lang1)</p> </td>
+<td width="40%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Returns a list
+of language tags that are superordinate tags to $lang1
+−− it gets this by removing subtags from the end
+of $lang1 until nothing (or just "i" or
+"x") is left.</p>
+<p style="margin-left:14%; margin-top: 1em">super_languages("fr−CA−joual")
+is ("fr−CA", "fr") <br/>
+super_languages("en−AU") is ("en")
+<br/>
+super_languages("en") is empty−list, () <br/>
+super_languages("i−cherokee") is
+empty−list, () <br/>
+...not ("i"), which would be illegal as well as
+pointless.</p>
+<p style="margin-left:14%; margin-top: 1em">If $lang1 is
+not a valid language tag, returns empty-list in a list
+context, undef in a scalar context.</p>
+<p style="margin-left:14%; margin-top: 1em">A notable and
+rather unavoidable problem with this method:
+"x−mingo-tom" has an "x" because
+the whole tag isn’t an IANA-registered tag
+−− but
+super_languages(’x−mingo−tom’) is
+(’x−mingo’) −− which
+isn’t really right, since ’i−mingo’
+is registered. But this module has no way of knowing that.
+(But note that
+same_language_tag(’x−mingo’,
+’i−mingo’) is TRUE.)</p>
+<p style="margin-left:14%; margin-top: 1em">More
+importantly, you assume <i>at your peril</i> that
+superordinates of $lang1 are mutually intelligible with
+$lang1. Consider this carefully.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="67%">
+<p style="margin-top: 1em">the function
+locale2language_tag($locale_identifier)</p> </td>
+<td width="19%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">This takes a
+locale name (like "en", "en_US", or
+"en_US.ISO8859−1") and maps it to a language
+tag. If it’s not mappable (as with, notably,
+"C" and "POSIX"), this returns
+empty-list in a list context, or undef in a scalar
+context.</p>
+<p style="margin-left:14%; margin-top: 1em">locale2language_tag("en")
+is "en" <br/>
+locale2language_tag("en_US") is
+"en−US" <br/>
+locale2language_tag("en_US.ISO8859−1") is
+"en−US" <br/>
+locale2language_tag("C") is undef or () <br/>
+locale2language_tag("POSIX") is undef or () <br/>
+locale2language_tag("POSIX") is undef or ()</p>
+<p style="margin-left:14%; margin-top: 1em">I’m not
+totally sure that locale names map satisfactorily to
+language tags. Think REAL hard about how you use this. YOU
+HAVE BEEN WARNED.</p>
+<p style="margin-left:14%; margin-top: 1em">The output is
+untainted. If you don’t know what tainting is,
+don’t worry about it.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="51%">
+<p style="margin-top: 1em">the function
+encode_language_tag($lang1)</p> </td>
+<td width="35%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">This function,
+if given a language tag, returns an encoding of it such
+that:</p>
+<p style="margin-left:14%; margin-top: 1em">* tags
+representing different languages never get the same
+encoding.</p>
+<p style="margin-left:14%; margin-top: 1em">* tags
+representing the same language always get the same
+encoding.</p>
+<p style="margin-left:14%; margin-top: 1em">* an encoding
+of a formally valid language tag always is a string value
+that is defined, has length, and is true if considered as a
+boolean.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that the
+encoding itself is <b>not</b> a formally valid language tag.
+Note also that you cannot, currently, go from an encoding
+back to a language tag that it’s an encoding of.</p>
+<p style="margin-left:14%; margin-top: 1em">Note also that
+you <b>must</b> consider the encoded value as atomic; i.e.,
+you should not consider it as anything but an opaque,
+unanalysable string value. (The internals of the encoding
+method may change in future versions, as the language
+tagging standard changes over time.)</p>
+<p style="margin-left:14%; margin-top: 1em">"encode_language_tag"
+returns undef if given anything other than a formally valid
+language tag.</p>
+<p style="margin-left:14%; margin-top: 1em">The reason
+"encode_language_tag" exists is because different
+language tags may represent the same language; this is
+normally treatable with "same_language_tag", but
+consider this situation:</p>
+<p style="margin-left:14%; margin-top: 1em">You have a data
+file that expresses greetings in different languages. Its
+format is "[language tag]=[how to say
+’Hello’]", like:</p>
+<p style="margin-left:14%; margin-top: 1em">en−US=Hiho
+<br/>
+fr=Bonjour <br/>
+i−mingo=Hau'</p>
+<p style="margin-left:14%; margin-top: 1em">And suppose you
+write a program that reads that file and then runs as a
+daemon, answering client requests that specify a language
+tag and then expect the string that says how to greet in
+that language. So an interaction looks like:</p>
+<p style="margin-left:14%; margin-top: 1em">greeting−client
+asks: fr <br/>
+greeting−server answers: Bonjour</p>
+<p style="margin-left:14%; margin-top: 1em">So far so good.
+But suppose the way you’re implementing this is:</p>
+<p style="margin-left:14%; margin-top: 1em">my %greetings;
+<br/>
+die unless open(IN, "&lt;", "in.dat");
+<br/>
+while(&lt;IN&gt;) { <br/>
+chomp; <br/>
+next unless /ˆ([ˆ=]+)=(.+)/s; <br/>
+my($lang, $expr) = ($1, $2); <br/>
+$greetings{$lang} = $expr; <br/>
+} <br/>
+close(IN);</p>
+<p style="margin-left:14%; margin-top: 1em">at which point
+%greetings has the contents:</p>
+<p style="margin-left:14%; margin-top: 1em">"en−US"
+=&gt; "Hiho" <br/>
+"fr" =&gt; "Bonjour" <br/>
+"i−mingo" =&gt; "Hau'"</p>
+<p style="margin-left:14%; margin-top: 1em">And suppose
+then that you answer client requests for language $wanted by
+just looking up $greetings{$wanted}.</p>
+<p style="margin-left:14%; margin-top: 1em">If the client
+asks for "fr", that will look up successfully in
+%greetings, to the value "Bonjour". And if the
+client asks for "i−mingo", that will look up
+successfully in %greetings, to the value
+"Hau’".</p>
+<p style="margin-left:14%; margin-top: 1em">But if the
+client asks for "i−Mingo" or
+"x−mingo", or "Fr", then the
+lookup in %greetings fails. That’s the Wrong
+Thing.</p>
+<p style="margin-left:14%; margin-top: 1em">You could
+instead do lookups on $wanted with:</p>
+<p style="margin-left:14%; margin-top: 1em">use
+I18N::LangTags qw(same_language_tag); <br/>
+my $response = ''; <br/>
+foreach my $l2 (keys %greetings) { <br/>
+if(same_language_tag($wanted, $l2)) { <br/>
+$response = $greetings{$l2}; <br/>
+last; <br/>
+} <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">But
+that’s rather inefficient. A better way to do it is to
+start your program with:</p>
+<p style="margin-left:14%; margin-top: 1em">use
+I18N::LangTags qw(encode_language_tag); <br/>
+my %greetings; <br/>
+die unless open(IN, "&lt;", "in.dat");
+<br/>
+while(&lt;IN&gt;) { <br/>
+chomp; <br/>
+next unless /ˆ([ˆ=]+)=(.+)/s; <br/>
+my($lang, $expr) = ($1, $2); <br/>
+$greetings{ <br/>
+encode_language_tag($lang) <br/>
+} = $expr; <br/>
+} <br/>
+close(IN);</p>
+<p style="margin-left:14%; margin-top: 1em">and then just
+answer client requests for language $wanted by just looking
+up</p>
+<p style="margin-left:14%; margin-top: 1em">$greetings{encode_language_tag($wanted)}</p>
+<p style="margin-left:14%; margin-top: 1em">And that does
+the Right Thing.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="57%">
+<p style="margin-top: 1em">the function
+alternate_language_tags($lang1)</p> </td>
+<td width="29%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">This function,
+if given a language tag, returns all language tags that are
+alternate forms of this language tag. (I.e., tags which
+refer to the same language.) This is meant to handle legacy
+tags caused by the minor changes in language tag standards
+over the years; and the x−/i− alternation is
+also dealt with.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that this
+function does <i>not</i> try to equate new (and never-used,
+and unusable) ISO639−2 three-letter tags to old (and
+still in use) ISO639−1 two-letter equivalents
+−− like "ara" −&gt;
+"ar" −− because "ara" has
+<i>never</i> been in use as an Internet language tag, and
+RFC 3066 stipulates that it never should be, since a shorter
+tag ("ar") exists.</p>
+<p style="margin-left:14%; margin-top: 1em">Examples:</p>
+<p style="margin-left:14%; margin-top: 1em">alternate_language_tags('no−bok')
+is ('nb') <br/>
+alternate_language_tags('nb') is ('no−bok') <br/>
+alternate_language_tags('he') is ('iw') <br/>
+alternate_language_tags('iw') is ('he') <br/>
+alternate_language_tags('i−hakka') is
+('zh−hakka', 'x−hakka') <br/>
+alternate_language_tags('zh−hakka') is
+('i−hakka', 'x−hakka') <br/>
+alternate_language_tags('en') is () <br/>
+alternate_language_tags('x−mingo−tom') is
+('i−mingo−tom') <br/>
+alternate_language_tags('x−klikitat') is
+('i−klikitat') <br/>
+alternate_language_tags('i−klikitat') is
+('x−klikitat')</p>
+<p style="margin-left:14%; margin-top: 1em">This function
+returns empty-list if given anything other than a formally
+valid language tag.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="72%">
+<p style="margin-top: 1em">the function @langs =
+panic_languages(@accept_languages)</p> </td>
+<td width="14%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">This function
+takes a list of 0 or more language tags that constitute a
+given user’s Accept-Language list, and returns a list
+of tags for <i>other</i> (non-super) languages that are
+probably acceptable to the user, to be used <i>if all else
+fails</i>.</p>
+<p style="margin-left:14%; margin-top: 1em">For example, if
+a user accepts only ’ca’ (Catalan) and
+’es’ (Spanish), and the documents/interfaces you
+have available are just in German, Italian, and Chinese,
+then the user will most likely want the Italian one (and not
+the Chinese or German one!), instead of getting nothing. So
+"panic_languages('ca', 'es')" returns a list
+containing ’it’ (Italian).</p>
+<p style="margin-left:14%; margin-top: 1em">English
+(’en’) is <i>always</i> in the return list, but
+whether it’s at the very end or not depends on the
+input languages. This function works by consulting an
+internal table that stipulates what common languages are
+"close" to each other.</p>
+<p style="margin-left:14%; margin-top: 1em">A useful
+construct you might consider using is:</p>
+<p style="margin-left:14%; margin-top: 1em">@fallbacks =
+super_languages(@accept_languages); <br/>
+push @fallbacks, panic_languages( <br/>
+@accept_languages, @fallbacks, <br/>
+);</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p style="margin-top: 1em">the function implicate_supers(
+...languages... )</p></td>
+<td width="24%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">This takes a
+list of strings (which are presumed to be language-tags;
+strings that aren’t, are ignored); and after each one,
+this function inserts super-ordinate forms that don’t
+already appear in the list. The original list, plus these
+insertions, is returned.</p>
+<p style="margin-left:14%; margin-top: 1em">In other words,
+it takes this:</p>
+<p style="margin-left:14%; margin-top: 1em">pt−br
+de−DE en−US fr pt−br−janeiro</p>
+<p style="margin-left:14%; margin-top: 1em">and returns
+this:</p>
+<p style="margin-left:14%; margin-top: 1em">pt−br pt
+de−DE de en−US en fr
+pt−br−janeiro</p>
+<p style="margin-left:14%; margin-top: 1em">This function
+is most useful in the idiom</p>
+<p style="margin-left:14%; margin-top: 1em">implicate_supers(
+I18N::LangTags::Detect::detect() );</p>
+<p style="margin-left:14%; margin-top: 1em">(See
+I18N::LangTags::Detect.)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="73%">
+<p style="margin-top: 1em">the function
+implicate_supers_strictly( ...languages... )</p></td>
+<td width="13%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">This works like
+"implicate_supers" except that the implicated
+forms are added to the end of the return list.</p>
+<p style="margin-left:14%; margin-top: 1em">In other words,
+implicate_supers_strictly takes a list of strings (which are
+presumed to be language-tags; strings that aren’t, are
+ignored) and after the whole given list, it inserts the
+super-ordinate forms of all given tags, minus any tags that
+already appear in the input list.</p>
+<p style="margin-left:14%; margin-top: 1em">In other words,
+it takes this:</p>
+<p style="margin-left:14%; margin-top: 1em">pt−br
+de−DE en−US fr pt−br−janeiro</p>
+<p style="margin-left:14%; margin-top: 1em">and returns
+this:</p>
+<p style="margin-left:14%; margin-top: 1em">pt−br
+de−DE en−US fr pt−br−janeiro pt de
+en</p>
+<p style="margin-left:14%; margin-top: 1em">The reason this
+function has "_strictly" in its name is that when
+you’re processing an Accept-Language list according to
+the RFCs, if you interpret the RFCs quite strictly, then you
+would use implicate_supers_strictly, but for normal use
+(i.e., common-sense use, as far as I’m concerned)
+you’d use implicate_supers.</p>
+<h2>ABOUT LOWERCASING
+<a name="ABOUT LOWERCASING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">I’ve
+considered making all the above functions that output
+language tags return all those tags strictly in lowercase.
+Having all your language tags in lowercase does make some
+things easier. But you might as well just lowercase as you
+like, or call encode_language_tag($lang1) where
+appropriate.</p>
+<h2>ABOUT UNICODE PLAINTEXT LANGUAGE TAGS
+<a name="ABOUT UNICODE PLAINTEXT LANGUAGE TAGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">In some future
+version of I18N::LangTags, I plan to include support for
+RFC2482−style language tags −− which are
+basically just normal language tags with their ASCII
+characters shifted into Plane 14.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">*
+I18N::LangTags::List</p>
+<p style="margin-left:9%; margin-top: 1em">* RFC 3066,
+"&lt;http://www.ietf.org/rfc/rfc3066.txt&gt;",
+"Tags for the Identification of Languages".
+(Obsoletes RFC 1766)</p>
+<p style="margin-left:9%; margin-top: 1em">* RFC 2277,
+"&lt;http://www.ietf.org/rfc/rfc2277.txt&gt;",
+"IETF Policy on Character Sets and Languages".</p>
+<p style="margin-left:9%; margin-top: 1em">* RFC 2231,
+"&lt;http://www.ietf.org/rfc/rfc2231.txt&gt;",
+"MIME Parameter Value and Encoded Word Extensions:
+Character Sets, Languages, and Continuations".</p>
+<p style="margin-left:9%; margin-top: 1em">* RFC 2482,
+"&lt;http://www.ietf.org/rfc/rfc2482.txt&gt;",
+"Language Tagging in Unicode Plain Text".</p>
+<p style="margin-left:9%; margin-top: 1em">* Locale::Codes,
+in
+"&lt;http://www.perl.com/CPAN/modules/by−module/Locale/&gt;"</p>
+<p style="margin-left:9%; margin-top: 1em">* ISO
+639−2, "Codes for the representation of names of
+languages", including two-letter and three-letter
+codes,
+"&lt;http://www.loc.gov/standards/iso639−2/php/code_list.php&gt;"</p>
+<p style="margin-left:9%; margin-top: 1em">* The IANA list
+of registered languages (hopefully up-to-date),
+"&lt;http://www.iana.org/assignments/language−tags&gt;"</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+1998+ Sean M. Burke. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">The programs and
+documentation in this dist are distributed in the hope that
+they will be useful, but without any warranty; without even
+the implied warranty of merchantability or fitness for a
+particular purpose.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Sean M. Burke
+"sburke@cpan.org"</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:14 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>I18N::Langinfo</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">I18N::Langinfo</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href='#For systems without "nl_langinfo"'>For systems without "nl_langinfo"</a><br/>
+<a href="#EXPORT">EXPORT</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">I18N::Langinfo
+− query locale information</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+I18N::Langinfo;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>langinfo()</b> function queries various locale
+information that can be used to localize output and user
+interfaces. It uses the current underlying locale,
+regardless of whether or not it was called from within the
+scope of "use locale". The <b>langinfo()</b>
+function requires one numeric argument that identifies the
+locale constant to query: if no argument is supplied, $_ is
+used. The numeric constants appropriate to be used as
+arguments are exportable from I18N::Langinfo.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+example will import the <b>langinfo()</b> function itself
+and three constants to be used as arguments to
+<b>langinfo()</b>: a constant for the abbreviated first day
+of the week (the numbering starts from Sunday = 1) and two
+more constants for the affirmative and negative answers for
+a yes/no question in the current locale.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+I18N::Langinfo qw(langinfo ABDAY_1 YESSTR NOSTR); <br/>
+my ($abday_1, $yesstr, $nostr) = <br/>
+map { langinfo($_) } (ABDAY_1, YESSTR, NOSTR); <br/>
+print "$abday_1? [$yesstr/$nostr] ";</p>
+<p style="margin-left:9%; margin-top: 1em">In other words,
+in the "C" (or English) locale the above will
+probably print something like:</p>
+<p style="margin-left:9%; margin-top: 1em">Sun?
+[yes/no]</p>
+<p style="margin-left:9%; margin-top: 1em">but under a
+French locale</p>
+<p style="margin-left:9%; margin-top: 1em">dim?
+[oui/non]</p>
+<p style="margin-left:9%; margin-top: 1em">The usually
+available constants are as follows.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>For abbreviated and full length days of the week and
+months of the year:</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">ABDAY_1 ABDAY_2
+ABDAY_3 ABDAY_4 ABDAY_5 ABDAY_6 ABDAY_7 <br/>
+ABMON_1 ABMON_2 ABMON_3 ABMON_4 ABMON_5 ABMON_6 <br/>
+ABMON_7 ABMON_8 ABMON_9 ABMON_10 ABMON_11 ABMON_12 <br/>
+DAY_1 DAY_2 DAY_3 DAY_4 DAY_5 DAY_6 DAY_7 <br/>
+MON_1 MON_2 MON_3 MON_4 MON_5 MON_6 <br/>
+MON_7 MON_8 MON_9 MON_10 MON_11 MON_12</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">For the date-time, date, and
+time formats used by the <b>strftime()</b> function (see
+POSIX):</p> </td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">D_T_FMT D_FMT
+T_FMT</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">For the locales for which it
+makes sense to have ante meridiem and post meridiem time
+formats:</p> </td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">AM_STR PM_STR
+T_FMT_AMPM</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">For the character code set being
+used (such as "ISO8859−1",
+"cp850", "koi8−r",
+"sjis", "utf8", etc.):</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">CODESET</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">For the symbol or string of
+characters that indicates a number is a monetary value:</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">CRNCYSTR</p>
+<p style="margin-left:14%; margin-top: 1em">An example is
+the dollar sign "$". Some locales not associated
+with particular locations may have an empty currency string.
+(The C locale is one.) Otherwise, the return of this is
+always prefixed by one of these three characters:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"−"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">indicates that in this locale,
+the string precedes the numeric value, as in a U.S. locale:
+"$9.95".</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"+"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>indicates that in this locale, the string follows the
+numeric value, like "9.95USD".</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"."</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>indicates that in this locale, the string replaces the
+radix character, like "9$95".</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>•</p></td>
+<td width="1%"></td>
+<td width="81%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">For the radix
+character used between the integer and the fractional part
+of decimal numbers, and the group separator string for
+large-ish floating point numbers (yes, these are redundant
+with <b>POSIX::localeconv()</b>):</p>
+<p style="margin-left:14%; margin-top: 1em">RADIXCHAR
+THOUSEP</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">For any alternate digits used in
+this locale besides the standard 0..9:</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">ALT_DIGITS</p>
+<p style="margin-left:14%; margin-top: 1em">This returns a
+sequence of alternate numeric reprsesentations for the
+numbers 0 ... up to 99. The representations are returned in
+a single string, with a semi-colon ";" used to
+separated the individual ones.</p>
+<p style="margin-left:14%; margin-top: 1em">Most locales
+don’t have alternate digits, so the string will be
+empty.</p>
+<p style="margin-left:14%; margin-top: 1em">To access this
+data conveniently, you could do something like</p>
+<p style="margin-left:14%; margin-top: 1em">use
+I18N::Langinfo qw(langinfo ALT_DIGITS); <br/>
+my @alt_digits = split ';', langinfo(ALT_DIGITS);</p>
+<p style="margin-left:14%; margin-top: 1em">The array
+@alt_digits will contain 0 elements if the current locale
+doesn’t have alternate digits specified for it.
+Otherwise, it will have as many elements as the locale
+defines, with "[0]" containing the alternate digit
+for zero; "[1]" for one; and so forth, up to
+potentially "[99]" for the alternate
+representation of ninety-nine.</p>
+<p style="margin-left:14%; margin-top: 1em">Be aware that
+the alternate representation in some locales for the numbers
+0..9 will have a leading alternate-zero, so would look like
+the equivalent of 00..09.</p>
+<p style="margin-left:14%; margin-top: 1em">Running this
+program</p>
+<p style="margin-left:14%; margin-top: 1em">use
+I18N::Langinfo qw(langinfo ALT_DIGITS); <br/>
+my @alt_digits = split ';', langinfo(ALT_DIGITS); <br/>
+splice @alt_digits, 15; <br/>
+print join " ", @alt_digits, "\n";</p>
+<p style="margin-left:14%; margin-top: 1em">on a Japanese
+locale yields</p>
+<p style="margin-left:14%; margin-top: 1em">"〇
+ 一  二  三  四
+ 五  六  七  八
+ 九  十  十 一
+ 十 二  十 三
+ 十 四 "</p>
+<p style="margin-left:14%; margin-top: 1em">on some
+platforms.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="76%">
+<p style="margin-top: 1em">For the affirmative and negative
+responses and expressions:</p></td>
+<td width="10%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">YESSTR YESEXPR
+NOSTR NOEXPR</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">For the eras based on typically
+some ruler, such as the Japanese Emperor (naturally only
+defined in the appropriate locales):</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">ERA ERA_D_FMT
+ERA_D_T_FMT ERA_T_FMT</p>
+<p style="margin-left:9%; margin-top: 1em">In addition,
+Linux boxes have extra items, as follows. (When called from
+other platform types, these return a stub value, of not much
+use.) <br/>
+"_NL_ADDRESS_POSTAL_FMT" <br/>
+"_NL_ADDRESS_COUNTRY_NAME" <br/>
+"_NL_ADDRESS_COUNTRY_POST" <br/>
+"_NL_ADDRESS_COUNTRY_AB2" <br/>
+"_NL_ADDRESS_COUNTRY_AB3" <br/>
+"_NL_ADDRESS_COUNTRY_CAR" <br/>
+"_NL_ADDRESS_COUNTRY_NUM" <br/>
+"_NL_ADDRESS_COUNTRY_ISBN" <br/>
+"_NL_ADDRESS_LANG_NAME" <br/>
+"_NL_ADDRESS_LANG_AB" <br/>
+"_NL_ADDRESS_LANG_TERM" <br/>
+"_NL_ADDRESS_LANG_LIB"</p>
+<p style="margin-left:14%;">On Linux boxes, these return
+information about the country for the current locale.
+Further information is found in <i>langinfo.h</i></p>
+<p style="margin-left:9%;">"_NL_IDENTIFICATION_TITLE"
+<br/>
+"_NL_IDENTIFICATION_SOURCE" <br/>
+"_NL_IDENTIFICATION_ADDRESS" <br/>
+"_NL_IDENTIFICATION_CONTACT" <br/>
+"_NL_IDENTIFICATION_EMAIL" <br/>
+"_NL_IDENTIFICATION_TEL" <br/>
+"_NL_IDENTIFICATION_FAX" <br/>
+"_NL_IDENTIFICATION_LANGUAGE" <br/>
+"_NL_IDENTIFICATION_TERRITORY" <br/>
+"_NL_IDENTIFICATION_AUDIENCE" <br/>
+"_NL_IDENTIFICATION_APPLICATION" <br/>
+"_NL_IDENTIFICATION_ABBREVIATION" <br/>
+"_NL_IDENTIFICATION_REVISION" <br/>
+"_NL_IDENTIFICATION_DATE" <br/>
+"_NL_IDENTIFICATION_CATEGORY"</p>
+<p style="margin-left:14%;">On Linux boxes, these return
+meta information about the current locale, such as how to
+get in touch with its maintainers. Further information is
+found in <i>langinfo.h</i></p>
+<p style="margin-left:9%;">"_NL_MEASUREMENT_MEASUREMENT"</p>
+<p style="margin-left:14%;">On Linux boxes, it returns 1 if
+the metric system of measurement prevails in the locale; or
+2 if US customary units prevail.</p>
+<p style="margin-left:9%;">"_NL_NAME_NAME_FMT"
+<br/>
+"_NL_NAME_NAME_GEN" <br/>
+"_NL_NAME_NAME_MR" <br/>
+"_NL_NAME_NAME_MRS" <br/>
+"_NL_NAME_NAME_MISS" <br/>
+"_NL_NAME_NAME_MS"</p>
+<p style="margin-left:14%;">On Linux boxes, these return
+information about how names are formatted and the personal
+salutations used in the current locale. Further information
+is found in <b>locale</b>(7) and <i>langinfo.h</i></p>
+<p style="margin-left:9%;">"_NL_PAPER_HEIGHT"
+<br/>
+"_NL_PAPER_WIDTH"</p>
+<p style="margin-left:14%;">On Linux boxes, these return
+the standard size of sheets of paper (in millimeters) in the
+current locale.</p>
+<p style="margin-left:9%;">"_NL_TELEPHONE_TEL_INT_FMT"
+<br/>
+"_NL_TELEPHONE_TEL_DOM_FMT" <br/>
+"_NL_TELEPHONE_INT_SELECT" <br/>
+"_NL_TELEPHONE_INT_PREFIX"</p>
+<p style="margin-left:14%;">On Linux boxes, these return
+information about how telephone numbers are formatted (both
+domestically and international calling) in the current
+locale. Further information is found in
+<i>langinfo.h</i></p>
+<h3>For systems without "nl_langinfo"
+<a name='For systems without "nl_langinfo"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This module
+originally was just a wrapper for the libc
+"nl_langinfo" function, and did not work on
+systems lacking it, such as Windows.</p>
+<p style="margin-left:9%; margin-top: 1em">Starting in Perl
+5.28, this module works on all platforms. When
+"nl_langinfo" is not available, it uses various
+methods to construct what that function, if present, would
+return. But there are potential glitches. These are the
+items that could be different: <br/>
+"ERA"</p>
+<p style="margin-left:14%;">Unimplemented, so returns
+"".</p>
+<p style="margin-left:9%;">"CODESET"</p>
+<p style="margin-left:14%;">This should work properly for
+Windows platforms. On almost all other modern platforms, it
+will reliably return "UTF−8" if that is the
+code set. Otherwise, it depends on the locale’s name.
+If that is of the form "foo.bar", it will assume
+"bar" is the code set; and it also knows about the
+two locales "C" and "POSIX". If none of
+those apply it returns "".</p>
+<p style="margin-left:9%;">"YESEXPR" <br/>
+"YESSTR" <br/>
+"NOEXPR" <br/>
+"NOSTR"</p>
+<p style="margin-left:14%;">Only the values for English are
+returned. "YESSTR" and "NOSTR" have been
+removed from POSIX 2008, and are retained here for backwards
+compatibility. Your platform’s "nl_langinfo"
+may not support them.</p>
+<p style="margin-left:9%;">"ALT_DIGITS"</p>
+<p style="margin-left:14%;">On systems with a strftime(3)
+that recognizes the POSIX-defined %O format modifier (not
+Windows), perl tries hard to return these. The result likely
+will go as high as what nl_langinfo() would return, but not
+necessarily; and the numbers from 0..9 will always be
+stripped of leading zeros.</p>
+<p style="margin-left:14%; margin-top: 1em">Without %O, an
+empty string is always returned.</p>
+<p style="margin-left:9%;">"D_FMT"</p>
+<p style="margin-left:14%;">Always evaluates to %x, the
+locale’s appropriate date representation.</p>
+<p style="margin-left:9%;">"T_FMT"</p>
+<p style="margin-left:14%;">Always evaluates to %X, the
+locale’s appropriate time representation.</p>
+<p style="margin-left:9%;">"D_T_FMT"</p>
+<p style="margin-left:14%;">Always evaluates to %c, the
+locale’s appropriate date and time representation.</p>
+<p style="margin-left:9%;">"CRNCYSTR"</p>
+<p style="margin-left:14%;">The return may be incorrect for
+those rare locales where the currency symbol replaces the
+radix character. If you have examples of it needing to work
+differently, please file a report at
+&lt;https://github.com/Perl/perl5/issues&gt;.</p>
+<p style="margin-left:9%;">"ERA_D_FMT" <br/>
+"ERA_T_FMT" <br/>
+"ERA_D_T_FMT" <br/>
+"T_FMT_AMPM"</p>
+<p style="margin-left:14%;">These are derived by using
+strftime(), and not all versions of that function know about
+them. "" is returned for these on such
+systems.</p>
+<p style="margin-left:9%;">All "_NL_<i>foo</i>"
+items</p>
+<p style="margin-left:14%;">These return the same values as
+they do on boxes that don’t have the appropriate
+underlying locale categories.</p>
+<p style="margin-left:9%; margin-top: 1em">See your
+<b>nl_langinfo</b>(3) for more information about the
+available constants. (Often this means having to look
+directly at the <i>langinfo.h</i> C header file.)</p>
+<h3>EXPORT
+<a name="EXPORT"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default only
+the langinfo() function is exported.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Before Perl
+5.28, the returned values are unreliable for the
+"RADIXCHAR" and "THOUSEP" locale
+constants.</p>
+<p style="margin-left:9%; margin-top: 1em">Starting in
+5.28, changing locales on threaded builds is supported on
+systems that offer thread-safe locale functions. These
+include POSIX 2008 systems and Windows starting with Visual
+Studio 2005, and this module will work properly in such
+situations. However, on threaded builds on Windows prior to
+Visual Studio 2015, retrieving the items
+"CRNCYSTR" and "THOUSEP" can result in a
+race with a thread that has converted to use the global
+locale. It is quite uncommon for a thread to have done this.
+It would be possible to construct a workaround for this;
+patches welcome: see "switch_to_global_locale" in
+perlapi.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">perllocale,
+"localeconv" in POSIX, "setlocale" in
+POSIX, <b>nl_langinfo</b>(3).</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Jarkko
+Hietaniemi, &lt;jhi@hut.fi&gt;. Now maintained by Perl 5
+porters.</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright 2001
+by Jarkko Hietaniemi</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

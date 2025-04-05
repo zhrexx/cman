@@ -1,0 +1,268 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:33 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>B::Xref</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">B::Xref</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#OPTIONS">OPTIONS</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">B::Xref −
+Generates cross reference reports for Perl programs</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">perl
+−MO=Xref[,OPTIONS] foo.pl</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The B::Xref
+module is used to generate a cross reference listing of all
+definitions and uses of variables, subroutines and formats
+in a Perl program. It is implemented as a backend for the
+Perl compiler.</p>
+<p style="margin-left:9%; margin-top: 1em">The report
+generated is in the following format:</p>
+<p style="margin-left:9%; margin-top: 1em">File filename1
+<br/>
+Subroutine subname1 <br/>
+Package package1 <br/>
+object1 line numbers <br/>
+object2 line numbers <br/>
+... <br/>
+Package package2 <br/>
+...</p>
+<p style="margin-left:9%; margin-top: 1em">Each <b>File</b>
+section reports on a single file. Each <b>Subroutine</b>
+section reports on a single subroutine apart from the
+special cases "(definitions)" and
+"(main)". These report, respectively, on
+subroutine definitions found by the initial symbol table
+walk and on the main part of the program or module external
+to all subroutines.</p>
+<p style="margin-left:9%; margin-top: 1em">The report is
+then grouped by the <b>Package</b> of each variable,
+subroutine or format with the special case
+"(lexicals)" meaning lexical variables. Each
+<b>object</b> name (implicitly qualified by its containing
+<b>Package</b>) includes its type character(s) at the
+beginning where possible. Lexical variables are easier to
+track and even included dereferencing information where
+possible.</p>
+<p style="margin-left:9%; margin-top: 1em">The "line
+numbers" are a comma separated list of line numbers
+(some preceded by code letters) where that object is used in
+some way. Simple uses aren’t preceded by a code
+letter. Introductions (such as where a lexical is first
+defined with "my") are indicated with the letter
+"i". Subroutine and method calls are indicated by
+the character "&amp;". Subroutine definitions are
+indicated by "s" and format definitions by
+"f".</p>
+<p style="margin-left:9%; margin-top: 1em">For instance,
+here’s part of the report from the <i>pod2man</i>
+program that comes with Perl:</p>
+<p style="margin-left:9%; margin-top: 1em">Subroutine
+clear_noremap <br/>
+Package (lexical) <br/>
+$ready_to_print i1069, 1079 <br/>
+Package main <br/>
+$&amp; 1086 <br/>
+$. 1086 <br/>
+$0 1086 <br/>
+$1 1087 <br/>
+$2 1085, 1085 <br/>
+$3 1085, 1085 <br/>
+$ARGV 1086 <br/>
+%HTML_Escapes 1085, 1085</p>
+<p style="margin-left:9%; margin-top: 1em">This shows the
+variables used in the subroutine "clear_noremap".
+The variable $ready_to_print is a <b>my()</b> (lexical)
+variable, <b>i</b>ntroduced (first declared with
+<b>my()</b>) on line 1069, and used on line 1079. The
+variable $&amp; from the main package is used on 1086, and
+so on.</p>
+<p style="margin-left:9%; margin-top: 1em">A line number
+may be prefixed by a single letter:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>i</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Lexical variable introduced (declared with <b>my()</b>)
+for the first time.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>&amp;</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Subroutine or method call.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>s</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Subroutine defined.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>r</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Format defined.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The most useful
+option the cross referencer has is to save the report to a
+separate file. For instance, to save the report on
+<i>myperlprogram</i> to the file <i>report</i>:</p>
+<p style="margin-left:9%; margin-top: 1em">$ perl
+−MO=Xref,−oreport myperlprogram</p>
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Option words are
+separated by commas (not whitespace) and follow the usual
+conventions of compiler backend options. <br/>
+"−oFILENAME"</p>
+<p style="margin-left:19%;">Directs output to
+"FILENAME" instead of standard output.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p>"−r"</p></td>
+<td width="5%"></td>
+<td width="81%">
+<p>Raw output. Instead of producing a human-readable
+report, outputs a line in machine-readable form for each
+definition/use of a variable/sub/format.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p>"−d"</p></td>
+<td width="5%"></td>
+<td width="81%">
+<p>Don’t output the "(definitions)"
+sections.</p> </td></tr>
+</table>
+<p style="margin-left:9%;">"−D[tO]"</p>
+<p style="margin-left:19%;">(Internal) debug options,
+probably only useful if "−r" included. The
+"t" option prints the object on the top of the
+stack as it’s being tracked. The "O" option
+prints each operator as it’s being processed in the
+execution order of the program.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Non-lexical
+variables are quite difficult to track through a program.
+Sometimes the type of a non-lexical variable’s use is
+impossible to determine. Introductions of non-lexical
+non-scalars don’t seem to be reported properly.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Malcolm Beattie,
+mbeattie@sable.ox.ac.uk.</p>
+<hr/>
+</body>
+</html>

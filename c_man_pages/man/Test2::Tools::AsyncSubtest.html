@@ -1,0 +1,201 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:08 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Tools::AsyncSubtest</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Tools::AsyncSubtest</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Tools::AsyncSubtest
+− Tools for writing async subtests.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These are tools
+for writing async subtests. Async subtests are subtests
+which can be started and stashed so that they can continue
+to receive events while other events are also being
+generated.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::Bundle::Extended; <br/>
+use Test2::Tools::AsyncSubtest; <br/>
+my $ast1 = async_subtest local =&gt; sub { <br/>
+ok(1, "Inside subtest"); <br/>
+}; <br/>
+my $ast2 = fork_subtest child =&gt; sub { <br/>
+ok(1, "Inside subtest in another process"); <br/>
+}; <br/>
+# You must call finish on the subtests you create. Finish
+will wait/join on <br/>
+# any child processes and threads. <br/>
+$ast1−&gt;finish; <br/>
+$ast2−&gt;finish; <br/>
+done_testing;</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Everything is
+exported by default. <br/>
+$ast = async_subtest $name <br/>
+$ast = async_subtest $name =&gt; sub { ... } <br/>
+$ast = async_subtest $name =&gt; \%hub_params, sub { ...
+}</p>
+<p style="margin-left:14%;">Create an async subtest. Run
+the codeblock if it is provided.</p>
+<p style="margin-left:9%;">$ast = fork_subtest $name =&gt;
+sub { ... } <br/>
+$ast = fork_subtest $name =&gt; \%hub_params, sub { ...
+}</p>
+<p style="margin-left:14%;">Create an async subtest. Run
+the codeblock in a forked process.</p>
+<p style="margin-left:9%;">$ast = thread_subtest $name
+=&gt; sub { ... } <br/>
+$ast = thread_subtest $name =&gt; \%hub_params, sub { ...
+}</p>
+<p style="margin-left:14%;"><b>** DISCOURAGED **</b>
+Threads are fragile. Thread tests are not even run unless
+the AUTHOR_TESTING or T2_DO_THREAD_TESTS env vars are
+enabled.</p>
+<p style="margin-left:14%; margin-top: 1em">Create an async
+subtest. Run the codeblock in a thread.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Async Subtests
+are always buffered.</p>
+<p style="margin-left:14%;">Always buffered.</p>
+<p style="margin-left:9%;">Do not use <b>done_testing()</b>
+yourself.</p>
+<p style="margin-left:14%;">using <b>done_testing()</b>
+inside an async subtest will not work properly, the async
+subtest must be finalized by calling
+"$st−&gt;finish".</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2−AsyncSubtest can be found at
+<i>https://github.com/Test−More/test−more/</i>.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist7@gmail.com&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<i>http://dev.perl.org/licenses/</i></p>
+<hr/>
+</body>
+</html>

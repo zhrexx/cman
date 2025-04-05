@@ -1,0 +1,195 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:40 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BIO_NEW_CMS</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">BIO_NEW_CMS</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">BIO_new_CMS
+− CMS streaming filter BIO</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/cms.h&gt; <br/>
+BIO *BIO_new_CMS(BIO *out, CMS_ContentInfo *cms);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_new_CMS()</b>
+returns a streaming filter BIO chain based on <b>cms</b>.
+The output of the filter is written to <b>out</b>. Any data
+written to the chain is automatically translated to a BER
+format CMS structure of the appropriate type.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The chain
+returned by this function behaves like a standard filter
+BIO. It supports non blocking I/O. Content is processed and
+streamed on the fly and not all held in memory at once: so
+it is possible to encode very large structures. After all
+content has been written through the chain
+<b>BIO_flush()</b> must be called to finalise the
+structure.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>CMS_STREAM</b> flag must be included in the corresponding
+<b>flags</b> parameter of the <b>cms</b> creation
+function.</p>
+<p style="margin-left:9%; margin-top: 1em">If an
+application wishes to write additional data to <b>out</b>
+BIOs should be removed from the chain using <b>BIO_pop()</b>
+and freed with <b>BIO_free()</b> until <b>out</b> is
+reached. If no additional data needs to be written
+<b>BIO_free_all()</b> can be called to free up the whole
+chain.</p>
+<p style="margin-left:9%; margin-top: 1em">Any content
+written through the filter is used verbatim: no canonical
+translation is performed.</p>
+<p style="margin-left:9%; margin-top: 1em">It is possible
+to chain multiple BIOs to, for example, create a triple
+wrapped signed, enveloped, signed structure. In this case it
+is the applications responsibility to set the inner content
+type of any outer CMS_ContentInfo structures.</p>
+<p style="margin-left:9%; margin-top: 1em">Large numbers of
+small writes through the chain should be avoided as this
+will produce an output consisting of lots of OCTET STRING
+structures. Prepending a <b>BIO_f_buffer()</b> buffering BIO
+will prevent this.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">There is
+currently no corresponding inverse BIO: i.e. one which can
+decode a CMS structure on the fly.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_new_CMS()</b>
+returns a BIO chain when successful or NULL if an error
+occurred. The error can be obtained from
+<b>ERR_get_error</b>(3).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ERR_get_error</b>(3),
+<b>CMS_sign</b>(3), <b>CMS_encrypt</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>BIO_new_CMS()</b> function was added in OpenSSL
+1.0.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2008−2016 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,1182 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:30 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_easy_setopt</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_easy_setopt</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#OPTIONS">OPTIONS</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_setopt
+− set options for a curl easy handle</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLoption option,
+parameter);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>curl_easy_setopt(3)</i>
+is used to tell libcurl how to behave. By setting the
+appropriate options, the application can change libcurl's
+behavior. All options are set with an <i>option</i> followed
+by a <i>parameter</i>. That parameter can be a <b>long</b>,
+a <b>function pointer</b>, an <b>object pointer</b> or a
+<b>curl_off_t</b>, depending on what the specific option
+expects. Read this manual carefully as bad input values may
+cause libcurl to behave badly! You can only set one option
+in each function call. A typical application uses many
+<i>curl_easy_setopt(3)</i> calls in the setup phase.</p>
+<p style="margin-left:9%; margin-top: 1em">Options set with
+this function call are valid for all forthcoming transfers
+performed using this <i>handle</i>. The options are not in
+any way reset between transfers, so if you want subsequent
+transfers with different options, you must change them
+between the transfers. You can optionally reset all options
+back to internal default with <i>curl_easy_reset(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Strings passed
+to libcurl as 'char *' arguments, are copied by the library;
+the string storage associated to the pointer argument may be
+discarded or reused after <i>curl_easy_setopt(3)</i>
+returns. The only exception to this rule is really
+<i>CURLOPT_POSTFIELDS(3)</i>, but the alternative that
+copies the string <i>CURLOPT_COPYPOSTFIELDS(3)</i> has some
+usage characteristics you need to read up on. This function
+does not accept input strings longer than
+<b>CURL_MAX_INPUT_LENGTH</b> (8 MB).</p>
+<p style="margin-left:9%; margin-top: 1em">The order in
+which the options are set does not matter.</p>
+<p style="margin-left:9%; margin-top: 1em">Before version
+7.17.0, strings were not copied. Instead the user was forced
+keep them available until libcurl no longer needed them.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>handle</i> is the return code from a
+<i>curl_easy_init(3)</i> or <i>curl_easy_duphandle(3)</i>
+call.</p>
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_ABSTRACT_UNIX_SOCKET</p>
+<p style="margin-left:18%;">Path to an abstract Unix domain
+socket. See <i>CURLOPT_ABSTRACT_UNIX_SOCKET(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_ACCEPTTIMEOUT_MS</p>
+<p style="margin-left:18%;">Timeout for waiting for the
+server's connect back to be accepted. See
+<i>CURLOPT_ACCEPTTIMEOUT_MS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_ACCEPT_ENCODING</p>
+<p style="margin-left:18%;">Accept−Encoding and
+automatic decompressing data. See
+<i>CURLOPT_ACCEPT_ENCODING(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_ADDRESS_SCOPE</p>
+<p style="margin-left:18%;">IPv6 scope for local addresses.
+See <i>CURLOPT_ADDRESS_SCOPE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_ALTSVC</p>
+<p style="margin-left:18%;">Specify the Alt−Svc:
+cache filename. See <i>CURLOPT_ALTSVC(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_ALTSVC_CTRL</p>
+<p style="margin-left:18%;">Enable and configure
+Alt−Svc: treatment. See
+<i>CURLOPT_ALTSVC_CTRL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_APPEND</p>
+<p style="margin-left:18%;">Append to remote file. See
+<i>CURLOPT_APPEND(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_AUTOREFERER</p>
+<p style="margin-left:18%;">Automatically set Referer:
+header. See <i>CURLOPT_AUTOREFERER(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_AWS_SIGV4</p>
+<p style="margin-left:18%;">AWS HTTP V4 Signature. See
+<i>CURLOPT_AWS_SIGV4(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_BUFFERSIZE</p>
+<p style="margin-left:18%;">Ask for alternate buffer size.
+See <i>CURLOPT_BUFFERSIZE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CAINFO</p>
+<p style="margin-left:18%;">CA cert bundle. See
+<i>CURLOPT_CAINFO(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CAINFO_BLOB</p>
+<p style="margin-left:18%;">CA cert bundle memory buffer.
+See <i>CURLOPT_CAINFO_BLOB(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CAPATH</p>
+<p style="margin-left:18%;">Path to CA cert bundle. See
+<i>CURLOPT_CAPATH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CA_CACHE_TIMEOUT</p>
+<p style="margin-left:18%;">Timeout for CA cache. See
+<i>CURLOPT_CA_CACHE_TIMEOUT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CERTINFO</p>
+<p style="margin-left:18%;">Extract certificate info. See
+<i>CURLOPT_CERTINFO(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CHUNK_BGN_FUNCTION</p>
+<p style="margin-left:18%;">Callback for wildcard download
+start of chunk. See <i>CURLOPT_CHUNK_BGN_FUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CHUNK_DATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+chunk callbacks. See <i>CURLOPT_CHUNK_DATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CHUNK_END_FUNCTION</p>
+<p style="margin-left:18%;">Callback for wildcard download
+end of chunk. See <i>CURLOPT_CHUNK_END_FUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CLOSESOCKETDATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+close socket callback. See
+<i>CURLOPT_CLOSESOCKETDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CLOSESOCKETFUNCTION</p>
+<p style="margin-left:18%;">Callback for closing socket.
+See <i>CURLOPT_CLOSESOCKETFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CONNECTTIMEOUT</p>
+<p style="margin-left:18%;">Timeout for the connection
+phase. See <i>CURLOPT_CONNECTTIMEOUT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CONNECTTIMEOUT_MS</p>
+<p style="margin-left:18%;">Millisecond timeout for the
+connection phase. See
+<i>CURLOPT_CONNECTTIMEOUT_MS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CONNECT_ONLY</p>
+<p style="margin-left:18%;">Only connect, nothing else. See
+<i>CURLOPT_CONNECT_ONLY(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CONNECT_TO</p>
+<p style="margin-left:18%;">Connect to a specific host and
+port. See <i>CURLOPT_CONNECT_TO(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CONV_FROM_NETWORK_FUNCTION</p>
+<p style="margin-left:18%;"><b>OBSOLETE</b> Callback for
+code base conversion. See
+<i>CURLOPT_CONV_FROM_NETWORK_FUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CONV_FROM_UTF8_FUNCTION</p>
+<p style="margin-left:18%;"><b>OBSOLETE</b> Callback for
+code base conversion. See
+<i>CURLOPT_CONV_FROM_UTF8_FUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CONV_TO_NETWORK_FUNCTION</p>
+<p style="margin-left:18%;"><b>OBSOLETE</b> Callback for
+code base conversion. See
+<i>CURLOPT_CONV_TO_NETWORK_FUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_COOKIE</p>
+<p style="margin-left:18%;">Cookie(s) to send. See
+<i>CURLOPT_COOKIE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_COOKIEFILE</p>
+<p style="margin-left:18%;">File to read cookies from. See
+<i>CURLOPT_COOKIEFILE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_COOKIEJAR</p>
+<p style="margin-left:18%;">File to write cookies to. See
+<i>CURLOPT_COOKIEJAR(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_COOKIELIST</p>
+<p style="margin-left:18%;">Add or control cookies. See
+<i>CURLOPT_COOKIELIST(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_COOKIESESSION</p>
+<p style="margin-left:18%;">Start a new cookie session. See
+<i>CURLOPT_COOKIESESSION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_COPYPOSTFIELDS</p>
+<p style="margin-left:18%;">Send a POST with this data
+− and copy it. See
+<i>CURLOPT_COPYPOSTFIELDS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CRLF</p>
+<p style="margin-left:18%;">Convert newlines. See
+<i>CURLOPT_CRLF(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CRLFILE</p>
+<p style="margin-left:18%;">Certificate Revocation List.
+See <i>CURLOPT_CRLFILE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CURLU</p>
+<p style="margin-left:18%;">Set URL to work on with a URL
+handle. See <i>CURLOPT_CURLU(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_CUSTOMREQUEST</p>
+<p style="margin-left:18%;">Custom request/method. See
+<i>CURLOPT_CUSTOMREQUEST(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DEBUGDATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+debug callback. See <i>CURLOPT_DEBUGDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DEBUGFUNCTION</p>
+<p style="margin-left:18%;">Callback for debug information.
+See <i>CURLOPT_DEBUGFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DEFAULT_PROTOCOL</p>
+<p style="margin-left:18%;">Default protocol. See
+<i>CURLOPT_DEFAULT_PROTOCOL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DIRLISTONLY</p>
+<p style="margin-left:18%;">List only. See
+<i>CURLOPT_DIRLISTONLY(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DISALLOW_USERNAME_IN_URL</p>
+<p style="margin-left:18%;">Do not allow username in URL.
+See <i>CURLOPT_DISALLOW_USERNAME_IN_URL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DNS_CACHE_TIMEOUT</p>
+<p style="margin-left:18%;">Timeout for DNS cache. See
+<i>CURLOPT_DNS_CACHE_TIMEOUT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DNS_INTERFACE</p>
+<p style="margin-left:18%;">Bind name resolves to this
+interface. See <i>CURLOPT_DNS_INTERFACE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DNS_LOCAL_IP4</p>
+<p style="margin-left:18%;">Bind name resolves to this IP4
+address. See <i>CURLOPT_DNS_LOCAL_IP4(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DNS_LOCAL_IP6</p>
+<p style="margin-left:18%;">Bind name resolves to this IP6
+address. See <i>CURLOPT_DNS_LOCAL_IP6(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DNS_SERVERS</p>
+<p style="margin-left:18%;">Preferred DNS servers. See
+<i>CURLOPT_DNS_SERVERS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DNS_SHUFFLE_ADDRESSES</p>
+<p style="margin-left:18%;">Shuffle addresses before use.
+See <i>CURLOPT_DNS_SHUFFLE_ADDRESSES(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DNS_USE_GLOBAL_CACHE</p>
+<p style="margin-left:18%;"><b>OBSOLETE</b> Enable global
+DNS cache. See <i>CURLOPT_DNS_USE_GLOBAL_CACHE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DOH_SSL_VERIFYHOST</p>
+<p style="margin-left:18%;">Verify the hostname in the DoH
+(DNS−over−HTTPS) SSL certificate. See
+<i>CURLOPT_DOH_SSL_VERIFYHOST(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DOH_SSL_VERIFYPEER</p>
+<p style="margin-left:18%;">Verify the DoH
+(DNS−over−HTTPS) SSL certificate. See
+<i>CURLOPT_DOH_SSL_VERIFYPEER(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DOH_SSL_VERIFYSTATUS</p>
+<p style="margin-left:18%;">Verify the DoH
+(DNS−over−HTTPS) SSL certificate's status. See
+<i>CURLOPT_DOH_SSL_VERIFYSTATUS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_DOH_URL</p>
+<p style="margin-left:18%;">Use this DoH server for name
+resolves. See <i>CURLOPT_DOH_URL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_ECH</p>
+<p style="margin-left:18%;">Set the configuration for ECH.
+See <i>CURLOPT_ECH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_EGDSOCKET</p>
+<p style="margin-left:18%;"><b>OBSOLETE</b> Identify EGD
+socket for entropy. See <i>CURLOPT_EGDSOCKET(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_ERRORBUFFER</p>
+<p style="margin-left:18%;">Error message buffer. See
+<i>CURLOPT_ERRORBUFFER(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_EXPECT_100_TIMEOUT_MS</p>
+<p style="margin-left:18%;">100−continue timeout. See
+<i>CURLOPT_EXPECT_100_TIMEOUT_MS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FAILONERROR</p>
+<p style="margin-left:18%;">Fail on HTTP 4xx errors.
+<i>CURLOPT_FAILONERROR(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FILETIME</p>
+<p style="margin-left:18%;">Request file modification date
+and time. See <i>CURLOPT_FILETIME(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FNMATCH_DATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+wildcard matching callback. See
+<i>CURLOPT_FNMATCH_DATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FNMATCH_FUNCTION</p>
+<p style="margin-left:18%;">Callback for wildcard matching.
+See <i>CURLOPT_FNMATCH_FUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FOLLOWLOCATION</p>
+<p style="margin-left:18%;">Follow HTTP redirects. See
+<i>CURLOPT_FOLLOWLOCATION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FORBID_REUSE</p>
+<p style="margin-left:18%;">Prevent subsequent connections
+from reusing this. See <i>CURLOPT_FORBID_REUSE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FRESH_CONNECT</p>
+<p style="margin-left:18%;">Use a new connection.
+<i>CURLOPT_FRESH_CONNECT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FTPPORT</p>
+<p style="margin-left:18%;">Use active FTP. See
+<i>CURLOPT_FTPPORT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FTPSSLAUTH</p>
+<p style="margin-left:18%;">Control how to do TLS. See
+<i>CURLOPT_FTPSSLAUTH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FTP_ACCOUNT</p>
+<p style="margin-left:18%;">Send ACCT command. See
+<i>CURLOPT_FTP_ACCOUNT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FTP_ALTERNATIVE_TO_USER</p>
+<p style="margin-left:18%;">Alternative to USER. See
+<i>CURLOPT_FTP_ALTERNATIVE_TO_USER(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FTP_CREATE_MISSING_DIRS</p>
+<p style="margin-left:18%;">Create missing directories on
+the remote server. See
+<i>CURLOPT_FTP_CREATE_MISSING_DIRS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FTP_FILEMETHOD</p>
+<p style="margin-left:18%;">Specify how to reach files. See
+<i>CURLOPT_FTP_FILEMETHOD(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FTP_SKIP_PASV_IP</p>
+<p style="margin-left:18%;">Ignore the IP address in the
+PASV response. See <i>CURLOPT_FTP_SKIP_PASV_IP(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FTP_SSL_CCC</p>
+<p style="margin-left:18%;">Back to non−TLS again
+after authentication. See <i>CURLOPT_FTP_SSL_CCC(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FTP_USE_EPRT</p>
+<p style="margin-left:18%;">Use EPRT. See
+<i>CURLOPT_FTP_USE_EPRT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FTP_USE_EPSV</p>
+<p style="margin-left:18%;">Use EPSV. See
+<i>CURLOPT_FTP_USE_EPSV(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_FTP_USE_PRET</p>
+<p style="margin-left:18%;">Use PRET. See
+<i>CURLOPT_FTP_USE_PRET(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_GSSAPI_DELEGATION</p>
+<p style="margin-left:18%;">Disable GSS−API
+delegation. See <i>CURLOPT_GSSAPI_DELEGATION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HAPPY_EYEBALLS_TIMEOUT_MS</p>
+<p style="margin-left:18%;">Timeout for happy eyeballs. See
+<i>CURLOPT_HAPPY_EYEBALLS_TIMEOUT_MS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HAPROXYPROTOCOL</p>
+<p style="margin-left:18%;">Send an HAProxy PROXY protocol
+v1 header. See <i>CURLOPT_HAPROXYPROTOCOL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HAPROXY_CLIENT_IP</p>
+<p style="margin-left:18%;">Spoof the client IP in an
+HAProxy PROXY protocol v1 header. See
+<i>CURLOPT_HAPROXY_CLIENT_IP(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HEADER</p>
+<p style="margin-left:18%;">Include the header in the body
+output. See <i>CURLOPT_HEADER(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HEADERDATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+header callback. See <i>CURLOPT_HEADERDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HEADERFUNCTION</p>
+<p style="margin-left:18%;">Callback for writing received
+headers. See <i>CURLOPT_HEADERFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HEADEROPT</p>
+<p style="margin-left:18%;">Control custom headers. See
+<i>CURLOPT_HEADEROPT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HSTS</p>
+<p style="margin-left:18%;">Set HSTS cache file. See
+<i>CURLOPT_HSTS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HSTSREADDATA</p>
+<p style="margin-left:18%;">Pass pointer to the HSTS read
+callback. See <i>CURLOPT_HSTSREADDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HSTSREADFUNCTION</p>
+<p style="margin-left:18%;">Set HSTS read callback. See
+<i>CURLOPT_HSTSREADFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HSTSWRITEDATA</p>
+<p style="margin-left:18%;">Pass pointer to the HSTS write
+callback. See <i>CURLOPT_HSTSWRITEDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HSTSWRITEFUNCTION</p>
+<p style="margin-left:18%;">Set HSTS write callback. See
+<i>CURLOPT_HSTSWRITEFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HSTS_CTRL</p>
+<p style="margin-left:18%;">Enable HSTS. See
+<i>CURLOPT_HSTS_CTRL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HTTP09_ALLOWED</p>
+<p style="margin-left:18%;">Allow HTTP/0.9 responses.
+<i>CURLOPT_HTTP09_ALLOWED(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HTTP200ALIASES</p>
+<p style="margin-left:18%;">Alternative versions of 200 OK.
+See <i>CURLOPT_HTTP200ALIASES(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HTTPAUTH</p>
+<p style="margin-left:18%;">HTTP server authentication
+methods. See <i>CURLOPT_HTTPAUTH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HTTPGET</p>
+<p style="margin-left:18%;">Do an HTTP GET request. See
+<i>CURLOPT_HTTPGET(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HTTPHEADER</p>
+<p style="margin-left:18%;">Custom HTTP headers. See
+<i>CURLOPT_HTTPHEADER(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HTTPPOST</p>
+<p style="margin-left:18%;"><b>Deprecated option</b>
+Multipart formpost HTTP POST. See
+<i>CURLOPT_HTTPPOST(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HTTPPROXYTUNNEL</p>
+<p style="margin-left:18%;">Tunnel through the HTTP proxy.
+<i>CURLOPT_HTTPPROXYTUNNEL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HTTP_CONTENT_DECODING</p>
+<p style="margin-left:18%;">Disable Content decoding. See
+<i>CURLOPT_HTTP_CONTENT_DECODING(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HTTP_TRANSFER_DECODING</p>
+<p style="margin-left:18%;">Disable Transfer decoding. See
+<i>CURLOPT_HTTP_TRANSFER_DECODING(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_HTTP_VERSION</p>
+<p style="margin-left:18%;">HTTP version to use.
+<i>CURLOPT_HTTP_VERSION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_IGNORE_CONTENT_LENGTH</p>
+<p style="margin-left:18%;">Ignore Content−Length.
+See <i>CURLOPT_IGNORE_CONTENT_LENGTH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_INFILESIZE</p>
+<p style="margin-left:18%;">Size of file to send.
+<i>CURLOPT_INFILESIZE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_INFILESIZE_LARGE</p>
+<p style="margin-left:18%;">Size of file to send.
+<i>CURLOPT_INFILESIZE_LARGE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_INTERFACE</p>
+<p style="margin-left:18%;">Bind connection locally to
+this. See <i>CURLOPT_INTERFACE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_INTERLEAVEDATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+RTSP interleave callback. See
+<i>CURLOPT_INTERLEAVEDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_INTERLEAVEFUNCTION</p>
+<p style="margin-left:18%;">Callback for RTSP interleaved
+data. See <i>CURLOPT_INTERLEAVEFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_IOCTLDATA</p>
+<p style="margin-left:18%;"><b>Deprecated option</b> Data
+pointer to pass to the I/O callback. See
+<i>CURLOPT_IOCTLDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_IOCTLFUNCTION</p>
+<p style="margin-left:18%;"><b>Deprecated option</b>
+Callback for I/O operations. See
+<i>CURLOPT_IOCTLFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_IPRESOLVE</p>
+<p style="margin-left:18%;">IP version to use. See
+<i>CURLOPT_IPRESOLVE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_ISSUERCERT</p>
+<p style="margin-left:18%;">Issuer certificate. See
+<i>CURLOPT_ISSUERCERT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_ISSUERCERT_BLOB</p>
+<p style="margin-left:18%;">Issuer certificate memory
+buffer. See <i>CURLOPT_ISSUERCERT_BLOB(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_KEEP_SENDING_ON_ERROR</p>
+<p style="margin-left:18%;">Keep sending on HTTP &gt;= 300
+errors. <i>CURLOPT_KEEP_SENDING_ON_ERROR(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_KEYPASSWD</p>
+<p style="margin-left:18%;">Client key password. See
+<i>CURLOPT_KEYPASSWD(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_KRBLEVEL</p>
+<p style="margin-left:18%;">Kerberos security level. See
+<i>CURLOPT_KRBLEVEL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_LOCALPORT</p>
+<p style="margin-left:18%;">Bind connection locally to this
+port. See <i>CURLOPT_LOCALPORT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_LOCALPORTRANGE</p>
+<p style="margin-left:18%;">Bind connection locally to port
+range. See <i>CURLOPT_LOCALPORTRANGE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_LOGIN_OPTIONS</p>
+<p style="margin-left:18%;">Login options. See
+<i>CURLOPT_LOGIN_OPTIONS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_LOW_SPEED_LIMIT</p>
+<p style="margin-left:18%;">Low speed limit to abort
+transfer. See <i>CURLOPT_LOW_SPEED_LIMIT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_LOW_SPEED_TIME</p>
+<p style="margin-left:18%;">Time to be below the speed to
+trigger low speed abort. See
+<i>CURLOPT_LOW_SPEED_TIME(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAIL_AUTH</p>
+<p style="margin-left:18%;">Authentication address. See
+<i>CURLOPT_MAIL_AUTH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAIL_FROM</p>
+<p style="margin-left:18%;">Address of the sender. See
+<i>CURLOPT_MAIL_FROM(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAIL_RCPT</p>
+<p style="margin-left:18%;">Address of the recipients. See
+<i>CURLOPT_MAIL_RCPT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAIL_RCPT_ALLOWFAILS</p>
+<p style="margin-left:18%;">Allow RCPT TO command to fail
+for some recipients. See
+<i>CURLOPT_MAIL_RCPT_ALLOWFAILS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAXAGE_CONN</p>
+<p style="margin-left:18%;">Limit the age (idle time) of
+connections for reuse. See <i>CURLOPT_MAXAGE_CONN(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAXCONNECTS</p>
+<p style="margin-left:18%;">Maximum number of connections
+in the connection pool. See
+<i>CURLOPT_MAXCONNECTS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAXFILESIZE</p>
+<p style="margin-left:18%;">Maximum file size to get. See
+<i>CURLOPT_MAXFILESIZE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAXFILESIZE_LARGE</p>
+<p style="margin-left:18%;">Maximum file size to get. See
+<i>CURLOPT_MAXFILESIZE_LARGE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAXLIFETIME_CONN</p>
+<p style="margin-left:18%;">Limit the age (since creation)
+of connections for reuse. See
+<i>CURLOPT_MAXLIFETIME_CONN(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAXREDIRS</p>
+<p style="margin-left:18%;">Maximum number of redirects to
+follow. See <i>CURLOPT_MAXREDIRS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAX_RECV_SPEED_LARGE</p>
+<p style="margin-left:18%;">Cap the download speed to this.
+See <i>CURLOPT_MAX_RECV_SPEED_LARGE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MAX_SEND_SPEED_LARGE</p>
+<p style="margin-left:18%;">Cap the upload speed to this.
+See <i>CURLOPT_MAX_SEND_SPEED_LARGE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MIMEPOST</p>
+<p style="margin-left:18%;">Post/send MIME data. See
+<i>CURLOPT_MIMEPOST(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_MIME_OPTIONS</p>
+<p style="margin-left:18%;">Set MIME option flags. See
+<i>CURLOPT_MIME_OPTIONS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_NETRC</p>
+<p style="margin-left:18%;">Enable .netrc parsing. See
+<i>CURLOPT_NETRC(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_NETRC_FILE</p>
+<p style="margin-left:18%;">.netrc filename. See
+<i>CURLOPT_NETRC_FILE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_NEW_DIRECTORY_PERMS</p>
+<p style="margin-left:18%;">Mode for creating new remote
+directories. See <i>CURLOPT_NEW_DIRECTORY_PERMS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_NEW_FILE_PERMS</p>
+<p style="margin-left:18%;">Mode for creating new remote
+files. See <i>CURLOPT_NEW_FILE_PERMS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_NOBODY</p>
+<p style="margin-left:18%;">Do not get the body contents.
+See <i>CURLOPT_NOBODY(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_NOPROGRESS</p>
+<p style="margin-left:18%;">Shut off the progress meter.
+See <i>CURLOPT_NOPROGRESS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_NOPROXY</p>
+<p style="margin-left:18%;">Filter out hosts from proxy
+use. <i>CURLOPT_NOPROXY(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_NOSIGNAL</p>
+<p style="margin-left:18%;">Do not install signal handlers.
+See <i>CURLOPT_NOSIGNAL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_OPENSOCKETDATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+open socket callback. See
+<i>CURLOPT_OPENSOCKETDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_OPENSOCKETFUNCTION</p>
+<p style="margin-left:18%;">Callback for socket creation.
+See <i>CURLOPT_OPENSOCKETFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PASSWORD</p>
+<p style="margin-left:18%;">Password. See
+<i>CURLOPT_PASSWORD(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PATH_AS_IS</p>
+<p style="margin-left:18%;">Disable squashing /../ and /./
+sequences in the path. See <i>CURLOPT_PATH_AS_IS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PINNEDPUBLICKEY</p>
+<p style="margin-left:18%;">Set pinned SSL public key . See
+<i>CURLOPT_PINNEDPUBLICKEY(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PIPEWAIT</p>
+<p style="margin-left:18%;">Wait on connection to pipeline
+on it. See <i>CURLOPT_PIPEWAIT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PORT</p>
+<p style="margin-left:18%;">Port number to connect to. See
+<i>CURLOPT_PORT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_POST</p>
+<p style="margin-left:18%;">Make an HTTP POST. See
+<i>CURLOPT_POST(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_POSTFIELDSIZE</p>
+<p style="margin-left:18%;">The POST data is this big. See
+<i>CURLOPT_POSTFIELDSIZE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_POSTFIELDSIZE_LARGE</p>
+<p style="margin-left:18%;">The POST data is this big. See
+<i>CURLOPT_POSTFIELDSIZE_LARGE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_POSTQUOTE</p>
+<p style="margin-left:18%;">Commands to run after transfer.
+See <i>CURLOPT_POSTQUOTE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_POSTREDIR</p>
+<p style="margin-left:18%;">How to act on redirects after
+POST. See <i>CURLOPT_POSTREDIR(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PREQUOTE</p>
+<p style="margin-left:18%;">Commands to run just before
+transfer. See <i>CURLOPT_PREQUOTE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PREREQDATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+CURLOPT_PREREQFUNCTION callback. See
+<i>CURLOPT_PREREQDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PREREQFUNCTION</p>
+<p style="margin-left:18%;">Callback to be called after a
+connection is established but before a request is made on
+that connection. See <i>CURLOPT_PREREQFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PRE_PROXY</p>
+<p style="margin-left:18%;">Socks proxy to use. See
+<i>CURLOPT_PRE_PROXY(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PRIVATE</p>
+<p style="margin-left:18%;">Private pointer to store. See
+<i>CURLOPT_PRIVATE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROGRESSDATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+progress meter callback. See
+<i>CURLOPT_PROGRESSDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROGRESSFUNCTION</p>
+<p style="margin-left:18%;"><b>OBSOLETE</b> callback for
+progress meter. See <i>CURLOPT_PROGRESSFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROTOCOLS</p>
+<p style="margin-left:18%;"><b>Deprecated option</b>
+Allowed protocols. See <i>CURLOPT_PROTOCOLS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROTOCOLS_STR</p>
+<p style="margin-left:18%;">Allowed protocols. See
+<i>CURLOPT_PROTOCOLS_STR(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY</p>
+<p style="margin-left:18%;">Proxy to use. See
+<i>CURLOPT_PROXY(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXYAUTH</p>
+<p style="margin-left:18%;">HTTP proxy authentication
+methods. See <i>CURLOPT_PROXYAUTH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXYHEADER</p>
+<p style="margin-left:18%;">Custom HTTP headers sent to
+proxy. See <i>CURLOPT_PROXYHEADER(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXYPASSWORD</p>
+<p style="margin-left:18%;">Proxy password. See
+<i>CURLOPT_PROXYPASSWORD(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXYPORT</p>
+<p style="margin-left:18%;">Proxy port to use. See
+<i>CURLOPT_PROXYPORT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXYTYPE</p>
+<p style="margin-left:18%;">Proxy type. See
+<i>CURLOPT_PROXYTYPE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXYUSERNAME</p>
+<p style="margin-left:18%;">Proxy username. See
+<i>CURLOPT_PROXYUSERNAME(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXYUSERPWD</p>
+<p style="margin-left:18%;">Proxy username and password.
+See <i>CURLOPT_PROXYUSERPWD(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_CAINFO</p>
+<p style="margin-left:18%;">Proxy CA cert bundle. See
+<i>CURLOPT_PROXY_CAINFO(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_CAINFO_BLOB</p>
+<p style="margin-left:18%;">Proxy CA cert bundle memory
+buffer. See <i>CURLOPT_PROXY_CAINFO_BLOB(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_CAPATH</p>
+<p style="margin-left:18%;">Path to proxy CA cert bundle.
+See <i>CURLOPT_PROXY_CAPATH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_CRLFILE</p>
+<p style="margin-left:18%;">Proxy Certificate Revocation
+List. See <i>CURLOPT_PROXY_CRLFILE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_ISSUERCERT</p>
+<p style="margin-left:18%;">Proxy issuer certificate. See
+<i>CURLOPT_PROXY_ISSUERCERT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_ISSUERCERT_BLOB</p>
+<p style="margin-left:18%;">Proxy issuer certificate memory
+buffer. See <i>CURLOPT_PROXY_ISSUERCERT_BLOB(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_KEYPASSWD</p>
+<p style="margin-left:18%;">Proxy client key password. See
+<i>CURLOPT_PROXY_KEYPASSWD(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_PINNEDPUBLICKEY</p>
+<p style="margin-left:18%;">Set the proxy's pinned SSL
+public key. See <i>CURLOPT_PROXY_PINNEDPUBLICKEY(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SERVICE_NAME</p>
+<p style="margin-left:18%;">Proxy authentication service
+name. <i>CURLOPT_PROXY_SERVICE_NAME(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SSLCERT</p>
+<p style="margin-left:18%;">Proxy client cert. See
+<i>CURLOPT_PROXY_SSLCERT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SSLCERTTYPE</p>
+<p style="margin-left:18%;">Proxy client cert type. See
+<i>CURLOPT_PROXY_SSLCERTTYPE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SSLCERT_BLOB</p>
+<p style="margin-left:18%;">Proxy client cert memory
+buffer. See <i>CURLOPT_PROXY_SSLCERT_BLOB(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SSLKEY</p>
+<p style="margin-left:18%;">Proxy client key. See
+<i>CURLOPT_PROXY_SSLKEY(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SSLKEYTYPE</p>
+<p style="margin-left:18%;">Proxy client key type. See
+<i>CURLOPT_PROXY_SSLKEYTYPE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SSLKEY_BLOB</p>
+<p style="margin-left:18%;">Proxy client key. See
+<i>CURLOPT_PROXY_SSLKEY_BLOB(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SSLVERSION</p>
+<p style="margin-left:18%;">Proxy SSL version to use. See
+<i>CURLOPT_PROXY_SSLVERSION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SSL_CIPHER_LIST</p>
+<p style="margin-left:18%;">Proxy ciphers to use. See
+<i>CURLOPT_PROXY_SSL_CIPHER_LIST(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SSL_OPTIONS</p>
+<p style="margin-left:18%;">Control proxy SSL behavior. See
+<i>CURLOPT_PROXY_SSL_OPTIONS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SSL_VERIFYHOST</p>
+<p style="margin-left:18%;">Verify the hostname in the
+proxy SSL certificate. See
+<i>CURLOPT_PROXY_SSL_VERIFYHOST(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_SSL_VERIFYPEER</p>
+<p style="margin-left:18%;">Verify the proxy SSL
+certificate. See <i>CURLOPT_PROXY_SSL_VERIFYPEER(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_TLS13_CIPHERS</p>
+<p style="margin-left:18%;">Proxy TLS 1.3 cipher suites to
+use. See <i>CURLOPT_PROXY_TLS13_CIPHERS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_TLSAUTH_PASSWORD</p>
+<p style="margin-left:18%;">Proxy TLS authentication
+password. See <i>CURLOPT_PROXY_TLSAUTH_PASSWORD(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_TLSAUTH_TYPE</p>
+<p style="margin-left:18%;">Proxy TLS authentication
+methods. See <i>CURLOPT_PROXY_TLSAUTH_TYPE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_TLSAUTH_USERNAME</p>
+<p style="margin-left:18%;">Proxy TLS authentication
+username. See <i>CURLOPT_PROXY_TLSAUTH_USERNAME(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PROXY_TRANSFER_MODE</p>
+<p style="margin-left:18%;">Add transfer mode to URL over
+proxy. See <i>CURLOPT_PROXY_TRANSFER_MODE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_PUT</p>
+<p style="margin-left:18%;"><b>Deprecated option</b> Issue
+an HTTP PUT request. See <i>CURLOPT_PUT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_QUICK_EXIT</p>
+<p style="margin-left:18%;">To be set by toplevel tools
+like "curl" to skip lengthy cleanups when they are
+about to call exit() anyway. See
+<i>CURLOPT_QUICK_EXIT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_QUOTE</p>
+<p style="margin-left:18%;">Commands to run before
+transfer. See <i>CURLOPT_QUOTE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RANDOM_FILE</p>
+<p style="margin-left:18%;"><b>OBSOLETE</b> Provide source
+for entropy random data. See
+<i>CURLOPT_RANDOM_FILE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RANGE</p>
+<p style="margin-left:18%;">Range requests. See
+<i>CURLOPT_RANGE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_READDATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+read callback. See <i>CURLOPT_READDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_READFUNCTION</p>
+<p style="margin-left:18%;">Callback for reading data. See
+<i>CURLOPT_READFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_REDIR_PROTOCOLS</p>
+<p style="margin-left:18%;"><b>Deprecated option</b>
+Protocols to allow redirects to. See
+<i>CURLOPT_REDIR_PROTOCOLS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_REDIR_PROTOCOLS_STR</p>
+<p style="margin-left:18%;">Protocols to allow redirects
+to. See <i>CURLOPT_REDIR_PROTOCOLS_STR(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_REFERER</p>
+<p style="margin-left:18%;">Referer: header. See
+<i>CURLOPT_REFERER(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_REQUEST_TARGET</p>
+<p style="margin-left:18%;">Set the request target.
+<i>CURLOPT_REQUEST_TARGET(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RESOLVE</p>
+<p style="margin-left:18%;">Provide fixed/fake name
+resolves. See <i>CURLOPT_RESOLVE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RESOLVER_START_DATA</p>
+<p style="margin-left:18%;">Data pointer to pass to
+resolver start callback. See
+<i>CURLOPT_RESOLVER_START_DATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RESOLVER_START_FUNCTION</p>
+<p style="margin-left:18%;">Callback to be called before a
+new resolve request is started. See
+<i>CURLOPT_RESOLVER_START_FUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RESUME_FROM</p>
+<p style="margin-left:18%;">Resume a transfer. See
+<i>CURLOPT_RESUME_FROM(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RESUME_FROM_LARGE</p>
+<p style="margin-left:18%;">Resume a transfer. See
+<i>CURLOPT_RESUME_FROM_LARGE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RTSP_CLIENT_CSEQ</p>
+<p style="margin-left:18%;">Client CSEQ number. See
+<i>CURLOPT_RTSP_CLIENT_CSEQ(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RTSP_REQUEST</p>
+<p style="margin-left:18%;">RTSP request. See
+<i>CURLOPT_RTSP_REQUEST(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RTSP_SERVER_CSEQ</p>
+<p style="margin-left:18%;">CSEQ number for RTSP
+Server−&gt;Client request. See
+<i>CURLOPT_RTSP_SERVER_CSEQ(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RTSP_SESSION_ID</p>
+<p style="margin-left:18%;">RTSP session−id. See
+<i>CURLOPT_RTSP_SESSION_ID(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RTSP_STREAM_URI</p>
+<p style="margin-left:18%;">RTSP stream URI. See
+<i>CURLOPT_RTSP_STREAM_URI(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_RTSP_TRANSPORT</p>
+<p style="margin-left:18%;">RTSP Transport: header. See
+<i>CURLOPT_RTSP_TRANSPORT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SASL_AUTHZID</p>
+<p style="margin-left:18%;">SASL authorization identity
+(identity to act as). See <i>CURLOPT_SASL_AUTHZID(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SASL_IR</p>
+<p style="margin-left:18%;">Enable SASL initial response.
+See <i>CURLOPT_SASL_IR(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SEEKDATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+seek callback. See <i>CURLOPT_SEEKDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SEEKFUNCTION</p>
+<p style="margin-left:18%;">Callback for seek operations.
+See <i>CURLOPT_SEEKFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SERVER_RESPONSE_TIMEOUT</p>
+<p style="margin-left:18%;">Timeout for server responses.
+See <i>CURLOPT_SERVER_RESPONSE_TIMEOUT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SERVER_RESPONSE_TIMEOUT_MS</p>
+<p style="margin-left:18%;">Timeout for server responses.
+See <i>CURLOPT_SERVER_RESPONSE_TIMEOUT_MS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SERVICE_NAME</p>
+<p style="margin-left:18%;">Authentication service name.
+<i>CURLOPT_SERVICE_NAME(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SHARE</p>
+<p style="margin-left:18%;">Share object to use. See
+<i>CURLOPT_SHARE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SOCKOPTDATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+sockopt callback. See <i>CURLOPT_SOCKOPTDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SOCKOPTFUNCTION</p>
+<p style="margin-left:18%;">Callback for sockopt
+operations. See <i>CURLOPT_SOCKOPTFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SOCKS5_AUTH</p>
+<p style="margin-left:18%;">Socks5 authentication methods.
+See <i>CURLOPT_SOCKS5_AUTH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SOCKS5_GSSAPI_NEC</p>
+<p style="margin-left:18%;">Socks5 GSSAPI NEC mode. See
+<i>CURLOPT_SOCKS5_GSSAPI_NEC(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SOCKS5_GSSAPI_SERVICE</p>
+<p style="margin-left:18%;"><b>Deprecated option</b> Socks5
+GSSAPI service name. See
+<i>CURLOPT_SOCKS5_GSSAPI_SERVICE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSH_AUTH_TYPES</p>
+<p style="margin-left:18%;">SSH authentication types. See
+<i>CURLOPT_SSH_AUTH_TYPES(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSH_COMPRESSION</p>
+<p style="margin-left:18%;">Enable SSH compression. See
+<i>CURLOPT_SSH_COMPRESSION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSH_HOSTKEYDATA</p>
+<p style="margin-left:18%;">Custom pointer to pass to ssh
+host key callback. See <i>CURLOPT_SSH_HOSTKEYDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSH_HOSTKEYFUNCTION</p>
+<p style="margin-left:18%;">Callback for checking host key
+handling. See <i>CURLOPT_SSH_HOSTKEYFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSH_HOST_PUBLIC_KEY_MD5</p>
+<p style="margin-left:18%;">MD5 of host's public key. See
+<i>CURLOPT_SSH_HOST_PUBLIC_KEY_MD5(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSH_HOST_PUBLIC_KEY_SHA256</p>
+<p style="margin-left:18%;">SHA256 of host's public key.
+See <i>CURLOPT_SSH_HOST_PUBLIC_KEY_SHA256(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSH_KEYDATA</p>
+<p style="margin-left:18%;">Custom pointer to pass to ssh
+key callback. See <i>CURLOPT_SSH_KEYDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSH_KEYFUNCTION</p>
+<p style="margin-left:18%;">Callback for known hosts
+handling. See <i>CURLOPT_SSH_KEYFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSH_KNOWNHOSTS</p>
+<p style="margin-left:18%;">Filename with known hosts. See
+<i>CURLOPT_SSH_KNOWNHOSTS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSH_PRIVATE_KEYFILE</p>
+<p style="margin-left:18%;">Filename of the private key.
+See <i>CURLOPT_SSH_PRIVATE_KEYFILE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSH_PUBLIC_KEYFILE</p>
+<p style="margin-left:18%;">Filename of the public key. See
+<i>CURLOPT_SSH_PUBLIC_KEYFILE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSLCERT</p>
+<p style="margin-left:18%;">Client cert. See
+<i>CURLOPT_SSLCERT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSLCERTTYPE</p>
+<p style="margin-left:18%;">Client cert type. See
+<i>CURLOPT_SSLCERTTYPE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSLCERT_BLOB</p>
+<p style="margin-left:18%;">Client cert memory buffer. See
+<i>CURLOPT_SSLCERT_BLOB(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSLENGINE</p>
+<p style="margin-left:18%;">Use identifier with SSL engine.
+See <i>CURLOPT_SSLENGINE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSLENGINE_DEFAULT</p>
+<p style="margin-left:18%;">Default SSL engine. See
+<i>CURLOPT_SSLENGINE_DEFAULT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSLKEY</p>
+<p style="margin-left:18%;">Client key. See
+<i>CURLOPT_SSLKEY(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSLKEYTYPE</p>
+<p style="margin-left:18%;">Client key type. See
+<i>CURLOPT_SSLKEYTYPE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSLKEY_BLOB</p>
+<p style="margin-left:18%;">Client key memory buffer. See
+<i>CURLOPT_SSLKEY_BLOB(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSLVERSION</p>
+<p style="margin-left:18%;">SSL version to use. See
+<i>CURLOPT_SSLVERSION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_CIPHER_LIST</p>
+<p style="margin-left:18%;">Ciphers to use. See
+<i>CURLOPT_SSL_CIPHER_LIST(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_CTX_DATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the SSL
+context callback. See <i>CURLOPT_SSL_CTX_DATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_CTX_FUNCTION</p>
+<p style="margin-left:18%;">Callback for SSL context logic.
+See <i>CURLOPT_SSL_CTX_FUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_EC_CURVES</p>
+<p style="margin-left:18%;">Set key exchange curves. See
+<i>CURLOPT_SSL_EC_CURVES(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_ENABLE_ALPN</p>
+<p style="margin-left:18%;">Enable use of ALPN. See
+<i>CURLOPT_SSL_ENABLE_ALPN(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_ENABLE_NPN</p>
+<p style="margin-left:18%;"><b>OBSOLETE</b> Enable use of
+NPN. See <i>CURLOPT_SSL_ENABLE_NPN(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_FALSESTART</p>
+<p style="margin-left:18%;">Enable TLS False Start. See
+<i>CURLOPT_SSL_FALSESTART(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_OPTIONS</p>
+<p style="margin-left:18%;">Control SSL behavior. See
+<i>CURLOPT_SSL_OPTIONS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_SESSIONID_CACHE</p>
+<p style="margin-left:18%;">Disable SSL session−id
+cache. See <i>CURLOPT_SSL_SESSIONID_CACHE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_VERIFYHOST</p>
+<p style="margin-left:18%;">Verify the hostname in the SSL
+certificate. See <i>CURLOPT_SSL_VERIFYHOST(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_VERIFYPEER</p>
+<p style="margin-left:18%;">Verify the SSL certificate. See
+<i>CURLOPT_SSL_VERIFYPEER(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SSL_VERIFYSTATUS</p>
+<p style="margin-left:18%;">Verify the SSL certificate's
+status. See <i>CURLOPT_SSL_VERIFYSTATUS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_STDERR</p>
+<p style="margin-left:18%;">Redirect stderr to another
+stream. See <i>CURLOPT_STDERR(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_STREAM_DEPENDS</p>
+<p style="margin-left:18%;">This HTTP/2 stream depends on
+another. See <i>CURLOPT_STREAM_DEPENDS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_STREAM_DEPENDS_E</p>
+<p style="margin-left:18%;">This HTTP/2 stream depends on
+another exclusively. See
+<i>CURLOPT_STREAM_DEPENDS_E(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_STREAM_WEIGHT</p>
+<p style="margin-left:18%;">Set this HTTP/2 stream's
+weight. See <i>CURLOPT_STREAM_WEIGHT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_SUPPRESS_CONNECT_HEADERS</p>
+<p style="margin-left:18%;">Suppress proxy CONNECT response
+headers from user callbacks. See
+<i>CURLOPT_SUPPRESS_CONNECT_HEADERS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TCP_FASTOPEN</p>
+<p style="margin-left:18%;">Enable TCP Fast Open. See
+<i>CURLOPT_TCP_FASTOPEN(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TCP_KEEPALIVE</p>
+<p style="margin-left:18%;">Enable TCP keep−alive.
+See <i>CURLOPT_TCP_KEEPALIVE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TCP_KEEPCNT</p>
+<p style="margin-left:18%;">Maximum number of
+keep−alive probes. See
+<i>CURLOPT_TCP_KEEPCNT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TCP_KEEPIDLE</p>
+<p style="margin-left:18%;">Idle time before sending
+keep−alive. See <i>CURLOPT_TCP_KEEPIDLE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TCP_KEEPINTVL</p>
+<p style="margin-left:18%;">Interval between
+keep−alive probes. See
+<i>CURLOPT_TCP_KEEPINTVL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TCP_NODELAY</p>
+<p style="margin-left:18%;">Disable the Nagle algorithm.
+See <i>CURLOPT_TCP_NODELAY(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TELNETOPTIONS</p>
+<p style="margin-left:18%;">TELNET options. See
+<i>CURLOPT_TELNETOPTIONS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TFTP_BLKSIZE</p>
+<p style="margin-left:18%;">TFTP block size. See
+<i>CURLOPT_TFTP_BLKSIZE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TFTP_NO_OPTIONS</p>
+<p style="margin-left:18%;">Do not send TFTP options
+requests. See <i>CURLOPT_TFTP_NO_OPTIONS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TIMECONDITION</p>
+<p style="margin-left:18%;">Make a time conditional
+request. See <i>CURLOPT_TIMECONDITION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TIMEOUT</p>
+<p style="margin-left:18%;">Timeout for the entire request.
+See <i>CURLOPT_TIMEOUT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TIMEOUT_MS</p>
+<p style="margin-left:18%;">Millisecond timeout for the
+entire request. See <i>CURLOPT_TIMEOUT_MS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TIMEVALUE</p>
+<p style="margin-left:18%;">Time value for the time
+conditional request. See <i>CURLOPT_TIMEVALUE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TIMEVALUE_LARGE</p>
+<p style="margin-left:18%;">Time value for the time
+conditional request. See
+<i>CURLOPT_TIMEVALUE_LARGE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TLS13_CIPHERS</p>
+<p style="margin-left:18%;">TLS 1.3 cipher suites to use.
+See <i>CURLOPT_TLS13_CIPHERS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TLSAUTH_PASSWORD</p>
+<p style="margin-left:18%;">TLS authentication password.
+See <i>CURLOPT_TLSAUTH_PASSWORD(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TLSAUTH_TYPE</p>
+<p style="margin-left:18%;">TLS authentication methods. See
+<i>CURLOPT_TLSAUTH_TYPE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TLSAUTH_USERNAME</p>
+<p style="margin-left:18%;">TLS authentication username.
+See <i>CURLOPT_TLSAUTH_USERNAME(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TRAILERDATA</p>
+<p style="margin-left:18%;">Custom pointer passed to the
+trailing headers callback. See
+<i>CURLOPT_TRAILERDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TRAILERFUNCTION</p>
+<p style="margin-left:18%;">Set callback for sending
+trailing headers. See <i>CURLOPT_TRAILERFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TRANSFERTEXT</p>
+<p style="margin-left:18%;">Use text transfer. See
+<i>CURLOPT_TRANSFERTEXT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_TRANSFER_ENCODING</p>
+<p style="margin-left:18%;">Request
+Transfer−Encoding. See
+<i>CURLOPT_TRANSFER_ENCODING(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_UNIX_SOCKET_PATH</p>
+<p style="margin-left:18%;">Path to a Unix domain socket.
+See <i>CURLOPT_UNIX_SOCKET_PATH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_UNRESTRICTED_AUTH</p>
+<p style="margin-left:18%;">Do not restrict authentication
+to original host. <i>CURLOPT_UNRESTRICTED_AUTH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_UPKEEP_INTERVAL_MS</p>
+<p style="margin-left:18%;">Sets the interval at which
+connection upkeep are performed. See
+<i>CURLOPT_UPKEEP_INTERVAL_MS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_UPLOAD</p>
+<p style="margin-left:18%;">Upload data. See
+<i>CURLOPT_UPLOAD(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_UPLOAD_BUFFERSIZE</p>
+<p style="margin-left:18%;">Set upload buffer size. See
+<i>CURLOPT_UPLOAD_BUFFERSIZE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_URL</p>
+<p style="margin-left:18%;">URL to work on. See
+<i>CURLOPT_URL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_USERAGENT</p>
+<p style="margin-left:18%;">User−Agent: header. See
+<i>CURLOPT_USERAGENT(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_USERNAME</p>
+<p style="margin-left:18%;">Username. See
+<i>CURLOPT_USERNAME(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_USERPWD</p>
+<p style="margin-left:18%;">Username and password. See
+<i>CURLOPT_USERPWD(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_USE_SSL</p>
+<p style="margin-left:18%;">Use TLS/SSL. See
+<i>CURLOPT_USE_SSL(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_VERBOSE</p>
+<p style="margin-left:18%;">Display verbose information.
+See <i>CURLOPT_VERBOSE(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_WILDCARDMATCH</p>
+<p style="margin-left:18%;">Transfer multiple files
+according to a filename pattern. See
+<i>CURLOPT_WILDCARDMATCH(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_WRITEDATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+write callback. See <i>CURLOPT_WRITEDATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_WRITEFUNCTION</p>
+<p style="margin-left:18%;">Callback for writing data. See
+<i>CURLOPT_WRITEFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_WS_OPTIONS</p>
+<p style="margin-left:18%;">Set WebSocket options. See
+<i>CURLOPT_WS_OPTIONS(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_XFERINFODATA</p>
+<p style="margin-left:18%;">Data pointer to pass to the
+progress meter callback. See
+<i>CURLOPT_XFERINFODATA(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_XFERINFOFUNCTION</p>
+<p style="margin-left:18%;">Callback for progress meter.
+See <i>CURLOPT_XFERINFOFUNCTION(3)</i></p>
+<p style="margin-left:9%;">CURLOPT_XOAUTH2_BEARER</p>
+<p style="margin-left:18%;">OAuth2 bearer token. See
+<i>CURLOPT_XOAUTH2_BEARER(3)</i></p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+CURLcode res; <br/>
+curl_easy_setopt(curl, CURLOPT_URL,
+"https://example.com"); <br/>
+res = curl_easy_perform(curl); <br/>
+curl_easy_cleanup(curl); <br/>
+} <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.1</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>CURLE_OK</i>
+(zero) means that the option was set properly,
+non−zero means an error occurred as
+<i>&lt;curl/curl.h&gt;</i> defines. See the
+<i>libcurl−errors(3)</i> man page for the full list
+with descriptions.</p>
+<p style="margin-left:9%; margin-top: 1em">Strings passed
+on to libcurl must be shorter than 8000000 bytes, otherwise
+<i>curl_easy_setopt(3)</i> returns
+<b>CURLE_BAD_FUNCTION_ARGUMENT</b> (added in 7.65.0).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLE_BAD_FUNCTION_ARGUMENT</b>
+is returned when the argument to an option is invalid, like
+perhaps out of range.</p>
+<p style="margin-left:9%; margin-top: 1em">If you try to
+set an option that libcurl does not know about, perhaps
+because the library is too old to support it or the option
+was removed in a recent version, this function returns
+<i>CURLE_UNKNOWN_OPTION</i>. If support for the option was
+disabled at compile−time, it returns
+<i>CURLE_NOT_BUILT_IN</i>.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curl_easy_cleanup</b>(3),
+<b>curl_easy_getinfo</b>(3), <b>curl_easy_init</b>(3),
+<b>curl_easy_option_by_id</b>(3),
+<b>curl_easy_option_by_name</b>(3),
+<b>curl_easy_option_next</b>(3), <b>curl_easy_reset</b>(3),
+<b>curl_multi_setopt</b>(3)</p>
+<hr/>
+</body>
+</html>

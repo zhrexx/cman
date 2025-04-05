@@ -1,0 +1,208 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:57 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>setfsgid</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">setfsgid</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#C library/kernel differences">C library/kernel differences</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">setfsgid −
+set group identity used for filesystem checks</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;sys/fsuid.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>[[deprecated]]
+int setfsgid(gid_t</b> <i>fsgid</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On Linux, a
+process has both a filesystem group ID and an effective
+group ID. The (Linux-specific) filesystem group ID is used
+for permissions checking when accessing filesystem objects,
+while the effective group ID is used for some other kinds of
+permissions checks (see <b>credentials</b>(7)).</p>
+<p style="margin-left:9%; margin-top: 1em">Normally, the
+value of the process’s filesystem group ID is the same
+as the value of its effective group ID. This is so, because
+whenever a process’s effective group ID is changed,
+the kernel also changes the filesystem group ID to be the
+same as the new value of the effective group ID. A process
+can cause the value of its filesystem group ID to diverge
+from its effective group ID by using <b>setfsgid</b>() to
+change its filesystem group ID to the value given in
+<i>fsgid</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>setfsgid</b>()
+will succeed only if the caller is the superuser or if
+<i>fsgid</i> matches either the caller’s real group
+ID, effective group ID, saved set-group-ID, or current the
+filesystem user ID.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On both success
+and failure, this call returns the previous filesystem group
+ID of the caller.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux 1.2.</p>
+<h3>C library/kernel differences
+<a name="C library/kernel differences"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">In glibc 2.15
+and earlier, when the wrapper for this system call
+determines that the argument can’t be passed to the
+kernel without integer truncation (because the kernel is old
+and does not support 32-bit group IDs), it will return
+−1 and set <i>errno</i> to <b>EINVAL</b> without
+attempting the system call.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The filesystem
+group ID concept and the <b>setfsgid</b>() system call were
+invented for historical reasons that are no longer
+applicable on modern Linux kernels. See <b>setfsuid</b>(2)
+for a discussion of why the use of both <b>setfsuid</b>(2)
+and <b>setfsgid</b>() is nowadays unneeded.</p>
+<p style="margin-left:9%; margin-top: 1em">The original
+Linux <b>setfsgid</b>() system call supported only 16-bit
+group IDs. Subsequently, Linux 2.4 added <b>setfsgid32</b>()
+supporting 32-bit IDs. The glibc <b>setfsgid</b>() wrapper
+function transparently deals with the variation across
+kernel versions.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">No error
+indications of any kind are returned to the caller, and the
+fact that both successful and unsuccessful calls return the
+same value makes it impossible to directly determine whether
+the call succeeded or failed. Instead, the caller must
+resort to looking at the return value from a further call
+such as <i>setfsgid(−1)</i> (which will always fail),
+in order to determine if a preceding call to
+<b>setfsgid</b>() changed the filesystem group ID. At the
+very least, <b>EPERM</b> should be returned when the call
+fails (because the caller lacks the <b>CAP_SETGID</b>
+capability).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>kill</b>(2),
+<b>setfsuid</b>(2), <b>capabilities</b>(7),
+<b>credentials</b>(7)</p>
+<hr/>
+</body>
+</html>

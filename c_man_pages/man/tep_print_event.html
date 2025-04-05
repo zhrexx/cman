@@ -1,0 +1,297 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:01 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LIBTRACEEVENT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LIBTRACEEVENT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#FILES">FILES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#RESOURCES">RESOURCES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">tep_print_event
+− Writes event information into a trace sequence.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;event−parse.h&gt; <br/>
+#include &lt;trace−seq.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em">void
+<b>tep_print_event</b>(struct tep_handle *<i>tep</i>, struct
+trace_seq*<i>s</i>, struct tep_record *<i>record</i>, const
+char *<i>fmt</i>, <i>...</i>)</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>tep_print_event()</b> function parses the event
+information of the given <i>record</i> and writes it into
+the trace sequence <i>s</i>, according to the format string
+<i>fmt</i>. The desired information is specified after the
+format string. The <i>fmt</i> is printf−like format
+string, following arguments are supported:</p>
+<p style="margin-left:14%; margin-top: 1em">TEP_PRINT_PID,
+"%d" − PID of the event. <br/>
+TEP_PRINT_CPU, "%d" − Event CPU. <br/>
+TEP_PRINT_COMM, "%s" − Event command string.
+<br/>
+TEP_PRINT_NAME, "%s" − Event name. <br/>
+TEP_PRINT_LATENCY, "%s" − Latency of the
+event. It prints 4 or more <br/>
+fields − interrupt state, scheduling state, <br/>
+current context, and preemption count. <br/>
+Field 1 is the interrupt enabled state: <br/>
+d : Interrupts are disabled <br/>
+. : Interrupts are enabled <br/>
+X : The architecture does not support this <br/>
+information <br/>
+Field 2 is the "need resched" state. <br/>
+N : The task is set to call the scheduler when <br/>
+possible, as another higher priority task <br/>
+may need to be scheduled in. <br/>
+. : The task is not set to call the scheduler. <br/>
+Field 3 is the context state. <br/>
+. : Normal context <br/>
+s : Soft interrupt context <br/>
+h : Hard interrupt context <br/>
+H : Hard interrupt context which triggered <br/>
+during soft interrupt context. <br/>
+z : NMI context <br/>
+Z : NMI context which triggered during hard <br/>
+interrupt context <br/>
+Field 4 is the preemption count. <br/>
+. : The preempt count is zero. <br/>
+On preemptible kernels (where the task can be scheduled <br/>
+out in arbitrary locations while in kernel context), the
+<br/>
+preempt count, when non zero, will prevent the kernel <br/>
+from scheduling out the current task. The preempt count <br/>
+number is displayed when it is not zero. <br/>
+Depending on the kernel, it may show other fields <br/>
+(lock depth, or migration disabled, which are unique to <br/>
+specialized kernels). <br/>
+TEP_PRINT_TIME, %d − event time stamp. A divisor and
+precision can be <br/>
+specified as part of this format string: <br/>
+"%precision.divisord". Example: <br/>
+"%3.1000d" − divide the time by 1000 and
+print the first <br/>
+3 digits before the dot. Thus, the time stamp <br/>
+"123456000" will be printed as "123.456"
+<br/>
+TEP_PRINT_INFO, "%s" − event information.
+<br/>
+TEP_PRINT_INFO_RAW, "%s" − event
+information, in raw format.</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em">#include
+&lt;event−parse.h&gt; <br/>
+#include &lt;trace−seq.h&gt; <br/>
+... <br/>
+struct trace_seq seq; <br/>
+trace_seq_init(&amp;seq); <br/>
+struct tep_handle *tep = tep_alloc(); <br/>
+... <br/>
+void print_my_event(struct tep_record *record) <br/>
+{ <br/>
+trace_seq_reset(&amp;seq); <br/>
+tep_print_event(tep, s, record, "%16s−%−5d
+[%03d] %s %6.1000d %s %s", <br/>
+TEP_PRINT_COMM, TEP_PRINT_PID, TEP_PRINT_CPU, <br/>
+TEP_PRINT_LATENCY, TEP_PRINT_TIME, TEP_PRINT_NAME, <br/>
+TEP_PRINT_INFO); <br/>
+} <br/>
+...</p>
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em"><b>event−parse.h</b>
+<br/>
+Header file to include in order to have access to the
+library APIs. <b><br/>
+trace−seq.h</b> <br/>
+Header file to include in order to have access to trace
+sequences related APIs. <br/>
+Trace sequences are used to allow a function to call several
+other functions <br/>
+to create a string of data to use. <b><br/>
+−ltraceevent</b> <br/>
+Linker switch to add when building a program that uses the
+library.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>libtraceevent</b>(3),
+<b>trace−cmd</b>(1)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em"><b>Steven
+Rostedt</b>
+&lt;<b><font color="#0000FF">rostedt@goodmis.org</font></b>
+<small><font color="#000000">[1]</font></small>
+<font color="#000000">&gt;, author of <b>libtraceevent</b>.
+<b><br/>
+Tzvetomir Stoyanov</b>
+&lt;</font><b><font color="#0000FF">tz.stoyanov@gmail.com</font></b>
+<small><font color="#000000">[2]</font></small>
+<font color="#000000">&gt;, author of this man
+page.</font></p>
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><font color="#000000">Report
+bugs to
+&lt;</font><b><font color="#0000FF">linux−trace−devel@vger.kernel.org</font></b>
+<small><font color="#000000">[3]</font></small>
+<font color="#000000">&gt;</font></p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><font color="#000000">libtraceevent
+is Free Software licensed under the GNU LGPL 2.1</font></p>
+<h2>RESOURCES
+<a name="RESOURCES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b><font color="#0000FF">https://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git/</font></b></p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">1.</font></p> </td>
+<td width="1%"></td>
+<td width="24%">
+<p style="margin-top: 1em"><font color="#000000">rostedt@goodmis.org</font></p> </td>
+<td width="62%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:rostedt@goodmis.org</font></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">2.</font></p> </td>
+<td width="1%"></td>
+<td width="27%">
+<p style="margin-top: 1em"><font color="#000000">tz.stoyanov@gmail.com</font></p> </td>
+<td width="59%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:tz.stoyanov@gmail.com</font></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">3.</font></p> </td>
+<td width="1%"></td>
+<td width="42%">
+<p style="margin-top: 1em"><font color="#000000">linux-trace-devel@vger.kernel.org</font></p> </td>
+<td width="44%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:linux-trace-devel@vger.kernel.org</font></p>
+<hr/>
+</body>
+</html>

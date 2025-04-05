@@ -1,0 +1,215 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:47 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_SEEKFUNCTION</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_SEEKFUNCTION</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_SEEKFUNCTION
+− user callback for seeking in input stream</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">/* These are the
+return codes for the seek callbacks */ <br/>
+#define CURL_SEEKFUNC_OK 0 <br/>
+#define CURL_SEEKFUNC_FAIL 1 /* fail the entire transfer */
+<br/>
+#define CURL_SEEKFUNC_CANTSEEK 2 /* tell libcurl seeking
+cannot be done, so <br/>
+libcurl might try other means instead */</p>
+<p style="margin-left:9%; margin-top: 1em">int
+seek_callback(void *clientp, curl_off_t offset, int
+origin);</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_SEEKFUNCTION,
+seek_callback);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a pointer
+to your callback function, which should match the prototype
+shown above.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+gets called by libcurl to seek to a certain position in the
+input stream and can be used to fast forward a file in a
+resumed upload (instead of reading all uploaded bytes with
+the normal read function/callback). It is also called to
+rewind a stream when data has already been sent to the
+server and needs to be sent again. This may happen when
+doing an HTTP PUT or POST with a multi−pass
+authentication method, or when an existing HTTP connection
+is reused too late and the server closes the connection. The
+function shall work like fseek(3) or lseek(3) and it gets
+SEEK_SET, SEEK_CUR or SEEK_END as argument for
+<i>origin</i>, although libcurl currently only passes
+SEEK_SET.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>clientp</i>
+is the pointer you set with <i>CURLOPT_SEEKDATA(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback
+function must return <i>CURL_SEEKFUNC_OK</i> on success,
+<i>CURL_SEEKFUNC_FAIL</i> to cause the upload operation to
+fail or <i>CURL_SEEKFUNC_CANTSEEK</i> to indicate that while
+the seek failed, libcurl is free to work around the problem
+if possible. The latter can sometimes be done by instead
+reading from the input or similar.</p>
+<p style="margin-left:9%; margin-top: 1em">If you forward
+the input arguments directly to fseek(3) or lseek(3), note
+that the data type for <i>offset</i> is not the same as
+defined for curl_off_t on many systems!</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;unistd.h&gt; /* for lseek */</p>
+<p style="margin-left:9%; margin-top: 1em">struct data {
+<br/>
+int our_fd; <br/>
+}; <br/>
+static int seek_cb(void *clientp, curl_off_t offset, int
+origin) <br/>
+{ <br/>
+struct data *d = (struct data *)clientp; <br/>
+lseek(d-&gt;our_fd, offset, origin); <br/>
+return CURL_SEEKFUNC_OK; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+struct data seek_data; <br/>
+CURL *curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+curl_easy_setopt(curl, CURLOPT_SEEKFUNCTION, seek_cb); <br/>
+curl_easy_setopt(curl, CURLOPT_SEEKDATA, &amp;seek_data);
+<br/>
+} <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.18.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLE_OK
+if the option is supported, and CURLE_UNKNOWN_OPTION if
+not.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_DEBUGFUNCTION</b>(3),
+<b>CURLOPT_IOCTLFUNCTION</b>(3), <b>CURLOPT_SEEKDATA</b>(3),
+<b>CURLOPT_STDERR</b>(3)</p>
+<hr/>
+</body>
+</html>

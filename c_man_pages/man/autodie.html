@@ -1,0 +1,519 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:31 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>autodie</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">autodie</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#EXCEPTIONS">EXCEPTIONS</a><br/>
+<a href="#CATEGORIES">CATEGORIES</a><br/>
+<a href="#FUNCTION SPECIFIC NOTES">FUNCTION SPECIFIC NOTES</a><br/>
+<a href="#print">print</a><br/>
+<a href="#flock">flock</a><br/>
+<a href="#system/exec">system/exec</a><br/>
+<a href="#GOTCHAS">GOTCHAS</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#Tips and Tricks">Tips and Tricks</a><br/>
+<a href='#Importing autodie into another namespace than "caller"'>Importing autodie into another namespace than "caller"</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#autodie and string eval">autodie and string eval</a><br/>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br/>
+<a href="#FEEDBACK">FEEDBACK</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#ACKNOWLEDGEMENTS">ACKNOWLEDGEMENTS</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">autodie −
+Replace functions with ones that succeed or die with lexical
+scope</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use autodie; #
+Recommended: implies 'use autodie qw(:default)' <br/>
+use autodie qw(:all); # Recommended more: defaults and
+system/exec. <br/>
+use autodie qw(open close); # open/close succeed or die <br/>
+open(my $fh, "&lt;", $filename); # No need to
+check! <br/>
+{ <br/>
+no autodie qw(open); # open failures won't die <br/>
+open(my $fh, "&lt;", $filename); # Could fail
+silently! <br/>
+no autodie; # disable all autodies <br/>
+} <br/>
+print "Hello World" or die $!; # autodie DOESN'T
+check print!</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">bIlujDI'
+yIchegh()Qo'; yIHegh()! <br/>
+It is better to die() than to return() in failure. <br/>
+−− Klingon programming proverb.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"autodie" pragma provides a convenient way to
+replace functions that normally return false on failure with
+equivalents that throw an exception on failure.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"autodie" pragma has <i>lexical scope</i>, meaning
+that functions and subroutines altered with
+"autodie" will only change their behaviour until
+the end of the enclosing block, file, or
+"eval".</p>
+<p style="margin-left:9%; margin-top: 1em">If
+"system" is specified as an argument to
+"autodie", then it uses IPC::System::Simple to do
+the heavy lifting. See the description of that module for
+more information.</p>
+<h2>EXCEPTIONS
+<a name="EXCEPTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Exceptions
+produced by the "autodie" pragma are members of
+the autodie::exception class. The preferred way to work with
+these exceptions under Perl 5.10 is as follows:</p>
+<p style="margin-left:9%; margin-top: 1em">eval { <br/>
+use autodie; <br/>
+open(my $fh, '&lt;', $some_file); <br/>
+my @records = &lt;$fh&gt;; <br/>
+# Do things with @records... <br/>
+close($fh); <br/>
+}; <br/>
+if ($@ and $@−&gt;isa('autodie::exception')) { <br/>
+if ($@−&gt;matches('open')) { print "Error from
+open\n"; } <br/>
+if ($@−&gt;matches(':io' )) { print
+"Non−open, IO error."; } <br/>
+} elsif ($@) { <br/>
+# A non−autodie exception. <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">See
+autodie::exception for further information on interrogating
+exceptions.</p>
+<h2>CATEGORIES
+<a name="CATEGORIES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Autodie uses a
+simple set of categories to group together similar
+built−ins. Requesting a category type (starting with a
+colon) will enable autodie for all built−ins beneath
+that category. For example, requesting ":file"
+will enable autodie for "close",
+"fcntl", "open" and
+"sysopen".</p>
+<p style="margin-left:9%; margin-top: 1em">The categories
+are currently:</p>
+<p style="margin-left:9%; margin-top: 1em">:all <br/>
+:default <br/>
+:io <br/>
+read <br/>
+seek <br/>
+sysread <br/>
+sysseek <br/>
+syswrite <br/>
+:dbm <br/>
+dbmclose <br/>
+dbmopen <br/>
+:file <br/>
+binmode <br/>
+close <br/>
+chmod <br/>
+chown <br/>
+fcntl <br/>
+flock <br/>
+ioctl <br/>
+open <br/>
+sysopen <br/>
+truncate <br/>
+:filesys <br/>
+chdir <br/>
+closedir <br/>
+opendir <br/>
+link <br/>
+mkdir <br/>
+readlink <br/>
+rename <br/>
+rmdir <br/>
+symlink <br/>
+unlink <br/>
+:ipc <br/>
+kill <br/>
+pipe <br/>
+:msg <br/>
+msgctl <br/>
+msgget <br/>
+msgrcv <br/>
+msgsnd <br/>
+:semaphore <br/>
+semctl <br/>
+semget <br/>
+semop <br/>
+:shm <br/>
+shmctl <br/>
+shmget <br/>
+shmread <br/>
+:socket <br/>
+accept <br/>
+bind <br/>
+connect <br/>
+getsockopt <br/>
+listen <br/>
+recv <br/>
+send <br/>
+setsockopt <br/>
+shutdown <br/>
+socketpair <br/>
+:threads <br/>
+fork <br/>
+:system <br/>
+system <br/>
+exec</p>
+<p style="margin-left:9%; margin-top: 1em">Note that while
+the above category system is presently a strict hierarchy,
+this should not be assumed.</p>
+<p style="margin-left:9%; margin-top: 1em">A plain
+"use autodie" implies "use autodie
+qw(:default)". Note that "system" and
+"exec" are not enabled by default.
+"system" requires the optional IPC::System::Simple
+module to be installed, and enabling "system" or
+"exec" will invalidate their exotic forms. See
+"BUGS" below for more details.</p>
+<p style="margin-left:9%; margin-top: 1em">The syntax:</p>
+<p style="margin-left:9%; margin-top: 1em">use autodie
+qw(:1.994);</p>
+<p style="margin-left:9%; margin-top: 1em">allows the
+":default" list from a particular version to be
+used. This provides the convenience of using the default
+methods, but the surety that no behavioral changes will
+occur if the "autodie" module is upgraded.</p>
+<p style="margin-left:9%; margin-top: 1em">"autodie"
+can be enabled for all of Perl's built−ins, including
+"system" and "exec" with:</p>
+<p style="margin-left:9%; margin-top: 1em">use autodie
+qw(:all);</p>
+<h2>FUNCTION SPECIFIC NOTES
+<a name="FUNCTION SPECIFIC NOTES"></a>
+</h2>
+<h3>print
+<a name="print"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The autodie
+pragma <b>does not check calls to "print"</b>.</p>
+<h3>flock
+<a name="flock"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">It is not
+considered an error for "flock" to return false if
+it fails due to an "EWOULDBLOCK" (or equivalent)
+condition. This means one can still use the common
+convention of testing the return value of "flock"
+when called with the "LOCK_NB" option:</p>
+<p style="margin-left:9%; margin-top: 1em">use autodie;
+<br/>
+if ( flock($fh, LOCK_EX | LOCK_NB) ) { <br/>
+# We have a lock <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Autodying
+"flock" will generate an exception if
+"flock" returns false with any other error.</p>
+<h3>system/exec
+<a name="system/exec"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+"system" built−in is considered to have
+failed in the following circumstances:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="74%">
+<p>The command does not start.</p></td>
+<td width="12%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="74%">
+<p>The command is killed by a signal.</p></td>
+<td width="12%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="74%">
+<p>The command returns a non−zero exit value (but see
+below).</p> </td>
+<td width="12%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">On success, the
+autodying form of "system" returns the <i>exit
+value</i> rather than the contents of $?.</p>
+<p style="margin-left:9%; margin-top: 1em">Additional
+allowable exit values can be supplied as an optional first
+argument to autodying "system":</p>
+<p style="margin-left:9%; margin-top: 1em">system( [ 0, 1,
+2 ], $cmd, @args); # 0,1,2 are good exit values</p>
+<p style="margin-left:9%; margin-top: 1em">"autodie"
+uses the IPC::System::Simple module to change
+"system". See its documentation for further
+information.</p>
+<p style="margin-left:9%; margin-top: 1em">Applying
+"autodie" to "system" or
+"exec" causes the exotic forms "system { $cmd
+} @args " or "exec { $cmd } @args" to be
+considered a syntax error until the end of the lexical
+scope. If you really need to use the exotic form, you can
+call "CORE::system" or "CORE::exec"
+instead, or use "no autodie qw(system exec)"
+before calling the exotic form.</p>
+<h2>GOTCHAS
+<a name="GOTCHAS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Functions called
+in list context are assumed to have failed if they return an
+empty list, or a list consisting only of a single undef
+element.</p>
+<p style="margin-left:9%; margin-top: 1em">Some builtins
+(e.g. "chdir" or "truncate") has a call
+signature that cannot completely be represented with a Perl
+prototype. This means that some valid Perl code will be
+invalid under autodie. As an example:</p>
+<p style="margin-left:9%; margin-top: 1em">chdir(BAREWORD);</p>
+<p style="margin-left:9%; margin-top: 1em">Without autodie
+(and assuming BAREWORD is an open filehandle/dirhandle) this
+is a valid call to chdir. But under autodie,
+"chdir" will behave like it had the prototype
+";$" and thus BAREWORD will be a syntax error
+(under "use strict". Without strict, it will
+interpreted as a filename).</p>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">:void cannot be
+used with lexical scope</p>
+<p style="margin-left:14%;">The ":void" option is
+supported in Fatal, but not "autodie". To
+workaround this, "autodie" may be explicitly
+disabled until the end of the current block with "no
+autodie". To disable autodie for only a single function
+(eg, open) use "no autodie qw(open)".</p>
+<p style="margin-left:14%; margin-top: 1em">"autodie"
+performs no checking of called context to determine whether
+to throw an exception; the explicitness of error handling
+with "autodie" is a deliberate feature.</p>
+<p style="margin-left:9%;">No user hints defined for %s</p>
+<p style="margin-left:14%;">You've insisted on hints for
+user−subroutines, either by pre−pending a
+"!" to the subroutine name itself, or earlier in
+the list of arguments to "autodie". However the
+subroutine in question does not have any hints
+available.</p>
+<p style="margin-left:9%; margin-top: 1em">See also
+"DIAGNOSTICS" in Fatal.</p>
+<h2>Tips and Tricks
+<a name="Tips and Tricks"></a>
+</h2>
+<h3>Importing autodie into another namespace than "caller"
+<a name='Importing autodie into another namespace than "caller"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">It is possible
+to import autodie into a different namespace by using
+Import::Into. However, you have to pass a "caller
+depth" (rather than a package name) for this to work
+correctly.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Used only
+once" warnings can be generated when
+"autodie" or "Fatal" is used with
+package filehandles (eg, "FILE"). Scalar
+filehandles are strongly recommended instead.</p>
+<p style="margin-left:9%; margin-top: 1em">When using
+"autodie" or "Fatal" with user
+subroutines, the declaration of those subroutines must
+appear before the first use of "Fatal" or
+"autodie", or have been exported from a module.
+Attempting to use "Fatal" or "autodie"
+on other user subroutines will result in a
+compile−time error.</p>
+<p style="margin-left:9%; margin-top: 1em">Due to a bug in
+Perl, "autodie" may "lose" any format
+which has the same name as an autodying built−in or
+function.</p>
+<p style="margin-left:9%; margin-top: 1em">"autodie"
+may not work correctly if used inside a file with a name
+that looks like a string eval, such as <i>eval (3)</i>.</p>
+<h3>autodie and string eval
+<a name="autodie and string eval"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Due to the
+current implementation of "autodie", unexpected
+results may be seen when used near or with the string
+version of eval. <i>None of these bugs exist when using
+block eval</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Under Perl 5.8
+only, "autodie" <i>does not</i> propagate into
+string "eval" statements, although it can be
+explicitly enabled inside a string "eval".</p>
+<p style="margin-left:9%; margin-top: 1em">Under Perl 5.10
+only, using a string eval when "autodie" is in
+effect can cause the autodie behaviour to leak into the
+surrounding scope. This can be worked around by using a
+"no autodie" at the end of the scope to explicitly
+remove autodie's effects, or by avoiding the use of string
+eval.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>None of these
+bugs exist when using block eval</i>. The use of
+"autodie" with block eval is considered good
+practice.</p>
+<h3>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Please report
+bugs via the GitHub Issue Tracker at
+&lt;https://github.com/pjf/autodie/issues&gt;.</p>
+<h2>FEEDBACK
+<a name="FEEDBACK"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If you find this
+module useful, please consider rating it on metacpan at
+&lt;https://metacpan.org/pod/autodie&gt; .</p>
+<p style="margin-left:9%; margin-top: 1em">The module
+author loves to hear how "autodie" has made your
+life better (or worse). Feedback can be sent to
+&lt;pjf@perltraining.com.au&gt;.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2008−2009, Paul Fenwick
+&lt;pjf@perltraining.com.au&gt;</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+free software. You may distribute it under the same terms as
+Perl itself.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Fatal,
+autodie::exception, autodie::hints, IPC::System::Simple</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Perl tips,
+autodie</i> at
+&lt;http://perltraining.com.au/tips/2008−08−20.html&gt;</p>
+<h2>ACKNOWLEDGEMENTS
+<a name="ACKNOWLEDGEMENTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Mark Reed and
+Roland Giersig −− Klingon translators.</p>
+<p style="margin-left:9%; margin-top: 1em">See the
+<i>AUTHORS</i> file for full credits. The latest version of
+this file can be found at
+&lt;https://github.com/pjf/autodie/tree/master/AUTHORS&gt;
+.</p>
+<hr/>
+</body>
+</html>

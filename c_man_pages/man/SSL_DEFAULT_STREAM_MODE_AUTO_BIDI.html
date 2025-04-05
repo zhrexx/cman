@@ -1,0 +1,247 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:23 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_SET_DEFAULT_STREAM_MODE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_SET_DEFAULT_STREAM_MODE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_set_default_stream_mode,
+SSL_DEFAULT_STREAM_MODE_NONE,
+SSL_DEFAULT_STREAM_MODE_AUTO_BIDI,
+SSL_DEFAULT_STREAM_MODE_AUTO_UNI − manage the default
+stream for a QUIC connection</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+#define SSL_DEFAULT_STREAM_MODE_NONE <br/>
+#define SSL_DEFAULT_STREAM_MODE_AUTO_BIDI <br/>
+#define SSL_DEFAULT_STREAM_MODE_AUTO_UNI <br/>
+int SSL_set_default_stream_mode(SSL *conn, uint32_t
+mode);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A QUIC
+connection SSL object may have a default stream attached to
+it. A default stream is a QUIC stream to which calls to
+<b>SSL_read</b>(3) and <b>SSL_write</b>(3) made on a QUIC
+connection SSL object are redirected. Default stream
+handling allows legacy applications to use QUIC similarly to
+a traditional TLS connection.</p>
+<p style="margin-left:9%; margin-top: 1em">When not
+disabled, a default stream is automatically created on an
+outgoing connection once <b>SSL_read</b>(3) or
+<b>SSL_write</b>(3) is called.</p>
+<p style="margin-left:9%; margin-top: 1em">A QUIC stream
+must be explicitly designated as client−initiated or
+server−initiated up front. This broadly corresponds to
+whether an application protocol involves the client
+transmitting first, or the server transmitting first. As
+such, if <b>SSL_read</b>(3) is called first (before any call
+to <b>SSL_write</b>(3)) after establishing a connection,
+OpenSSL will wait for the server to open the first
+server−initiated stream, and then bind this as the
+default stream. Conversely, if <b>SSL_write</b>(3) is called
+before any call to <b>SSL_read</b>(3), OpenSSL assumes the
+client wishes to transmit first, creates a
+client−initiated stream, and binds this as the default
+stream.</p>
+<p style="margin-left:9%; margin-top: 1em">By default, the
+default stream created is bidirectional. If a unidirectional
+stream is desired, or if the application wishes to disable
+default stream functionality,
+<b>SSL_set_default_stream_mode()</b> (discussed below) can
+be used to accomplish this.</p>
+<p style="margin-left:9%; margin-top: 1em">When a QUIC
+connection SSL object has no default stream currently
+associated with it, for example because default stream
+functionality was disabled, calls to functions which require
+a stream on the QUIC connection SSL object (for example,
+<b>SSL_read</b>(3) and <b>SSL_write</b>(3)) will fail.</p>
+<p style="margin-left:9%; margin-top: 1em">It is
+recommended that new applications and applications which
+rely on multiple streams forego use of the default stream
+functionality, which is intended for legacy
+applications.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_default_stream_mode()</b>
+can be used to configure or disable default stream handling.
+It can only be called on a QUIC connection SSL object prior
+to any default stream being created. If used, it is
+recommended to call it immediately after calling
+<b>SSL_new</b>(3), prior to initiating a connection. The
+argument <i>mode</i> may be one of the following options:
+<br/>
+SSL_DEFAULT_STREAM_MODE_AUTO_BIDI</p>
+<p style="margin-left:14%;">This is the default setting. If
+<b>SSL_write</b>(3) is called prior to any call to
+<b>SSL_read</b>(3), a bidirectional client−initiated
+stream is created and bound as the default stream. If
+<b>SSL_read</b>(3) is called prior to any call to
+<b>SSL_write</b>(3), OpenSSL waits for an incoming stream
+from the peer (causing <b>SSL_read</b>(3) to block if the
+connection is in blocking mode), and then binds that stream
+as the default stream. Note that this incoming stream may be
+either bidirectional or unidirectional; thus, this setting
+does not guarantee the presence of a bidirectional stream
+when <b>SSL_read</b>(3) is called first. To determine the
+type of a stream after a call to <b>SSL_read</b>(3), use
+<b>SSL_get_stream_type</b>(3).</p>
+<p style="margin-left:9%;">SSL_DEFAULT_STREAM_MODE_AUTO_UNI</p>
+<p style="margin-left:14%;">In this mode, if
+<b>SSL_write</b>(3) is called prior to any call to
+<b>SSL_read</b>(3), a unidirectional client−initiated
+stream is created and bound as the default stream. The
+behaviour is otherwise identical to that of
+<b>SSL_DEFAULT_STREAM_MODE_AUTO_BIDI</b>. The behaviour when
+<b>SSL_read</b>(3) is called prior to any call to
+<b>SSL_write</b>(3) is unchanged.</p>
+<p style="margin-left:9%;">SSL_DEFAULT_STREAM_MODE_NONE</p>
+<p style="margin-left:14%;">Default stream creation is
+inhibited. This is the recommended mode of operation.
+<b>SSL_read</b>(3) and <b>SSL_write</b>(3) calls cannot be
+made on the QUIC connection SSL object directly. You must
+obtain streams using <b>SSL_new_stream</b>(3) or
+<b>SSL_accept_stream</b>(3) in order to communicate with the
+peer.</p>
+<p style="margin-left:9%; margin-top: 1em">A default stream
+will not be automatically created on a QUIC connection SSL
+object if the default stream mode is set to
+<b>SSL_DEFAULT_STREAM_MODE_NONE</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_incoming_stream_policy</b>(3)
+interacts significantly with the default stream
+functionality.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_default_stream_mode()</b>
+returns 1 on success and 0 on failure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_default_stream_mode()</b>
+fails if it is called after a default stream has already
+been established.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+fail if called on a QUIC stream SSL object or on a
+non−QUIC SSL object.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_new_stream</b>(3),
+<b>SSL_accept_stream</b>(3), <b>SSL_free</b>(3),
+<b>SSL_set_incoming_stream_policy</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+were added in OpenSSL 3.2.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2002−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

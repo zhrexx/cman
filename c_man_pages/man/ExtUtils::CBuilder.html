@@ -1,0 +1,356 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:57 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ExtUtils::CBuilder</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">ExtUtils::CBuilder</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#TO DO">TO DO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SUPPORT">SUPPORT</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">ExtUtils::CBuilder
+− Compile and link C code for Perl modules</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+ExtUtils::CBuilder; <br/>
+my $b = ExtUtils::CBuilder−&gt;new(%options); <br/>
+$obj_file = $b−&gt;compile(source =&gt; 'MyModule.c');
+<br/>
+$lib_file = $b−&gt;link(objects =&gt; $obj_file);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module can
+build the C portions of Perl modules by invoking the
+appropriate compilers and linkers in a cross−platform
+manner. It was motivated by the "Module::Build"
+project, but may be useful for other purposes as well.
+However, it is <i>not</i> intended as a general
+cross−platform interface to all your C building needs.
+That would have been a much more ambitious goal!</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p style="margin-top: 1em">new</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p style="margin-top: 1em">Returns a new
+"ExtUtils::CBuilder" object. A "config"
+parameter lets you override "Config.pm" settings
+for all operations performed by the object, as in the
+following example:</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em"># Use a
+different compiler than Config.pm says <br/>
+my $b = ExtUtils::CBuilder−&gt;new( config =&gt; <br/>
+{ ld =&gt; 'gcc' } );</p>
+<p style="margin-left:14%; margin-top: 1em">A
+"quiet" parameter tells "CBuilder" to
+not print its system() commands before executing them:</p>
+<p style="margin-left:14%; margin-top: 1em"># Be quieter
+than normal <br/>
+my $b = ExtUtils::CBuilder−&gt;new( quiet =&gt; 1
+);</p>
+<p style="margin-left:9%;">have_compiler</p>
+<p style="margin-left:14%;">Returns true if the current
+system has a working C compiler and linker, false otherwise.
+To determine this, we actually compile and link a sample C
+library. The sample will be compiled in the system tempdir
+or, if that fails for some reason, in the current
+directory.</p>
+<p style="margin-left:9%;">have_cplusplus</p>
+<p style="margin-left:14%;">Just like have_compiler but for
+C++ instead of C.</p>
+<p style="margin-left:9%;">compile</p>
+<p style="margin-left:14%;">Compiles a C source file and
+produces an object file. The name of the object file is
+returned. The source file is specified in a
+"source" parameter, which is required; the other
+parameters listed below are optional. <br/>
+"object_file"</p>
+<p style="margin-left:19%;">Specifies the name of the
+output file to create. Otherwise the object_file() method
+will be consulted, passing it the name of the
+"source" file.</p>
+<p style="margin-left:14%;">"include_dirs"</p>
+<p style="margin-left:19%;">Specifies any additional
+directories in which to search for header files. May be
+given as a string indicating a single directory, or as a
+list reference indicating multiple directories.</p>
+<p style="margin-left:14%;">"extra_compiler_flags"</p>
+<p style="margin-left:19%;">Specifies any additional
+arguments to pass to the compiler. Should be given as a list
+reference containing the arguments individually, or if this
+is not possible, as a string containing all the arguments
+together.</p>
+<p style="margin-left:14%;">"C++"</p>
+<p style="margin-left:19%;">Specifies that the source file
+is a C++ source file and sets appropriate compiler flags</p>
+<p style="margin-left:14%; margin-top: 1em">The operation
+of this method is also affected by the
+"archlibexp", "cccdlflags",
+"ccflags", "optimize", and
+"cc" entries in "Config.pm".</p>
+<p style="margin-left:9%;">link</p>
+<p style="margin-left:14%;">Invokes the linker to produce a
+library file from object files. In scalar context, the name
+of the library file is returned. In list context, the
+library file and any temporary files created are returned. A
+required "objects" parameter contains the name of
+the object files to process, either in a string (for one
+object file) or list reference (for one or more files). The
+following parameters are optional: <br/>
+lib_file</p>
+<p style="margin-left:19%;">Specifies the name of the
+output library file to create. Otherwise the lib_file()
+method will be consulted, passing it the name of the first
+entry in "objects".</p>
+<p style="margin-left:14%;">module_name</p>
+<p style="margin-left:19%;">Specifies the name of the Perl
+module that will be created by linking. On platforms that
+need to do prelinking (Win32, OS/2, etc.) this is a required
+parameter.</p>
+<p style="margin-left:14%;">extra_linker_flags</p>
+<p style="margin-left:19%;">Any additional flags you wish
+to pass to the linker.</p>
+<p style="margin-left:14%; margin-top: 1em">On platforms
+where need_prelink() returns true, prelink() will be called
+automatically.</p>
+<p style="margin-left:14%; margin-top: 1em">The operation
+of this method is also affected by the
+"lddlflags", "shrpenv", and
+"ld" entries in "Config.pm".</p>
+<p style="margin-left:9%;">link_executable</p>
+<p style="margin-left:14%;">Invokes the linker to produce
+an executable file from object files. In scalar context, the
+name of the executable file is returned. In list context,
+the executable file and any temporary files created are
+returned. A required "objects" parameter contains
+the name of the object files to process, either in a string
+(for one object file) or list reference (for one or more
+files). The optional parameters are the same as
+"link" with exception for <br/>
+exe_file</p>
+<p style="margin-left:19%;">Specifies the name of the
+output executable file to create. Otherwise the exe_file()
+method will be consulted, passing it the name of the first
+entry in "objects".</p>
+<p style="margin-left:9%;">object_file</p>
+<p style="margin-left:14%;">my $object_file =
+$b−&gt;object_file($source_file);</p>
+<p style="margin-left:14%; margin-top: 1em">Converts the
+name of a C source file to the most natural name of an
+output object file to create from it. For instance, on Unix
+the source file <i>foo.c</i> would result in the object file
+<i>foo.o</i>.</p>
+<p style="margin-left:9%;">lib_file</p>
+<p style="margin-left:14%;">my $lib_file =
+$b−&gt;lib_file($object_file);</p>
+<p style="margin-left:14%; margin-top: 1em">Converts the
+name of an object file to the most natural name of a output
+library file to create from it. For instance, on Mac OS X
+the object file <i>foo.o</i> would result in the library
+file <i>foo.bundle</i>.</p>
+<p style="margin-left:9%;">exe_file</p>
+<p style="margin-left:14%;">my $exe_file =
+$b−&gt;exe_file($object_file);</p>
+<p style="margin-left:14%; margin-top: 1em">Converts the
+name of an object file to the most natural name of an
+executable file to create from it. For instance, on Mac OS X
+the object file <i>foo.o</i> would result in the executable
+file <i>foo</i>, and on Windows it would result in
+<i>foo.exe</i>.</p>
+<p style="margin-left:9%;">prelink</p>
+<p style="margin-left:14%;">On certain platforms like
+Win32, OS/2, VMS, and AIX, it is necessary to perform some
+actions before invoking the linker. The
+"ExtUtils::Mksymlists" module does this, writing
+files used by the linker during the creation of shared
+libraries for dynamic extensions. The names of any files
+written will be returned as a list.</p>
+<p style="margin-left:14%; margin-top: 1em">Several
+parameters correspond to ExtUtils::Mksymlists::Mksymlists()
+options, as follows:</p>
+<p style="margin-left:14%; margin-top: 1em">Mksymlists()
+prelink() type <br/>
+
+−−−−−−−−−−−−−|−−−−−−−−−−−−−−−−−−−|−−−−−−−−−−−−−−−−−−−
+<br/>
+NAME | dl_name | string (required) <br/>
+DLBASE | dl_base | string <br/>
+FILE | dl_file | string <br/>
+DL_VARS | dl_vars | array reference <br/>
+DL_FUNCS | dl_funcs | hash reference <br/>
+FUNCLIST | dl_func_list | array reference <br/>
+IMPORTS | dl_imports | hash reference <br/>
+VERSION | dl_version | string</p>
+<p style="margin-left:14%; margin-top: 1em">Please see the
+documentation for "ExtUtils::Mksymlists" for the
+details of what these parameters do.</p>
+<p style="margin-left:9%;">need_prelink</p>
+<p style="margin-left:14%;">Returns true on platforms where
+prelink() should be called during linking, and false
+otherwise.</p>
+<p style="margin-left:9%;">extra_link_args_after_prelink</p>
+<p style="margin-left:14%;">Returns list of extra arguments
+to give to the link command; the arguments are the same as
+for <b>prelink()</b>, with addition of array reference to
+the results of <b>prelink()</b>; this reference is indexed
+by key "prelink_res".</p>
+<h2>TO DO
+<a name="TO DO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Currently this
+has only been tested on Unix and doesn't contain any of the
+Windows−specific code from the
+"Module::Build" project. I'll do that next.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+an outgrowth of the "Module::Build" project, to
+which there have been many contributors. Notably, Randy W.
+Sims submitted lots of code to support 3 compilers on
+Windows and helped with various other
+platform−specific issues. Ilya Zakharevich has
+contributed fixes for OS/2; John E. Malmberg and Peter
+Prymmer have done likewise for VMS.</p>
+<h2>SUPPORT
+<a name="SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">ExtUtils::CBuilder
+is maintained as part of the Perl 5 core. Please submit any
+bug reports via the <i>perlbug</i> tool included with Perl
+5. Bug reports will be included in the Perl 5 ticket system
+at &lt;https://rt.perl.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">The Perl 5
+source code is available at
+&lt;https://perl5.git.perl.org/perl.git&gt; and
+ExtUtils−CBuilder may be found in the
+<i>dist/ExtUtils−CBuilder</i> directory of the
+repository.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Ken Williams,
+kwilliams@cpan.org</p>
+<p style="margin-left:9%; margin-top: 1em">Additional
+contributions by The Perl 5 Porters.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+2003−2005 Ken Williams. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>perl</b>(1),
+<b>Module::Build</b>(3)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:31 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_mime_data_cb</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_mime_data_cb</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_mime_data_cb
+− set a callback−based data source for a mime
+part's body</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">size_t
+readfunc(char *buffer, size_t size, size_t nitems, void
+*arg);</p>
+<p style="margin-left:9%; margin-top: 1em">int
+seekfunc(void *arg, curl_off_t offset, int origin);</p>
+<p style="margin-left:9%; margin-top: 1em">void
+freefunc(void *arg);</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_mime_data_cb(curl_mimepart *part, curl_off_t datasize,
+<br/>
+curl_read_callback readfunc, <br/>
+curl_seek_callback seekfunc, <br/>
+curl_free_callback freefunc, void *arg);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>curl_mime_data_cb(3)</i>
+sets the data source of a mime part's body content from a
+data read callback function.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>part</i> is
+the part's to assign contents to.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>readfunc</i>
+is a pointer to a data read callback function, with a
+signature as shown by the above prototype. It may not be set
+to NULL.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>seekfunc</i>
+is a pointer to a seek callback function, with a signature
+as shown by the above prototype. This function is used when
+resending data (i.e.: after a redirect); this pointer may be
+set to NULL, in which case a resend might not be not
+possible.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>freefunc</i>
+is a pointer to a user resource freeing callback function,
+with a signature as shown by the above prototype. If no
+resource is to be freed, it may safely be set to NULL. This
+function is called upon mime structure freeing.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>arg</i> is a
+user defined argument to callback functions.</p>
+<p style="margin-left:9%; margin-top: 1em">The read
+callback function gets called by libcurl as soon as it needs
+to read data in order to send it to the peer − like if
+you ask it to upload or post data to the server. The data
+area pointed at by the pointer <i>buffer</i> should be
+filled up with at most <i>size</i> multiplied with
+<i>nitems</i> number of bytes by your function.</p>
+<p style="margin-left:9%; margin-top: 1em">Your read
+function must then return the actual number of bytes that it
+stored in that memory area. Returning 0 signals
+end−of−file to the library and cause it to stop
+the current transfer.</p>
+<p style="margin-left:9%; margin-top: 1em">If you stop the
+current transfer by returning 0
+"pre−maturely" (i.e. before the server
+expected it, like when you have said you intend to upload N
+bytes and yet you upload less than N bytes), you may
+experience that the server "hangs" waiting for the
+rest of the data that does not come.</p>
+<p style="margin-left:9%; margin-top: 1em">The read
+callback may return <i>CURL_READFUNC_ABORT</i> to stop the
+current operation immediately, resulting in a
+<i>CURLE_ABORTED_BY_CALLBACK</i> error code from the
+transfer.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback can
+return <i>CURL_READFUNC_PAUSE</i> to cause reading from this
+connection to pause. See <i>curl_easy_pause(3)</i> for
+further details.</p>
+<p style="margin-left:9%; margin-top: 1em">The seek
+function gets called by libcurl to rewind input stream data
+or to seek to a certain position. The function shall work
+like fseek(3) or lseek(3) and it gets SEEK_SET, SEEK_CUR or
+SEEK_END as argument for <i>origin</i>, although libcurl
+currently only passes SEEK_SET.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback
+function must return <i>CURL_SEEKFUNC_OK</i> on success,
+<i>CURL_SEEKFUNC_FAIL</i> to cause the upload operation to
+fail or <i>CURL_SEEKFUNC_CANTSEEK</i> to indicate that while
+the seek failed, libcurl is free to work around the problem
+if possible. The latter can sometimes be done by instead
+reading from the input or similar.</p>
+<p style="margin-left:9%; margin-top: 1em">Care must be
+taken if the part is bound to a curl easy handle that is
+later duplicated: the <i>arg</i> pointer argument is also
+duplicated, resulting in the pointed item to be shared
+between the original and the copied handle. In particular,
+special attention should be given to the <i>freefunc</i>
+procedure code since it then gets called twice with the same
+argument.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects http, imap and smtp</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Sending a huge
+data string causes the same amount of memory to be
+allocated: to avoid overhead resources consumption, one
+might want to use a callback source to avoid data
+duplication. In this case, original data must be retained
+until after the transfer terminates. <br/>
+#include &lt;string.h&gt; /* for memcpy */ <br/>
+char hugedata[512000];</p>
+<p style="margin-left:9%; margin-top: 1em">struct ctl {
+<br/>
+char *buffer; <br/>
+curl_off_t size; <br/>
+curl_off_t position; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">size_t
+read_callback(char *buffer, size_t size, size_t nitems, void
+*arg) <br/>
+{ <br/>
+struct ctl *p = (struct ctl *) arg; <br/>
+curl_off_t sz = p-&gt;size - p-&gt;position;</p>
+<p style="margin-left:9%; margin-top: 1em">nitems *= size;
+<br/>
+if(sz &gt; nitems) <br/>
+sz = nitems; <br/>
+if(sz) <br/>
+memcpy(buffer, p-&gt;buffer + p-&gt;position, sz); <br/>
+p-&gt;position += sz; <br/>
+return sz; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int
+seek_callback(void *arg, curl_off_t offset, int origin) <br/>
+{ <br/>
+struct ctl *p = (struct ctl *) arg;</p>
+<p style="margin-left:9%; margin-top: 1em">switch(origin) {
+<br/>
+case SEEK_END: <br/>
+offset += p-&gt;size; <br/>
+break; <br/>
+case SEEK_CUR: <br/>
+offset += p-&gt;position; <br/>
+break; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">if(offset &lt;
+0) <br/>
+return CURL_SEEKFUNC_FAIL; <br/>
+p-&gt;position = offset; <br/>
+return CURL_SEEKFUNC_OK; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+curl_mime *mime = curl_mime_init(curl); <br/>
+curl_mimepart *part = curl_mime_addpart(mime); <br/>
+struct ctl hugectl;</p>
+<p style="margin-left:9%; margin-top: 1em">hugectl.buffer =
+hugedata; <br/>
+hugectl.size = sizeof(hugedata); <br/>
+hugectl.position = 0; <br/>
+curl_mime_data_cb(part, hugectl.size, read_callback,
+seek_callback, NULL, <br/>
+&amp;hugectl); <br/>
+} <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.56.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLE_OK or a
+CURL error code upon failure.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curl_easy_duphandle</b>(3),
+<b>curl_mime_addpart</b>(3), <b>curl_mime_data</b>(3),
+<b>curl_mime_name</b>(3)</p>
+<hr/>
+</body>
+</html>

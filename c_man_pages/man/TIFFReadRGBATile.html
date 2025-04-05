@@ -1,0 +1,261 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:14 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TIFFREADRGBATILE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">TIFFREADRGBATILE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TIFFReadRGBATile
+− read and decode an image tile into a fixed-format
+raster</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<pre style="margin-left:13%; margin-top: 1em">#include &lt;tiffio.h&gt;</pre>
+<p style="margin-left:9%;"><b>int TIFFReadRGBATile(TIFF
+*tif, uint32_t x, uint32_t y, uint32_t <br/>
+*raster) <br/>
+int TIFFReadRGBATileExt(TIFF *tif, uint32_t col, uint32_t
+row, uint32_t <br/>
+*raster, int stop_on_error)</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b><i>TIFFReadRGBATile()</i></b>
+reads a single tile of a tile−based image into memory,
+storing the result in the user supplied RGBA <i>raster</i>.
+The raster is assumed to be an array of <b>TileWidth</b>
+× <b>TileLength</b> 32−bit entries, where
+<b>TileWidth</b> is the width of a tile
+(<b>TIFFTAG_TILEWIDTH</b>) and <b>TileLength</b> is the
+height of a tile (<b>TIFFTAG_TILELENGTH</b>).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFReadRGBATileExt()</i>
+provides the parameter <i>stop_on_error</i>. Its behaviour
+is described at <i>TIFFReadRGBAImage</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>x</i> and
+<i>y</i> values are the offsets from the top left corner to
+the top left corner of the tile to be read. They must be an
+exact multiple of the tile width and length.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that the
+raster is assume to be organized such that the pixel at
+location (<i>x</i>, <i>y</i>) is <i>raster</i> [ <i>y</i>
+× <i>width</i> + <i>x</i> ]; with the raster origin in
+the <i>lower−left hand corner</i> of the tile. That is
+bottom to top organization. Edge tiles which partly fall off
+the image will be filled out with appropriate zeroed
+areas.</p>
+<p style="margin-left:9%; margin-top: 1em">Raster pixels
+are 8−bit packed red, green, blue, alpha samples. The
+macros <i>TIFFGetR</i>, <i>TIFFGetG</i>, <i>TIFFGetB</i>,
+and <i>TIFFGetA</i> should be used to access individual
+samples. Images without Associated Alpha matting information
+have a constant Alpha of 1.0 (255).</p>
+<p style="margin-left:9%; margin-top: 1em">See the
+<i>TIFFRGBAImage</i> page for more details on how various
+image types are converted to RGBA values.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Samples must be
+either 1, 2, 4, 8, or 16 bits. Colorimetric samples/pixel
+must be either 1, 3, or 4 (i.e. <b>SamplesPerPixel</b>
+− <b>ExtraSamples</b>).</p>
+<p style="margin-left:9%; margin-top: 1em">Palette image
+colormaps that appear to be incorrectly written as
+8−bit values are automatically scaled to
+16−bits.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFReadRGBATile()</i>
+is just a wrapper around the more general
+<i>TIFFRGBAImage</i> facilities. It’s main advantage
+over the similar <i>TIFFReadRGBAImage()</i> function is that
+for large images a single buffer capable of holding the
+whole image doesn’t need to be allocated, only enough
+for one tile. The <i>TIFFReadRGBAStrip()</i> function does a
+similar operation for stripped images.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">1 is returned if
+the image was successfully read and converted. Otherwise, 0
+is returned if an error was encountered.</p>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All error
+messages are directed to the <i>TIFFErrorExtR()</i>
+routine.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Sorry,
+can not handle %d−bit pictures"</b>:</p>
+<p style="margin-left:13%;">The image had
+<b>BitsPerSample</b> other than 1, 2, 4, 8, or 16.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Sorry,
+can not handle %d−channel images"</b>:</p>
+<p style="margin-left:13%;">The image had
+<b>SamplesPerPixel</b> other than 1, 3, or 4.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Missing
+needed "PhotometricInterpretation" tag</b>:</p>
+<p style="margin-left:13%;">The image did not have a tag
+that describes how to display the data.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>No
+"PhotometricInterpretation" tag, assuming
+RGB</b>:</p>
+<p style="margin-left:13%;">The image was missing a tag
+that describes how to display it, but because it has 3 or 4
+samples/pixel, it is assumed to be RGB.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>No
+"PhotometricInterpretation" tag, assuming
+min−is−black</b>:</p>
+<p style="margin-left:13%;">The image was missing a tag
+that describes how to display it, but because it has 1
+sample/pixel, it is assumed to be a grayscale or bilevel
+image.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"No
+space for photometric conversion table"</b>:</p>
+<p style="margin-left:13%;">There was insufficient memory
+for a table used to convert image samples to 8−bit
+RGB.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Missing
+required "Colormap" tag</b>:</p>
+<p style="margin-left:13%;">A Palette image did not have a
+required <b>Colormap</b> tag.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"No
+space for tile buffer"</b>:</p>
+<p style="margin-left:13%;">There was insufficient memory
+to allocate an i/o buffer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"No
+space for strip buffer"</b>:</p>
+<p style="margin-left:13%;">There was insufficient memory
+to allocate an i/o buffer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Can not
+handle format"</b>:</p>
+<p style="margin-left:13%;">The image has a format
+(combination of <b>BitsPerSample</b>,
+<b>SamplesPerPixel</b>, and
+<b>PhotometricInterpretation</b>) that
+<i>TIFFReadRGBAImage()</i> can not handle.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"No
+space for B&amp;W mapping table"</b>:</p>
+<p style="margin-left:13%;">There was insufficient memory
+to allocate a table used to map grayscale data to RGB.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"No
+space for Palette mapping table"</b>:</p>
+<p style="margin-left:13%;">There was insufficient memory
+to allocate a table used to map data to 8−bit RGB.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFOpen</i>
+(3tiff), <i>TIFFRGBAImage</i> (3tiff),
+<i>TIFFReadRGBAImage</i> (3tiff), <i>TIFFReadRGBAStrip</i>
+(3tiff), <i>libtiff</i> (3tiff)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">LibTIFF
+contributors</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">1988-2022,
+LibTIFF contributors</p>
+<hr/>
+</body>
+</html>

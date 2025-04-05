@@ -1,0 +1,249 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:13 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SET_SESSION_CACHE_MODE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SET_SESSION_CACHE_MODE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_set_session_cache_mode,
+SSL_CTX_get_session_cache_mode − enable/disable
+session caching</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+long SSL_CTX_set_session_cache_mode(SSL_CTX ctx, long mode);
+<br/>
+long SSL_CTX_get_session_cache_mode(SSL_CTX ctx);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_session_cache_mode()</b>
+enables/disables session caching by setting the operational
+mode for <b>ctx</b> to &lt;mode&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_get_session_cache_mode()</b>
+returns the currently used cache mode.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The OpenSSL
+library can store/retrieve SSL/TLS sessions for later reuse.
+The sessions can be held in memory for each <b>ctx</b>, if
+more than one SSL_CTX object is being maintained, the
+sessions are unique for each SSL_CTX object.</p>
+<p style="margin-left:9%; margin-top: 1em">In order to
+reuse a session, a client must send the session's id to the
+server. It can only send exactly one id. The server then
+either agrees to reuse the session or it starts a full
+handshake (to create a new session).</p>
+<p style="margin-left:9%; margin-top: 1em">A server will
+look up the session in its internal session storage. If the
+session is not found in internal storage or lookups for the
+internal storage have been deactivated
+(SSL_SESS_CACHE_NO_INTERNAL_LOOKUP), the server will try the
+external storage if available.</p>
+<p style="margin-left:9%; margin-top: 1em">Since a client
+may try to reuse a session intended for use in a different
+context, the session id context must be set by the server
+(see <b>SSL_CTX_set_session_id_context</b>(3)).</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+session cache modes and modifiers are available: <br/>
+SSL_SESS_CACHE_OFF</p>
+<p style="margin-left:14%;">No session caching for client
+or server takes place.</p>
+<p style="margin-left:9%;">SSL_SESS_CACHE_CLIENT</p>
+<p style="margin-left:14%;">Client sessions are added to
+the session cache. As there is no reliable way for the
+OpenSSL library to know whether a session should be reused
+or which session to choose (due to the abstract BIO layer
+the SSL engine does not have details about the connection),
+the application must select the session to be reused by
+using the <b>SSL_set_session</b>(3) function. This option is
+not activated by default.</p>
+<p style="margin-left:9%;">SSL_SESS_CACHE_SERVER</p>
+<p style="margin-left:14%;">Server sessions are added to
+the session cache. When a client proposes a session to be
+reused, the server looks for the corresponding session in
+(first) the internal session cache (unless
+SSL_SESS_CACHE_NO_INTERNAL_LOOKUP is set), then (second) in
+the external cache if available. If the session is found,
+the server will try to reuse the session. This is the
+default.</p>
+<p style="margin-left:9%;">SSL_SESS_CACHE_BOTH</p>
+<p style="margin-left:14%;">Enable both
+SSL_SESS_CACHE_CLIENT and SSL_SESS_CACHE_SERVER at the same
+time.</p>
+<p style="margin-left:9%;">SSL_SESS_CACHE_NO_AUTO_CLEAR</p>
+<p style="margin-left:14%;">Normally the session cache is
+checked for expired sessions every 255 connections using the
+<b>SSL_CTX_flush_sessions</b>(3) function. Since this may
+lead to a delay which cannot be controlled, the automatic
+flushing may be disabled and
+<b>SSL_CTX_flush_sessions</b>(3) can be called explicitly by
+the application.</p>
+<p style="margin-left:9%;">SSL_SESS_CACHE_NO_INTERNAL_LOOKUP</p>
+<p style="margin-left:14%;">By setting this flag,
+session−resume operations in an SSL/TLS server will
+not automatically look up sessions in the internal cache,
+even if sessions are automatically stored there. If external
+session caching callbacks are in use, this flag guarantees
+that all lookups are directed to the external cache. As
+automatic lookup only applies for SSL/TLS servers, the flag
+has no effect on clients.</p>
+<p style="margin-left:9%;">SSL_SESS_CACHE_NO_INTERNAL_STORE</p>
+<p style="margin-left:14%;">Depending on the presence of
+SSL_SESS_CACHE_CLIENT and/or SSL_SESS_CACHE_SERVER, sessions
+negotiated in an SSL/TLS handshake may be cached for
+possible reuse. Normally a new session is added to the
+internal cache as well as any external session caching
+(callback) that is configured for the SSL_CTX. This flag
+will prevent sessions being stored in the internal cache
+(though the application can add them manually using
+<b>SSL_CTX_add_session</b>(3)). Note: in any SSL/TLS servers
+where external caching is configured, any successful session
+lookups in the external cache (i.e. for session−resume
+requests) would normally be copied into the local cache
+before processing continues − this flag prevents these
+additions to the internal cache as well.</p>
+<p style="margin-left:9%;">SSL_SESS_CACHE_NO_INTERNAL</p>
+<p style="margin-left:14%;">Enable both
+SSL_SESS_CACHE_NO_INTERNAL_LOOKUP and
+SSL_SESS_CACHE_NO_INTERNAL_STORE at the same time.</p>
+<p style="margin-left:9%;">SSL_SESS_CACHE_UPDATE_TIME</p>
+<p style="margin-left:14%;">Updates the timestamp of the
+session when it is used, increasing the lifespan of the
+session. The session timeout applies to last use, rather
+then creation time.</p>
+<p style="margin-left:9%; margin-top: 1em">The default mode
+is SSL_SESS_CACHE_SERVER.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_session_cache_mode()</b>
+returns the previously set cache mode.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_get_session_cache_mode()</b>
+returns the currently set cache mode.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_set_session</b>(3), <b>SSL_session_reused</b>(3),
+<b>SSL_CTX_add_session</b>(3),
+<b>SSL_CTX_sess_number</b>(3),
+<b>SSL_CTX_sess_set_cache_size</b>(3),
+<b>SSL_CTX_sess_set_get_cb</b>(3),
+<b>SSL_CTX_set_session_id_context</b>(3),
+<b>SSL_CTX_set_timeout</b>(3),
+<b>SSL_CTX_flush_sessions</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2001−2021 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

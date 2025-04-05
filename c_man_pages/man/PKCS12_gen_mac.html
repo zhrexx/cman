@@ -1,0 +1,188 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:49 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PKCS12_GEN_MAC</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">PKCS12_GEN_MAC</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#CONFORMING TO">CONFORMING TO</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">PKCS12_gen_mac,
+PKCS12_setup_mac, PKCS12_set_mac, PKCS12_verify_mac −
+Functions to create and manipulate a PKCS#12 structure</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/pkcs12.h&gt; <br/>
+int PKCS12_gen_mac(PKCS12 *p12, const char *pass, int
+passlen, <br/>
+unsigned char *mac, unsigned int *maclen); <br/>
+int PKCS12_verify_mac(PKCS12 *p12, const char *pass, int
+passlen); <br/>
+int PKCS12_set_mac(PKCS12 *p12, const char *pass, int
+passlen, <br/>
+unsigned char *salt, int saltlen, int iter, <br/>
+const EVP_MD *md_type); <br/>
+int PKCS12_setup_mac(PKCS12 *p12, int iter, unsigned char
+*salt, <br/>
+int saltlen, const EVP_MD *md_type);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_gen_mac()</b>
+generates an HMAC over the entire PKCS#12 object using the
+supplied password along with a set of already configured
+parameters. The default key generation mechanism used is
+PKCS12KDF.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_verify_mac()</b>
+verifies the PKCS#12 object's HMAC using the supplied
+password.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_setup_mac()</b>
+sets the MAC part of the PKCS#12 structure with the supplied
+parameters.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_set_mac()</b>
+sets the MAC and MAC parameters into the PKCS#12 object.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>pass</i> is
+the passphrase to use in the HMAC. <i>salt</i> is the salt
+value to use, <i>iter</i> is the iteration count and
+<i>md_type</i> is the message digest function to use.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If <i>salt</i>
+is NULL then a suitable salt will be generated and used.</p>
+<p style="margin-left:9%; margin-top: 1em">If <i>iter</i>
+is 1 then an iteration count will be omitted from the
+PKCS#12 structure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_gen_mac()</b>,
+<b>PKCS12_verify_mac()</b> and <b>PKCS12_set_mac()</b> make
+assumptions regarding the encoding of the given passphrase.
+See <b>passphrase−encoding</b>(7) for more
+information.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All functions
+return 1 on success and 0 if an error occurred.</p>
+<h2>CONFORMING TO
+<a name="CONFORMING TO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IETF RFC 7292
+(&lt;https://tools.ietf.org/html/rfc7292&gt;)</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>d2i_PKCS12</b>(3),
+<b>EVP_KDF−PKCS12KDF</b>(7), <b>PKCS12_create</b>(3),
+<b>passphrase−encoding</b>(7)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2021−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

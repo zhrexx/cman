@@ -1,0 +1,468 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:08 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Mock</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Mock</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#CONSTRUCTION">CONSTRUCTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Mock
+− Module for managing mocked classes and
+instances.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module lets
+you add and override methods for any package temporarily.
+When the instance is destroyed it will restore the package
+to its original state.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Test2::Mock;
+<br/>
+use MyClass; <br/>
+my $mock = Test2::Mock−&gt;new( <br/>
+track =&gt; $BOOL, # enable call tracking if desired <br/>
+class =&gt; 'MyClass', <br/>
+override =&gt; [ <br/>
+name =&gt; sub { 'fred' }, <br/>
+... <br/>
+], <br/>
+add =&gt; [ <br/>
+is_mocked =&gt; sub { 1 } <br/>
+... <br/>
+], <br/>
+... <br/>
+); <br/>
+# Unmock the 'name' sub <br/>
+$mock−&gt;restore('name'); <br/>
+... <br/>
+$mock = undef; # Will remove all the mocking</p>
+<h2>CONSTRUCTION
+<a name="CONSTRUCTION"></a>
+</h2>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">$mock =
+Test2::Mock−&gt;new(class =&gt; $CLASS, ...)</p>
+<p style="margin-left:14%;">This will create a new instance
+of Test2::Mock that manages mocking for the specified
+$CLASS.</p>
+<p style="margin-left:14%; margin-top: 1em">Any
+"Test2::Mock" method can be used as a constructor
+argument, each should be followed by an arrayref of
+arguments to be used within the method. For instance the
+add() method:</p>
+<p style="margin-left:14%; margin-top: 1em">my $mock =
+Test2::Mock−&gt;new( <br/>
+class =&gt; 'AClass', <br/>
+add =&gt; [foo =&gt; sub { 'foo' }], <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">is identical to
+this:</p>
+<p style="margin-left:14%; margin-top: 1em">my $mock =
+Test2::Mock−&gt;new( <br/>
+class =&gt; 'AClass', <br/>
+); <br/>
+$mock−&gt;add(foo =&gt; sub { 'foo' });</p>
+<p style="margin-left:9%;">$mock−&gt;track($bool)</p>
+<p style="margin-left:14%;">Turn tracking on or off. Any
+sub added/overridden/set when tracking is on will log every
+call in a hash retrievable via
+"$mock−&gt;tracking". Changing the tracking
+toggle will not affect subs already altered, but will affect
+any additional alterations.</p>
+<p style="margin-left:9%;">$hashref =
+$mock−&gt;sub_tracking</p>
+<p style="margin-left:14%;">The tracking data looks like
+this:</p>
+<p style="margin-left:14%; margin-top: 1em">{ <br/>
+sub_name =&gt; [ <br/>
+{sub_name =&gt; $sub_name, sub_ref =&gt; $mock_subref, args
+=&gt; [... copy of @_ from the call ... ]}, <br/>
+..., <br/>
+..., <br/>
+], <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">Unlike
+call_tracking, this lists all calls by sub, so you can
+choose to only look at the sub specific calls.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Please
+note:</b> The hashref items with the subname and args are
+shared with call_tracking, modifying one modifies the other,
+so copy first!</p>
+<p style="margin-left:9%;">$arrayref =
+$mock−&gt;call_tracking</p>
+<p style="margin-left:14%;">The tracking data looks like
+this:</p>
+<p style="margin-left:14%; margin-top: 1em">[ <br/>
+{sub_name =&gt; $sub_name, sub_ref =&gt; $mock_subref, args
+=&gt; [... copy of @_ from the call ... ]}, <br/>
+..., <br/>
+..., <br/>
+]</p>
+<p style="margin-left:14%; margin-top: 1em">Unlike
+sub_tracking this lists all calls to any mocked sub, in the
+order they were called. To filter by sub use
+sub_tracking.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Please
+note:</b> The hashref items with the subname and args are
+shared with sub_tracking, modifying one modifies the other,
+so copy first!</p>
+<p style="margin-left:9%;">$mock−&gt;<b>clear_sub_tracking()</b>
+<br/>
+$mock−&gt;clear_sub_tracking(\@subnames)</p>
+<p style="margin-left:14%;">Clear tracking data. With no
+arguments ALL tracking data is cleared. When arguments are
+provided then only those specific keys will be cleared.</p>
+<p style="margin-left:9%;">$mock−&gt;<b>clear_call_tracking()</b></p>
+<p style="margin-left:14%;">Clear all items from
+call_tracking.</p>
+<p style="margin-left:9%;">$mock−&gt;add('symbol'
+=&gt; ..., 'symbol2' =&gt; ...) <br/>
+$mock−&gt;override('symbol1' =&gt; ..., 'symbol2'
+=&gt; ...) <br/>
+$mock−&gt;set('symbol1' =&gt; ..., 'symbol2' =&gt;
+...)</p>
+<p style="margin-left:14%;">add() and override() are the
+primary ways to add/modify methods for a class. Both accept
+the exact same type of arguments. The difference is that
+"override" will fail unless the symbol you are
+overriding already exists, "add" on the other hand
+will fail if the symbol does already exist.</p>
+<p style="margin-left:14%; margin-top: 1em">set() was more
+recently added for cases where you may not know if the sub
+already exists. These cases are rare, and set should be
+avoided (think of it like 'no strict'). However there are
+valid use cases, so it was added.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+Think of override as a push operation. If you call override
+on the same symbol multiple times it will track that. You
+can use restore() as a pop operation to go back to the
+previous mock. "reset" can be used to remove all
+the mocking for a symbol.</p>
+<p style="margin-left:14%; margin-top: 1em">Arguments must
+be a symbol name, with optional sigil, followed by a new
+specification of the symbol. If no sigil is specified then
+'&amp;' (sub) is assumed. A simple example of overriding a
+sub:</p>
+<p style="margin-left:14%; margin-top: 1em">$mock−&gt;override(foo
+=&gt; sub { 'overridden foo' }); <br/>
+my $val = $class−&gt;foo; # Runs our override <br/>
+# $val is now set to 'overridden foo'</p>
+<p style="margin-left:14%; margin-top: 1em">You can also
+simply provide a value and it will be wrapped in a sub for
+you:</p>
+<p style="margin-left:14%; margin-top: 1em">$mock−&gt;override(
+foo =&gt; 'foo' );</p>
+<p style="margin-left:14%; margin-top: 1em">The example
+above will generate a sub that always returns the string
+'foo'.</p>
+<p style="margin-left:14%; margin-top: 1em">There are three
+*special* values that can be used to generate accessors:</p>
+<p style="margin-left:14%; margin-top: 1em">$mock−&gt;add(
+<br/>
+name =&gt; 'rw', # Generates a read/write accessor <br/>
+age =&gt; 'ro', # Generates a read only accessor <br/>
+size =&gt; 'wo', # Generates a write only accessor <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">If you want to
+have a sub that actually returns one of the three special
+strings, or that returns a coderef, you can use a hashref as
+the spec:</p>
+<p style="margin-left:14%; margin-top: 1em">my $ref = sub {
+'my sub' }; <br/>
+$mock−&gt;add( <br/>
+rw_string =&gt; { val =&gt; 'rw' }, <br/>
+ro_string =&gt; { val =&gt; 'ro' }, <br/>
+wo_string =&gt; { val =&gt; 'wo' }, <br/>
+coderef =&gt; { val =&gt; $ref }, # the coderef method
+returns $ref each time <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">You can also
+override/add other symbol types, such as hash:</p>
+<p style="margin-left:14%; margin-top: 1em">package Foo;
+<br/>
+... <br/>
+$mock−&gt;add('%foo' =&gt; {a =&gt; 1}); <br/>
+print $Foo::foo{a}; # prints '1'</p>
+<p style="margin-left:14%; margin-top: 1em">You can also
+tell mock to deduce the symbol type for the add/override
+from the reference, rules are similar to glob
+assignments:</p>
+<p style="margin-left:14%; margin-top: 1em">$mock−&gt;add(
+<br/>
+−foo =&gt; sub { 'foo' }, # Adds the &amp;foo sub to
+the package <br/>
+−foo =&gt; { foo =&gt; 1 }, # Adds the %foo hash to
+the package <br/>
+−foo =&gt; [ 'f', 'o', 'o' ], # Adds the @foo array to
+the package <br/>
+−foo =&gt; \"foo", # Adds the $foo scalar to
+the package <br/>
+);</p>
+<p style="margin-left:9%;">$mock−&gt;restore($SYMBOL)</p>
+<p style="margin-left:14%;">Restore the symbol to what it
+was before the last override. If the symbol was recently
+added this will remove it. If the symbol has been overridden
+multiple times this will ONLY restore it to the previous
+state. Think of "override" as a push operation,
+and "restore" as the pop operation.</p>
+<p style="margin-left:9%;">$mock−&gt;reset($SYMBOL)</p>
+<p style="margin-left:14%;">Remove all mocking of the
+symbol and restore the original symbol. If the symbol was
+initially added then it will be completely removed.</p>
+<p style="margin-left:9%;">$mock−&gt;orig($SYMBOL)</p>
+<p style="margin-left:14%;">This will return the original
+symbol, before any mocking. For symbols that were added this
+will return undef.</p>
+<p style="margin-left:9%;">$mock−&gt;current($SYMBOL)</p>
+<p style="margin-left:14%;">This will return the current
+symbol.</p>
+<p style="margin-left:9%;">$mock−&gt;reset_all</p>
+<p style="margin-left:14%;">Remove all added symbols, and
+restore all overridden symbols to their originals.</p>
+<p style="margin-left:9%;">$mock−&gt;add_constructor($NAME
+=&gt; $TYPE) <br/>
+$mock−&gt;override_constructor($NAME =&gt; $TYPE)</p>
+<p style="margin-left:14%;">This can be used to inject
+constructors. The first argument should be the name of the
+constructor. The second argument specifies the constructor
+type.</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"hash" type is the most common, all arguments are
+used to create a new hash that is blessed.</p>
+<p style="margin-left:14%; margin-top: 1em">hash =&gt; sub
+{ <br/>
+my ($class, %params) = @_; <br/>
+return bless \%params, $class; <br/>
+};</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"array" type is similar to the hash type, but
+accepts a list instead of key/value pairs:</p>
+<p style="margin-left:14%; margin-top: 1em">array =&gt; sub
+{ <br/>
+my ($class, @params) = @_; <br/>
+return bless \@params, $class; <br/>
+};</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"ref" type takes a reference and blesses it. This
+will modify your original input argument.</p>
+<p style="margin-left:14%; margin-top: 1em">ref =&gt; sub {
+<br/>
+my ($class, $params) = @_; <br/>
+return bless $params, $class; <br/>
+};</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"ref_copy" type will copy your reference and bless
+the copy:</p>
+<p style="margin-left:14%; margin-top: 1em">ref_copy =&gt;
+sub { <br/>
+my ($class, $params) = @_; <br/>
+my $type = reftype($params); <br/>
+return bless {%$params}, $class <br/>
+if $type eq 'HASH'; <br/>
+return bless [@$params], $class <br/>
+if $type eq 'ARRAY'; <br/>
+croak "Not sure how to construct a '$class' from
+'$params'"; <br/>
+};</p>
+<p style="margin-left:9%;">$mock−&gt;before($NAME,
+sub { ... })</p>
+<p style="margin-left:14%;">This will replace the original
+sub $NAME with a new sub that calls your custom code just
+before calling the original method. The return from your
+custom sub is ignored. Your sub and the original both get
+the unmodified arguments.</p>
+<p style="margin-left:9%;">$mock−&gt;after($NAME, sub
+{ ... })</p>
+<p style="margin-left:14%;">This is similar to before,
+except your callback runs after the original code. The
+return from your callback is ignored.</p>
+<p style="margin-left:9%;">$mock−&gt;around($NAME,
+sub { ... })</p>
+<p style="margin-left:14%;">This gives you the chance to
+wrap the original sub:</p>
+<p style="margin-left:14%; margin-top: 1em">$mock−&gt;around(foo
+=&gt; sub { <br/>
+my $orig = shift; <br/>
+my $self = shift; <br/>
+my (@args) = @_; <br/>
+... <br/>
+$self−&gt;$orig(@args); <br/>
+... <br/>
+return ...; <br/>
+});</p>
+<p style="margin-left:14%; margin-top: 1em">The original
+sub is passed in as the first argument, even before $self.
+You are responsible for making sure your wrapper sub returns
+the correct thing.</p>
+<p style="margin-left:9%;">$mock−&gt;autoload</p>
+<p style="margin-left:14%;">This will inject an
+"AUTOLOAD" sub into the class. This autoload will
+automatically generate read−write accessors for any
+sub called that does not already exist.</p>
+<p style="margin-left:9%;">$mock−&gt;block_load</p>
+<p style="margin-left:14%;">This will prevent the real
+class from loading until the mock is destroyed. This will
+fail if the class is already loaded. This will let you mock
+a class completely without loading the original module.</p>
+<p style="margin-left:9%;">$pm_file =
+$mock−&gt;file</p>
+<p style="margin-left:14%;">This returns the relative path
+to the file for the module. This corresponds to the %INC
+entry.</p>
+<p style="margin-left:9%;">$bool =
+$mock−&gt;purge_on_destroy($bool)</p>
+<p style="margin-left:14%;">When true, this will cause the
+package stash to be completely obliterated when the mock
+object falls out of scope or is otherwise destroyed. You do
+not normally want this.</p>
+<p style="margin-left:9%;">$stash =
+$mock−&gt;stash</p>
+<p style="margin-left:14%;">This returns the stash for the
+class being mocked. This is the equivalent of:</p>
+<p style="margin-left:14%; margin-top: 1em">my $stash =
+\%{"${class}\::"};</p>
+<p style="margin-left:14%; margin-top: 1em">This saves you
+from needing to turn off strict.</p>
+<p style="margin-left:9%;">$class =
+$mock−&gt;class</p>
+<p style="margin-left:14%;">The class being mocked by this
+instance.</p>
+<p style="margin-left:9%;">$p = $mock−&gt;parent</p>
+<p style="margin-left:14%;">If you mock a class twice the
+first instance is the parent, the second is the child. This
+prevents the parent from being destroyed before the child,
+which would lead to a very unpleasant situation.</p>
+<p style="margin-left:9%;">$c = $mock−&gt;child</p>
+<p style="margin-left:14%;">Returns the child mock, if
+any.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2−Suite can be found at
+&lt;https://github.com/Test−More/test−more/&gt;.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;https://dev.perl.org/licenses/&gt;</p>
+<hr/>
+</body>
+</html>

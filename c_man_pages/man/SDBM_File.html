@@ -1,0 +1,247 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:51:13 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SDBM_File</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SDBM_File</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Tie">Tie</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href='#"sdbm store returned −1, errno 22, key "..." at ..."'>"sdbm store returned −1, errno 22, key "..." at ..."</a><br/>
+<a href="#SECURITY WARNING">SECURITY WARNING</a><br/>
+<a href="#BUGS AND WARNINGS">BUGS AND WARNINGS</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SDBM_File
+− Tied access to sdbm files</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Fcntl; # For
+O_RDWR, O_CREAT, etc. <br/>
+use SDBM_File; <br/>
+tie(%h, 'SDBM_File', 'filename', O_RDWR|O_CREAT, 0666) <br/>
+or die "Couldn't tie SDBM file 'filename': $!;
+aborting"; <br/>
+# Now read and change the hash <br/>
+$h{newkey} = newvalue; <br/>
+print $h{oldkey}; <br/>
+... <br/>
+untie %h;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"SDBM_File"
+establishes a connection between a Perl hash variable and a
+file in SDBM_File format. You can manipulate the data in the
+file just as if it were in a Perl hash, but when your
+program exits, the data will remain in the file, to be used
+the next time your program runs.</p>
+<h3>Tie
+<a name="Tie"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Use
+"SDBM_File" with the Perl built-in "tie"
+function to establish the connection between the variable
+and the file.</p>
+<p style="margin-left:9%; margin-top: 1em">tie %hash,
+'SDBM_File', $basename, $modeflags, $perms; <br/>
+tie %hash, 'SDBM_File', $dirfile, $modeflags, $perms,
+$pagfilename;</p>
+<p style="margin-left:9%; margin-top: 1em">$basename is the
+base filename for the database. The database is two files
+with ".dir" and ".pag" extensions
+appended to $basename,</p>
+<p style="margin-left:9%; margin-top: 1em">$basename.dir
+(or .sdbm_dir on VMS, per DIRFEXT constant) <br/>
+$basename.pag</p>
+<p style="margin-left:9%; margin-top: 1em">The two
+filenames can also be given separately in full as $dirfile
+and $pagfilename. This suits for two files without
+".dir" and ".pag" extensions, perhaps
+for example two files from File::Temp.</p>
+<p style="margin-left:9%; margin-top: 1em">$modeflags can
+be the following constants from the "Fcntl" module
+(in the style of the <b>open</b>(2) system call),</p>
+<p style="margin-left:9%; margin-top: 1em">O_RDONLY
+read−only access <br/>
+O_WRONLY write−only access <br/>
+O_RDWR read and write access</p>
+<p style="margin-left:9%; margin-top: 1em">If you want to
+create the file if it does not already exist then bitwise-OR
+("|") "O_CREAT" too. If you omit
+"O_CREAT" and the database does not already exist
+then the "tie" call will fail.</p>
+<p style="margin-left:9%; margin-top: 1em">O_CREAT create
+database if doesn't already exist</p>
+<p style="margin-left:9%; margin-top: 1em">$perms is the
+file permissions bits to use if new database files are
+created. This parameter is mandatory even when not creating
+a new database. The permissions will be reduced by the
+user’s umask so the usual value here would be 0666, or
+if some very private data then 0600. (See "umask"
+in perlfunc.)</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SDBM_File
+optionally exports the following constants:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>"PAGFEXT" − the extension used for the
+page file, usually ".pag".</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>"DIRFEXT" − the extension used for the
+directory file, ".dir" everywhere but VMS, where
+it is ".sdbm_dir".</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>"PAIRMAX" − the maximum size of a stored
+hash entry, including the length of both the key and
+value.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">These constants
+can also be used with fully qualified names, eg.
+"SDBM_File::PAGFEXT".</p>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On failure, the
+"tie" call returns an undefined value and probably
+sets $! to contain the reason the file could not be
+tied.</p>
+<h3>"sdbm store returned −1, errno 22, key "..." at ..."
+<a name='"sdbm store returned −1, errno 22, key "..." at ..."'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This warning is
+emitted when you try to store a key or a value that is too
+long. It means that the change was not recorded in the
+database. See BUGS AND WARNINGS below.</p>
+<h2>SECURITY WARNING
+<a name="SECURITY WARNING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Do not accept
+SDBM files from untrusted sources!</b></p>
+<p style="margin-left:9%; margin-top: 1em">The sdbm file
+format was designed for speed and convenience, not for
+portability or security. A maliciously crafted file might
+cause perl to crash or even expose a security
+vulnerability.</p>
+<h2>BUGS AND WARNINGS
+<a name="BUGS AND WARNINGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">There are a
+number of limits on the size of the data that you can store
+in the SDBM file. The most important is that the length of a
+key, plus the length of its associated value, may not exceed
+1008 bytes.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+"tie" in perlfunc, perldbmfilter, Fcntl</p>
+<hr/>
+</body>
+</html>

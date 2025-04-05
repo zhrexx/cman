@@ -1,0 +1,205 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:29 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CTLOG_STORE_NEW</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CTLOG_STORE_NEW</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CTLOG_STORE_new_ex,
+CTLOG_STORE_new, CTLOG_STORE_free,
+CTLOG_STORE_load_default_file, CTLOG_STORE_load_file −
+Create and populate a Certificate Transparency log list</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ct.h&gt; <br/>
+CTLOG_STORE *CTLOG_STORE_new_ex(OSSL_LIB_CTX *libctx, const
+char *propq); <br/>
+CTLOG_STORE *CTLOG_STORE_new(void); <br/>
+void CTLOG_STORE_free(CTLOG_STORE *store); <br/>
+int CTLOG_STORE_load_default_file(CTLOG_STORE *store); <br/>
+int CTLOG_STORE_load_file(CTLOG_STORE *store, const char
+*file);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A CTLOG_STORE is
+a container for a list of CTLOGs (Certificate Transparency
+logs). The list can be loaded from one or more files and
+then searched by LogID (see RFC 6962, Section 3.2, for the
+definition of a LogID).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CTLOG_STORE_new_ex()</b>
+creates an empty list of CT logs associated with the library
+context <i>libctx</i> and the property query string
+<i>propq</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CTLOG_STORE_new()</b>
+does the same thing as <b>CTLOG_STORE_new_ex()</b> but with
+the default library context and property query string.</p>
+<p style="margin-left:9%; margin-top: 1em">The CTLOG_STORE
+is then populated by <b>CTLOG_STORE_load_default_file()</b>
+or <b>CTLOG_STORE_load_file()</b>.
+<b>CTLOG_STORE_load_default_file()</b> loads from the
+default file, which is named <i>ct_log_list.cnf</i> in
+OPENSSLDIR (see the output of
+<b>openssl−version</b>(1)). This can be overridden
+using an environment variable named <b>CTLOG_FILE</b>.
+<b>CTLOG_STORE_load_file()</b> loads from a
+caller−specified file path instead. Both of these
+functions append any loaded CT logs to the CTLOG_STORE.</p>
+<p style="margin-left:9%; margin-top: 1em">The expected
+format of the file is:</p>
+<p style="margin-left:9%; margin-top: 1em">enabled_logs=foo,bar
+<br/>
+[foo] <br/>
+description = Log 1 <br/>
+key = &lt;base64−encoded DER SubjectPublicKeyInfo
+here&gt; <br/>
+[bar] <br/>
+description = Log 2 <br/>
+key = &lt;base64−encoded DER SubjectPublicKeyInfo
+here&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">Once a
+CTLOG_STORE is no longer required, it should be passed to
+<b>CTLOG_STORE_free()</b>. This will delete all of the
+CTLOGs stored within, along with the CTLOG_STORE itself. If
+the argument is NULL, nothing is done.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If there are any
+invalid CT logs in a file, they are skipped and the
+remaining valid logs will still be added to the CTLOG_STORE.
+A CT log will be considered invalid if it is missing a
+"key" or "description" field.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Both
+<b>CTLOG_STORE_load_default_file</b> and
+<b>CTLOG_STORE_load_file</b> return 1 if all CT logs in the
+file are successfully parsed and loaded, 0 otherwise.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ct</b>(7),
+<b>CTLOG_STORE_get0_log_by_id</b>(3),
+<b>SSL_CTX_set_ctlog_list_file</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CTLOG_STORE_new_ex
+was added in OpenSSL 3.0. All other functions were added in
+OpenSSL 1.1.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2016−2024 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

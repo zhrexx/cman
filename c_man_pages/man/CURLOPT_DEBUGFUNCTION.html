@@ -1,0 +1,316 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:39 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_DEBUGFUNCTION</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_DEBUGFUNCTION</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_DEBUGFUNCTION
+− debug callback</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">typedef enum {
+<br/>
+CURLINFO_TEXT = 0, <br/>
+CURLINFO_HEADER_IN, /* 1 */ <br/>
+CURLINFO_HEADER_OUT, /* 2 */ <br/>
+CURLINFO_DATA_IN, /* 3 */ <br/>
+CURLINFO_DATA_OUT, /* 4 */ <br/>
+CURLINFO_SSL_DATA_IN, /* 5 */ <br/>
+CURLINFO_SSL_DATA_OUT, /* 6 */ <br/>
+CURLINFO_END <br/>
+} curl_infotype;</p>
+<p style="margin-left:9%; margin-top: 1em">int
+debug_callback(CURL *handle, <br/>
+curl_infotype type, <br/>
+char *data, <br/>
+size_t size, <br/>
+void *clientp);</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_DEBUGFUNCTION, <br/>
+debug_callback);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a pointer
+to your callback function, which should match the prototype
+shown above.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>CURLOPT_DEBUGFUNCTION(3)</i>
+replaces the standard debug function used when
+<i>CURLOPT_VERBOSE(3)</i> is in effect. This callback
+receives debug information, as specified in the <i>type</i>
+argument. This function must return 0. The <i>data</i>
+pointed to by the char * passed to this function is not
+null−terminated, but is exactly of the <i>size</i> as
+told by the <i>size</i> argument.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>clientp</i> argument is the pointer set with
+<i>CURLOPT_DEBUGDATA(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Available
+<b>curl_infotype</b> values: <br/>
+CURLINFO_TEXT</p>
+<p style="margin-left:18%;">The data is informational
+text.</p>
+<p style="margin-left:9%;">CURLINFO_HEADER_IN</p>
+<p style="margin-left:18%;">The data is header (or
+header−like) data received from the peer.</p>
+<p style="margin-left:9%;">CURLINFO_HEADER_OUT</p>
+<p style="margin-left:18%;">The data is header (or
+header−like) data sent to the peer.</p>
+<p style="margin-left:9%;">CURLINFO_DATA_IN</p>
+<p style="margin-left:18%;">The data is the unprocessed
+protocol data received from the peer. Even if the data is
+encoded or compressed, it is not provided decoded nor
+decompressed to this callback. If you need the data in
+decoded and decompressed form, use
+<i>CURLOPT_WRITEFUNCTION(3)</i>.</p>
+<p style="margin-left:9%;">CURLINFO_DATA_OUT</p>
+<p style="margin-left:18%;">The data is protocol data sent
+to the peer.</p>
+<p style="margin-left:9%;">CURLINFO_SSL_DATA_OUT</p>
+<p style="margin-left:18%;">The data is SSL/TLS (binary)
+data sent to the peer.</p>
+<p style="margin-left:9%;">CURLINFO_SSL_DATA_IN</p>
+<p style="margin-left:18%;">The data is SSL/TLS (binary)
+data received from the peer.</p>
+<p style="margin-left:9%; margin-top: 1em">WARNING: This
+callback may be called with the curl <i>handle</i> set to an
+internal handle. (Added in 8.4.0)</p>
+<p style="margin-left:9%; margin-top: 1em">If you need to
+distinguish your curl <i>handle</i> from internal handles
+then set <i>CURLOPT_PRIVATE(3)</i> on your handle.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">static <br/>
+void dump(const char *text, <br/>
+FILE *stream, unsigned char *ptr, size_t size) <br/>
+{ <br/>
+size_t i; <br/>
+size_t c; <br/>
+unsigned int width = 0x10;</p>
+<p style="margin-left:9%; margin-top: 1em">fprintf(stream,
+"%s, %10.10ld bytes (0x%8.8lx)\n", <br/>
+text, (long)size, (long)size);</p>
+<p style="margin-left:9%; margin-top: 1em">for(i = 0; i
+&lt; size; i += width) { <br/>
+fprintf(stream, "%4.4lx: ", (long)i);</p>
+<p style="margin-left:9%; margin-top: 1em">/* show hex to
+the left */ <br/>
+for(c = 0; c &lt; width; c++) { <br/>
+if(i + c &lt; size) <br/>
+fprintf(stream, "%02x ", ptr[i + c]); <br/>
+else <br/>
+fputs(" ", stream); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">/* show data on
+the right */ <br/>
+for(c = 0; (c &lt; width) &amp;&amp; (i + c &lt; size); c++)
+{ <br/>
+char x = (ptr[i + c] &gt;= 0x20 &amp;&amp; ptr[i + c] &lt;
+0x80) ? ptr[i + c] : ’.’; <br/>
+fputc(x, stream); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">fputc(’\n’,
+stream); /* newline */ <br/>
+} <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">static <br/>
+int my_trace(CURL *handle, curl_infotype type, <br/>
+char *data, size_t size, <br/>
+void *clientp) <br/>
+{ <br/>
+const char *text; <br/>
+(void)handle; /* prevent compiler warning */ <br/>
+(void)clientp;</p>
+<p style="margin-left:9%; margin-top: 1em">switch(type) {
+<br/>
+case CURLINFO_TEXT: <br/>
+fputs("== Info: ", stderr); <br/>
+fwrite(data, size, 1, stderr); <br/>
+default: /* in case a new one is introduced to shock us */
+<br/>
+return 0;</p>
+<p style="margin-left:9%; margin-top: 1em">case
+CURLINFO_HEADER_OUT: <br/>
+text = "=&gt; Send header"; <br/>
+break; <br/>
+case CURLINFO_DATA_OUT: <br/>
+text = "=&gt; Send data"; <br/>
+break; <br/>
+case CURLINFO_SSL_DATA_OUT: <br/>
+text = "=&gt; Send SSL data"; <br/>
+break; <br/>
+case CURLINFO_HEADER_IN: <br/>
+text = "&lt;= Recv header"; <br/>
+break; <br/>
+case CURLINFO_DATA_IN: <br/>
+text = "&lt;= Recv data"; <br/>
+break; <br/>
+case CURLINFO_SSL_DATA_IN: <br/>
+text = "&lt;= Recv SSL data"; <br/>
+break; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">dump(text,
+stderr, (unsigned char *)data, size); <br/>
+return 0; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl; <br/>
+CURLcode res;</p>
+<p style="margin-left:9%; margin-top: 1em">curl =
+curl_easy_init(); <br/>
+if(curl) { <br/>
+curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, my_trace);</p>
+<p style="margin-left:9%; margin-top: 1em">/* the
+DEBUGFUNCTION has no effect until we enable VERBOSE */ <br/>
+curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);</p>
+<p style="margin-left:9%; margin-top: 1em">/* example.com
+is redirected, so we tell libcurl to follow redirection */
+<br/>
+curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);</p>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_setopt(curl,
+CURLOPT_URL, "https://example.com/"); <br/>
+res = curl_easy_perform(curl); <br/>
+/* Check for errors */ <br/>
+if(res != CURLE_OK) <br/>
+fprintf(stderr, "curl_easy_perform() failed:
+%s\n", <br/>
+curl_easy_strerror(res));</p>
+<p style="margin-left:9%; margin-top: 1em">/* always
+cleanup */ <br/>
+curl_easy_cleanup(curl); <br/>
+} <br/>
+return 0; <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.9.6</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns
+CURLE_OK</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLINFO_CONN_ID</b>(3),
+<b>CURLINFO_XFER_ID</b>(3), <b>CURLOPT_DEBUGDATA</b>(3),
+<b>CURLOPT_VERBOSE</b>(3), <b>curl_global_trace</b>(3)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SET_MSG_CALLBACK</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SET_MSG_CALLBACK</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_set_msg_callback,
+SSL_CTX_set_msg_callback_arg, SSL_set_msg_callback,
+SSL_set_msg_callback_arg, SSL_trace − install callback
+for observing protocol messages</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+void SSL_CTX_set_msg_callback(SSL_CTX *ctx, <br/>
+void (*cb)(int write_p, int version, <br/>
+int content_type, const void *buf, <br/>
+size_t len, SSL *ssl, void *arg)); <br/>
+void SSL_CTX_set_msg_callback_arg(SSL_CTX *ctx, void *arg);
+<br/>
+void SSL_set_msg_callback(SSL *ssl, <br/>
+void (*cb)(int write_p, int version, <br/>
+int content_type, const void *buf, <br/>
+size_t len, SSL *ssl, void *arg)); <br/>
+void SSL_set_msg_callback_arg(SSL *ssl, void *arg); <br/>
+void SSL_trace(int write_p, int version, int content_type,
+<br/>
+const void *buf, size_t len, SSL *ssl, void *arg);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_msg_callback()</b>
+or <b>SSL_set_msg_callback()</b> can be used to define a
+message callback function <i>cb</i> for observing all
+SSL/TLS/QUIC protocol messages (such as handshake messages)
+that are received or sent, as well as other events that
+occur during processing.
+<b>SSL_CTX_set_msg_callback_arg()</b> and
+<b>SSL_set_msg_callback_arg()</b> can be used to set
+argument <i>arg</i> to the callback function, which is
+available for arbitrary application use.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_msg_callback()</b>
+and <b>SSL_CTX_set_msg_callback_arg()</b> specify default
+settings that will be copied to new <b>SSL</b> objects by
+<b>SSL_new</b>(3). <b>SSL_set_msg_callback()</b> and
+<b>SSL_set_msg_callback_arg()</b> modify the actual settings
+of an <b>SSL</b> object. Using a <b>NULL</b> pointer for
+<i>cb</i> disables the message callback.</p>
+<p style="margin-left:9%; margin-top: 1em">When <i>cb</i>
+is called by the SSL/TLS/QUIC library the function arguments
+have the following meaning: <i><br/>
+write_p</i></p>
+<p style="margin-left:14%;">This flag is <b>0</b> when a
+protocol message has been received and <b>1</b> when a
+protocol message has been sent.</p>
+<p style="margin-left:9%;"><i>version</i></p>
+<p style="margin-left:14%;">The protocol version according
+to which the protocol message is interpreted by the library
+such as <b>TLS1_3_VERSION</b>, <b>TLS1_2_VERSION</b>,
+<b>OSSL_QUIC1_VERSION</b> etc. For the SSL3_RT_HEADER pseudo
+content type (see NOTES below) this value will be the
+decoded version/legacy_version field of the record
+header.</p>
+<p style="margin-left:9%;"><i>content_type</i></p>
+<p style="margin-left:14%;">This is one of the content type
+values defined in the protocol specification
+(<b>SSL3_RT_CHANGE_CIPHER_SPEC</b>, <b>SSL3_RT_ALERT</b>,
+<b>SSL3_RT_HANDSHAKE</b>; but never
+<b>SSL3_RT_APPLICATION_DATA</b> because the callback will
+only be called for protocol messages). Alternatively it may
+be a "pseudo" content type. These pseudo content
+types are used to signal some other event in the processing
+of data (see NOTES below).</p>
+<p style="margin-left:9%;"><i>buf</i>, <i>len</i></p>
+<p style="margin-left:14%;"><i>buf</i> points to a buffer
+containing the protocol message or other data (in the case
+of pseudo content types), which consists of <i>len</i>
+bytes. The buffer is no longer valid after the callback
+function has returned.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p><i>ssl</i></p></td>
+<td width="1%"></td>
+<td width="78%">
+<p>The <b>SSL</b> object that received or sent the
+message.</p> </td>
+<td width="8%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p><i>arg</i></p></td>
+<td width="1%"></td>
+<td width="78%">
+<p>The user−defined argument optionally defined by
+<b>SSL_CTX_set_msg_callback_arg()</b> or
+<b>SSL_set_msg_callback_arg()</b>.</p> </td>
+<td width="8%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_trace()</b> function can be used as a
+pre−written callback in a call to
+<b>SSL_CTX_set_msg_callback()</b> or
+<b>SSL_set_msg_callback()</b>. It requires a BIO to be set
+as the callback argument via
+<b>SSL_CTX_set_msg_callback_arg()</b> or
+<b>SSL_set_msg_callback_arg()</b>. Setting this callback
+will cause human readable diagostic tracing information
+about an SSL/TLS/QUIC connection to be written to the
+BIO.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Protocol
+messages are passed to the callback function after
+decryption and fragment collection where applicable. (Thus
+record boundaries are not visible.)</p>
+<p style="margin-left:9%; margin-top: 1em">If processing a
+received protocol message results in an error, the callback
+function may not be called. For example, the callback
+function will never see messages that are considered too
+large to be processed.</p>
+<p style="margin-left:9%; margin-top: 1em">Due to automatic
+protocol version negotiation, <i>version</i> is not
+necessarily the protocol version used by the sender of the
+message: If a TLS 1.0 ClientHello message is received by an
+SSL 3.0−only server, <i>version</i> will be
+<b>SSL3_VERSION</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">Pseudo content
+type values may be sent at various points during the
+processing of data. The following pseudo content types are
+currently defined: <b><br/>
+SSL3_RT_HEADER</b></p>
+<p style="margin-left:14%;">Used when a TLS record is sent
+or received. The <b>buf</b> contains the record header bytes
+only.</p>
+<p style="margin-left:9%;"><b>SSL3_RT_INNER_CONTENT_TYPE</b></p>
+<p style="margin-left:14%;">Used when an encrypted TLSv1.3
+record is sent or received. In encrypted TLSv1.3 records the
+content type in the record header is always
+SSL3_RT_APPLICATION_DATA. The real content type for the
+record is contained in an "inner" content type.
+<b>buf</b> contains the encoded "inner" content
+type byte.</p>
+<p style="margin-left:9%;"><b>SSL3_RT_QUIC_DATAGRAM</b></p>
+<p style="margin-left:14%;">Used when a QUIC datagram is
+sent or received.</p>
+<p style="margin-left:9%;"><b>SSL3_RT_QUIC_PACKET</b></p>
+<p style="margin-left:14%;">Used when a QUIC packet is sent
+or received.</p>
+<p style="margin-left:9%;"><b>SSL3_RT_QUIC_FRAME_FULL</b></p>
+<p style="margin-left:14%;">Used when a QUIC frame is sent
+or received. This is only used for non−crypto and
+stream data related frames. The full QUIC frame data is
+supplied.</p>
+<p style="margin-left:9%;"><b>SSL3_RT_QUIC_FRAME_HEADER</b></p>
+<p style="margin-left:14%;">Used when a QUIC stream data or
+crypto frame is sent or received. Only the QUIC frame header
+data is supplied.</p>
+<p style="margin-left:9%;"><b>SSL3_RT_QUIC_FRAME_PADDING</b></p>
+<p style="margin-left:14%;">Used when a sequence of one or
+more QUIC padding frames is sent or received. A padding
+frame consists of a single byte and it is common to have
+multiple such frames in a sequence. Rather than supplying
+each frame individually the callback will supply all the
+padding frames in one go via this pseudo content type.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_msg_callback()</b>,
+<b>SSL_CTX_set_msg_callback_arg()</b>,
+<b>SSL_set_msg_callback()</b> and
+<b>SSL_set_msg_callback_arg()</b> do not return values.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_new</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The pseudo
+content type <b>SSL3_RT_INNER_CONTENT_TYPE</b> was added in
+OpenSSL 1.1.1.</p>
+<p style="margin-left:9%; margin-top: 1em">The pseudo
+content types <b>SSL3_RT_QUIC_DATAGRAM</b>,
+<b>SSL3_RT_QUIC_PACKET</b>, <b>SSL3_RT_QUIC_FRAME_FULL</b>,
+<b>SSL3_RT_QUIC_FRAME_HEADER</b> and
+<b>SSL3_RT_QUIC_FRAME_PADDING</b> were added in OpenSSL
+3.2.</p>
+<p style="margin-left:9%; margin-top: 1em">In versions
+previous to OpenSSL 3.0 <i>cb</i> was called with 0 as
+<i>version</i> for the pseudo content type
+<b>SSL3_RT_HEADER</b> for TLS records.</p>
+<p style="margin-left:9%; margin-top: 1em">In versions
+previous to OpenSSL 3.2 <i>cb</i> was called with 0 as
+<i>version</i> for the pseudo content type
+<b>SSL3_RT_HEADER</b> for DTLS records.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2001−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

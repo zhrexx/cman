@@ -1,0 +1,233 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_CONNECT_TO</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_CONNECT_TO</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_CONNECT_TO
+− connect to another host and port instead</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_CONNECT_TO, <br/>
+struct curl_slist *connect_to);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a pointer
+to a linked list of strings with "connect to"
+information to use for establishing network connections with
+this handle. The linked list should be a fully valid list of
+<b>struct curl_slist</b> structs properly filled in. Use
+<i>curl_slist_append(3)</i> to create the list and
+<i>curl_slist_free_all(3)</i> to clean up an entire
+list.</p>
+<p style="margin-left:9%; margin-top: 1em">Each single
+string should be written using the format
+HOST:PORT:CONNECT−TO−HOST:CONNECT−TO−PORT
+where HOST is the host of the request, PORT is the port of
+the request, CONNECT−TO−HOST is the hostname to
+connect to, and CONNECT−TO−PORT is the port to
+connect to.</p>
+<p style="margin-left:9%; margin-top: 1em">The first string
+that matches the request's host and port is used.</p>
+<p style="margin-left:9%; margin-top: 1em">Dotted numerical
+IP addresses are supported for HOST and
+CONNECT−TO−HOST. A numerical IPv6 address must
+be written within [brackets].</p>
+<p style="margin-left:9%; margin-top: 1em">Any of the four
+values may be empty. When the HOST or PORT is empty, the
+host or port always match (the request's host or port is
+ignored). When CONNECT−TO−HOST or
+CONNECT−TO−PORT is empty, the "connect
+to" feature is disabled for the host or port, and the
+request's host or port are used to establish the network
+connection.</p>
+<p style="margin-left:9%; margin-top: 1em">This option is
+suitable to direct the request at a specific server, e.g. at
+a specific cluster node in a cluster of servers.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"connect to" host and port are only used to
+establish the network connection. They do NOT affect the
+host and port that are used for TLS/SSL (e.g. SNI,
+certificate verification) or for the application
+protocols.</p>
+<p style="margin-left:9%; margin-top: 1em">In contrast to
+<i>CURLOPT_RESOLVE(3)</i>, the option
+<i>CURLOPT_CONNECT_TO(3)</i> does not pre−populate the
+DNS cache and therefore it does not affect future transfers
+of other easy handles that have been added to the same multi
+handle.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"connect to" host and port are ignored if they are
+equal to the host and the port in the request URL, because
+connecting to the host and the port in the request URL is
+the default behavior.</p>
+<p style="margin-left:9%; margin-top: 1em">If an HTTP proxy
+is used for a request having a special "connect
+to" host or port, and the "connect to" host
+or port differs from the request's host and port, the HTTP
+proxy is automatically switched to tunnel mode for this
+specific request. This is necessary because it is not
+possible to connect to a specific host or port in normal
+(non−tunnel) mode.</p>
+<p style="margin-left:9%; margin-top: 1em">When this option
+is passed to <i>curl_easy_setopt(3)</i>, libcurl does not
+copy the list so you <b>must</b> keep it around until you no
+longer use this <i>handle</i> for a transfer before you call
+<i>curl_slist_free_all(3)</i> on the list.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl; <br/>
+struct curl_slist *connect_to = NULL; <br/>
+connect_to = curl_slist_append(NULL,
+"example.com::server1.example.com:");</p>
+<p style="margin-left:9%; margin-top: 1em">curl =
+curl_easy_init(); <br/>
+if(curl) { <br/>
+curl_easy_setopt(curl, CURLOPT_CONNECT_TO, connect_to); <br/>
+curl_easy_setopt(curl, CURLOPT_URL,
+"https://example.com");</p>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_perform(curl);</p>
+<p style="margin-left:9%; margin-top: 1em">/* always
+cleanup */ <br/>
+curl_easy_cleanup(curl); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">curl_slist_free_all(connect_to);
+<br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.49.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLE_OK
+if the option is supported, and CURLE_UNKNOWN_OPTION if
+not.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_FOLLOWLOCATION</b>(3),
+<b>CURLOPT_HTTPPROXYTUNNEL</b>(3),
+<b>CURLOPT_RESOLVE</b>(3), <b>CURLOPT_URL</b>(3)</p>
+<hr/>
+</body>
+</html>

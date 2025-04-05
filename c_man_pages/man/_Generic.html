@@ -1,0 +1,165 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:10 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>_Generic</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">_Generic</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">_Generic −
+type-generic selection</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>_Generic(</b><i>expression</i><b>,
+type1:</b> e1<b>,</b> ... /*<b>, default:</b> e
+*/<b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>_Generic</b>()
+evaluates the path of code under the type selector that is
+compatible with the type of the controlling
+<i>expression</i>, or <b>default:</b> if no type is
+compatible.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>expression</i>
+is not evaluated.</p>
+<p style="margin-left:9%; margin-top: 1em">This is
+especially useful for writing type-generic macros, that will
+behave differently depending on the type of the
+argument.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">C11.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">C11.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+program demonstrates how to write a replacement for the
+standard <b>imaxabs</b>(3) function, which being a function
+can’t really provide what it promises: seamlessly
+upgrading to the widest available type.</p>
+<p style="margin-left:18%; margin-top: 1em">#include
+&lt;stdint.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#define my_imaxabs _Generic(INTMAX_C(0), \ <br/>
+long: labs, \ <br/>
+long long: llabs \ <br/>
+/* long long long: lllabs */ \ <br/>
+) <br/>
+int <br/>
+main(void) <br/>
+{ <br/>
+off_t a; <br/>
+a = −42; <br/>
+printf("imaxabs(%jd) == %jd\n", (intmax_t) a,
+my_imaxabs(a)); <br/>
+printf("&amp;imaxabs == %p\n", &amp;my_imaxabs);
+<br/>
+printf("&amp;labs == %p\n", &amp;labs); <br/>
+printf("&amp;llabs == %p\n", &amp;llabs); <br/>
+exit(EXIT_SUCCESS); <br/>
+ }</p>
+<hr/>
+</body>
+</html>

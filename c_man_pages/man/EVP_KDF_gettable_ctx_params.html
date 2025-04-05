@@ -1,0 +1,464 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:21 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>EVP_KDF</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">EVP_KDF</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Types">Types</a><br/>
+<a href="#Algorithm implementation fetching">Algorithm implementation fetching</a><br/>
+<a href="#Context manipulation functions">Context manipulation functions</a><br/>
+<a href="#Computing functions">Computing functions</a><br/>
+<a href="#Information functions">Information functions</a><br/>
+<a href="#PARAMETERS">PARAMETERS</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">EVP_KDF,
+EVP_KDF_fetch, EVP_KDF_free, EVP_KDF_up_ref, EVP_KDF_CTX,
+EVP_KDF_CTX_new, EVP_KDF_CTX_free, EVP_KDF_CTX_dup,
+EVP_KDF_CTX_reset, EVP_KDF_derive, EVP_KDF_CTX_get_kdf_size,
+EVP_KDF_get0_provider, EVP_KDF_CTX_kdf, EVP_KDF_is_a,
+EVP_KDF_get0_name, EVP_KDF_names_do_all,
+EVP_KDF_get0_description, EVP_KDF_CTX_get_params,
+EVP_KDF_CTX_set_params, EVP_KDF_do_all_provided,
+EVP_KDF_get_params, EVP_KDF_gettable_params,
+EVP_KDF_gettable_ctx_params, EVP_KDF_settable_ctx_params,
+EVP_KDF_CTX_gettable_params, EVP_KDF_CTX_settable_params
+− EVP KDF routines</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/kdf.h&gt; <br/>
+typedef struct evp_kdf_st EVP_KDF; <br/>
+typedef struct evp_kdf_ctx_st EVP_KDF_CTX; <br/>
+EVP_KDF_CTX *EVP_KDF_CTX_new(EVP_KDF *kdf); <br/>
+const EVP_KDF *EVP_KDF_CTX_kdf(EVP_KDF_CTX *ctx); <br/>
+void EVP_KDF_CTX_free(EVP_KDF_CTX *ctx); <br/>
+EVP_KDF_CTX *EVP_KDF_CTX_dup(const EVP_KDF_CTX *src); <br/>
+void EVP_KDF_CTX_reset(EVP_KDF_CTX *ctx); <br/>
+size_t EVP_KDF_CTX_get_kdf_size(EVP_KDF_CTX *ctx); <br/>
+int EVP_KDF_derive(EVP_KDF_CTX *ctx, unsigned char *key,
+size_t keylen, <br/>
+const OSSL_PARAM params[]); <br/>
+int EVP_KDF_up_ref(EVP_KDF *kdf); <br/>
+void EVP_KDF_free(EVP_KDF *kdf); <br/>
+EVP_KDF *EVP_KDF_fetch(OSSL_LIB_CTX *libctx, const char
+*algorithm, <br/>
+const char *properties); <br/>
+int EVP_KDF_is_a(const EVP_KDF *kdf, const char *name); <br/>
+const char *EVP_KDF_get0_name(const EVP_KDF *kdf); <br/>
+const char *EVP_KDF_get0_description(const EVP_KDF *kdf);
+<br/>
+const OSSL_PROVIDER *EVP_KDF_get0_provider(const EVP_KDF
+*kdf); <br/>
+void EVP_KDF_do_all_provided(OSSL_LIB_CTX *libctx, <br/>
+void (*fn)(EVP_KDF *kdf, void *arg), <br/>
+void *arg); <br/>
+int EVP_KDF_names_do_all(const EVP_KDF *kdf, <br/>
+void (*fn)(const char *name, void *data), <br/>
+void *data); <br/>
+int EVP_KDF_get_params(EVP_KDF *kdf, OSSL_PARAM params[]);
+<br/>
+int EVP_KDF_CTX_get_params(EVP_KDF_CTX *ctx, OSSL_PARAM
+params[]); <br/>
+int EVP_KDF_CTX_set_params(EVP_KDF_CTX *ctx, const
+OSSL_PARAM params[]); <br/>
+const OSSL_PARAM *EVP_KDF_gettable_params(const EVP_KDF
+*kdf); <br/>
+const OSSL_PARAM *EVP_KDF_gettable_ctx_params(const EVP_KDF
+*kdf); <br/>
+const OSSL_PARAM *EVP_KDF_settable_ctx_params(const EVP_KDF
+*kdf); <br/>
+const OSSL_PARAM *EVP_KDF_CTX_gettable_params(const EVP_KDF
+*kdf); <br/>
+const OSSL_PARAM *EVP_KDF_CTX_settable_params(const EVP_KDF
+*kdf); <br/>
+const OSSL_PROVIDER *EVP_KDF_get0_provider(const EVP_KDF
+*kdf);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The EVP KDF
+routines are a high−level interface to Key Derivation
+Function algorithms and should be used instead of
+algorithm−specific functions.</p>
+<p style="margin-left:9%; margin-top: 1em">After creating a
+<b>EVP_KDF_CTX</b> for the required algorithm using
+<b>EVP_KDF_CTX_new()</b>, inputs to the algorithm are
+supplied either by passing them as part of the
+<b>EVP_KDF_derive()</b> call or using calls to
+<b>EVP_KDF_CTX_set_params()</b> before calling
+<b>EVP_KDF_derive()</b> to derive the key.</p>
+<h3>Types
+<a name="Types"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF</b>
+is a type that holds the implementation of a KDF.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_CTX</b>
+is a context type that holds the algorithm inputs.</p>
+<h3>Algorithm implementation fetching
+<a name="Algorithm implementation fetching"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_fetch()</b>
+fetches an implementation of a KDF <i>algorithm</i>, given a
+library context <i>libctx</i> and a set of
+<i>properties</i>. See "ALGORITHM FETCHING" in
+<b>crypto</b>(7) for further information.</p>
+<p style="margin-left:9%; margin-top: 1em">See "Key
+Derivation Function (KDF)" in
+<b>OSSL_PROVIDER−default</b>(7) for the lists of
+algorithms supported by the default provider.</p>
+<p style="margin-left:9%; margin-top: 1em">The returned
+value must eventually be freed with
+<b>EVP_KDF_free</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_up_ref()</b>
+increments the reference count of an already fetched
+KDF.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_free()</b>
+frees a fetched algorithm. NULL is a valid parameter, for
+which this function is a no−op.</p>
+<h3>Context manipulation functions
+<a name="Context manipulation functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_CTX_new()</b>
+creates a new context for the KDF implementation
+<i>kdf</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_CTX_free()</b>
+frees up the context <i>ctx</i>. If <i>ctx</i> is NULL,
+nothing is done.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_CTX_kdf()</b>
+returns the <b>EVP_KDF</b> associated with the context
+<i>ctx</i>.</p>
+<h3>Computing functions
+<a name="Computing functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_CTX_reset()</b>
+resets the context to the default state as if the context
+had just been created.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_derive()</b>
+processes any parameters in <i>Params</i> and then derives
+<i>keylen</i> bytes of key material and places it in the
+<i>key</i> buffer. If the algorithm produces a fixed amount
+of output then an error will occur unless the <i>keylen</i>
+parameter is equal to that output size, as returned by
+<b>EVP_KDF_CTX_get_kdf_size()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_get_params()</b>
+retrieves details about the implementation <i>kdf</i>. The
+set of parameters given with <i>params</i> determine exactly
+what parameters should be retrieved. Note that a parameter
+that is unknown in the underlying context is simply
+ignored.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_CTX_get_params()</b>
+retrieves chosen parameters, given the context <i>ctx</i>
+and its underlying context. The set of parameters given with
+<i>params</i> determine exactly what parameters should be
+retrieved. Note that a parameter that is unknown in the
+underlying context is simply ignored.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_CTX_set_params()</b>
+passes chosen parameters to the underlying context, given a
+context <i>ctx</i>. The set of parameters given with
+<i>params</i> determine exactly what parameters are passed
+down. Note that a parameter that is unknown in the
+underlying context is simply ignored. Also, what happens
+when a needed parameter isn't passed down is defined by the
+implementation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_gettable_params()</b>
+returns an <b>OSSL_PARAM</b>(3) array that describes the
+retrievable and settable parameters.
+<b>EVP_KDF_gettable_params()</b> returns parameters that can
+be used with <b>EVP_KDF_get_params()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_gettable_ctx_params()</b>
+and <b>EVP_KDF_CTX_gettable_params()</b> return constant
+<b>OSSL_PARAM</b>(3) arrays that describe the retrievable
+parameters that can be used with
+<b>EVP_KDF_CTX_get_params()</b>.
+<b>EVP_KDF_gettable_ctx_params()</b> returns the parameters
+that can be retrieved from the algorithm, whereas
+<b>EVP_KDF_CTX_gettable_params()</b> returns the parameters
+that can be retrieved in the context's current state.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_settable_ctx_params()</b>
+and <b>EVP_KDF_CTX_settable_params()</b> return constant
+<b>OSSL_PARAM</b>(3) arrays that describe the settable
+parameters that can be used with
+<b>EVP_KDF_CTX_set_params()</b>.
+<b>EVP_KDF_settable_ctx_params()</b> returns the parameters
+that can be retrieved from the algorithm, whereas
+<b>EVP_KDF_CTX_settable_params()</b> returns the parameters
+that can be retrieved in the context's current state.</p>
+<h3>Information functions
+<a name="Information functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_CTX_get_kdf_size()</b>
+returns the output size if the algorithm produces a fixed
+amount of output and <b>SIZE_MAX</b> otherwise. If an error
+occurs then 0 is returned. For some algorithms an error may
+result if input parameters necessary to calculate a fixed
+output size have not yet been supplied.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_is_a()</b>
+returns 1 if <i>kdf</i> is an implementation of an algorithm
+that's identifiable with <i>name</i>, otherwise 0.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_get0_provider()</b>
+returns the provider that holds the implementation of the
+given <i>kdf</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_do_all_provided()</b>
+traverses all KDF implemented by all activated providers in
+the given library context <i>libctx</i>, and for each of the
+implementations, calls the given function <i>fn</i> with the
+implementation method and the given <i>arg</i> as
+argument.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_get0_name()</b>
+return the name of the given KDF. For fetched KDFs with
+multiple names, only one of them is returned; it's
+recommended to use <b>EVP_KDF_names_do_all()</b>
+instead.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_names_do_all()</b>
+traverses all names for <i>kdf</i>, and calls <i>fn</i> with
+each name and <i>data</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_get0_description()</b>
+returns a description of the <i>kdf</i>, meant for display
+and human consumption. The description is at the discretion
+of the <i>kdf</i> implementation.</p>
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The standard
+parameter names are: <br/>
+"pass" (<b>OSSL_KDF_PARAM_PASSWORD</b>) &lt;octet
+string&gt;</p>
+<p style="margin-left:14%;">Some KDF implementations
+require a password. For those KDF implementations that
+support it, this parameter sets the password.</p>
+<p style="margin-left:9%;">"salt"
+(<b>OSSL_KDF_PARAM_SALT</b>) &lt;octet string&gt;</p>
+<p style="margin-left:14%;">Some KDF implementations can
+take a non−secret unique cryptographic salt. For those
+KDF implementations that support it, this parameter sets the
+salt.</p>
+<p style="margin-left:14%; margin-top: 1em">The default
+value, if any, is implementation dependent.</p>
+<p style="margin-left:9%;">"iter"
+(<b>OSSL_KDF_PARAM_ITER</b>) &lt;unsigned integer&gt;</p>
+<p style="margin-left:14%;">Some KDF implementations
+require an iteration count. For those KDF implementations
+that support it, this parameter sets the iteration
+count.</p>
+<p style="margin-left:14%; margin-top: 1em">The default
+value, if any, is implementation dependent.</p>
+<p style="margin-left:9%;">"properties"
+(<b>OSSL_KDF_PARAM_PROPERTIES</b>) &lt;UTF8 string&gt; <br/>
+"mac" (<b>OSSL_KDF_PARAM_MAC</b>) &lt;UTF8
+string&gt; <br/>
+"digest" (<b>OSSL_KDF_PARAM_DIGEST</b>) &lt;UTF8
+string&gt; <br/>
+"cipher" (<b>OSSL_KDF_PARAM_CIPHER</b>) &lt;UTF8
+string&gt;</p>
+<p style="margin-left:14%;">For KDF implementations that
+use an underlying computation MAC, digest or cipher, these
+parameters set what the algorithm should be.</p>
+<p style="margin-left:14%; margin-top: 1em">The value is
+always the name of the intended algorithm, or the
+properties.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that not
+all algorithms may support all possible underlying
+implementations.</p>
+<p style="margin-left:9%;">"key"
+(<b>OSSL_KDF_PARAM_KEY</b>) &lt;octet string&gt;</p>
+<p style="margin-left:14%;">Some KDF implementations
+require a key. For those KDF implementations that support
+it, this octet string parameter sets the key.</p>
+<p style="margin-left:9%;">"info"
+(<b>OSSL_KDF_PARAM_INFO</b>) &lt;octet string&gt;</p>
+<p style="margin-left:14%;">Some KDF implementations, such
+as <b>EVP_KDF−HKDF</b>(7), take an 'info' parameter
+for binding the derived key material to application−
+and context−specific information. This parameter sets
+the info, fixed info, other info or shared info argument.
+You can specify this parameter multiple times, and each
+instance will be concatenated to form the final value.</p>
+<p style="margin-left:9%;">"maclen"
+(<b>OSSL_KDF_PARAM_MAC_SIZE</b>) &lt;unsigned
+integer&gt;</p>
+<p style="margin-left:14%;">Used by implementations that
+use a MAC with a variable output size (KMAC). For those KDF
+implementations that support it, this parameter sets the MAC
+output size.</p>
+<p style="margin-left:14%; margin-top: 1em">The default
+value, if any, is implementation dependent. The length must
+never exceed what can be given with a <b>size_t</b>.</p>
+<p style="margin-left:9%;">"maxmem_bytes"
+(<b>OSSL_KDF_PARAM_SCRYPT_MAXMEM</b>) &lt;unsigned
+integer&gt;</p>
+<p style="margin-left:14%;">Memory−hard
+password−based KDF algorithms, such as scrypt, use an
+amount of memory that depends on the load factors provided
+as input. For those KDF implementations that support it,
+this <b>uint64_t</b> parameter sets an upper limit on the
+amount of memory that may be consumed while performing a key
+derivation. If this memory usage limit is exceeded because
+the load factors are chosen too high, the key derivation
+will fail.</p>
+<p style="margin-left:14%; margin-top: 1em">The default
+value is implementation dependent. The memory size must
+never exceed what can be given with a <b>size_t</b>.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_fetch()</b>
+returns a pointer to a newly fetched <b>EVP_KDF</b>, or NULL
+if allocation failed.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_get0_provider()</b>
+returns a pointer to the provider for the KDF, or NULL on
+error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_up_ref()</b>
+returns 1 on success, 0 on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_CTX_new()</b>
+returns either the newly allocated <b>EVP_KDF_CTX</b>
+structure or NULL if an error occurred.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_CTX_free()</b>
+and <b>EVP_KDF_CTX_reset()</b> do not return a value.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_CTX_get_kdf_size()</b>
+returns the output size. <b>SIZE_MAX</b> is returned to
+indicate that the algorithm produces a variable amount of
+output; 0 to indicate failure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_get0_name()</b>
+returns the name of the KDF, or NULL on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_KDF_names_do_all()</b>
+returns 1 if the callback was called for all names. A return
+value of 0 means that the callback was not called for any
+names.</p>
+<p style="margin-left:9%; margin-top: 1em">The remaining
+functions return 1 for success and 0 or a negative value for
+failure. In particular, a return value of −2 indicates
+the operation is not supported by the KDF algorithm.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The KDF
+life−cycle is described in
+<b>life_cycle−kdf</b>(7). In the future, the
+transitions described there will be enforced. When this is
+done, it will not be considered a breaking change to the
+API.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Key
+Derivation Function (KDF)" in
+<b>OSSL_PROVIDER−default</b>(7),
+<b>life_cycle−kdf</b>(7).</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality was added in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2019−2024 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

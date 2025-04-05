@@ -1,0 +1,199 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:35 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>UNW_REG_STATES_ITERATE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">UNW_REG_STATES_ITERATE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#THREAD AND SIGNAL SAFETY">THREAD AND SIGNAL SAFETY</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">unw_reg_states_iterate
+−− get register state info on current
+procedure</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;libunwind.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">int
+unw_reg_states_iterate(unw_cursor_t *cp,
+unw_reg_states_callbackcb, void *token);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+unw_reg_states_iterate() routine provides information about
+the procedure that created the stack frame identified by
+argument cp. The cb argument is a pointer to a function of
+type unw_reg_states_callback which is used to return the
+information. The function unw_reg_states_callback has the
+following definition:</p>
+<p style="margin-left:9%; margin-top: 1em">int (
+*unw_reg_states_callback)(void *token, void
+*reg_states_data, size_t reg_states_data_size, unw_word_t
+start_ip, unw_word_t end_ip);</p>
+<p style="margin-left:9%; margin-top: 1em">The callback
+function may be invoked several times for each call of
+unw_reg_states_iterate. Each call is associated with an
+instruction address range and a set of instructions on how
+to update register values when returning from the procedure
+in that address range. For each invocation, the arguments to
+the callback function are: <br/>
+void * token</p>
+<p style="margin-left:18%;">The token value passed to
+unw_reg_states_callback.</p>
+<p style="margin-left:9%;">void * reg_states_data</p>
+<p style="margin-left:18%;">A pointer to data about
+updating register values. This data, or a copy of it, can be
+passed to unw_apply_reg_state.</p>
+<p style="margin-left:9%;">int reg_states_data_size</p>
+<p style="margin-left:18%;">The size of the register update
+data.</p>
+<p style="margin-left:9%;">unw_word_t start_ip</p>
+<p style="margin-left:18%;">The address of the first
+instruction of the address range.</p>
+<p style="margin-left:9%;">unw_word_t end_ip</p>
+<p style="margin-left:18%;">The address of the first
+instruction <i>beyond</i> the end of the address range.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On successful
+completion, unw_reg_states_iterate() returns 0. If the
+callback function returns a nonzero value, that indicates
+failure and the function returns immediately. Otherwise the
+negative value of one of the error codes below is
+returned.</p>
+<h2>THREAD AND SIGNAL SAFETY
+<a name="THREAD AND SIGNAL SAFETY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">unw_reg_states_iterate()
+is thread safe. If cursor cp is in the local address space,
+this routine is also safe to use from a signal handler.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">UNW_EUNSPEC</p>
+<p style="margin-left:18%;">An unspecified error
+occurred.</p>
+<p style="margin-left:9%;">UNW_ENOINFO</p>
+<p style="margin-left:18%;">Libunwind was unable to locate
+unwind−info for the procedure.</p>
+<p style="margin-left:9%;">UNW_EBADVERSION</p>
+<p style="margin-left:18%;">The unwind−info for the
+procedure has version or format that is not understood by
+libunwind.</p>
+<p style="margin-left:9%; margin-top: 1em">In addition,
+unw_reg_states_iterate() may return any error returned by
+the access_mem() call−back (see
+unw_create_addr_space(3libunwind)).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind(3libunwind),
+unw_apply_reg_state(3libunwind)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">David
+Mosberger−Tang <br/>
+Email: <b>dmosberger@gmail.com</b> <br/>
+WWW: <b>http://www.nongnu.org/libunwind/</b>.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,1004 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:43 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>IO::Uncompress::RawInflate</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">IO::Uncompress::RawInflate</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Functional Interface">Functional Interface</a><br/>
+<a href="#rawinflate $input_filename_or_reference =&gt; $output_filename_or_reference [,OPTS]">rawinflate $input_filename_or_reference =&gt; $output_filename_or_reference [,OPTS]</a><br/>
+<a href="#Notes">Notes</a><br/>
+<a href="#Optional Parameters">Optional Parameters</a><br/>
+<a href="#OneShot Examples">OneShot Examples</a><br/>
+<a href="#OO Interface">OO Interface</a><br/>
+<a href="#Constructor">Constructor</a><br/>
+<a href="#Constructor Options">Constructor Options</a><br/>
+<a href="#Methods">Methods</a><br/>
+<a href="#read">read</a><br/>
+<a href="#read">read</a><br/>
+<a href="#getline">getline</a><br/>
+<a href="#getc">getc</a><br/>
+<a href="#ungetc">ungetc</a><br/>
+<a href="#inflateSync">inflateSync</a><br/>
+<a href="#getHeaderInfo">getHeaderInfo</a><br/>
+<a href="#tell">tell</a><br/>
+<a href="#eof">eof</a><br/>
+<a href="#seek">seek</a><br/>
+<a href="#binmode">binmode</a><br/>
+<a href="#opened">opened</a><br/>
+<a href="#autoflush">autoflush</a><br/>
+<a href="#input_line_number">input_line_number</a><br/>
+<a href="#fileno">fileno</a><br/>
+<a href="#close">close</a><br/>
+<a href="#nextStream">nextStream</a><br/>
+<a href="#trailingData">trailingData</a><br/>
+<a href="#Importing">Importing</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Working with Net::FTP">Working with Net::FTP</a><br/>
+<a href="#SUPPORT">SUPPORT</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#MODIFICATION HISTORY">MODIFICATION HISTORY</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Uncompress::RawInflate
+− Read RFC 1951 files/buffers</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+IO::Uncompress::RawInflate qw(rawinflate $RawInflateError) ;
+<br/>
+my $status = rawinflate $input =&gt; $output [,OPTS] <br/>
+or die "rawinflate failed: $RawInflateError\n";
+<br/>
+my $z = IO::Uncompress::RawInflate−&gt;new( $input
+[OPTS] ) <br/>
+or die "rawinflate failed: $RawInflateError\n";
+<br/>
+$status = $z−&gt;read($buffer) <br/>
+$status = $z−&gt;read($buffer, $length) <br/>
+$status = $z−&gt;read($buffer, $length, $offset) <br/>
+$line = $z−&gt;getline() <br/>
+$char = $z−&gt;getc() <br/>
+$char = $z−&gt;ungetc() <br/>
+$char = $z−&gt;opened() <br/>
+$status = $z−&gt;inflateSync() <br/>
+$data = $z−&gt;trailingData() <br/>
+$status = $z−&gt;nextStream() <br/>
+$data = $z−&gt;getHeaderInfo() <br/>
+$z−&gt;tell() <br/>
+$z−&gt;seek($position, $whence) <br/>
+$z−&gt;binmode() <br/>
+$z−&gt;fileno() <br/>
+$z−&gt;eof() <br/>
+$z−&gt;close() <br/>
+$RawInflateError ; <br/>
+# IO::File mode <br/>
+&lt;$z&gt; <br/>
+read($z, $buffer); <br/>
+read($z, $buffer, $length); <br/>
+read($z, $buffer, $length, $offset); <br/>
+tell($z) <br/>
+seek($z, $position, $whence) <br/>
+binmode($z) <br/>
+fileno($z) <br/>
+eof($z) <br/>
+close($z)</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides a Perl interface that allows the reading of
+files/buffers that conform to RFC 1951.</p>
+<p style="margin-left:9%; margin-top: 1em">For writing RFC
+1951 files/buffers, see the companion module
+IO::Compress::RawDeflate.</p>
+<h2>Functional Interface
+<a name="Functional Interface"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A
+top−level function, "rawinflate", is
+provided to carry out "one−shot"
+uncompression between buffers and/or files. For finer
+control over the uncompression process, see the "OO
+Interface" section.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+IO::Uncompress::RawInflate qw(rawinflate $RawInflateError) ;
+<br/>
+rawinflate $input_filename_or_reference =&gt;
+$output_filename_or_reference [,OPTS] <br/>
+or die "rawinflate failed:
+$RawInflateError\n";</p>
+<p style="margin-left:9%; margin-top: 1em">The functional
+interface needs Perl5.005 or better.</p>
+<h3>rawinflate $input_filename_or_reference =&gt; $output_filename_or_reference [,OPTS]
+<a name="rawinflate $input_filename_or_reference =&gt; $output_filename_or_reference [,OPTS]"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"rawinflate"
+expects at least two parameters,
+$input_filename_or_reference and
+$output_filename_or_reference and zero or more optional
+parameters (see "Optional Parameters")</p>
+<p style="margin-left:9%; margin-top: 1em"><i>The
+$input_filename_or_reference parameter</i></p>
+<p style="margin-left:9%; margin-top: 1em">The parameter,
+$input_filename_or_reference, is used to define the source
+of the compressed data.</p>
+<p style="margin-left:9%; margin-top: 1em">It can take one
+of the following forms: <br/>
+A filename</p>
+<p style="margin-left:15%;">If the
+$input_filename_or_reference parameter is a simple scalar,
+it is assumed to be a filename. This file will be opened for
+reading and the input data will be read from it.</p>
+<p style="margin-left:9%;">A filehandle</p>
+<p style="margin-left:15%;">If the
+$input_filename_or_reference parameter is a filehandle, the
+input data will be read from it. The string '−' can be
+used as an alias for standard input.</p>
+<p style="margin-left:9%;">A scalar reference</p>
+<p style="margin-left:15%;">If $input_filename_or_reference
+is a scalar reference, the input data will be read from
+$$input_filename_or_reference.</p>
+<p style="margin-left:9%;">An array reference</p>
+<p style="margin-left:15%;">If $input_filename_or_reference
+is an array reference, each element in the array must be a
+filename.</p>
+<p style="margin-left:15%; margin-top: 1em">The input data
+will be read from each file in turn.</p>
+<p style="margin-left:15%; margin-top: 1em">The complete
+array will be walked to ensure that it only contains valid
+filenames before any data is uncompressed.</p>
+<p style="margin-left:9%;">An Input FileGlob string</p>
+<p style="margin-left:15%;">If $input_filename_or_reference
+is a string that is delimited by the characters
+"&lt;" and "&gt;" "rawinflate"
+will assume that it is an <i>input fileglob string</i>. The
+input is the list of files that match the fileglob.</p>
+<p style="margin-left:15%; margin-top: 1em">See
+File::GlobMapper for more details.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+$input_filename_or_reference parameter is any other type,
+"undef" will be returned.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>The
+$output_filename_or_reference parameter</i></p>
+<p style="margin-left:9%; margin-top: 1em">The parameter
+$output_filename_or_reference is used to control the
+destination of the uncompressed data. This parameter can
+take one of these forms. <br/>
+A filename</p>
+<p style="margin-left:15%;">If the
+$output_filename_or_reference parameter is a simple scalar,
+it is assumed to be a filename. This file will be opened for
+writing and the uncompressed data will be written to it.</p>
+<p style="margin-left:9%;">A filehandle</p>
+<p style="margin-left:15%;">If the
+$output_filename_or_reference parameter is a filehandle, the
+uncompressed data will be written to it. The string
+'−' can be used as an alias for standard output.</p>
+<p style="margin-left:9%;">A scalar reference</p>
+<p style="margin-left:15%;">If
+$output_filename_or_reference is a scalar reference, the
+uncompressed data will be stored in
+$$output_filename_or_reference.</p>
+<p style="margin-left:9%;">An Array Reference</p>
+<p style="margin-left:15%;">If
+$output_filename_or_reference is an array reference, the
+uncompressed data will be pushed onto the array.</p>
+<p style="margin-left:9%;">An Output FileGlob</p>
+<p style="margin-left:15%;">If
+$output_filename_or_reference is a string that is delimited
+by the characters "&lt;" and "&gt;"
+"rawinflate" will assume that it is an <i>output
+fileglob string</i>. The output is the list of files that
+match the fileglob.</p>
+<p style="margin-left:15%; margin-top: 1em">When
+$output_filename_or_reference is an fileglob string,
+$input_filename_or_reference must also be a fileglob string.
+Anything else is an error.</p>
+<p style="margin-left:15%; margin-top: 1em">See
+File::GlobMapper for more details.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+$output_filename_or_reference parameter is any other type,
+"undef" will be returned.</p>
+<h3>Notes
+<a name="Notes"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">When
+$input_filename_or_reference maps to multiple compressed
+files/buffers and $output_filename_or_reference is a single
+file/buffer, after uncompression
+$output_filename_or_reference will contain a concatenation
+of all the uncompressed data from each of the input
+files/buffers.</p>
+<h3>Optional Parameters
+<a name="Optional Parameters"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The optional
+parameters for the one−shot function
+"rawinflate" are (for the most part) identical to
+those used with the OO interface defined in the
+"Constructor Options" section. The exceptions are
+listed below <br/>
+"AutoClose =&gt; 0|1"</p>
+<p style="margin-left:15%;">This option applies to any
+input or output data streams to "rawinflate" that
+are filehandles.</p>
+<p style="margin-left:15%; margin-top: 1em">If
+"AutoClose" is specified, and the value is true,
+it will result in all input and/or output filehandles being
+closed once "rawinflate" has completed.</p>
+<p style="margin-left:15%; margin-top: 1em">This parameter
+defaults to 0.</p>
+<p style="margin-left:9%;">"BinModeOut =&gt;
+0|1"</p>
+<p style="margin-left:15%;">This option is now a
+no−op. All files will be written in binmode.</p>
+<p style="margin-left:9%;">"Append =&gt; 0|1"</p>
+<p style="margin-left:15%;">The behaviour of this option is
+dependent on the type of output data stream.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="15%"></td>
+<td width="2%">
+<p>•</p></td>
+<td width="5%"></td>
+<td width="10%">
+<p>A Buffer</p></td>
+<td width="68%">
+</td></tr>
+</table>
+<p style="margin-left:22%; margin-top: 1em">If
+"Append" is enabled, all uncompressed data will be
+append to the end of the output buffer. Otherwise the output
+buffer will be cleared before any uncompressed data is
+written to it.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="15%"></td>
+<td width="2%">
+<p style="margin-top: 1em">•</p></td>
+<td width="5%"></td>
+<td width="13%">
+<p style="margin-top: 1em">A Filename</p></td>
+<td width="65%">
+</td></tr>
+</table>
+<p style="margin-left:22%; margin-top: 1em">If
+"Append" is enabled, the file will be opened in
+append mode. Otherwise the contents of the file, if any,
+will be truncated before any uncompressed data is written to
+it.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="15%"></td>
+<td width="2%">
+<p style="margin-top: 1em">•</p></td>
+<td width="5%"></td>
+<td width="15%">
+<p style="margin-top: 1em">A Filehandle</p></td>
+<td width="63%">
+</td></tr>
+</table>
+<p style="margin-left:22%; margin-top: 1em">If
+"Append" is enabled, the filehandle will be
+positioned to the end of the file via a call to
+"seek" before any uncompressed data is written to
+it. Otherwise the file pointer will not be moved.</p>
+<p style="margin-left:15%; margin-top: 1em">When
+"Append" is specified, and set to true, it will
+<i>append</i> all uncompressed data to the output data
+stream.</p>
+<p style="margin-left:15%; margin-top: 1em">So when the
+output is a filehandle it will carry out a seek to the eof
+before writing any uncompressed data. If the output is a
+filename, it will be opened for appending. If the output is
+a buffer, all uncompressed data will be appended to the
+existing buffer.</p>
+<p style="margin-left:15%; margin-top: 1em">Conversely when
+"Append" is not specified, or it is present and is
+set to false, it will operate as follows.</p>
+<p style="margin-left:15%; margin-top: 1em">When the output
+is a filename, it will truncate the contents of the file
+before writing any uncompressed data. If the output is a
+filehandle its position will not be changed. If the output
+is a buffer, it will be wiped before any uncompressed data
+is output.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+0.</p>
+<p style="margin-left:9%;">"MultiStream =&gt;
+0|1"</p>
+<p style="margin-left:15%;">This option is a
+no−op.</p>
+<p style="margin-left:9%;">"TrailingData =&gt;
+$scalar"</p>
+<p style="margin-left:15%;">Returns the data, if any, that
+is present immediately after the compressed data stream once
+uncompression is complete.</p>
+<p style="margin-left:15%; margin-top: 1em">This option can
+be used when there is useful information immediately
+following the compressed data stream, and you don't know the
+length of the compressed data stream.</p>
+<p style="margin-left:15%; margin-top: 1em">If the input is
+a buffer, "trailingData" will return everything
+from the end of the compressed data stream to the end of the
+buffer.</p>
+<p style="margin-left:15%; margin-top: 1em">If the input is
+a filehandle, "trailingData" will return the data
+that is left in the filehandle input buffer once the end of
+the compressed data stream has been reached. You can then
+use the filehandle to read the rest of the input file.</p>
+<p style="margin-left:15%; margin-top: 1em">Don't bother
+using "trailingData" if the input is a
+filename.</p>
+<p style="margin-left:15%; margin-top: 1em">If you know the
+length of the compressed data stream before you start
+uncompressing, you can avoid having to use
+"trailingData" by setting the
+"InputLength" option.</p>
+<h3>OneShot Examples
+<a name="OneShot Examples"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">To read the
+contents of the file "file1.txt.1951" and write
+the uncompressed data to the file "file1.txt".</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use IO::Uncompress::RawInflate qw(rawinflate
+$RawInflateError) ; <br/>
+my $input = "file1.txt.1951"; <br/>
+my $output = "file1.txt"; <br/>
+rawinflate $input =&gt; $output <br/>
+or die "rawinflate failed:
+$RawInflateError\n";</p>
+<p style="margin-left:9%; margin-top: 1em">To read from an
+existing Perl filehandle, $input, and write the uncompressed
+data to a buffer, $buffer.</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use IO::Uncompress::RawInflate qw(rawinflate
+$RawInflateError) ; <br/>
+use IO::File ; <br/>
+my $input = IO::File−&gt;new(
+"&lt;file1.txt.1951" ) <br/>
+or die "Cannot open 'file1.txt.1951': $!\n" ; <br/>
+my $buffer ; <br/>
+rawinflate $input =&gt; \$buffer <br/>
+or die "rawinflate failed:
+$RawInflateError\n";</p>
+<p style="margin-left:9%; margin-top: 1em">To uncompress
+all files in the directory "/my/home" that match
+"*.txt.1951" and store the compressed data in the
+same directory</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use IO::Uncompress::RawInflate qw(rawinflate
+$RawInflateError) ; <br/>
+rawinflate '&lt;/my/home/*.txt.1951&gt;' =&gt;
+'&lt;/my/home/#1.txt&gt;' <br/>
+or die "rawinflate failed:
+$RawInflateError\n";</p>
+<p style="margin-left:9%; margin-top: 1em">and if you want
+to compress each file one at a time, this will do the
+trick</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use IO::Uncompress::RawInflate qw(rawinflate
+$RawInflateError) ; <br/>
+for my $input ( glob "/my/home/*.txt.1951" ) <br/>
+{ <br/>
+my $output = $input; <br/>
+$output =˜ s/.1951// ; <br/>
+rawinflate $input =&gt; $output <br/>
+or die "Error compressing '$input':
+$RawInflateError\n"; <br/>
+}</p>
+<h2>OO Interface
+<a name="OO Interface"></a>
+</h2>
+<h3>Constructor
+<a name="Constructor"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The format of
+the constructor for IO::Uncompress::RawInflate is shown
+below</p>
+<p style="margin-left:9%; margin-top: 1em">my $z =
+IO::Uncompress::RawInflate−&gt;new( $input [OPTS] )
+<br/>
+or die "IO::Uncompress::RawInflate failed:
+$RawInflateError\n";</p>
+<p style="margin-left:9%; margin-top: 1em">The constructor
+takes one mandatory parameter, $input, defined below, and
+zero or more "OPTS", defined in "Constructor
+Options".</p>
+<p style="margin-left:9%; margin-top: 1em">Returns an
+"IO::Uncompress::RawInflate" object on success and
+undef on failure. The variable $RawInflateError will contain
+an error message on failure.</p>
+<p style="margin-left:9%; margin-top: 1em">If you are
+running Perl 5.005 or better the object, $z, returned from
+IO::Uncompress::RawInflate can be used exactly like an
+IO::File filehandle. This means that all normal input file
+operations can be carried out with $z. For example, to read
+a line from a compressed file/buffer you can use either of
+these forms</p>
+<p style="margin-left:9%; margin-top: 1em">$line =
+$z−&gt;getline(); <br/>
+$line = &lt;$z&gt;;</p>
+<p style="margin-left:9%; margin-top: 1em">Below is a
+simple exaple of using the OO interface to read the
+compressed file "myfile.1951" and write its
+contents to stdout.</p>
+<p style="margin-left:9%; margin-top: 1em">my $filename =
+"myfile.1951"; <br/>
+my $z = IO::Uncompress::RawInflate−&gt;new($filename)
+<br/>
+or die "IO::Uncompress::RawInflate failed:
+$RawInflateError\n"; <br/>
+while (&lt;$z&gt;) { <br/>
+print $_; <br/>
+} <br/>
+$z−&gt;close();</p>
+<p style="margin-left:9%; margin-top: 1em">See
+"EXAMPLES" for further examples</p>
+<p style="margin-left:9%; margin-top: 1em">The mandatory
+parameter $input is used to determine the source of the
+compressed data. This parameter can take one of three forms.
+<br/>
+A filename</p>
+<p style="margin-left:15%;">If the $input parameter is a
+scalar, it is assumed to be a filename. This file will be
+opened for reading and the compressed data will be read from
+it.</p>
+<p style="margin-left:9%;">A filehandle</p>
+<p style="margin-left:15%;">If the $input parameter is a
+filehandle, the compressed data will be read from it. The
+string '−' can be used as an alias for standard
+input.</p>
+<p style="margin-left:9%;">A scalar reference</p>
+<p style="margin-left:15%;">If $input is a scalar
+reference, the compressed data will be read from
+$$input.</p>
+<h3>Constructor Options
+<a name="Constructor Options"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The option names
+defined below are case insensitive and can be optionally
+prefixed by a '−'. So all of the following are
+valid</p>
+<p style="margin-left:9%; margin-top: 1em">−AutoClose
+<br/>
+−autoclose <br/>
+AUTOCLOSE <br/>
+autoclose</p>
+<p style="margin-left:9%; margin-top: 1em">OPTS is a
+combination of the following options: <br/>
+"AutoClose =&gt; 0|1"</p>
+<p style="margin-left:15%;">This option is only valid when
+the $input parameter is a filehandle. If specified, and the
+value is true, it will result in the file being closed once
+either the "close" method is called or the
+IO::Uncompress::RawInflate object is destroyed.</p>
+<p style="margin-left:15%; margin-top: 1em">This parameter
+defaults to 0.</p>
+<p style="margin-left:9%;">"MultiStream =&gt;
+0|1"</p>
+<p style="margin-left:15%;">Allows multiple concatenated
+compressed streams to be treated as a single compressed
+stream. Decompression will stop once either the end of the
+file/buffer is reached, an error is encountered (premature
+eof, corrupt compressed data) or the end of a stream is not
+immediately followed by the start of another stream.</p>
+<p style="margin-left:15%; margin-top: 1em">This parameter
+defaults to 0.</p>
+<p style="margin-left:9%;">"Prime =&gt;
+$string"</p>
+<p style="margin-left:15%;">This option will uncompress the
+contents of $string before processing the input
+file/buffer.</p>
+<p style="margin-left:15%; margin-top: 1em">This option can
+be useful when the compressed data is embedded in another
+file/data structure and it is not possible to work out where
+the compressed data begins without having to read the first
+few bytes. If this is the case, the uncompression can be
+<i>primed</i> with these bytes using this option.</p>
+<p style="margin-left:9%;">"Transparent =&gt;
+0|1"</p>
+<p style="margin-left:15%;">If this option is set and the
+input file/buffer is not compressed data, the module will
+allow reading of it anyway.</p>
+<p style="margin-left:15%; margin-top: 1em">In addition, if
+the input file/buffer does contain compressed data and there
+is non−compressed data immediately following it,
+setting this option will make this module treat the whole
+file/buffer as a single data stream.</p>
+<p style="margin-left:15%; margin-top: 1em">This option
+defaults to 1.</p>
+<p style="margin-left:9%;">"BlockSize =&gt;
+$num"</p>
+<p style="margin-left:15%;">When reading the compressed
+input data, IO::Uncompress::RawInflate will read it in
+blocks of $num bytes.</p>
+<p style="margin-left:15%; margin-top: 1em">This option
+defaults to 4096.</p>
+<p style="margin-left:9%;">"InputLength =&gt;
+$size"</p>
+<p style="margin-left:15%;">When present this option will
+limit the number of compressed bytes read from the input
+file/buffer to $size. This option can be used in the
+situation where there is useful data directly after the
+compressed data stream and you know beforehand the exact
+length of the compressed data stream.</p>
+<p style="margin-left:15%; margin-top: 1em">This option is
+mostly used when reading from a filehandle, in which case
+the file pointer will be left pointing to the first byte
+directly after the compressed data stream.</p>
+<p style="margin-left:15%; margin-top: 1em">This option
+defaults to off.</p>
+<p style="margin-left:9%;">"Append =&gt; 0|1"</p>
+<p style="margin-left:15%;">This option controls what the
+"read" method does with uncompressed data.</p>
+<p style="margin-left:15%; margin-top: 1em">If set to 1,
+all uncompressed data will be appended to the output
+parameter of the "read" method.</p>
+<p style="margin-left:15%; margin-top: 1em">If set to 0,
+the contents of the output parameter of the "read"
+method will be overwritten by the uncompressed data.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+0.</p>
+<p style="margin-left:9%;">"Strict =&gt; 0|1"</p>
+<p style="margin-left:15%;">This option is a
+no−op.</p>
+<h2>Methods
+<a name="Methods"></a>
+</h2>
+<h3>read
+<a name="read"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">$status =
+$z−&gt;read($buffer)</p>
+<p style="margin-left:9%; margin-top: 1em">Reads a block of
+compressed data (the size of the compressed block is
+determined by the "Buffer" option in the
+constructor), uncompresses it and writes any uncompressed
+data into $buffer. If the "Append" parameter is
+set in the constructor, the uncompressed data will be
+appended to the $buffer parameter. Otherwise $buffer will be
+overwritten.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+number of uncompressed bytes written to $buffer, zero if eof
+or a negative number on error.</p>
+<h3>read
+<a name="read"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">$status =
+$z−&gt;read($buffer, $length) <br/>
+$status = $z−&gt;read($buffer, $length, $offset) <br/>
+$status = read($z, $buffer, $length) <br/>
+$status = read($z, $buffer, $length, $offset)</p>
+<p style="margin-left:9%; margin-top: 1em">Attempt to read
+$length bytes of uncompressed data into $buffer.</p>
+<p style="margin-left:9%; margin-top: 1em">The main
+difference between this form of the "read" method
+and the previous one, is that this one will attempt to
+return <i>exactly</i> $length bytes. The only circumstances
+that this function will not is if end−of−file or
+an IO error is encountered.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+number of uncompressed bytes written to $buffer, zero if eof
+or a negative number on error.</p>
+<h3>getline
+<a name="getline"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">$line =
+$z−&gt;getline() <br/>
+$line = &lt;$z&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">Reads a single
+line.</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+fully supports the use of the variable $/ (or
+$INPUT_RECORD_SEPARATOR or $RS when "English" is
+in use) to determine what constitutes an end of line.
+Paragraph mode, record mode and file slurp mode are all
+supported.</p>
+<h3>getc
+<a name="getc"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">$char =
+$z−&gt;getc()</p>
+<p style="margin-left:9%; margin-top: 1em">Read a single
+character.</p>
+<h3>ungetc
+<a name="ungetc"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">$char =
+$z−&gt;ungetc($string)</p>
+<h3>inflateSync
+<a name="inflateSync"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">$status =
+$z−&gt;inflateSync()</p>
+<p style="margin-left:9%; margin-top: 1em">TODO</p>
+<h3>getHeaderInfo
+<a name="getHeaderInfo"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">$hdr =
+$z−&gt;getHeaderInfo(); <br/>
+@hdrs = $z−&gt;getHeaderInfo();</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns either a hash reference (in scalar context) or a
+list or hash references (in array context) that contains
+information about each of the header fields in the
+compressed data stream(s).</p>
+<h3>tell
+<a name="tell"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">$z−&gt;tell()
+<br/>
+tell $z</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+uncompressed file offset.</p>
+<h3>eof
+<a name="eof"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">$z−&gt;eof();
+<br/>
+eof($z);</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+the end of the compressed input stream has been reached.</p>
+<h3>seek
+<a name="seek"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$z−&gt;seek($position,
+$whence); <br/>
+seek($z, $position, $whence);</p>
+<p style="margin-left:9%; margin-top: 1em">Provides a
+sub−set of the "seek" functionality, with
+the restriction that it is only legal to seek forward in the
+input file/buffer. It is a fatal error to attempt to seek
+backward.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that the
+implementation of "seek" in this module does not
+provide true random access to a compressed file/buffer. It
+works by uncompressing data from the current offset in the
+file/buffer until it reaches the uncompressed offset
+specified in the parameters to "seek". For very
+small files this may be acceptable behaviour. For large
+files it may cause an unacceptable delay.</p>
+<p style="margin-left:9%; margin-top: 1em">The $whence
+parameter takes one the usual values, namely SEEK_SET,
+SEEK_CUR or SEEK_END.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns 1 on
+success, 0 on failure.</p>
+<h3>binmode
+<a name="binmode"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">$z−&gt;binmode
+<br/>
+binmode $z ;</p>
+<p style="margin-left:9%; margin-top: 1em">This is a noop
+provided for completeness.</p>
+<h3>opened
+<a name="opened"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$z−&gt;opened()</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+the object currently refers to a opened file/buffer.</p>
+<h3>autoflush
+<a name="autoflush"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $prev =
+$z−&gt;autoflush() <br/>
+my $prev = $z−&gt;autoflush(EXPR)</p>
+<p style="margin-left:9%; margin-top: 1em">If the $z object
+is associated with a file or a filehandle, this method
+returns the current autoflush setting for the underlying
+filehandle. If "EXPR" is present, and is
+non−zero, it will enable flushing after every
+write/print operation.</p>
+<p style="margin-left:9%; margin-top: 1em">If $z is
+associated with a buffer, this method has no effect and
+always returns "undef".</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note</b> that
+the special variable $| <b>cannot</b> be used to set or
+retrieve the autoflush setting.</p>
+<h3>input_line_number
+<a name="input_line_number"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$z−&gt;input_line_number()
+<br/>
+$z−&gt;input_line_number(EXPR)</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+current uncompressed line number. If "EXPR" is
+present it has the effect of setting the line number. Note
+that setting the line number does not change the current
+position within the file/buffer being read.</p>
+<p style="margin-left:9%; margin-top: 1em">The contents of
+$/ are used to determine what constitutes a line
+terminator.</p>
+<h3>fileno
+<a name="fileno"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$z−&gt;fileno()
+<br/>
+fileno($z)</p>
+<p style="margin-left:9%; margin-top: 1em">If the $z object
+is associated with a file or a filehandle,
+"fileno" will return the underlying file
+descriptor. Once the "close" method is called
+"fileno" will return "undef".</p>
+<p style="margin-left:9%; margin-top: 1em">If the $z object
+is associated with a buffer, this method will return
+"undef".</p>
+<h3>close
+<a name="close"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$z−&gt;close()
+; <br/>
+close $z ;</p>
+<p style="margin-left:9%; margin-top: 1em">Closes the
+output file/buffer.</p>
+<p style="margin-left:9%; margin-top: 1em">For most
+versions of Perl this method will be automatically invoked
+if the IO::Uncompress::RawInflate object is destroyed
+(either explicitly or by the variable with the reference to
+the object going out of scope). The exceptions are Perl
+versions 5.005 through 5.00504 and 5.8.0. In these cases,
+the "close" method will be called automatically,
+but not until global destruction of all live objects when
+the program is terminating.</p>
+<p style="margin-left:9%; margin-top: 1em">Therefore, if
+you want your scripts to be able to run on all versions of
+Perl, you should call "close" explicitly and not
+rely on automatic closing.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true on
+success, otherwise 0.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+"AutoClose" option has been enabled when the
+IO::Uncompress::RawInflate object was created, and the
+object is associated with a file, the underlying file will
+also be closed.</p>
+<h3>nextStream
+<a name="nextStream"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">my $status =
+$z−&gt;nextStream();</p>
+<p style="margin-left:9%; margin-top: 1em">Skips to the
+next compressed data stream in the input file/buffer. If a
+new compressed data stream is found, the eof marker will be
+cleared and $. will be reset to 0.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns 1 if a
+new stream was found, 0 if none was found, and −1 if
+an error was encountered.</p>
+<h3>trailingData
+<a name="trailingData"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">my $data =
+$z−&gt;trailingData();</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+data, if any, that is present immediately after the
+compressed data stream once uncompression is complete. It
+only makes sense to call this method once the end of the
+compressed data stream has been encountered.</p>
+<p style="margin-left:9%; margin-top: 1em">This option can
+be used when there is useful information immediately
+following the compressed data stream, and you don't know the
+length of the compressed data stream.</p>
+<p style="margin-left:9%; margin-top: 1em">If the input is
+a buffer, "trailingData" will return everything
+from the end of the compressed data stream to the end of the
+buffer.</p>
+<p style="margin-left:9%; margin-top: 1em">If the input is
+a filehandle, "trailingData" will return the data
+that is left in the filehandle input buffer once the end of
+the compressed data stream has been reached. You can then
+use the filehandle to read the rest of the input file.</p>
+<p style="margin-left:9%; margin-top: 1em">Don't bother
+using "trailingData" if the input is a
+filename.</p>
+<p style="margin-left:9%; margin-top: 1em">If you know the
+length of the compressed data stream before you start
+uncompressing, you can avoid having to use
+"trailingData" by setting the
+"InputLength" option in the constructor.</p>
+<h2>Importing
+<a name="Importing"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">No symbolic
+constants are required by IO::Uncompress::RawInflate at
+present.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p>:all</p></td>
+<td width="1%"></td>
+<td width="80%">
+<p>Imports "rawinflate" and $RawInflateError.
+Same as doing this</p></td>
+<td width="5%">
+</td></tr>
+</table>
+<p style="margin-left:15%; margin-top: 1em">use
+IO::Uncompress::RawInflate qw(rawinflate $RawInflateError)
+;</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<h3>Working with Net::FTP
+<a name="Working with Net::FTP"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">See
+IO::Compress::FAQ</p>
+<h2>SUPPORT
+<a name="SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">General
+feedback/questions/bug reports should be sent to
+&lt;https://github.com/pmqs/IO−Compress/issues&gt;
+(preferred) or
+&lt;https://rt.cpan.org/Public/Dist/Display.html?Name=IO−Compress&gt;.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Compress::Zlib,
+IO::Compress::Gzip, IO::Uncompress::Gunzip,
+IO::Compress::Deflate, IO::Uncompress::Inflate,
+IO::Compress::RawDeflate, IO::Compress::Bzip2,
+IO::Uncompress::Bunzip2, IO::Compress::Lzma,
+IO::Uncompress::UnLzma, IO::Compress::Xz,
+IO::Uncompress::UnXz, IO::Compress::Lzip,
+IO::Uncompress::UnLzip, IO::Compress::Lzop,
+IO::Uncompress::UnLzop, IO::Compress::Lzf,
+IO::Uncompress::UnLzf, IO::Compress::Zstd,
+IO::Uncompress::UnZstd, IO::Uncompress::AnyInflate,
+IO::Uncompress::AnyUncompress</p>
+<p style="margin-left:9%; margin-top: 1em">IO::Compress::FAQ</p>
+<p style="margin-left:9%; margin-top: 1em">File::GlobMapper,
+Archive::Zip, Archive::Tar, IO::Zlib</p>
+<p style="margin-left:9%; margin-top: 1em">For RFC 1950,
+1951 and 1952 see
+&lt;https://datatracker.ietf.org/doc/html/rfc1950&gt;,
+&lt;https://datatracker.ietf.org/doc/html/rfc1951&gt; and
+&lt;https://datatracker.ietf.org/doc/html/rfc1952&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>zlib</i>
+compression library was written by Jean−loup Gailly
+"gzip@prep.ai.mit.edu" and Mark Adler
+"madler@alumni.caltech.edu".</p>
+<p style="margin-left:9%; margin-top: 1em">The primary site
+for the <i>zlib</i> compression library is
+&lt;http://www.zlib.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">The primary site
+for the <i>zlib−ng</i> compression library is
+&lt;https://github.com/zlib−ng/zlib−ng&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">The primary site
+for gzip is &lt;http://www.gzip.org&gt;.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module was
+written by Paul Marquess, "pmqs@cpan.org".</p>
+<h2>MODIFICATION HISTORY
+<a name="MODIFICATION HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the Changes
+file.</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+2005−2024 Paul Marquess. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

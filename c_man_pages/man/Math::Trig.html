@@ -1,0 +1,673 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:19 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Math::Trig</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Math::Trig</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#TRIGONOMETRIC FUNCTIONS">TRIGONOMETRIC FUNCTIONS</a><br/>
+<a href="#ERRORS DUE TO DIVISION BY ZERO">ERRORS DUE TO DIVISION BY ZERO</a><br/>
+<a href="#SIMPLE (REAL) ARGUMENTS, COMPLEX RESULTS">SIMPLE (REAL) ARGUMENTS, COMPLEX RESULTS</a><br/>
+<a href="#PLANE ANGLE CONVERSIONS">PLANE ANGLE CONVERSIONS</a><br/>
+<a href="#RADIAL COORDINATE CONVERSIONS">RADIAL COORDINATE CONVERSIONS</a><br/>
+<a href="#COORDINATE SYSTEMS">COORDINATE SYSTEMS</a><br/>
+<a href="#3−D ANGLE CONVERSIONS">3−D ANGLE CONVERSIONS</a><br/>
+<a href="#GREAT CIRCLE DISTANCES AND DIRECTIONS">GREAT CIRCLE DISTANCES AND DIRECTIONS</a><br/>
+<a href="#great_circle_distance">great_circle_distance</a><br/>
+<a href="#great_circle_direction">great_circle_direction</a><br/>
+<a href="#great_circle_bearing">great_circle_bearing</a><br/>
+<a href="#great_circle_destination">great_circle_destination</a><br/>
+<a href="#great_circle_midpoint">great_circle_midpoint</a><br/>
+<a href="#great_circle_waypoint">great_circle_waypoint</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#CAVEAT FOR GREAT CIRCLE FORMULAS">CAVEAT FOR GREAT CIRCLE FORMULAS</a><br/>
+<a href="#Real-valued asin and acos">Real-valued asin and acos</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Math::Trig
+− trigonometric functions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Math::Trig;
+<br/>
+$x = tan(0.9); <br/>
+$y = acos(3.7); <br/>
+$z = asin(2.4); <br/>
+$halfpi = pi/2; <br/>
+$rad = deg2rad(120); <br/>
+# Import constants pi2, pi4, pip2, pip4 (2*pi, 4*pi, pi/2,
+pi/4). <br/>
+use Math::Trig ':pi'; <br/>
+# Import the conversions between
+cartesian/spherical/cylindrical. <br/>
+use Math::Trig ':radial'; <br/>
+# Import the great circle formulas. <br/>
+use Math::Trig ':great_circle';</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Math::Trig"
+defines many trigonometric functions not defined by the core
+Perl which defines only the sin() and cos(). The constant
+<b>pi</b> is also defined as are a few convenience functions
+for angle conversions, and <i>great circle formulas</i> for
+spherical movement.</p>
+<h2>TRIGONOMETRIC FUNCTIONS
+<a name="TRIGONOMETRIC FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The tangent</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p><b>tan</b></p></td>
+<td width="87%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The cofunctions
+of the sine, cosine, and tangent (cosec/csc and cotan/cot
+are aliases)</p>
+<p style="margin-left:9%; margin-top: 1em"><b>csc</b>,
+<b>cosec</b>, <b>sec</b>, <b>sec</b>, <b>cot</b>,
+<b>cotan</b></p>
+<p style="margin-left:9%; margin-top: 1em">The arcus (also
+known as the inverse) functions of the sine, cosine, and
+tangent</p>
+<p style="margin-left:9%; margin-top: 1em"><b>asin</b>,
+<b>acos</b>, <b>atan</b></p>
+<p style="margin-left:9%; margin-top: 1em">The principal
+value of the arc tangent of y/x</p>
+<p style="margin-left:9%; margin-top: 1em"><b>atan2</b>(y,
+x)</p>
+<p style="margin-left:9%; margin-top: 1em">The arcus
+cofunctions of the sine, cosine, and tangent (acosec/acsc
+and acotan/acot are aliases). Note that atan2(0, 0) is not
+well-defined.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>acsc</b>,
+<b>acosec</b>, <b>asec</b>, <b>acot</b>, <b>acotan</b></p>
+<p style="margin-left:9%; margin-top: 1em">The hyperbolic
+sine, cosine, and tangent</p>
+<p style="margin-left:9%; margin-top: 1em"><b>sinh</b>,
+<b>cosh</b>, <b>tanh</b></p>
+<p style="margin-left:9%; margin-top: 1em">The cofunctions
+of the hyperbolic sine, cosine, and tangent (cosech/csch and
+cotanh/coth are aliases)</p>
+<p style="margin-left:9%; margin-top: 1em"><b>csch</b>,
+<b>cosech</b>, <b>sech</b>, <b>coth</b>, <b>cotanh</b></p>
+<p style="margin-left:9%; margin-top: 1em">The area (also
+known as the inverse) functions of the hyperbolic sine,
+cosine, and tangent</p>
+<p style="margin-left:9%; margin-top: 1em"><b>asinh</b>,
+<b>acosh</b>, <b>atanh</b></p>
+<p style="margin-left:9%; margin-top: 1em">The area
+cofunctions of the hyperbolic sine, cosine, and tangent
+(acsch/acosech and acoth/acotanh are aliases)</p>
+<p style="margin-left:9%; margin-top: 1em"><b>acsch</b>,
+<b>acosech</b>, <b>asech</b>, <b>acoth</b>,
+<b>acotanh</b></p>
+<p style="margin-left:9%; margin-top: 1em">The
+trigonometric constant <b>pi</b> and some of handy multiples
+of it are also defined.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pi, pi2, pi4,
+pip2, pip4</b></p>
+<h3>ERRORS DUE TO DIVISION BY ZERO
+<a name="ERRORS DUE TO DIVISION BY ZERO"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions</p>
+<p style="margin-left:9%; margin-top: 1em">acoth <br/>
+acsc <br/>
+acsch <br/>
+asec <br/>
+asech <br/>
+atanh <br/>
+cot <br/>
+coth <br/>
+csc <br/>
+csch <br/>
+sec <br/>
+sech <br/>
+tan <br/>
+tanh</p>
+<p style="margin-left:9%; margin-top: 1em">cannot be
+computed for all arguments because that would mean dividing
+by zero or taking logarithm of zero. These situations cause
+fatal runtime errors looking like this</p>
+<p style="margin-left:9%; margin-top: 1em">cot(0): Division
+by zero. <br/>
+(Because in the definition of cot(0), the divisor sin(0) is
+0) <br/>
+Died at ...</p>
+<p style="margin-left:9%; margin-top: 1em">or</p>
+<p style="margin-left:9%; margin-top: 1em">atanh(−1):
+Logarithm of zero. <br/>
+Died at...</p>
+<p style="margin-left:9%; margin-top: 1em">For the
+"csc", "cot", "asec",
+"acsc", "acot", "csch",
+"coth", "asech", "acsch", the
+argument cannot be 0 (zero). For the "atanh",
+"acoth", the argument cannot be 1 (one). For the
+"atanh", "acoth", the argument cannot be
+−1 (minus one). For the "tan",
+"sec", "tanh", "sech", the
+argument cannot be <i>pi/2 + k * pi</i>, where <i>k</i> is
+any integer.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+atan2(0, 0) is not well-defined.</p>
+<h3>SIMPLE (REAL) ARGUMENTS, COMPLEX RESULTS
+<a name="SIMPLE (REAL) ARGUMENTS, COMPLEX RESULTS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Please note that
+some of the trigonometric functions can break out from the
+<b>real axis</b> into the <b>complex plane</b>. For example
+asin(2) has no definition for plain real numbers but it has
+definition for complex numbers.</p>
+<p style="margin-left:9%; margin-top: 1em">In Perl terms
+this means that supplying the usual Perl numbers (also known
+as scalars, please see perldata) as input for the
+trigonometric functions might produce as output results that
+no more are simple real numbers: instead they are complex
+numbers.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"Math::Trig" handles this by using the
+"Math::Complex" package which knows how to handle
+complex numbers, please see Math::Complex for more
+information. In practice you need not to worry about getting
+complex numbers as results because the
+"Math::Complex" takes care of details like for
+example how to display complex numbers. For example:</p>
+<p style="margin-left:9%; margin-top: 1em">print asin(2),
+"\n";</p>
+<p style="margin-left:9%; margin-top: 1em">should produce
+something like this (take or leave few last decimals):</p>
+<p style="margin-left:9%; margin-top: 1em">1.5707963267949−1.31695789692482i</p>
+<p style="margin-left:9%; margin-top: 1em">That is, a
+complex number with the real part of approximately 1.571 and
+the imaginary part of approximately −1.317.</p>
+<h2>PLANE ANGLE CONVERSIONS
+<a name="PLANE ANGLE CONVERSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">(Plane,
+2−dimensional) angles may be converted with the
+following functions. <br/>
+deg2rad</p>
+<p style="margin-left:14%;">$radians =
+deg2rad($degrees);</p>
+<p style="margin-left:9%;">grad2rad</p>
+<p style="margin-left:14%;">$radians =
+grad2rad($gradians);</p>
+<p style="margin-left:9%;">rad2deg</p>
+<p style="margin-left:14%;">$degrees =
+rad2deg($radians);</p>
+<p style="margin-left:9%;">grad2deg</p>
+<p style="margin-left:14%;">$degrees =
+grad2deg($gradians);</p>
+<p style="margin-left:9%;">deg2grad</p>
+<p style="margin-left:14%;">$gradians =
+deg2grad($degrees);</p>
+<p style="margin-left:9%;">rad2grad</p>
+<p style="margin-left:14%;">$gradians =
+rad2grad($radians);</p>
+<p style="margin-left:9%; margin-top: 1em">The full circle
+is 2 <i>pi</i> radians or <i>360</i> degrees or <i>400</i>
+gradians. The result is by default wrapped to be inside the
+[0, {2pi,360,400}] circle. If you don’t want this,
+supply a true second argument:</p>
+<p style="margin-left:9%; margin-top: 1em">$zillions_of_radians
+= deg2rad($zillions_of_degrees, 1); <br/>
+$negative_degrees = rad2deg($negative_radians, 1);</p>
+<p style="margin-left:9%; margin-top: 1em">You can also do
+the wrapping explicitly by <b>rad2rad()</b>,
+<b>deg2deg()</b>, and <b>grad2grad()</b>. <br/>
+rad2rad</p>
+<p style="margin-left:14%;">$radians_wrapped_by_2pi =
+rad2rad($radians);</p>
+<p style="margin-left:9%;">deg2deg</p>
+<p style="margin-left:14%;">$degrees_wrapped_by_360 =
+deg2deg($degrees);</p>
+<p style="margin-left:9%;">grad2grad</p>
+<p style="margin-left:14%;">$gradians_wrapped_by_400 =
+grad2grad($gradians);</p>
+<h2>RADIAL COORDINATE CONVERSIONS
+<a name="RADIAL COORDINATE CONVERSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Radial
+coordinate systems</b> are the <b>spherical</b> and the
+<b>cylindrical</b> systems, explained shortly in more
+detail.</p>
+<p style="margin-left:9%; margin-top: 1em">You can import
+radial coordinate conversion functions by using the
+":radial" tag:</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::Trig
+':radial'; <br/>
+($rho, $theta, $z) = cartesian_to_cylindrical($x, $y, $z);
+<br/>
+($rho, $theta, $phi) = cartesian_to_spherical($x, $y, $z);
+<br/>
+($x, $y, $z) = cylindrical_to_cartesian($rho, $theta, $z);
+<br/>
+($rho_s, $theta, $phi) = cylindrical_to_spherical($rho_c,
+$theta, $z); <br/>
+($x, $y, $z) = spherical_to_cartesian($rho, $theta, $phi);
+<br/>
+($rho_c, $theta, $z) = spherical_to_cylindrical($rho_s,
+$theta, $phi);</p>
+<p style="margin-left:9%; margin-top: 1em"><b>All angles
+are in radians</b>.</p>
+<h3>COORDINATE SYSTEMS
+<a name="COORDINATE SYSTEMS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Cartesian</b>
+coordinates are the usual rectangular <i>(x, y,
+z)</i>−coordinates.</p>
+<p style="margin-left:9%; margin-top: 1em">Spherical
+coordinates, <i>(rho, theta, phi)</i>, are three-dimensional
+coordinates which define a point in three-dimensional space.
+They are based on a sphere surface. The radius of the sphere
+is <b>rho</b>, also known as the <i>radial</i> coordinate.
+The angle in the <i>xy</i>−plane (around the
+<i>z</i>−axis) is <b>theta</b>, also known as the
+<i>azimuthal</i> coordinate. The angle from the
+<i>z</i>−axis is <b>phi</b>, also known as the
+<i>polar</i> coordinate. The North Pole is therefore <i>rho,
+0, 0</i>, and the Gulf of Guinea (think of the missing big
+chunk of Africa) <i>rho, 0, pi/2</i>. In geographical terms
+<i>phi</i> is latitude (northward positive, southward
+negative) and <i>theta</i> is longitude (eastward positive,
+westward negative).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BEWARE</b>:
+some texts define <i>theta</i> and <i>phi</i> the other way
+round, some texts define the <i>phi</i> to start from the
+horizontal plane, some texts use <i>r</i> in place of
+<i>rho</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Cylindrical
+coordinates, <i>(rho, theta, z)</i>, are three-dimensional
+coordinates which define a point in three-dimensional space.
+They are based on a cylinder surface. The radius of the
+cylinder is <b>rho</b>, also known as the <i>radial</i>
+coordinate. The angle in the <i>xy</i>−plane (around
+the <i>z</i>−axis) is <b>theta</b>, also known as the
+<i>azimuthal</i> coordinate. The third coordinate is the
+<i>z</i>, pointing up from the <b>theta</b>−plane.</p>
+<h3>3−D ANGLE CONVERSIONS
+<a name="3−D ANGLE CONVERSIONS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Conversions to
+and from spherical and cylindrical coordinates are
+available. Please notice that the conversions are not
+necessarily reversible because of the equalities like
+<i>pi</i> angles being equal to <i>−pi</i> angles.
+<br/>
+cartesian_to_cylindrical</p>
+<p style="margin-left:14%;">($rho, $theta, $z) =
+cartesian_to_cylindrical($x, $y, $z);</p>
+<p style="margin-left:9%;">cartesian_to_spherical</p>
+<p style="margin-left:14%;">($rho, $theta, $phi) =
+cartesian_to_spherical($x, $y, $z);</p>
+<p style="margin-left:9%;">cylindrical_to_cartesian</p>
+<p style="margin-left:14%;">($x, $y, $z) =
+cylindrical_to_cartesian($rho, $theta, $z);</p>
+<p style="margin-left:9%;">cylindrical_to_spherical</p>
+<p style="margin-left:14%;">($rho_s, $theta, $phi) =
+cylindrical_to_spherical($rho_c, $theta, $z);</p>
+<p style="margin-left:14%; margin-top: 1em">Notice that
+when $z is not 0 $rho_s is not equal to $rho_c.</p>
+<p style="margin-left:9%;">spherical_to_cartesian</p>
+<p style="margin-left:14%;">($x, $y, $z) =
+spherical_to_cartesian($rho, $theta, $phi);</p>
+<p style="margin-left:9%;">spherical_to_cylindrical</p>
+<p style="margin-left:14%;">($rho_c, $theta, $z) =
+spherical_to_cylindrical($rho_s, $theta, $phi);</p>
+<p style="margin-left:14%; margin-top: 1em">Notice that
+when $z is not 0 $rho_c is not equal to $rho_s.</p>
+<h2>GREAT CIRCLE DISTANCES AND DIRECTIONS
+<a name="GREAT CIRCLE DISTANCES AND DIRECTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A great circle
+is section of a circle that contains the circle diameter:
+the shortest distance between two (non-antipodal) points on
+the spherical surface goes along the great circle connecting
+those two points.</p>
+<h3>great_circle_distance
+<a name="great_circle_distance"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+great circle distance between two points on a sphere.</p>
+<p style="margin-left:9%; margin-top: 1em">$distance =
+great_circle_distance($theta0, $phi0, $theta1, $phi1, [,
+$rho]);</p>
+<p style="margin-left:9%; margin-top: 1em">Where ($theta0,
+$phi0) and ($theta1, $phi1) are the spherical coordinates of
+the two points, respectively. The distance is in $rho units.
+The $rho is optional. It defaults to 1 (the unit
+sphere).</p>
+<p style="margin-left:9%; margin-top: 1em">If you are using
+geographic coordinates, latitude and longitude, you need to
+adjust for the fact that latitude is zero at the equator
+increasing towards the north and decreasing towards the
+south. Assuming ($lat0, $lon0) and ($lat1, $lon1) are the
+geographic coordinates in radians of the two points, the
+distance can be computed with</p>
+<p style="margin-left:9%; margin-top: 1em">$distance =
+great_circle_distance($lon0, pi/2 − $lat0, <br/>
+$lon1, pi/2 − $lat1, $rho);</p>
+<h3>great_circle_direction
+<a name="great_circle_direction"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The direction
+you must follow the great circle (also known as
+<i>bearing</i>) can be computed by the
+<b>great_circle_direction()</b> function:</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::Trig
+'great_circle_direction'; <br/>
+$direction = great_circle_direction($theta0, $phi0, $theta1,
+$phi1);</p>
+<h3>great_circle_bearing
+<a name="great_circle_bearing"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias
+’great_circle_bearing’ for
+’great_circle_direction’ is also available.</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::Trig
+'great_circle_bearing'; <br/>
+$direction = great_circle_bearing($theta0, $phi0, $theta1,
+$phi1);</p>
+<p style="margin-left:9%; margin-top: 1em">The result of
+great_circle_direction is in radians, zero indicating
+straight north, pi or −pi straight south, pi/2
+straight west, and −pi/2 straight east.</p>
+<h3>great_circle_destination
+<a name="great_circle_destination"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">You can
+inversely compute the destination if you know the starting
+point, direction, and distance:</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::Trig
+'great_circle_destination'; <br/>
+# $diro is the original direction, <br/>
+# for example from great_circle_bearing(). <br/>
+# $distance is the angular distance in radians, <br/>
+# for example from great_circle_distance(). <br/>
+# $thetad and $phid are the destination coordinates, <br/>
+# $dird is the final direction at the destination. <br/>
+($thetad, $phid, $dird) = <br/>
+great_circle_destination($theta, $phi, $diro,
+$distance);</p>
+<p style="margin-left:9%; margin-top: 1em">or the midpoint
+if you know the end points:</p>
+<h3>great_circle_midpoint
+<a name="great_circle_midpoint"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use Math::Trig
+'great_circle_midpoint'; <br/>
+($thetam, $phim) = <br/>
+great_circle_midpoint($theta0, $phi0, $theta1, $phi1);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>great_circle_midpoint()</b> is just a special case of</p>
+<h3>great_circle_waypoint
+<a name="great_circle_waypoint"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use Math::Trig
+'great_circle_waypoint'; <br/>
+($thetai, $phii) = <br/>
+great_circle_waypoint($theta0, $phi0, $theta1, $phi1,
+$way);</p>
+<p style="margin-left:9%; margin-top: 1em">Where $way
+indicates the position of the waypoint along the great
+circle arc through the starting point ($theta0, $phi0) and
+the end point ($theta1, $phi1) relative to the distance from
+the starting point to the end point. So $way = 0 gives the
+starting point, $way = 1 gives the end point, $way &lt; 0
+gives a point "behind" the starting point, and
+$way &gt; 1 gives a point beyond the end point. $way
+defaults to 0.5 if not given.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+antipodal points (where their distance is <i>pi</i> radians)
+do not have unique waypoints between them, and therefore
+"undef" is returned in such cases. If the points
+are the same, so the distance between them is zero, all
+waypoints are identical to the starting/end point.</p>
+<p style="margin-left:9%; margin-top: 1em">The thetas,
+phis, direction, and distance in the above are all in
+radians.</p>
+<p style="margin-left:9%; margin-top: 1em">You can import
+all the great circle formulas by</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::Trig
+':great_circle';</p>
+<p style="margin-left:9%; margin-top: 1em">Notice that the
+resulting directions might be somewhat surprising if you are
+looking at a flat worldmap: in such map projections the
+great circles quite often do not look like the shortest
+routes −− but for example the shortest possible
+routes from Europe or North America to Asia do often cross
+the polar regions. (The common Mercator projection does
+<b>not</b> show great circles as straight lines: straight
+lines in the Mercator projection are lines of constant
+bearing.)</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">To calculate the
+distance between London (51.3N 0.5W) and Tokyo (35.7N
+139.8E) in kilometers:</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::Trig
+qw(great_circle_distance deg2rad); <br/>
+# Notice the 90 − latitude: phi zero is at the North
+Pole. <br/>
+sub NESW { deg2rad($_[0]), deg2rad(90 − $_[1]) } <br/>
+my @L = NESW( −0.5, 51.3); <br/>
+my @T = NESW(139.8, 35.7); <br/>
+my $km = great_circle_distance(@L, @T, 6378); # About 9600
+km.</p>
+<p style="margin-left:9%; margin-top: 1em">The direction
+you would have to go from London to Tokyo (in radians,
+straight north being zero, straight east being pi/2).</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::Trig
+qw(great_circle_direction); <br/>
+my $rad = great_circle_direction(@L, @T); # About 0.547 or
+0.174 pi.</p>
+<p style="margin-left:9%; margin-top: 1em">The midpoint
+between London and Tokyo being</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::Trig
+qw(great_circle_midpoint rad2deg); <br/>
+my @M = great_circle_midpoint(@L, @T); <br/>
+sub SWNE { rad2deg( $_[0] ), 90 − rad2deg( $_[1] ) }
+<br/>
+my @lonlat = SWNE(@M);</p>
+<p style="margin-left:9%; margin-top: 1em">or about 69 N 89
+E, on the Putorana Plateau of Siberia.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NOTE</b>: you
+<b>cannot</b> get from A to B like this:</p>
+<p style="margin-left:9%; margin-top: 1em">Dist =
+great_circle_distance(A, B) <br/>
+Dir = great_circle_direction(A, B) <br/>
+C = great_circle_destination(A, Dist, Dir)</p>
+<p style="margin-left:9%; margin-top: 1em">and expect C to
+be B, because the bearing constantly changes when going from
+A to B (except in some special case like the meridians or
+the circles of latitudes) and in
+<b>great_circle_destination()</b> one gives a
+<b>constant</b> bearing to follow.</p>
+<h3>CAVEAT FOR GREAT CIRCLE FORMULAS
+<a name="CAVEAT FOR GREAT CIRCLE FORMULAS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The answers may
+be off by few percentages because of the irregular (slightly
+aspherical) form of the Earth. The errors are at worst about
+0.55%, but generally below 0.3%.</p>
+<h3>Real-valued asin and acos
+<a name="Real-valued asin and acos"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">For small inputs
+<b>asin()</b> and <b>acos()</b> may return complex numbers
+even when real numbers would be enough and correct, this
+happens because of floating-point inaccuracies. You can see
+these inaccuracies for example by trying theses:</p>
+<p style="margin-left:9%; margin-top: 1em">print
+cos(1e−6)**2+sin(1e−6)**2 −
+1,"\n"; <br/>
+printf "%.20f",
+cos(1e−6)**2+sin(1e−6)**2,"\n";</p>
+<p style="margin-left:9%; margin-top: 1em">which will print
+something like this</p>
+<p style="margin-left:9%; margin-top: 1em">−1.11022302462516e−16
+<br/>
+0.99999999999999988898</p>
+<p style="margin-left:9%; margin-top: 1em">even though the
+expected results are of course exactly zero and one. The
+formulas used to compute <b>asin()</b> and <b>acos()</b> are
+quite sensitive to this, and therefore they might
+accidentally slip into the complex plane even when they
+should not. To counter this there are two interfaces that
+are guaranteed to return a real-valued output. <br/>
+asin_real</p>
+<p style="margin-left:14%;">use Math::Trig qw(asin_real);
+<br/>
+$real_angle = asin_real($input_sin);</p>
+<p style="margin-left:14%; margin-top: 1em">Return a
+real-valued arcus sine if the input is between [−1,
+1], <b>inclusive</b> the endpoints. For inputs greater than
+one, pi/2 is returned. For inputs less than minus one,
+−pi/2 is returned.</p>
+<p style="margin-left:9%;">acos_real</p>
+<p style="margin-left:14%;">use Math::Trig qw(acos_real);
+<br/>
+$real_angle = acos_real($input_cos);</p>
+<p style="margin-left:14%; margin-top: 1em">Return a
+real-valued arcus cosine if the input is between [−1,
+1], <b>inclusive</b> the endpoints. For inputs greater than
+one, zero is returned. For inputs less than minus one, pi is
+returned.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Saying "use
+Math::Trig;" exports many mathematical routines in the
+caller environment and even overrides some ("sin",
+"cos"). This is construed as a feature by the
+Authors, actually... ;−)</p>
+<p style="margin-left:9%; margin-top: 1em">The code is not
+optimized for speed, especially because we use
+"Math::Complex" and thus go quite near complex
+numbers while doing the computations even when the arguments
+are not. This, however, cannot be completely avoided if we
+want things like asin(2) to give an answer instead of giving
+a fatal runtime error.</p>
+<p style="margin-left:9%; margin-top: 1em">Do not attempt
+navigation using these formulas.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Math::Complex</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Jarkko
+Hietaniemi &lt;<i>jhi!at!iki.fi</i>&gt;, Raphael Manfredi
+&lt;<i>Raphael_Manfredi!at!pobox.com</i>&gt;, Zefram
+&lt;zefram@fysh.org&gt;</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

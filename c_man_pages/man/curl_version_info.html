@@ -1,0 +1,637 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:33 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_version_info</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_version_info</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FEATURES">FEATURES</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_version_info
+− returns runtime libcurl version info</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">curl_version_info_data
+*curl_version_info(CURLversion age);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns a
+pointer to a filled in static struct with information about
+various features in the running version of libcurl.
+<i>age</i> should be set to the version of this
+functionality by the time you write your program. This way,
+libcurl always returns a proper struct that your program
+understands, while programs in the future might get a
+different struct. <b>CURLVERSION_NOW</b> is the most recent
+one for the library you have installed: <br/>
+data = curl_version_info(CURLVERSION_NOW); <br/>
+Applications should use this information to judge if things
+are possible to do or not, instead of using
+compile−time checks, as dynamic/DLL libraries can be
+changed independent of applications.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+can alter the returned static data as long as
+<i>curl_global_init(3)</i> has not been called. It is
+therefore not thread−safe before libcurl
+initialization occurs.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+curl_version_info_data struct looks like this</p>
+<p style="margin-left:9%; margin-top: 1em">typedef struct {
+<br/>
+CURLversion age; /* see description below */</p>
+<p style="margin-left:9%; margin-top: 1em">const char
+*version; /* human readable string */ <br/>
+unsigned int version_num; /* numeric representation */ <br/>
+const char *host; /* human readable string */ <br/>
+int features; /* bitmask, see below */ <br/>
+char *ssl_version; /* human readable string */ <br/>
+long ssl_version_num; /* not used, always zero */ <br/>
+const char *libz_version; /* human readable string */ <br/>
+const char *const *protocols; /* protocols */</p>
+<p style="margin-left:9%; margin-top: 1em">/* when
+’age’ is CURLVERSION_SECOND or higher, the
+members below exist */ <br/>
+const char *ares; /* human readable string */ <br/>
+int ares_num; /* number */</p>
+<p style="margin-left:9%; margin-top: 1em">/* when
+’age’ is CURLVERSION_THIRD or higher, the
+members below exist */ <br/>
+const char *libidn; /* human readable string */</p>
+<p style="margin-left:9%; margin-top: 1em">/* when
+’age’ is CURLVERSION_FOURTH or higher (&gt;=
+7.16.1), the members <br/>
+below exist */ <br/>
+int iconv_ver_num; /* ’_libiconv_version’ if
+iconv support enabled */</p>
+<p style="margin-left:9%; margin-top: 1em">const char
+*libssh_version; /* human readable string */</p>
+<p style="margin-left:9%; margin-top: 1em">/* when
+’age’ is CURLVERSION_FIFTH or higher (&gt;=
+7.57.0), the members <br/>
+below exist */ <br/>
+unsigned int brotli_ver_num; /* Numeric Brotli version <br/>
+(MAJOR &lt;&lt; 24) | (MINOR &lt;&lt; 12) | PATCH */ <br/>
+const char *brotli_version; /* human readable string. */</p>
+<p style="margin-left:9%; margin-top: 1em">/* when
+’age’ is CURLVERSION_SIXTH or higher (&gt;=
+7.66.0), the members <br/>
+below exist */ <br/>
+unsigned int nghttp2_ver_num; /* Numeric nghttp2 version
+<br/>
+(MAJOR &lt;&lt; 16) | (MINOR &lt;&lt; 8) | PATCH */ <br/>
+const char *nghttp2_version; /* human readable string.
+*/</p>
+<p style="margin-left:9%; margin-top: 1em">const char
+*quic_version; /* human readable quic (+ HTTP/3) library +
+<br/>
+version or NULL */</p>
+<p style="margin-left:9%; margin-top: 1em">/* when
+’age’ is CURLVERSION_SEVENTH or higher (&gt;=
+7.70.0), the members <br/>
+below exist */ <br/>
+const char *cainfo; /* the built-in default CURLOPT_CAINFO,
+might <br/>
+be NULL */ <br/>
+const char *capath; /* the built-in default CURLOPT_CAPATH,
+might <br/>
+be NULL */ <br/>
+/* when ’age’ is CURLVERSION_EIGHTH or higher
+(&gt;= 7.71.0), the members <br/>
+below exist */ <br/>
+unsigned int zstd_ver_num; /* Numeric Zstd version <br/>
+(MAJOR &lt;&lt; 24) | (MINOR &lt;&lt; 12) | PATCH */ <br/>
+const char *zstd_version; /* human readable string. */ <br/>
+/* when ’age’ is CURLVERSION_NINTH or higher
+(&gt;= 7.75.0), the members <br/>
+below exist */ <br/>
+const char *hyper_version; /* human readable string. */ <br/>
+/* when ’age’ is CURLVERSION_TENTH or higher
+(&gt;= 7.77.0), the members <br/>
+below exist */ <br/>
+const char *gsasl_version; /* human readable string. */ <br/>
+/* when ’age’ is CURLVERSION_ELEVENTH or higher
+(&gt;= 7.87.0), the members <br/>
+below exist */ <br/>
+const char *const *feature_names; /* Feature names. */ <br/>
+/* when ’age’ is CURLVERSION_TWELFTH or higher
+(&gt;= 8.8.0), the members <br/>
+below exist */ <br/>
+const char *const *rtmp_version; /* human readable string */
+<br/>
+} curl_version_info_data;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>age</i>
+describes what the age of this struct is. The number depends
+on how new the libcurl you are using is. You are however
+guaranteed to get a struct that you have a matching struct
+for in the header, as you tell libcurl your "age"
+with the input argument.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>version</i>
+is just an ascii string for the libcurl version.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>version_num</i>
+is a 24 bit number created like this: &lt;8 bits major
+number&gt; | &lt;8 bits minor number&gt; | &lt;8 bits patch
+number&gt;. Version 7.9.8 is therefore returned as
+0x070908.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>host</i> is
+an ascii string showing what host information that this
+libcurl was built for. As discovered by a configure script
+or set by the build environment.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>features</i>
+is a bit mask representing available features. It can have
+none, one or more bits set. The use of this field is
+deprecated: use <i>feature_names</i> instead. The feature
+names description below lists the associated bits.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>feature_names</i>
+is a pointer to an array of string pointers, containing the
+names of the features that libcurl supports. The array is
+terminated by a NULL entry. See the list of features names
+below.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>ssl_version</i>
+is an ASCII string for the TLS library name + version used.
+If libcurl has no SSL support, this is NULL. For example
+"Schannel", "Secure Transport" or
+"OpenSSL/1.1.0g".</p>
+<p style="margin-left:9%; margin-top: 1em"><i>ssl_version_num</i>
+is always 0.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>libz_version</i>
+is an ASCII string (there is no numerical version). If
+libcurl has no libz support, this is NULL.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>protocols</i>
+is a pointer to an array of char * pointers, containing the
+names protocols that libcurl supports (using lowercase
+letters). The protocol names are the same as would be used
+in URLs. The array is terminated by a NULL entry.</p>
+<h2>FEATURES
+<a name="FEATURES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">alt-svc</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_ALTSVC</p>
+<p style="margin-left:18%; margin-top: 1em">HTTP
+Alt−Svc parsing and the associated options (Added in
+7.64.1)</p>
+<p style="margin-left:9%;">AsynchDNS</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_ASYNCHDNS</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for asynchronous name lookups, which
+allows more exact timeouts (even on Windows) and less
+blocking when using the multi interface. (added in
+7.10.7)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>brotli</p></td>
+<td width="1%"></td>
+<td width="49%">
+<p><i>features</i> mask bit: CURL_VERSION_BROTLI</p></td>
+<td width="33%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">supports HTTP
+Brotli content encoding using libbrotlidec (Added in
+7.57.0)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">Debug</p></td>
+<td width="3%"></td>
+<td width="47%">
+<p style="margin-top: 1em"><i>features</i> mask bit:
+CURL_VERSION_DEBUG</p> </td>
+<td width="35%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with debug capabilities (added in 7.10.6)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p style="margin-top: 1em">ECH</p></td>
+<td width="5%"></td>
+<td width="40%">
+<p style="margin-top: 1em"><i>features</i> mask bit:
+non−existent</p> </td>
+<td width="42%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with ECH support (experimental, added in 8.8.0)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">gsasl</p></td>
+<td width="3%"></td>
+<td width="47%">
+<p style="margin-top: 1em"><i>features</i> mask bit:
+CURL_VERSION_GSASL</p> </td>
+<td width="35%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with libgsasl and thus with some extra SCRAM−SHA
+authentication methods. (added in 7.76.0)</p>
+<p style="margin-left:9%;">GSS-API</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_GSSAPI</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for GSS−API. This makes libcurl use
+provided functions for Kerberos and SPNEGO authentication.
+It also allows libcurl to use the current user credentials
+without the app having to pass them on. (Added in
+7.38.0)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p>HSTS</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p><i>features</i> mask bit: CURL_VERSION_HSTS</p></td>
+<td width="36%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for HSTS (HTTP Strict Transport Security)
+(Added in 7.74.0)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">HTTP2</p></td>
+<td width="3%"></td>
+<td width="47%">
+<p style="margin-top: 1em"><i>features</i> mask bit:
+CURL_VERSION_HTTP2</p> </td>
+<td width="35%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for HTTP2. (Added in 7.33.0)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">HTTP3</p></td>
+<td width="3%"></td>
+<td width="47%">
+<p style="margin-top: 1em"><i>features</i> mask bit:
+CURL_VERSION_HTTP3</p> </td>
+<td width="35%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">HTTP/3 and QUIC
+support are built−in (Added in 7.66.0)</p>
+<p style="margin-left:9%;">HTTPS-proxy</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_HTTPS_PROXY</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for HTTPS−proxy. (Added in
+7.52.0)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>IDN</p></td>
+<td width="5%"></td>
+<td width="45%">
+<p><i>features</i> mask bit: CURL_VERSION_IDN</p></td>
+<td width="37%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for IDNA, domain names with international
+letters. (Added in 7.12.0)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p style="margin-top: 1em">IPv6</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p style="margin-top: 1em"><i>features</i> mask bit:
+CURL_VERSION_IPV6</p> </td>
+<td width="36%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">supports
+IPv6</p>
+<p style="margin-left:9%;">Kerberos</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_KERBEROS5</p>
+<p style="margin-left:18%; margin-top: 1em">supports
+Kerberos V5 authentication for FTP, IMAP, LDAP, POP3, SMTP
+and SOCKSv5 proxy. (Added in 7.40.0)</p>
+<p style="margin-left:9%;">Largefile</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_LARGEFILE</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for large files. (Added in 7.11.1)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p>libz</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p><i>features</i> mask bit: CURL_VERSION_LIBZ</p></td>
+<td width="36%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">supports HTTP
+deflate using libz (Added in 7.10)</p>
+<p style="margin-left:9%;">MultiSSL</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_MULTI_SSL</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with multiple SSL backends. For details, see
+<i>curl_global_sslset(3)</i>. (Added in 7.56.0)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p>NTLM</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p><i>features</i> mask bit: CURL_VERSION_NTLM</p></td>
+<td width="36%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">supports HTTP
+NTLM (added in 7.10.6)</p>
+<p style="margin-left:9%;">NTLM_WB</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_NTLM_WB</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for NTLM delegation to a winbind helper.
+(Added in 7.22.0) This feature was removed from curl in
+8.8.0.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>PSL</p></td>
+<td width="5%"></td>
+<td width="45%">
+<p><i>features</i> mask bit: CURL_VERSION_PSL</p></td>
+<td width="37%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for Mozilla's Public Suffix List. This
+makes libcurl ignore cookies with a domain that is on the
+list. (Added in 7.47.0)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">SPNEGO</p></td>
+<td width="1%"></td>
+<td width="49%">
+<p style="margin-top: 1em"><i>features</i> mask bit:
+CURL_VERSION_SPNEGO</p> </td>
+<td width="33%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for SPNEGO authentication (Simple and
+Protected GSS−API Negotiation Mechanism, defined in
+RFC 2478.) (added in 7.10.8)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p style="margin-top: 1em">SSL</p></td>
+<td width="5%"></td>
+<td width="45%">
+<p style="margin-top: 1em"><i>features</i> mask bit:
+CURL_VERSION_SSL</p> </td>
+<td width="37%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">supports SSL
+(HTTPS/FTPS) (Added in 7.10)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p style="margin-top: 1em">SSPI</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p style="margin-top: 1em"><i>features</i> mask bit:
+CURL_VERSION_SSPI</p> </td>
+<td width="36%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for SSPI. This is only available on
+Windows and makes libcurl use Windows−provided
+functions for Kerberos, NTLM, SPNEGO and Digest
+authentication. It also allows libcurl to use the current
+user credentials without the app having to pass them on.
+(Added in 7.13.2)</p>
+<p style="margin-left:9%;">threadsafe</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_THREADSAFE</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with thread−safety support (Atomic or SRWLOCK)
+to protect curl initialization. (Added in 7.84.0) See
+<i>libcurl−thread(3)</i></p>
+<p style="margin-left:9%;">TLS-SRP</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_TLSAUTH_SRP</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for TLS−SRP (in one or more of the
+built−in TLS backends). (Added in 7.21.4)</p>
+<p style="margin-left:9%;">TrackMemory</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_CURLDEBUG</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with memory tracking debug capabilities. This is
+mainly of interest for libcurl hackers. (added in
+7.19.6)</p>
+<p style="margin-left:9%;">Unicode</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_UNICODE</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with Unicode support on Windows. This makes
+non−ASCII characters work in filenames and options
+passed to libcurl. (Added in 7.72.0)</p>
+<p style="margin-left:9%;">UnixSockets</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_UNIX_SOCKETS</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for Unix domain sockets. (Added in
+7.40.0)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p>zstd</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p><i>features</i> mask bit: CURL_VERSION_ZSTD</p></td>
+<td width="36%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">supports HTTP
+zstd content encoding using zstd library (Added in
+7.72.0)</p>
+<p style="margin-left:9%;">no name</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_CONV</p>
+<p style="margin-left:18%; margin-top: 1em">libcurl was
+built with support for character conversions, as provided by
+the CURLOPT_CONV_* callbacks. Always 0 since 7.82.0. (Added
+in 7.15.4, deprecated.)</p>
+<p style="margin-left:9%;">no name</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_GSSNEGOTIATE</p>
+<p style="margin-left:18%; margin-top: 1em">supports HTTP
+GSS−Negotiate (added in 7.10.6, deprecated in
+7.38.0)</p>
+<p style="margin-left:9%;">no name</p>
+<p style="margin-left:18%;"><i>features</i> mask bit:
+CURL_VERSION_KERBEROS4</p>
+<p style="margin-left:18%; margin-top: 1em">supports
+Kerberos V4 (when using FTP). Legacy bit. Deprecated since
+7.33.0.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+curl_version_info_data *ver =
+curl_version_info(CURLVERSION_NOW); <br/>
+printf("libcurl version %u.%u.%u\n", <br/>
+(ver-&gt;version_num &gt;&gt; 16) &amp; 0xff, <br/>
+(ver-&gt;version_num &gt;&gt; 8) &amp; 0xff, <br/>
+ver-&gt;version_num &amp; 0xff); <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.10.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A pointer to a
+curl_version_info_data struct.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curl_version</b>(3)</p>
+<hr/>
+</body>
+</html>

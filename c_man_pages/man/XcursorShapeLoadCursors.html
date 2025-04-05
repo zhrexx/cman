@@ -1,0 +1,2822 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:56:09 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>XCURSOR</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">XCURSOR</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTIONAL OVERVIEW">FUNCTIONAL OVERVIEW</a><br/>
+<a href="#CURSOR FILES">CURSOR FILES</a><br/>
+<a href="#THEMES">THEMES</a><br/>
+<a href="#DATATYPES">DATATYPES</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#Object Management">Object Management</a><br/>
+<a href="#Reading and writing images">Reading and writing images</a><br/>
+<a href="#Reading library images">Reading library images</a><br/>
+<a href="#Library attributes">Library attributes</a><br/>
+<a href="#Cursor APIs">Cursor APIs</a><br/>
+<a href="#X Cursor Name APIs">X Cursor Name APIs</a><br/>
+<a href="#X Cursor Comment APIs">X Cursor Comment APIs</a><br/>
+<a href="#Animated Cursors">Animated Cursors</a><br/>
+<a href="#Glyph Cursor APIs">Glyph Cursor APIs</a><br/>
+<a href="#Display Information APIs">Display Information APIs</a><br/>
+<a href="#ENVIRONMENT">ENVIRONMENT</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Xcursor −
+Cursor management library</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;X11/Xcursor/Xcursor.h&gt;</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Xcursor</b>
+is a simple library designed to help locate and load
+cursors. Cursors can be loaded from files or memory. A
+library of common cursors exists which map to the standard X
+cursor names. Cursors can exist in several sizes and the
+library automatically picks the best size.</p>
+<h2>FUNCTIONAL OVERVIEW
+<a name="FUNCTIONAL OVERVIEW"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Xcursor is built
+in a couple of layers; at the bottom layer is code which can
+load cursor images from files. Above that is a layer which
+locates cursor files based on the library path and theme. At
+the top is a layer which builds cursors either out of an
+image loaded from a file or one of the standard X cursors.
+When using images loaded from files, Xcursor prefers to use
+the Render extension CreateCursor request if supported by
+the X server. Where not supported, Xcursor maps the cursor
+image to a standard X cursor and uses the core CreateCursor
+request.</p>
+<h3>CURSOR FILES
+<a name="CURSOR FILES"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Xcursor defines
+a new format for cursors on disk. Each file holds one or
+more cursor images. Each cursor image is tagged with a
+nominal size so that the best size can be selected
+automatically. Multiple cursors of the same nominal size can
+be loaded together; applications are expected to use them as
+an animated sequence.</p>
+<p style="margin-left:9%; margin-top: 1em">Cursor files are
+stored as a header containing a table of contents followed
+by a sequence of chunks. The table of contents indicates the
+type, subtype and position in the file of each chunk. The
+file header looks like:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>magic</i>:</p></td>
+<td width="25%">
+<p>CARD32 "Xcur" (0x58, 0x63, 0x75, 0x72)</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>header</i>:</p></td>
+<td width="25%">
+<p>CARD32 bytes in this header</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>version</i>:</p></td>
+<td width="25%">
+<p>CARD32 file version number</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>ntoc</i>:</p></td>
+<td width="25%">
+<p>CARD32 number of toc entries</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>toc</i>:</p></td>
+<td width="25%">
+<p>LISTofTOC table of contents</p></td>
+<td width="58%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Each table of
+contents entry looks like:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>type</i>:</p></td>
+<td width="25%">
+<p>CARD32 entry type</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>subtype</i>:</p></td>
+<td width="25%">
+<p>CARD32 type-specific label - size for images</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>position</i>:</p></td>
+<td width="25%">
+<p>CARD32 absolute byte position of table in file</p></td>
+<td width="58%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Each chunk in
+the file has set of common header fields followed by
+additional type-specific fields:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>header</i>:</p></td>
+<td width="25%">
+<p>CARD32 bytes in chunk header (including type-specific
+fields)</p> </td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>type</i>:</p></td>
+<td width="25%">
+<p>CARD32 must match type in TOC for this chunk</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>subtype</i>:</p></td>
+<td width="25%">
+<p>CARD32 must match subtype in TOC for this chunk</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>version</i>:</p></td>
+<td width="25%">
+<p>CARD32 version number for this chunk type</p></td>
+<td width="58%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">There are
+currently two chunk types defined for cursor files; comments
+and images. Comments look like:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>header</i>:</p></td>
+<td width="25%">
+<p>20 Comment headers are 20 bytes</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>type</i>:</p></td>
+<td width="25%">
+<p>0xfffe0001 Comment type is 0xfffe0001</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>subtype</i>:</p></td>
+<td width="25%">
+<p>{ 1 (COPYRIGHT), 2 (LICENSE), 3 (OTHER) }</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>version</i>:</p></td>
+<td width="25%">
+<p>1</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>length</i>:</p></td>
+<td width="25%">
+<p>CARD32 byte length of UTF-8 string</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>string</i>:</p></td>
+<td width="25%">
+<p>LISTofCARD8 UTF-8 string</p></td>
+<td width="58%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Images look
+like:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>header</i>:</p></td>
+<td width="25%">
+<p>36 Image headers are 36 bytes</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>type</i>:</p></td>
+<td width="25%">
+<p>0xfffd0002 Image type is 0xfffd0002</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>subtype</i>:</p></td>
+<td width="25%">
+<p>CARD32 Image subtype is the nominal size</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>version</i>:</p></td>
+<td width="25%">
+<p>1</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>width</i>:</p></td>
+<td width="25%">
+<p>CARD32 Must be less than or equal to 0x7fff</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>height</i>:</p></td>
+<td width="25%">
+<p>CARD32 Must be less than or equal to 0x7fff</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>xhot</i>:</p></td>
+<td width="25%">
+<p>CARD32 Must be less than or equal to width</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>yhot</i>:</p></td>
+<td width="25%">
+<p>CARD32 Must be less than or equal to height</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>delay</i>:</p></td>
+<td width="25%">
+<p>CARD32 Delay between animation frames in
+milliseconds</p> </td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="12%"></td>
+<td width="5%">
+<p><i>pixels</i>:</p></td>
+<td width="25%">
+<p>LISTofCARD32 Packed ARGB format pixels</p></td>
+<td width="58%">
+</td></tr>
+</table>
+<h3>THEMES
+<a name="THEMES"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Xcursor (mostly)
+follows the freedesktop.org spec for theming icons. The
+default search path it uses is</p>
+<p style="margin-left:18%; margin-top: 1em">˜/.local/share/icons,
+˜/.icons, /usr/share/icons, /usr/share/pixmaps</p>
+<p style="margin-left:9%; margin-top: 1em">Within each of
+these directories, it searches for a directory using the
+theme name:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Within the theme directory, it looks for cursor files in
+the “cursors” subdirectory.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Xcursor looks
+for a specific file, which must be one of the cursor
+<i>shape</i> names, e.g., as used in XcursorLibraryLoadImage
+or XcursorLibraryShape.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">If it finds no matching cursor
+file in the “cursors” subdirectory, Xcursor next
+looks for an “index.theme” file in each theme
+directory to look for inherited themes. Those are lines in
+this format:</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Inherits =
+<i>theme-name</i></p>
+<p style="margin-left:14%; margin-top: 1em">Xcursor uses
+the first inherited <i>theme-name</i>, ignoring others which
+may exist in a given “index.theme” file. If it
+finds an inherited theme, Xcursor searches along the path to
+use that as well. Xcursor ignores other <i>keys</i> in the
+“index.theme” file, including “Name”
+(i.e., the name which a graphical application may use as the
+<i>presentation name</i>).</p>
+<p style="margin-left:14%; margin-top: 1em">More than one
+<i>theme-name</i> may be listed on the <b>Inherits=</b>
+line. The freedesktop.org spec states that list items are
+separated by commas. Xcursor also accepts semicolon, but
+translates both to colon when searching the path. Xcursor
+expects only one <b>Inherits=</b> line; the freedesktop.org
+spec is unclear whether multiple keys are allowed.</p>
+<p style="margin-left:9%; margin-top: 1em">If no theme is
+set, or if no cursor is found for the specified theme
+anywhere along the path, Xcursor checks the
+“default” theme.</p>
+<p style="margin-left:9%; margin-top: 1em">When Xcursor
+finds a cursor file, it stops searching. It always uses the
+first cursor file found while searching along the path.</p>
+<h2>DATATYPES
+<a name="DATATYPES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>XcursorImage</b></p>
+<p style="margin-left:18%;">holds a single cursor image in
+memory. Each pixel in the cursor is a 32-bit value
+containing ARGB with A in the high byte.</p>
+<p style="margin-left:21%; margin-top: 1em">typedef struct
+_XcursorImage {</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<p>XcursorDim</p><td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>size;</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>/* nominal size for matching */ <br/>
+XcursorDim</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>width;</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>/* actual width */ <br/>
+XcursorDim</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>height;</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>/* actual height */ <br/>
+XcursorDim</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>xhot;</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>/* hot spot x (must be inside image) */ <br/>
+XcursorDim</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>yhot;</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>/* hot spot y (must be inside image) */ <br/>
+XcursorPixel</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>*pixels;</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>/* pointer to pixels */</p></td></tr>
+</table>
+<p style="margin-left:21%;">} XcursorImage;</p>
+<p style="margin-left:9%;"><b>XcursorImages</b></p>
+<p style="margin-left:18%;">holds multiple XcursorImage
+structures. They are all freed when the XcursorImages is
+freed in XcursorImagesDestroy.</p>
+<p style="margin-left:21%; margin-top: 1em">typedef struct
+_XcursorImages {</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<p>int</p><td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>nimage;</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>/* number of images */ <br/>
+XcursorImage</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>**images; /* array of XcursorImage pointers */</p></td></tr>
+</table>
+<p style="margin-left:21%;">} XcursorImages;</p>
+<p style="margin-left:9%;"><b>XcursorCursors</b></p>
+<p style="margin-left:18%;">Holds multiple Cursor objects.
+They are all freed when the XcursorCursors is freed. These
+are reference counted so that multiple XcursorAnimate
+structures can use the same XcursorCursors.</p>
+<p style="margin-left:21%; margin-top: 1em">typedef struct
+_XcursorCursors {</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<p>Display</p><td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>*dpy;</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>/* Display holding cursors */ <br/>
+int</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>ref;</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>/* reference count */ <br/>
+int</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>ncursor; /* number of cursors */ <br/>
+Cursor</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>*cursors; /* array of cursors */</p></td></tr>
+</table>
+<p style="margin-left:21%;">} XcursorCursors;</p>
+<p style="margin-left:9%;"><b>XcursorAnimate</b></p>
+<p style="margin-left:18%;">References a set of cursors and
+a sequence within that set. Multiple XcursorAnimate
+structures may reference the same XcursorCursors; each holds
+a reference which is removed when the XcursorAnimate is
+freed.</p>
+<p style="margin-left:21%; margin-top: 1em">typedef struct
+_XcursorAnimate {</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<p>XcursorCursors</p><td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>*cursors; /* list of cursors to use */ <br/>
+int</p></td></tr>
+<tr align="left" valign="top">
+<td width="26%"></td>
+<td width="12%"></td>
+<td width="62%">
+<p>sequence; /* which cursor is next */</p></td></tr>
+</table>
+<p style="margin-left:21%;">} XcursorAnimate;</p>
+<p style="margin-left:9%;"><b>XcursorFile</b></p>
+<p style="margin-left:18%;">Xcursor provides an abstract
+API for accessing the file data. Xcursor provides a stdio
+implementation of this abstract API; applications are free
+to create additional implementations. These functions
+parallel the stdio functions in return value and expected
+argument values; the read and write functions flip the
+arguments around to match the POSIX versions.</p>
+<p style="margin-left:21%; margin-top: 1em">typedef struct
+_XcursorFile { <br/>
+void *closure; <br/>
+int (*read) (XcursorFile *file, unsigned char *buf, int
+len); <br/>
+int (*write) (XcursorFile *file, unsigned char *buf, int
+len); <br/>
+int (*seek) (XcursorFile *file, long offset, int whence);
+<br/>
+};</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<h3>Object Management
+<a name="Object Management"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">XcursorImage
+*XcursorImageCreate (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>width</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>height</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">void XcursorImageDestroy (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorImage</p></td>
+<td width="58%">
+<p>*<i>image</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Allocate and
+free images. On allocation, the hotspot and the pixels are
+left uninitialized. The size is set to the maximum of
+<i>width</i> and <i>height</i>.</p>
+<p style="margin-left:9%;">XcursorImages
+*XcursorImagesCreate (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">void XcursorImagesDestroy (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorImages</p></td>
+<td width="58%">
+<p>*<i>images</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Allocate and
+free arrays to hold multiple cursor images. On allocation,
+<i>nimage</i> is set to zero.</p>
+<p style="margin-left:9%;">XcursorCursors
+*XcursorCursorsCreate (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">void XcursorCursorsDestroy (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorCursors</p></td>
+<td width="58%">
+<p>*<i>cursors</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Allocate and
+free arrays to hold multiple cursors. On allocation,
+<i>ncursor</i> is set to zero, <i>ref</i> is set to one.</p>
+<h3>Reading and writing images
+<a name="Reading and writing images"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">XcursorImage
+*XcursorXcFileLoadImage (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorFile</p></td>
+<td width="58%">
+<p>*<i>file</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorImages
+*XcursorXcFileLoadImages (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorFile</p></td>
+<td width="58%">
+<p>*<i>file</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorImages
+*XcursorXcFileLoadAllImages (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorFile</p></td>
+<td width="58%">
+<p>*<i>file</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorBool XcursorXcFileLoad
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorFile</p></td>
+<td width="58%">
+<p>*<i>file</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorComments</p></td>
+<td width="58%">
+<p>**<i>commentsp</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorImages</p></td>
+<td width="58%">
+<p>**<i>imagesp</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorBool XcursorXcFileSave
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorFile</p></td>
+<td width="58%">
+<p>*<i>file</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const XcursorComments *<i>comments</i>,</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const XcursorImages</p></td>
+<td width="58%">
+<p>*<i>images</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">These read and
+write cursors from an XcursorFile handle. After reading, the
+file pointer will be left at some random place in the
+file.</p>
+<p style="margin-left:9%;">XcursorImage
+*XcursorFileLoadImage (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>FILE</p></td>
+<td width="58%">
+<p>*<i>file</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorImages
+*XcursorFileLoadImages (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>FILE</p></td>
+<td width="58%">
+<p>*<i>file</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorImages
+*XcursorFileLoadAllImages (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>FILE</p></td>
+<td width="58%">
+<p>*<i>file</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorBool XcursorFileLoad
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>FILE</p></td>
+<td width="58%">
+<p>*<i>file</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorComments</p></td>
+<td width="58%">
+<p>**<i>commentsp</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorImages</p></td>
+<td width="58%">
+<p>**<i>imagesp</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorBool
+XcursorFileSaveImages (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>FILE</p></td>
+<td width="58%">
+<p>*<i>file</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const XcursorImages</p></td>
+<td width="58%">
+<p>*<i>images</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorBool XcursorFileSave
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>FILE</p></td>
+<td width="58%">
+<p>*<i>file</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const XcursorComments *<i>comments</i>,</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const XcursorImages</p></td>
+<td width="58%">
+<p>*<i>images</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">These read and
+write cursors from a stdio FILE handle. Writing flushes
+before returning so that any errors should be detected.</p>
+<p style="margin-left:9%;">XcursorImage
+*XcursorFilenameLoadImage (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>filename</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorImages
+*XcursorFilenameLoadImages (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>filename</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorImages
+*XcursorFilenameLoadAllImages (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>file</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorBool XcursorFilenameLoad
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>file</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorComments</p></td>
+<td width="58%">
+<p>**<i>commentsp</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorImages</p></td>
+<td width="58%">
+<p>**<i>imagesp</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorBool
+XcursorFilenameSaveImages (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>filename</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const XcursorImages</p></td>
+<td width="58%">
+<p>*<i>images</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorBool XcursorFilenameSave
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>file</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const XcursorComments *<i>comments</i>,</p></td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const XcursorImages</p></td>
+<td width="58%">
+<p>*<i>images</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">These parallel
+the stdio FILE interfaces above, but take filenames.</p>
+<h3>Reading library images
+<a name="Reading library images"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">XcursorImage
+*XcursorLibraryLoadImage (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>name</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>theme</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorImages
+*XcursorLibraryLoadImages (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>name</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>theme</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">These search
+the library path, loading the first file found of the
+desired <i>size</i>, using a private function
+(XcursorScanTheme) to find the appropriate theme:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="77%">
+<p>If <i>theme</i> is not NULL, use that.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="77%">
+<p>If <i>theme</i> is NULL, or if there was no match for
+the desired theme, use “default” for the theme
+name.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="77%">
+<p>If neither search succeeds, these functions return
+NULL.</p> </td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">The two
+functions differ by more than the number of images
+loaded:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="77%">
+<p style="margin-top: 1em">XcursorLibraryLoadImage calls
+XcursorFileLoadImage but</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="77%">
+<p>XcursorLibraryLoadImages calls XcursorFileLoadImages,
+and (on success) it calls XcursorImagesSetName to associate
+<i>name</i> with the result.</p></td></tr>
+</table>
+<h3>Library attributes
+<a name="Library attributes"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">const char *
+XcursorLibraryPath (void)</p>
+<p style="margin-left:18%; margin-top: 1em">Returns the
+library search path:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="77%">
+<p>If the environment variable <b>XCURSOR_PATH</b> is set,
+return that value.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="77%">
+<p>Otherwise, return the compiled-in search path.</p></td></tr>
+</table>
+<p style="margin-left:9%;">int XcursorLibraryShape (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>library</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Search
+Xcursor’s table of cursor font names for the given
+“shape name” (<i>library</i>):</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="77%">
+<p>If found, return the index into that table, multiplied
+by two (to account for the source- and mask-values used in
+an X cursor font).</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="77%">
+<p>If not found, return -1.</p></td></tr>
+</table>
+<h3>Cursor APIs
+<a name="Cursor APIs"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Cursor
+XcursorFilenameLoadCursor (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>file</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorCursors
+*XcursorFilenameLoadCursors (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>file</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">These load
+cursors from the specified file.</p>
+<p style="margin-left:9%;">Cursor XcursorLibraryLoadCursor
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>name</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorCursors
+*XcursorLibraryLoadCursors (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>name</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">These load
+cursors using the specified library <i>name</i>. The theme
+comes from the display.</p>
+<p style="margin-left:9%;">Cursor
+XcursorImageLoadCursor(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const XcursorImage</p></td>
+<td width="58%">
+<p>*<i>image</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">This creates a
+cursor, given the image to display. It calls
+XcursorSupportsARGB to decide what type of cursor to
+create:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="77%">
+<p>XRenderCreateCursor is used if ARGB is supported on the
+display, and</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="77%">
+<p>XCreatePixmapCursor is used otherwise.</p></td></tr>
+</table>
+<p style="margin-left:9%;">Cursor
+XcursorImagesLoadCursor(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const XcursorImages</p></td>
+<td width="58%">
+<p>*<i>images</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">This provides
+an interface for creating animated cursors, if the
+<i>images</i> array contains multiple images, and if
+XcursorSupportsAnim returns true. Otherwise, it calls
+XcursorImageLoadCursor.</p>
+<p style="margin-left:9%;">XcursorCursors
+*XcursorImagesLoadCursors(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const XcursorImages</p></td>
+<td width="58%">
+<p>*<i>images</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">This calls
+XcursorCursorsCreate to create an array of XcursorCursors,
+to correspond to the XcursorImages <i>images</i> array, and
+uses XcursorImageLoadCursor to load the corresponding cursor
+data.</p>
+<p style="margin-left:18%; margin-top: 1em">Normally it
+returns the resulting array pointer. On any failure, it
+discards the result XcursorCursorsDestroy, and returns
+NULL.</p>
+<h3>X Cursor Name APIs
+<a name="X Cursor Name APIs"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">XcursorImage
+*XcursorShapeLoadImage (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>unsigned int</p></td>
+<td width="58%">
+<p><i>shape</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>theme</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorImages
+*XcursorShapeLoadImages (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>unsigned int</p></td>
+<td width="58%">
+<p><i>shape</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>theme</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">These map
+<i>shape</i> to a library name using the standard X cursor
+names and then load the images.</p>
+<p style="margin-left:9%;">Cursor XcursorShapeLoadCursor
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>unsigned int</p></td>
+<td width="58%">
+<p><i>shape</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorCursors
+*XcursorShapeLoadCursors (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>unsigned int</p></td>
+<td width="58%">
+<p><i>shape</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">These map
+<i>shape</i> to a library name and then load the
+cursors.</p>
+<h3>X Cursor Comment APIs
+<a name="X Cursor Comment APIs"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">XcursorComment
+*XcursorCommentCreate (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorUInt</p></td>
+<td width="58%">
+<p><i>comment_type</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>length</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">XcursorXcFileLoad
+uses this function to allocate an XcursorComment structure
+for a single cursor. The <i>comment_type</i> parameter is
+used as the <i>subtype</i> field, e.g., COPYRIGHT. The
+<i>length</i> is the number of bytes to allocate for the
+comment text.</p>
+<p style="margin-left:9%;">void XcursorCommentDestroy(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorComment</p></td>
+<td width="58%">
+<p>*<i>comment</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Deallocates the
+given XcursorComment structure.</p>
+<p style="margin-left:9%;">XcursorComments *
+XcursorCommentsCreate (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">XcursorXcFileLoad
+uses this function to allocate an index of XcursorComment
+structure pointers. The <i>size</i> parameter tells it how
+many pointers will be in the index.</p>
+<p style="margin-left:9%;">void XcursorCommentsDestroy
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorComments</p></td>
+<td width="58%">
+<p>*<i>comments</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Deallocates the
+given XcursorComments structure as well as the
+XcursorComment structures which it points to.</p>
+<h3>Animated Cursors
+<a name="Animated Cursors"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">XcursorAnimate *
+XcursorAnimateCreate (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorCursors</p></td>
+<td width="58%">
+<p>*<i>cursors</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Wrap the given
+array of cursors in a newly allocated XcursorAnimate
+structure, which adds a sequence number used in
+XcursorAnimateNext.</p>
+<p style="margin-left:9%;">void XcursorAnimateDestroy (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorAnimate</p></td>
+<td width="58%">
+<p>*<i>animate</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Discards the
+given <i>animate</i> data, freeing both the XcursorCursors
+array of cursors as well as the XcursorAnimate
+structure.</p>
+<p style="margin-left:9%;">Cursor XcursorAnimateNext (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorAnimate</p></td>
+<td width="58%">
+<p>*<i>animate</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Cyclically
+returns the next Cursor in the array, incrementing the
+sequence number to prepare for the next call.</p>
+<p style="margin-left:18%; margin-top: 1em">The caller is
+responsible for displaying the series of Cursor images.
+Xcursor does not do that.</p>
+<h3>Glyph Cursor APIs
+<a name="Glyph Cursor APIs"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The X11
+XCreateFontCursor and XCreateGlyphCursor functions use this
+part of the API to extend the X core cursors feature to use
+themes. <br/>
+void XcursorImageHash (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XImage</p></td>
+<td width="58%">
+<p>*<i>image</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>unsigned char</p></td>
+<td width="58%">
+<p><i>hash</i>[XCURSOR_BITMAP_HASH_SIZE])</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Compute a hash
+of the image, to display when the environment variable
+XCURSOR_DISCOVER is set.</p>
+<p style="margin-left:9%;">void XcursorImagesSetName (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorImages</p></td>
+<td width="58%">
+<p>*<i>images</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>name</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Associates the
+given name with the images.</p>
+<p style="margin-left:9%;">void XcursorNoticeCreateBitmap
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Pixmap</p></td>
+<td width="58%">
+<p><i>pid</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>unsigned int</p></td>
+<td width="58%">
+<p><i>width</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>unsigned int</p></td>
+<td width="58%">
+<p><i>height</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Check if the
+display supports either ARGB or themes, and also if the
+image size fits within the maximum cursor size (64 pixels).
+If so, create a bitmap of the specified size, and cache the
+result in Xcursor, identifying it with the Pixmap-id (pid)
+value.</p>
+<p style="margin-left:9%;">void XcursorNoticePutBitmap
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Drawable</p></td>
+<td width="58%">
+<p><i>draw</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XImage</p></td>
+<td width="58%">
+<p>*<i>image</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Update the
+image contents in the bitmap specified by the draw value (a
+Pixmap-id). The bitmap must have been created by
+XcursorNoticeCreateBitmap.</p>
+<p style="margin-left:9%;">Cursor
+XcursorTryShapeBitmapCursor (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Pixmap</p></td>
+<td width="58%">
+<p><i>source</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Pixmap</p></td>
+<td width="58%">
+<p><i>mask</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XColor</p></td>
+<td width="58%">
+<p>*<i>foreground</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XColor</p></td>
+<td width="58%">
+<p>*<i>background</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>unsigned int</p></td>
+<td width="58%">
+<p><i>x</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>unsigned int</p></td>
+<td width="58%">
+<p><i>y</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">If the display
+supports either ARGB or themes, try to load a cursor into
+Xcursor’s cache using the <i>source</i> parameter as a
+Pixmap-id. The source may no longer be in the cache. Xcursor
+uses the hash value to identify the desired image.</p>
+<p style="margin-left:9%;">Cursor XcursorTryShapeCursor
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Font</p></td>
+<td width="58%">
+<p><i>source_font</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Font</p></td>
+<td width="58%">
+<p><i>mask_font</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>unsigned int</p></td>
+<td width="58%">
+<p><i>source_char</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>unsigned int</p></td>
+<td width="58%">
+<p><i>mask_char</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XColor _Xconst</p></td>
+<td width="58%">
+<p>*<i>foreground</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XColor _Xconst</p></td>
+<td width="58%">
+<p>*<i>background</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">If the display
+supports either ARGB or themes, try to load a cursor into
+Xcursor’s cache using the <i>source_char</i> parameter
+as a shape. Using</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="56%">
+<p>the default size from XcursorGetDefaultSize,</p></td>
+<td width="21%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="56%">
+<p>the default theme from XcursorGetTheme, and</p></td>
+<td width="21%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="56%">
+<p>the <i>source_char</i> parameter as a shape,</p></td>
+<td width="21%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Xcursor calls
+XcursorShapeLoadImages to load the cursor images. If
+successful, Xcursor uses XcursorImagesLoadCursor to load the
+cursor information.</p>
+<h3>Display Information APIs
+<a name="Display Information APIs"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">XcursorBool
+XcursorSupportsARGB (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Returns true if
+the display supports ARGB cursors. Otherwise, cursors will
+be mapped to a core X cursor.</p>
+<p style="margin-left:9%;">XcursorBool XcursorSupportsAnim
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Returns true if
+the display supports animated cursors. Otherwise, cursors
+will be mapped to a core X cursor.</p>
+<p style="margin-left:9%;">XcursorBool
+XcursorSetDefaultSize (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>int</p></td>
+<td width="58%">
+<p><i>size</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Sets the
+default size for cursors on the specified display. When
+loading cursors, those whose nominal size is closest to this
+size will be preferred.</p>
+<p style="margin-left:9%;">int XcursorGetDefaultSize (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Gets the
+default cursor size.</p>
+<p style="margin-left:9%;">XcursorBool XcursorSetResizable
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorBool</p></td>
+<td width="58%">
+<p><i>resizable</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Sets the
+current resizable-cursors state.</p>
+<p style="margin-left:9%;">XcursorBool XcursorGetResizable
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Gets the
+current resizable-cursors state.</p>
+<p style="margin-left:9%;">XcursorBool XcursorSetTheme
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>const char</p></td>
+<td width="58%">
+<p>*<i>theme</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Sets the
+current theme name.</p>
+<p style="margin-left:9%;">char *XcursorGetTheme (</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Gets the
+current theme name.</p>
+<p style="margin-left:9%;">XcursorBool XcursorGetThemeCore
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>)</p></td></tr>
+</table>
+<p style="margin-left:9%;">XcursorBool XcursorSetThemeCore
+(</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>Display</p></td>
+<td width="58%">
+<p>*<i>dpy</i>,</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+</td>
+<td width="58%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="28%">
+<p>XcursorBool</p></td>
+<td width="58%">
+<p><i>theme_core</i>)</p></td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Get or set
+property which tells Xcursor whether to enable themes for
+core cursors.</p>
+<h2>ENVIRONMENT
+<a name="ENVIRONMENT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Environment
+variables can be used to override resource settings, which
+in turn override compiled-in default values.</p>
+<p style="margin-left:9%; margin-top: 1em">Some of the
+environment variables recognized by Xcursor are booleans,
+specified as follows:</p>
+<p style="margin-left:13%;"><i>true</i> for
+“t”, “1”, “y” or
+“on” <i><br/>
+false</i> for “f”, “0”,
+“n” or “off”</p>
+<p style="margin-left:9%; margin-top: 1em">Xcursor ignores
+other values for these booleans.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="15%">
+<p><b>HOME</b></p></td>
+<td width="4%"></td>
+<td width="72%">
+<p>Xcursor interprets “˜” in the search
+list as the home directory, using this variable rather than
+the password database.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="15%">
+<p><b>XCURSOR_ANIM</b></p></td>
+<td width="4%"></td>
+<td width="72%">
+<p>If the display supports the Render CreateCursor request,
+and the Render feature is enabled, disable <i>animated</i>
+cursors if the environment variable is <i>false</i>.</p></td></tr>
+</table>
+<p style="margin-left:28%; margin-top: 1em">If the
+environment variable is not given, Xcursor uses the resource
+<b>Xcursor.anim</b>.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="15%">
+<p style="margin-top: 1em"><b>XCURSOR_CORE</b></p></td>
+<td width="4%"></td>
+<td width="72%">
+<p style="margin-top: 1em">If the display supports the
+Render CreateCursor request disable the Render feature if
+the environment variable is <i>false</i>.</p></td></tr>
+</table>
+<p style="margin-left:28%; margin-top: 1em">If the
+environment variable is not given, Xcursor uses the resource
+<b>Xcursor.core</b>.</p>
+<p style="margin-left:9%;"><b>XCURSOR_DISCOVER</b></p>
+<p style="margin-left:28%;">If the variable is set, Xcursor
+turns on a logging feature. It displays the hash value and
+the image so that users can see which cursor name is
+associated with each image.</p>
+<p style="margin-left:28%; margin-top: 1em">There is no
+corresponding resource setting.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="18%">
+<p><b>XCURSOR_DITHER</b></p></td>
+<td width="1%"></td>
+<td width="49%">
+<p>This variable sets the desired <i>dither</i>.</p></td>
+<td width="23%">
+</td></tr>
+</table>
+<p style="margin-left:28%; margin-top: 1em">If the
+environment variable is not given, Xcursor uses the resource
+<b>Xcursor.dither</b>.</p>
+<p style="margin-left:28%; margin-top: 1em">If neither
+environment variable or resource is found, Xcursor uses
+“threshold”</p>
+<p style="margin-left:28%; margin-top: 1em">These are the
+recognized values:</p>
+<p style="margin-left:32%;"><b>diffuse <br/>
+median <br/>
+ordered <br/>
+threshold</b></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="15%">
+<p><b>XCURSOR_PATH</b></p></td>
+<td width="4%"></td>
+<td width="72%">
+<p>This variable sets the list of paths in which to search
+for cursors, rather than the compiled-in default list.</p></td></tr>
+</table>
+<p style="margin-left:28%; margin-top: 1em">Directories in
+this path are separated by colons (:).</p>
+<p style="margin-left:9%;"><b>XCURSOR_RESIZED</b></p>
+<p style="margin-left:28%;">Enables automatic resizing of
+cursors to improve their displayed size if the environment
+variable is <i>true</i>.</p>
+<p style="margin-left:28%; margin-top: 1em">If the
+environment variable is not given, Xcursor tries the
+<b>Xcursor.resized</b> resource.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="15%">
+<p><b>XCURSOR_SIZE</b></p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>This variable sets the desired cursor size, in
+pixels.</p> </td>
+<td width="3%">
+</td></tr>
+</table>
+<p style="margin-left:28%; margin-top: 1em">If the
+environment variable is not given, Xcursor tries the
+<b>Xcursor.size</b> resource.</p>
+<p style="margin-left:28%; margin-top: 1em">If no size is
+given, whether by environment variable or resource setting,
+Xcursor next tries the <b>Xft.dpi</b> resource setting to
+guess the size of a 16-point cursor.</p>
+<p style="margin-left:28%; margin-top: 1em">Finally, if
+<b>Xft.dpi</b> is not set, Xcursor uses the display height,
+dividing by 48 (assuming that the height is 768).</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="17%">
+<p style="margin-top: 1em"><b>XCURSOR_THEME</b></p></td>
+<td width="2%"></td>
+<td width="51%">
+<p style="margin-top: 1em">This variable selects the
+desired <i>theme</i>.</p></td>
+<td width="21%">
+</td></tr>
+</table>
+<p style="margin-left:28%; margin-top: 1em">If the
+environment variable is not given, Xcursor tries the
+<b>Xcursor.theme</b> resource.</p>
+<p style="margin-left:28%; margin-top: 1em">If neither
+environment variable or resource is found, Xcursor uses the
+<i>default</i> theme.</p>
+<p style="margin-left:9%;"><b>XCURSOR_THEME_CORE</b></p>
+<p style="margin-left:28%;">Enables themes for core cursors
+if the environment variable is <i>true</i>.</p>
+<p style="margin-left:28%; margin-top: 1em">If the
+environment variable is not given, Xcursor tries the
+<b>Xcursor.theme_core</b> resource.</p>
+<p style="margin-left:28%; margin-top: 1em">An application
+can enable or disable themes using XcursorSetThemeCore.</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Xcursor</b>
+will probably change radically in the future; weak attempts
+will be made to retain some level of source-file
+compatibility.</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Keith Packard
+Thomas E. Dickey</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">XCreateRenderCursor(3),
+XCreatePixmapCursor(3), and XCreateFontCursor(3)</p>
+<p style="margin-left:9%; margin-top: 1em">as well as</p>
+<p style="margin-left:18%; margin-top: 1em"><i>Icon Theme
+Specification</i> <br/>
+ https://specifications.freedesktop.org/icon-theme-spec/</p>
+<hr/>
+</body>
+</html>

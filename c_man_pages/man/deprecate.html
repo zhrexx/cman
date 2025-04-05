@@ -1,0 +1,195 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:16 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>deprecate</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">deprecate</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Important Caveat">Important Caveat</a><br/>
+<a href="#EXPORT">EXPORT</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">deprecate
+− Perl pragma for deprecating the inclusion of a
+module in core</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use deprecate; #
+warn about future absence if loaded from core</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This pragma
+simplifies the maintenance of dual-life modules that will no
+longer be included in the Perl core in a future Perl
+release, but are still included currently.</p>
+<p style="margin-left:9%; margin-top: 1em">The purpose of
+the pragma is to alert users to the status of such a module
+by issuing a warning that encourages them to install the
+module from CPAN, so that a future upgrade to a perl which
+omits the module will not break their code.</p>
+<p style="margin-left:9%; margin-top: 1em">This warning
+will only be issued if the module was loaded from a core
+library directory, which allows the "use
+deprecate" line to be included in the CPAN version of
+the module. Because the pragma remains silent when the
+module is run from a non-core library directory, the pragma
+call does not need to be patched into or out of either the
+core or CPAN version of the module. The exact same code can
+be shipped for either purpose.</p>
+<h3>Important Caveat
+<a name="Important Caveat"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Note that when a
+module installs from CPAN to a core library directory rather
+than the site library directories, the user gains no
+protection from having installed it.</p>
+<p style="margin-left:9%; margin-top: 1em">At the same
+time, this pragma cannot detect when such a module has
+installed from CPAN to the core library, and so it would
+endlessly and uselessly exhort the user to upgrade.</p>
+<p style="margin-left:9%; margin-top: 1em">Therefore
+modules that can install from CPAN to the core library must
+make sure not to call this pragma when they have done so.
+Generally this means that the exact logic from the installer
+must be mirrored inside the module. E.g.:</p>
+<p style="margin-left:9%; margin-top: 1em"># Makefile.PL
+<br/>
+WriteMakefile( <br/>
+# ... <br/>
+INSTALLDIRS =&gt; ( "$]" &gt;= 5.011 ? 'site' :
+'perl' ), <br/>
+); <br/>
+# lib/Foo/Bar.pm <br/>
+use if "$]" &gt;= 5.011, 'deprecate';</p>
+<p style="margin-left:9%; margin-top: 1em">(The above
+example shows the most important case of this: when the
+target is a Perl older than 5.12 (where the core library
+directories take precedence over the site library
+directories) and the module being installed was included in
+core in that Perl version. Under those circumstances, an
+upgrade of the module from CPAN is only possible by
+installing to the core library.)</p>
+<h2>EXPORT
+<a name="EXPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">None by default.
+The only method is "import", called by "use
+deprecate;".</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">First example to
+"use deprecate;" was Switch.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Original version
+by Nicholas Clark</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2009, 2011</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself, either Perl version
+5.10.0 or, at your option, any later version of Perl 5 you
+may have available.</p>
+<hr/>
+</body>
+</html>

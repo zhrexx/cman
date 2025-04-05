@@ -1,0 +1,1031 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:43 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>warnings</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">warnings</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Default Warnings and Optional Warnings">Default Warnings and Optional Warnings</a><br/>
+<a href='#"Negative warnings"'>"Negative warnings"</a><br/>
+<a href="#What’s wrong with −w and $ˆW">What’s wrong with −w and $ˆW</a><br/>
+<a href="#Controlling Warnings from the Command Line">Controlling Warnings from the Command Line</a><br/>
+<a href="#Backward Compatibility">Backward Compatibility</a><br/>
+<a href="#Category Hierarchy">Category Hierarchy</a><br/>
+<a href="#Fatal Warnings">Fatal Warnings</a><br/>
+<a href="#Reporting Warnings from a Module">Reporting Warnings from a Module</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">warnings −
+Perl pragma to control optional warnings</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use warnings;
+<br/>
+no warnings; <br/>
+# Standard warnings are enabled by use v5.35 or above <br/>
+use v5.35; <br/>
+use warnings "all"; <br/>
+no warnings "uninitialized"; <br/>
+# or equivalent to those last two ... <br/>
+use warnings qw(all −uninitialized); <br/>
+use warnings::register; <br/>
+if (warnings::enabled()) { <br/>
+warnings::warn("some warning"); <br/>
+} <br/>
+if (warnings::enabled("void")) { <br/>
+warnings::warn("void", "some warning");
+<br/>
+} <br/>
+if (warnings::enabled($object)) { <br/>
+warnings::warn($object, "some warning"); <br/>
+} <br/>
+warnings::warnif("some warning"); <br/>
+warnings::warnif("void", "some
+warning"); <br/>
+warnings::warnif($object, "some warning");</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+"warnings" pragma gives control over which
+warnings are enabled in which parts of a Perl program.
+It’s a more flexible alternative for both the command
+line flag <b>−w</b> and the equivalent Perl variable,
+$ˆW.</p>
+<p style="margin-left:9%; margin-top: 1em">This pragma
+works just like the "strict" pragma. This means
+that the scope of the warning pragma is limited to the
+enclosing block. It also means that the pragma setting will
+not leak across files (via "use",
+"require" or "do"). This allows authors
+to independently define the degree of warning checks that
+will be applied to their module.</p>
+<p style="margin-left:9%; margin-top: 1em">By default,
+optional warnings are disabled, so any legacy code that
+doesn’t attempt to control the warnings will work
+unchanged.</p>
+<p style="margin-left:9%; margin-top: 1em">All warnings are
+enabled in a block by either of these:</p>
+<p style="margin-left:9%; margin-top: 1em">use warnings;
+<br/>
+use warnings 'all';</p>
+<p style="margin-left:9%; margin-top: 1em">Similarly all
+warnings are disabled in a block by either of these:</p>
+<p style="margin-left:9%; margin-top: 1em">no warnings;
+<br/>
+no warnings 'all';</p>
+<p style="margin-left:9%; margin-top: 1em">For example,
+consider the code below:</p>
+<p style="margin-left:9%; margin-top: 1em">use warnings;
+<br/>
+my @x; <br/>
+{ <br/>
+no warnings; <br/>
+my $y = @x[0]; <br/>
+} <br/>
+my $z = @x[0];</p>
+<p style="margin-left:9%; margin-top: 1em">The code in the
+enclosing block has warnings enabled, but the inner block
+has them disabled. In this case that means the assignment to
+the scalar $z will trip the "Scalar value @x[0] better
+written as $x[0]" warning, but the assignment to the
+scalar $y will not.</p>
+<p style="margin-left:9%; margin-top: 1em">All warnings are
+enabled automatically within the scope of a "use
+v5.35" (or higher) declaration.</p>
+<h3>Default Warnings and Optional Warnings
+<a name="Default Warnings and Optional Warnings"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Before the
+introduction of lexical warnings, Perl had two classes of
+warnings: mandatory and optional.</p>
+<p style="margin-left:9%; margin-top: 1em">As its name
+suggests, if your code tripped a mandatory warning, you
+would get a warning whether you wanted it or not. For
+example, the code below would always produce an "isn't
+numeric" warning about the "2:".</p>
+<p style="margin-left:9%; margin-top: 1em">my $x =
+"2:" + 3;</p>
+<p style="margin-left:9%; margin-top: 1em">With the
+introduction of lexical warnings, mandatory warnings now
+become <i>default</i> warnings. The difference is that
+although the previously mandatory warnings are still enabled
+by default, they can then be subsequently enabled or
+disabled with the lexical warning pragma. For example, in
+the code below, an "isn't numeric" warning will
+only be reported for the $x variable.</p>
+<p style="margin-left:9%; margin-top: 1em">my $x =
+"2:" + 3; <br/>
+no warnings; <br/>
+my $y = "2:" + 3;</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+neither the <b>−w</b> flag or the $ˆW can be used
+to disable/enable default warnings. They are still mandatory
+in this case.</p>
+<h3>"Negative warnings"
+<a name='"Negative warnings"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">As a
+convenience, you can (as of Perl 5.34) pass arguments to the
+import() method both positively and negatively. Negative
+warnings are those with a "−" sign prepended
+to their names; positive warnings are anything else. This
+lets you turn on some warnings and turn off others in one
+command. So, assuming that you’ve already turned on a
+bunch of warnings but want to tweak them a bit in some
+block, you can do this:</p>
+<p style="margin-left:9%; margin-top: 1em">{ <br/>
+use warnings qw(uninitialized −redefine); <br/>
+... <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">which is
+equivalent to:</p>
+<p style="margin-left:9%; margin-top: 1em">{ <br/>
+use warnings qw(uninitialized); <br/>
+no warnings qw(redefine); <br/>
+... <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">The argument
+list is processed in the order you specify. So, for example,
+if you don’t want to be warned about use of
+experimental features, except for "somefeature"
+that you really dislike, you can say this:</p>
+<p style="margin-left:9%; margin-top: 1em">use warnings
+qw(all −experimental experimental::somefeature);</p>
+<p style="margin-left:9%; margin-top: 1em">which is
+equivalent to:</p>
+<p style="margin-left:9%; margin-top: 1em">use warnings
+'all'; <br/>
+no warnings 'experimental'; <br/>
+use warnings 'experimental::somefeature';</p>
+<p style="margin-left:9%; margin-top: 1em">As experimental
+features become regular features of Perl, the corresponding
+warnings are not printed anymore. They also stop being
+listed in the "Category Hierarchy" below.</p>
+<p style="margin-left:9%; margin-top: 1em">It is still
+possible to request turning on or off these warnings, but
+doing so has no effect.</p>
+<h3>What’s wrong with −w and $ˆW
+<a name="What’s wrong with −w and $ˆW"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Although very
+useful, the big problem with using <b>−w</b> on the
+command line to enable warnings is that it is all or
+nothing. Take the typical scenario when you are writing a
+Perl program. Parts of the code you will write yourself, but
+it’s very likely that you will make use of pre-written
+Perl modules. If you use the <b>−w</b> flag in this
+case, you end up enabling warnings in pieces of code that
+you haven’t written.</p>
+<p style="margin-left:9%; margin-top: 1em">Similarly, using
+$ˆW to either disable or enable blocks of code is
+fundamentally flawed. For a start, say you want to disable
+warnings in a block of code. You might expect this to be
+enough to do the trick:</p>
+<p style="margin-left:9%; margin-top: 1em">{ <br/>
+local ($ˆW) = 0; <br/>
+my $x =+ 2; <br/>
+my $y; chop $y; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">When this code
+is run with the <b>−w</b> flag, a warning will be
+produced for the $x line: "Reversed +=
+operator".</p>
+<p style="margin-left:9%; margin-top: 1em">The problem is
+that Perl has both compile-time and run-time warnings. To
+disable compile-time warnings you need to rewrite the code
+like this:</p>
+<p style="margin-left:9%; margin-top: 1em">{ <br/>
+BEGIN { $ˆW = 0 } <br/>
+my $x =+ 2; <br/>
+my $y; chop $y; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">And note that
+unlike the first example, this will permanently set $ˆW
+since it cannot both run during compile-time and be
+localized to a run-time block.</p>
+<p style="margin-left:9%; margin-top: 1em">The other big
+problem with $ˆW is the way you can inadvertently
+change the warning setting in unexpected places in your
+code. For example, when the code below is run (without the
+<b>−w</b> flag), the second call to "doit"
+will trip a "Use of uninitialized value" warning,
+whereas the first will not.</p>
+<p style="margin-left:9%; margin-top: 1em">sub doit <br/>
+{ <br/>
+my $y; chop $y; <br/>
+} <br/>
+doit(); <br/>
+{ <br/>
+local ($ˆW) = 1; <br/>
+doit() <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">This is a
+side-effect of $ˆW being dynamically scoped.</p>
+<p style="margin-left:9%; margin-top: 1em">Lexical warnings
+get around these limitations by allowing finer control over
+where warnings can or can’t be tripped.</p>
+<h3>Controlling Warnings from the Command Line
+<a name="Controlling Warnings from the Command Line"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">There are three
+Command Line flags that can be used to control when warnings
+are (or aren’t) produced:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p><b>−w</b></p></td>
+<td width="3%"></td>
+<td width="85%">
+<p>This is the existing flag. If the lexical warnings
+pragma is <b>not</b> used in any of your code, or any of the
+modules that you use, this flag will enable warnings
+everywhere. See "Backward Compatibility" for
+details of how this flag interacts with lexical
+warnings.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p><b>−W</b></p></td>
+<td width="3%"></td>
+<td width="85%">
+<p>If the <b>−W</b> flag is used on the command line,
+it will enable all warnings throughout the program
+regardless of whether warnings were disabled locally using
+"no warnings" or "$ˆW =0". This
+includes all files that get included via "use",
+"require" or "do". Think of it as the
+Perl equivalent of the "lint" command.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p><b>−X</b></p></td>
+<td width="3%"></td>
+<td width="85%">
+<p>Does the exact opposite to the <b>−W</b> flag,
+i.e. it disables all warnings.</p></td></tr>
+</table>
+<h3>Backward Compatibility
+<a name="Backward Compatibility"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If you are used
+to working with a version of Perl prior to the introduction
+of lexically scoped warnings, or have code that uses both
+lexical warnings and $ˆW, this section will describe
+how they interact.</p>
+<p style="margin-left:9%; margin-top: 1em">How Lexical
+Warnings interact with <b>−w</b>/$ˆW:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">1.</p></td>
+<td width="3%"></td>
+<td width="85%">
+<p style="margin-top: 1em">If none of the three command
+line flags (<b>−w</b>, <b>−W</b> or
+<b>−X</b>) that control warnings is used and neither
+$ˆW nor the "warnings" pragma are used, then
+default warnings will be enabled and optional warnings
+disabled. This means that legacy code that doesn’t
+attempt to control the warnings will work unchanged.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>2.</p></td>
+<td width="3%"></td>
+<td width="85%">
+<p>The <b>−w</b> flag just sets the global $ˆW
+variable as in 5.005. This means that any legacy code that
+currently relies on manipulating $ˆW to control warning
+behavior will still work as is.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>3.</p></td>
+<td width="3%"></td>
+<td width="85%">
+<p>Apart from now being a boolean, the $ˆW variable
+operates in exactly the same horrible uncontrolled global
+way, except that it cannot disable/enable default
+warnings.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>4.</p></td>
+<td width="3%"></td>
+<td width="85%">
+<p>If a piece of code is under the control of the
+"warnings" pragma, both the $ˆW variable and
+the <b>−w</b> flag will be ignored for the scope of
+the lexical warning.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>5.</p></td>
+<td width="3%"></td>
+<td width="85%">
+<p>The only way to override a lexical warnings setting is
+with the <b>−W</b> or <b>−X</b> command line
+flags.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The combined
+effect of 3 &amp; 4 is that it will allow code which uses
+the "warnings" pragma to control the warning
+behavior of $ˆW−type code (using a "local
+$ˆW=0") if it really wants to, but not
+vice-versa.</p>
+<h3>Category Hierarchy
+<a name="Category Hierarchy"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A hierarchy of
+"categories" have been defined to allow groups of
+warnings to be enabled/disabled in isolation.</p>
+<p style="margin-left:9%; margin-top: 1em">The current
+hierarchy is:</p>
+<p style="margin-left:9%; margin-top: 1em">all −+
+<br/>
+| <br/>
++− closure <br/>
+| <br/>
++− deprecated −−−−+ <br/>
+| | <br/>
+| +− deprecated::apostrophe_as_package_separator <br/>
+| | <br/>
+| +− deprecated::delimiter_will_be_paired <br/>
+| | <br/>
+| +− deprecated::dot_in_inc <br/>
+| | <br/>
+| +− deprecated::goto_construct <br/>
+| | <br/>
+| +− deprecated::missing_import_called_with_args <br/>
+| | <br/>
+| +− deprecated::smartmatch <br/>
+| | <br/>
+| +− deprecated::subsequent_use_version <br/>
+| | <br/>
+| +− deprecated::unicode_property_name <br/>
+| | <br/>
+| +− deprecated::version_downgrade <br/>
+| <br/>
++− exiting <br/>
+| <br/>
++− experimental −−+ <br/>
+| | <br/>
+| +− experimental::args_array_with_signatures <br/>
+| | <br/>
+| +− experimental::builtin <br/>
+| | <br/>
+| +− experimental::class <br/>
+| | <br/>
+| +− experimental::declared_refs <br/>
+| | <br/>
+| +− experimental::defer <br/>
+| | <br/>
+| +− experimental::extra_paired_delimiters <br/>
+| | <br/>
+| +− experimental::private_use <br/>
+| | <br/>
+| +− experimental::re_strict <br/>
+| | <br/>
+| +− experimental::refaliasing <br/>
+| | <br/>
+| +− experimental::regex_sets <br/>
+| | <br/>
+| +− experimental::try <br/>
+| | <br/>
+| +− experimental::uniprop_wildcards <br/>
+| | <br/>
+| +− experimental::vlb <br/>
+| <br/>
++− glob <br/>
+| <br/>
++− imprecision <br/>
+| <br/>
++− io
+−−−−−−−−−−−−+
+<br/>
+| | <br/>
+| +− closed <br/>
+| | <br/>
+| +− exec <br/>
+| | <br/>
+| +− layer <br/>
+| | <br/>
+| +− newline <br/>
+| | <br/>
+| +− pipe <br/>
+| | <br/>
+| +− syscalls <br/>
+| | <br/>
+| +− unopened <br/>
+| <br/>
++− locale <br/>
+| <br/>
++− misc <br/>
+| <br/>
++− missing <br/>
+| <br/>
++− numeric <br/>
+| <br/>
++− once <br/>
+| <br/>
++− overflow <br/>
+| <br/>
++− pack <br/>
+| <br/>
++− portable <br/>
+| <br/>
++− recursion <br/>
+| <br/>
++− redefine <br/>
+| <br/>
++− redundant <br/>
+| <br/>
++− regexp <br/>
+| <br/>
++− scalar <br/>
+| <br/>
++− severe
+−−−−−−−−+
+<br/>
+| | <br/>
+| +− debugging <br/>
+| | <br/>
+| +− inplace <br/>
+| | <br/>
+| +− internal <br/>
+| | <br/>
+| +− malloc <br/>
+| <br/>
++− shadow <br/>
+| <br/>
++− signal <br/>
+| <br/>
++− substr <br/>
+| <br/>
++− syntax
+−−−−−−−−+
+<br/>
+| | <br/>
+| +− ambiguous <br/>
+| | <br/>
+| +− bareword <br/>
+| | <br/>
+| +− digit <br/>
+| | <br/>
+| +− illegalproto <br/>
+| | <br/>
+| +− parenthesis <br/>
+| | <br/>
+| +− precedence <br/>
+| | <br/>
+| +− printf <br/>
+| | <br/>
+| +− prototype <br/>
+| | <br/>
+| +− qw <br/>
+| | <br/>
+| +− reserved <br/>
+| | <br/>
+| +− semicolon <br/>
+| <br/>
++− taint <br/>
+| <br/>
++− threads <br/>
+| <br/>
++− uninitialized <br/>
+| <br/>
++− unpack <br/>
+| <br/>
++− untie <br/>
+| <br/>
++− utf8
+−−−−−−−−−−+
+<br/>
+| | <br/>
+| +− non_unicode <br/>
+| | <br/>
+| +− nonchar <br/>
+| | <br/>
+| +− surrogate <br/>
+| <br/>
++− void</p>
+<p style="margin-left:9%; margin-top: 1em">Just like the
+"strict" pragma any of these categories can be
+combined</p>
+<p style="margin-left:9%; margin-top: 1em">use warnings
+qw(void redefine); <br/>
+no warnings qw(io syntax untie);</p>
+<p style="margin-left:9%; margin-top: 1em">Also like the
+"strict" pragma, if there is more than one
+instance of the "warnings" pragma in a given scope
+the cumulative effect is additive.</p>
+<p style="margin-left:9%; margin-top: 1em">use warnings
+qw(void); # only "void" warnings enabled <br/>
+... <br/>
+use warnings qw(io); # only "void" &amp;
+"io" warnings enabled <br/>
+... <br/>
+no warnings qw(void); # only "io" warnings
+enabled</p>
+<p style="margin-left:9%; margin-top: 1em">To determine
+which category a specific warning has been assigned to see
+perldiag.</p>
+<p style="margin-left:9%; margin-top: 1em">Note: Before
+Perl 5.8.0, the lexical warnings category
+"deprecated" was a sub-category of the
+"syntax" category. It is now a top-level category
+in its own right.</p>
+<p style="margin-left:9%; margin-top: 1em">Note: Before
+5.21.0, the "missing" lexical warnings category
+was internally defined to be the same as the
+"uninitialized" category. It is now a top-level
+category in its own right.</p>
+<h3>Fatal Warnings
+<a name="Fatal Warnings"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The presence of
+the word "FATAL" in the category list will
+escalate warnings in those categories into fatal errors in
+that lexical scope.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NOTE:</b>
+FATAL warnings should be used with care, particularly
+"FATAL =&gt; 'all'".</p>
+<p style="margin-left:9%; margin-top: 1em">Libraries using
+warnings::warn for custom warning categories generally
+don’t expect warnings::warn to be fatal and can wind
+up in an unexpected state as a result. For XS modules
+issuing categorized warnings, such unanticipated exceptions
+could also expose memory leak bugs.</p>
+<p style="margin-left:9%; margin-top: 1em">Moreover, the
+Perl interpreter itself has had serious bugs involving
+fatalized warnings. For a summary of resolved and unresolved
+problems as of January 2015, please see this
+perl5−porters post
+&lt;http://www.nntp.perl.org/group/perl.perl5.porters/2015/01/msg225235.html&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">While some
+developers find fatalizing some warnings to be a useful
+defensive programming technique, using "FATAL =&gt;
+'all'" to fatalize all possible warning categories
+−− including custom ones −− is
+particularly risky. Therefore, the use of "FATAL =&gt;
+'all'" is discouraged.</p>
+<p style="margin-left:9%; margin-top: 1em">The strictures
+module on CPAN offers one example of a warnings subset that
+the module’s authors believe is relatively safe to
+fatalize.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NOTE:</b>
+Users of FATAL warnings, especially those using "FATAL
+=&gt; 'all'", should be fully aware that they are
+risking future portability of their programs by doing so.
+Perl makes absolutely no commitments to not introduce new
+warnings or warnings categories in the future; indeed, we
+explicitly reserve the right to do so. Code that may not
+warn now may warn in a future release of Perl if the Perl5
+development team deems it in the best interests of the
+community to do so. Should code using FATAL warnings break
+due to the introduction of a new warning we will NOT
+consider it an incompatible change. Users of FATAL warnings
+should take special caution during upgrades to check to see
+if their code triggers any new warnings and should pay
+particular attention to the fine print of the documentation
+of the features they use to ensure they do not exploit
+features that are documented as risky, deprecated, or
+unspecified, or where the documentation says "so
+don’t do that", or anything with the same sense
+and spirit. Use of such features in combination with FATAL
+warnings is ENTIRELY AT THE USER’S RISK.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+documentation describes how to use FATAL warnings but the
+perl5 porters strongly recommend that you understand the
+risks before doing so, especially for library code intended
+for use by others, as there is no way for downstream users
+to change the choice of fatal categories.</p>
+<p style="margin-left:9%; margin-top: 1em">In the code
+below, the use of "time", "length" and
+"join" can all produce a "Useless use of xxx
+in void context" warning.</p>
+<p style="margin-left:9%; margin-top: 1em">use warnings;
+<br/>
+time; <br/>
+{ <br/>
+use warnings FATAL =&gt; qw(void); <br/>
+length "abc"; <br/>
+} <br/>
+join "", 1,2,3; <br/>
+print "done\n";</p>
+<p style="margin-left:9%; margin-top: 1em">When run it
+produces this output</p>
+<p style="margin-left:9%; margin-top: 1em">Useless use of
+time in void context at fatal line 3. <br/>
+Useless use of length in void context at fatal line 7.</p>
+<p style="margin-left:9%; margin-top: 1em">The scope where
+"length" is used has escalated the
+"void" warnings category into a fatal error, so
+the program terminates immediately when it encounters the
+warning.</p>
+<p style="margin-left:9%; margin-top: 1em">To explicitly
+turn off a "FATAL" warning you just disable the
+warning it is associated with. So, for example, to disable
+the "void" warning in the example above, either of
+these will do the trick:</p>
+<p style="margin-left:9%; margin-top: 1em">no warnings
+qw(void); <br/>
+no warnings FATAL =&gt; qw(void);</p>
+<p style="margin-left:9%; margin-top: 1em">If you want to
+downgrade a warning that has been escalated into a fatal
+error back to a normal warning, you can use the
+"NONFATAL" keyword. For example, the code below
+will promote all warnings into fatal errors, except for
+those in the "syntax" category.</p>
+<p style="margin-left:9%; margin-top: 1em">use warnings
+FATAL =&gt; 'all', NONFATAL =&gt; 'syntax';</p>
+<p style="margin-left:9%; margin-top: 1em">As of Perl 5.20,
+instead of "use warnings FATAL =&gt; 'all';" you
+can use:</p>
+<p style="margin-left:9%; margin-top: 1em">use v5.20; #
+Perl 5.20 or greater is required for the following <br/>
+use warnings 'FATAL'; # short form of "use warnings
+FATAL =&gt; 'all';"</p>
+<p style="margin-left:9%; margin-top: 1em">However, you
+should still heed the guidance earlier in this section
+against using "use warnings FATAL =&gt;
+'all';".</p>
+<p style="margin-left:9%; margin-top: 1em">If you want your
+program to be compatible with versions of Perl before 5.20,
+you must use "use warnings FATAL =&gt; 'all';"
+instead. (In previous versions of Perl, the behavior of the
+statements "use warnings 'FATAL';", "use
+warnings 'NONFATAL';" and "no warnings
+'FATAL';" was unspecified; they did not behave as if
+they included the "=&gt; 'all'" portion. As of
+5.20, they do.)</p>
+<h3>Reporting Warnings from a Module
+<a name="Reporting Warnings from a Module"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+"warnings" pragma provides a number of functions
+that are useful for module authors. These are used when you
+want to report a module-specific warning to a calling module
+that has enabled warnings via the "warnings"
+pragma.</p>
+<p style="margin-left:9%; margin-top: 1em">Consider the
+module "MyMod::Abc" below.</p>
+<p style="margin-left:9%; margin-top: 1em">package
+MyMod::Abc; <br/>
+use warnings::register; <br/>
+sub open { <br/>
+my $path = shift; <br/>
+if ($path !˜ m#ˆ/#) { <br/>
+warnings::warn("changing relative path to
+/var/abc") <br/>
+if warnings::enabled(); <br/>
+$path = "/var/abc/$path"; <br/>
+} <br/>
+} <br/>
+1;</p>
+<p style="margin-left:9%; margin-top: 1em">The call to
+"warnings::register" will create a new warnings
+category called "MyMod::Abc", i.e. the new
+category name matches the current package name. The
+"open" function in the module will display a
+warning message if it gets given a relative path as a
+parameter. This warning will only be displayed if the code
+that uses "MyMod::Abc" has actually enabled them
+with the "warnings" pragma as below − note
+that a plain "use warnings" enables even warnings
+that have not yet been registered.</p>
+<p style="margin-left:9%; margin-top: 1em">use warnings;
+<br/>
+use MyMod::Abc; <br/>
+... <br/>
+abc::open("../fred.txt");</p>
+<p style="margin-left:9%; margin-top: 1em">The specific
+warning can be enabled or disabled, but only after the
+module has been imported:</p>
+<p style="margin-left:9%; margin-top: 1em"># no warnings
+'MyMod::Abc'; # error, unknown category before <br/>
+# the module is loaded <br/>
+use MyMod::Abc; <br/>
+no warnings 'MyMod::Abc'; # ok after the module is loaded
+<br/>
+... <br/>
+abc::open("../fred.txt");</p>
+<p style="margin-left:9%; margin-top: 1em">It is also
+possible to test whether the pre-defined warnings categories
+are set in the calling module with the
+"warnings::enabled" function. Consider this
+snippet of code:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+MyMod::Abc; <br/>
+sub open2 { <br/>
+if (warnings::enabled("deprecated")) { <br/>
+warnings::warn("deprecated", <br/>
+"open2 is deprecated, use open instead"); <br/>
+} <br/>
+open(@_); <br/>
+} <br/>
+sub open <br/>
+... <br/>
+1;</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+"open2" has been deprecated, so code has been
+included to display a warning message whenever the calling
+module has (at least) the "deprecated" warnings
+category enabled. Something like this, say.</p>
+<p style="margin-left:9%; margin-top: 1em">use warnings
+'deprecated'; <br/>
+use MyMod::Abc; <br/>
+... <br/>
+MyMod::Abc::open2($filename);</p>
+<p style="margin-left:9%; margin-top: 1em">Either the
+"warnings::warn" or "warnings::warnif"
+function should be used to actually display the warnings
+message. This is because they can make use of the feature
+that allows warnings to be escalated into fatal errors. So
+in this case</p>
+<p style="margin-left:9%; margin-top: 1em">use MyMod::Abc;
+<br/>
+use warnings FATAL =&gt; 'MyMod::Abc'; <br/>
+... <br/>
+MyMod::Abc::open('../fred.txt');</p>
+<p style="margin-left:9%; margin-top: 1em">the
+"warnings::warnif" function will detect this and
+die after displaying the warning message.</p>
+<p style="margin-left:9%; margin-top: 1em">The three
+warnings functions, "warnings::warn",
+"warnings::warnif" and
+"warnings::enabled" can optionally take an object
+reference in place of a category name. In this case the
+functions will use the class name of the object as the
+warnings category.</p>
+<p style="margin-left:9%; margin-top: 1em">Consider this
+example:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Original; <br/>
+no warnings; <br/>
+use warnings::register; <br/>
+sub new <br/>
+{ <br/>
+my $class = shift; <br/>
+bless [], $class; <br/>
+} <br/>
+sub check <br/>
+{ <br/>
+my $self = shift; <br/>
+my $value = shift; <br/>
+if ($value % 2 &amp;&amp; warnings::enabled($self)) <br/>
+{ warnings::warn($self, "Odd numbers are unsafe")
+} <br/>
+} <br/>
+sub doit <br/>
+{ <br/>
+my $self = shift; <br/>
+my $value = shift; <br/>
+$self−&gt;check($value); <br/>
+# ... <br/>
+} <br/>
+1; <br/>
+package Derived; <br/>
+use warnings::register; <br/>
+use Original; <br/>
+our @ISA = qw( Original ); <br/>
+sub new <br/>
+{ <br/>
+my $class = shift; <br/>
+bless [], $class; <br/>
+} <br/>
+1;</p>
+<p style="margin-left:9%; margin-top: 1em">The code below
+makes use of both modules, but it only enables warnings from
+"Derived".</p>
+<p style="margin-left:9%; margin-top: 1em">use Original;
+<br/>
+use Derived; <br/>
+use warnings 'Derived'; <br/>
+my $x = Original−&gt;new(); <br/>
+$x−&gt;doit(1); <br/>
+my $y = Derived−&gt;new(); <br/>
+$x−&gt;doit(1);</p>
+<p style="margin-left:9%; margin-top: 1em">When this code
+is run only the "Derived" object, $y, will
+generate a warning.</p>
+<p style="margin-left:9%; margin-top: 1em">Odd numbers are
+unsafe at main.pl line 7</p>
+<p style="margin-left:9%; margin-top: 1em">Notice also that
+the warning is reported at the line where the object is
+first used.</p>
+<p style="margin-left:9%; margin-top: 1em">When registering
+new categories of warning, you can supply more names to
+warnings::register like this:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+MyModule; <br/>
+use warnings::register qw(format precision); <br/>
+... <br/>
+warnings::warnif('MyModule::format', '...');</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Note: The
+functions with names ending in "_at_level" were
+added in Perl 5.28. <br/>
+use warnings::register</p>
+<p style="margin-left:14%;">Creates a new warnings category
+with the same name as the package where the call to the
+pragma is used.</p>
+<p style="margin-left:9%;"><b>warnings::enabled()</b></p>
+<p style="margin-left:14%;">Use the warnings category with
+the same name as the current package.</p>
+<p style="margin-left:14%; margin-top: 1em">Return TRUE if
+that warnings category is enabled in the calling module.
+Otherwise returns FALSE.</p>
+<p style="margin-left:9%;">warnings::enabled($category)</p>
+<p style="margin-left:14%;">Return TRUE if the warnings
+category, $category, is enabled in the calling module.
+Otherwise returns FALSE.</p>
+<p style="margin-left:9%;">warnings::enabled($object)</p>
+<p style="margin-left:14%;">Use the name of the class for
+the object reference, $object, as the warnings category.</p>
+<p style="margin-left:14%; margin-top: 1em">Return TRUE if
+that warnings category is enabled in the first scope where
+the object is used. Otherwise returns FALSE.</p>
+<p style="margin-left:9%;">warnings::enabled_at_level($category,
+$level)</p>
+<p style="margin-left:14%;">Like
+"warnings::enabled", but $level specifies the
+exact call frame, 0 being the immediate caller.</p>
+<p style="margin-left:9%;"><b>warnings::fatal_enabled()</b></p>
+<p style="margin-left:14%;">Return TRUE if the warnings
+category with the same name as the current package has been
+set to FATAL in the calling module. Otherwise returns
+FALSE.</p>
+<p style="margin-left:9%;">warnings::fatal_enabled($category)</p>
+<p style="margin-left:14%;">Return TRUE if the warnings
+category $category has been set to FATAL in the calling
+module. Otherwise returns FALSE.</p>
+<p style="margin-left:9%;">warnings::fatal_enabled($object)</p>
+<p style="margin-left:14%;">Use the name of the class for
+the object reference, $object, as the warnings category.</p>
+<p style="margin-left:14%; margin-top: 1em">Return TRUE if
+that warnings category has been set to FATAL in the first
+scope where the object is used. Otherwise returns FALSE.</p>
+<p style="margin-left:9%;">warnings::fatal_enabled_at_level($category,
+$level)</p>
+<p style="margin-left:14%;">Like
+"warnings::fatal_enabled", but $level specifies
+the exact call frame, 0 being the immediate caller.</p>
+<p style="margin-left:9%;">warnings::warn($message)</p>
+<p style="margin-left:14%;">Print $message to STDERR.</p>
+<p style="margin-left:14%; margin-top: 1em">Use the
+warnings category with the same name as the current
+package.</p>
+<p style="margin-left:14%; margin-top: 1em">If that
+warnings category has been set to "FATAL" in the
+calling module then die. Otherwise return.</p>
+<p style="margin-left:9%;">warnings::warn($category,
+$message)</p>
+<p style="margin-left:14%;">Print $message to STDERR.</p>
+<p style="margin-left:14%; margin-top: 1em">If the warnings
+category, $category, has been set to "FATAL" in
+the calling module then die. Otherwise return.</p>
+<p style="margin-left:9%;">warnings::warn($object,
+$message)</p>
+<p style="margin-left:14%;">Print $message to STDERR.</p>
+<p style="margin-left:14%; margin-top: 1em">Use the name of
+the class for the object reference, $object, as the warnings
+category.</p>
+<p style="margin-left:14%; margin-top: 1em">If that
+warnings category has been set to "FATAL" in the
+scope where $object is first used then die. Otherwise
+return.</p>
+<p style="margin-left:9%;">warnings::warn_at_level($category,
+$level, $message)</p>
+<p style="margin-left:14%;">Like
+"warnings::warn", but $level specifies the exact
+call frame, 0 being the immediate caller.</p>
+<p style="margin-left:9%;">warnings::warnif($message)</p>
+<p style="margin-left:14%;">Equivalent to:</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(warnings::enabled()) <br/>
+{ warnings::warn($message) }</p>
+<p style="margin-left:9%;">warnings::warnif($category,
+$message)</p>
+<p style="margin-left:14%;">Equivalent to:</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(warnings::enabled($category)) <br/>
+{ warnings::warn($category, $message) }</p>
+<p style="margin-left:9%;">warnings::warnif($object,
+$message)</p>
+<p style="margin-left:14%;">Equivalent to:</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(warnings::enabled($object)) <br/>
+{ warnings::warn($object, $message) }</p>
+<p style="margin-left:9%;">warnings::warnif_at_level($category,
+$level, $message)</p>
+<p style="margin-left:14%;">Like
+"warnings::warnif", but $level specifies the exact
+call frame, 0 being the immediate caller.</p>
+<p style="margin-left:9%;">warnings::register_categories(@names)</p>
+<p style="margin-left:14%;">This registers warning
+categories for the given names and is primarily for use by
+the warnings::register pragma.</p>
+<p style="margin-left:9%; margin-top: 1em">See also
+"Pragmatic Modules" in perlmodlib and
+perldiag.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:48 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SD_BUS_SET_WATCH_BIND</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SD_BUS_SET_WATCH_BIND</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#Errors">Errors</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">sd_bus_set_watch_bind,
+sd_bus_get_watch_bind − Control socket binding
+watching on bus connections</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;systemd/sd−bus.h&gt;</b></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="59%">
+<p style="margin-top: 1em"><b>int
+sd_bus_set_watch_bind(sd_bus *</b><i>bus</i><b>,
+int </b><i>b</i><b>);</b></p> </td>
+<td width="32%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="59%">
+<p style="margin-top: 1em"><b>int
+sd_bus_get_watch_bind(sd_bus *</b><i>bus</i><b>);</b></p> </td>
+<td width="32%">
+</td></tr>
+</table>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>sd_bus_set_watch_bind()</b>
+may be used to enable or disable client−side watching
+of server socket binding for a bus connection object. If the
+<i>b</i> is true, the feature is enabled, otherwise disabled
+(which is the default). When enabled, and the selected bus
+address refers to an AF_UNIX socket in the file system which
+does not exist while the connection attempt is made an
+<b>inotify</b>(7) watch is installed on it, waiting for the
+socket to appear. As soon as the socket appears the
+connection is made. This functionality is useful in
+particular in early−boot programs that need to run
+before the system bus is available, but want to connect to
+it the instant it may be connected to.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>sd_bus_get_watch_bind()</b>
+may be used to query the current setting of this feature. It
+returns zero when the feature is disabled, and positive if
+enabled.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that no
+timeout is applied while we wait for the socket to appear.
+This means that any synchronous remote operation (such as
+<b>sd_bus_call</b>(3), <b>sd_bus_add_match</b>(3) or
+<b>sd_bus_request_name</b>(3)), that is used on a connection
+with this feature enabled that hasn't been established yet,
+might block forever if the socket is never created. However,
+asynchronous remote operations (such as
+<b>sd_bus_send</b>(3), <b>sd_bus_call_async</b>(3),
+<b>sd_bus_add_match_async</b>(3)) do not block in this case,
+and safely enqueue the requested operations to be dispatched
+the instant the connection is set up.</p>
+<p style="margin-left:9%; margin-top: 1em">Use
+<b>sd_bus_is_ready</b>(3) to determine whether the
+connection is fully established, i.e. whether the peer
+socket has been bound, connected to and authenticated. Use
+<b>sd_bus_set_connected_signal</b>(3) to be notified when
+the connection is fully established.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+these functions return 0 or a positive integer. On failure,
+they return a negative errno−style error code.</p>
+<h3>Errors
+<a name="Errors"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returned errors
+may indicate the following problems:</p>
+<p style="margin-left:9%; margin-top: 1em"><b>−ECHILD</b></p>
+<p style="margin-left:14%;">The bus connection has been
+created in a different process, library or module
+instance.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Functions
+described here are available as a shared library, which can
+be compiled against and linked to with the
+<b>libsystemd pkg-config</b>(1) file.</p>
+<p style="margin-left:9%; margin-top: 1em">The code
+described here uses <b>getenv</b>(3), which is declared to
+be not multi−thread−safe. This means that the
+code calling the functions described here must not call
+<b>setenv</b>(3) from a parallel thread. It is recommended
+to only do calls to <b>setenv()</b> from an early phase of
+the program when no other threads have been started.</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Example 1. Create
+a simple system service that publishes a property on the
+system bus and can reconnect when D−Bus disconnects
+and reconnects</b></p>
+<p style="margin-left:14%; margin-top: 1em">/*
+SPDX−License−Identifier: MIT−0 */</p>
+<p style="margin-left:14%; margin-top: 1em">/* A
+D−Bus service that automatically reconnects when the
+system bus is <br/>
+* restarted. <br/>
+* <br/>
+* Compile with 'cc sd_bus_service_reconnect.c
+$(pkg−config −−libs −−cflags
+libsystemd)' <br/>
+* <br/>
+* To allow the program to take ownership of the name
+'org.freedesktop.ReconnectExample', <br/>
+* add the following as
+/etc/dbus−1/system.d/org.freedesktop.ReconnectExample.conf
+<br/>
+* and then reload the broker with 'systemctl reload
+dbus':</p>
+<p style="margin-left:14%; margin-top: 1em">&lt;?xml
+version="1.0"?&gt;
+&lt;!−−*−nxml−*−−&gt;
+<br/>
+&lt;!DOCTYPE busconfig PUBLIC
+"−//freedesktop//DTD D−BUS Bus
+Configuration 1.0//EN" <br/>
+
+"http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd"&gt;
+<br/>
+&lt;busconfig&gt; <br/>
+&lt;policy user="root"&gt; <br/>
+&lt;allow
+own="org.freedesktop.ReconnectExample"/&gt; <br/>
+&lt;allow
+send_destination="org.freedesktop.ReconnectExample"/&gt;
+<br/>
+&lt;allow
+receive_sender="org.freedesktop.ReconnectExample"/&gt;
+<br/>
+&lt;/policy&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">&lt;policy
+context="default"&gt; <br/>
+&lt;allow
+send_destination="org.freedesktop.ReconnectExample"/&gt;
+<br/>
+&lt;allow
+receive_sender="org.freedesktop.ReconnectExample"/&gt;
+<br/>
+&lt;/policy&gt; <br/>
+&lt;/busconfig&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">* <br/>
+* To get the property via busctl: <br/>
+* <br/>
+* $ busctl −−user get−property
+org.freedesktop.ReconnectExample \ <br/>
+* /org/freedesktop/ReconnectExample \ <br/>
+* org.freedesktop.ReconnectExample \ <br/>
+* Example <br/>
+* s "example" <br/>
+*/</p>
+<p style="margin-left:14%; margin-top: 1em">#include
+&lt;errno.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;systemd/sd−bus.h&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">#define
+_cleanup_(f) __attribute__((cleanup(f)))</p>
+<p style="margin-left:14%; margin-top: 1em">static int
+log_error(int r, const char *str) { <br/>
+fprintf(stderr, "%s failed: %s\n", str,
+strerror(−r)); <br/>
+return r; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">typedef struct
+object { <br/>
+const char *example; <br/>
+sd_bus **bus; <br/>
+sd_event **event; <br/>
+} object;</p>
+<p style="margin-left:14%; margin-top: 1em">static int
+property_get( <br/>
+sd_bus *bus, <br/>
+const char *path, <br/>
+const char *interface, <br/>
+const char *property, <br/>
+sd_bus_message *reply, <br/>
+void *userdata, <br/>
+sd_bus_error *error) {</p>
+<p style="margin-left:14%; margin-top: 1em">object *o =
+userdata;</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(strcmp(property, "Example") == 0) <br/>
+return sd_bus_message_append(reply, "s",
+o−&gt;example);</p>
+<p style="margin-left:14%; margin-top: 1em">return
+sd_bus_error_setf(error, <br/>
+SD_BUS_ERROR_UNKNOWN_PROPERTY, <br/>
+"Unknown property '%s'", <br/>
+property); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">/*
+https://www.freedesktop.org/software/systemd/man/sd_bus_add_object.html
+*/ <br/>
+static const sd_bus_vtable vtable[] = { <br/>
+SD_BUS_VTABLE_START(0), <br/>
+SD_BUS_PROPERTY( <br/>
+"Example", "s", <br/>
+property_get, <br/>
+0, <br/>
+SD_BUS_VTABLE_PROPERTY_CONST), <br/>
+SD_BUS_VTABLE_END <br/>
+};</p>
+<p style="margin-left:14%; margin-top: 1em">static int
+setup(object *o);</p>
+<p style="margin-left:14%; margin-top: 1em">static int
+on_disconnect(sd_bus_message *message, void *userdata,
+sd_bus_error *ret_error) { <br/>
+int r;</p>
+<p style="margin-left:14%; margin-top: 1em">r =
+setup((object *)userdata); <br/>
+if (r &lt; 0) { <br/>
+object *o = userdata; <br/>
+r = sd_event_exit(*o−&gt;event, r); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_event_exit()"); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">return 1; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">/* Ensure the
+event loop exits with a clear error if acquiring the
+well−known <br/>
+* service name fails */ <br/>
+static int request_name_callback(sd_bus_message *m, void
+*userdata, sd_bus_error *ret_error) { <br/>
+int r;</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(!sd_bus_message_is_method_error(m, NULL)) <br/>
+return 1;</p>
+<p style="margin-left:14%; margin-top: 1em">const
+sd_bus_error *error = sd_bus_message_get_error(m);</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(sd_bus_error_has_names(error, SD_BUS_ERROR_TIMEOUT,
+SD_BUS_ERROR_NO_REPLY)) <br/>
+return 1; /* The bus is not available, try again later
+*/</p>
+<p style="margin-left:14%; margin-top: 1em">fprintf(stderr,
+"Failed to request name: %s\n",
+error−&gt;message); <br/>
+object *o = userdata; <br/>
+r = sd_event_exit(*o−&gt;event,
+−sd_bus_error_get_errno(error)); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_event_exit()");</p>
+<p style="margin-left:14%; margin-top: 1em">return 1; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">static int
+setup(object *o) { <br/>
+int r;</p>
+<p style="margin-left:14%; margin-top: 1em">/* If we are
+reconnecting, then the bus object needs to be closed,
+detached <br/>
+* from the event loop and recreated. <br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_detach_event.html
+<br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_close_unref.html
+<br/>
+*/ <br/>
+if (*o−&gt;bus) { <br/>
+r = sd_bus_detach_event(*o−&gt;bus); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_bus_detach_event()"); <br/>
+*o−&gt;bus = sd_bus_close_unref(*o−&gt;bus);
+<br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">/* Set up a new
+bus object for the system bus, configure it to wait for
+D−Bus <br/>
+* to be available instead of failing if it is not, and start
+it. All the <br/>
+* following operations are asynchronous and will not block
+waiting for D−Bus <br/>
+* to be available. <br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_new.html
+<br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_set_address.html
+<br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_set_bus_client.html
+<br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_negotiate_creds.html
+<br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_set_watch_bind.html
+<br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_set_connected_signal.html
+<br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_start.html
+<br/>
+*/ <br/>
+r = sd_bus_new(o−&gt;bus); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_bus_new()"); <br/>
+r = sd_bus_set_address(*o−&gt;bus,
+"unix:path=/run/dbus/system_bus_socket"); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_bus_set_address()"); <br/>
+r = sd_bus_set_bus_client(*o−&gt;bus, 1); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_bus_set_bus_client()");
+<br/>
+r = sd_bus_negotiate_creds(*o−&gt;bus, 1,
+SD_BUS_CREDS_UID|SD_BUS_CREDS_EUID|SD_BUS_CREDS_EFFECTIVE_CAPS);
+<br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_bus_negotiate_creds()");
+<br/>
+r = sd_bus_set_watch_bind(*o−&gt;bus, 1); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_bus_set_watch_bind()");
+<br/>
+r = sd_bus_start(*o−&gt;bus); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_bus_start()");</p>
+<p style="margin-left:14%; margin-top: 1em">/* Publish an
+interface on the bus, specifying our well−known object
+access <br/>
+* path and public interface name. <br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_add_object.html
+<br/>
+* https://dbus.freedesktop.org/doc/dbus−tutorial.html
+<br/>
+*/ <br/>
+r = sd_bus_add_object_vtable(*o−&gt;bus, <br/>
+NULL, <br/>
+"/org/freedesktop/ReconnectExample", <br/>
+"org.freedesktop.ReconnectExample", <br/>
+vtable, <br/>
+o); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_bus_add_object_vtable()");
+<br/>
+/* By default the service is only assigned an ephemeral
+name. Also add a <br/>
+* well−known one, so that clients know whom to call.
+This needs to be <br/>
+* asynchronous, as D−Bus might not be yet available.
+The callback will check <br/>
+* whether the error is expected or not, in case it fails.
+<br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_request_name.html
+<br/>
+*/ <br/>
+r = sd_bus_request_name_async(*o−&gt;bus, <br/>
+NULL, <br/>
+"org.freedesktop.ReconnectExample", <br/>
+0, <br/>
+request_name_callback, <br/>
+o); <br/>
+if (r &lt; 0) <br/>
+return log_error(r,
+"sd_bus_request_name_async()"); <br/>
+/* When D−Bus is disconnected this callback will be
+invoked, which will set up <br/>
+* the connection again. This needs to be asynchronous, as
+D−Bus might not yet <br/>
+* be available. <br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_match_signal_async.html
+<br/>
+*/ <br/>
+r = sd_bus_match_signal_async(*o−&gt;bus, <br/>
+NULL, <br/>
+"org.freedesktop.DBus.Local", <br/>
+NULL, <br/>
+"org.freedesktop.DBus.Local", <br/>
+"Disconnected", <br/>
+on_disconnect, <br/>
+NULL, <br/>
+o); <br/>
+if (r &lt; 0) <br/>
+return log_error(r,
+"sd_bus_match_signal_async()"); <br/>
+/* Attach the bus object to the event loop so that calls and
+signals are <br/>
+* processed. <br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_bus_attach_event.html
+<br/>
+*/ <br/>
+r = sd_bus_attach_event(*o−&gt;bus,
+*o−&gt;event, 0); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_bus_attach_event()");</p>
+<p style="margin-left:14%; margin-top: 1em">return 0; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">int main(int
+argc, char **argv) { <br/>
+/* The bus should be relinquished before the program
+terminates. The cleanup <br/>
+* attribute allows us to do it nicely and cleanly whenever
+we exit the block. <br/>
+*/ <br/>
+_cleanup_(sd_bus_flush_close_unrefp) sd_bus *bus = NULL;
+<br/>
+_cleanup_(sd_event_unrefp) sd_event *event = NULL; <br/>
+object o = { <br/>
+.example = "example", <br/>
+.bus = &amp;bus, <br/>
+.event = &amp;event, <br/>
+}; <br/>
+int r;</p>
+<p style="margin-left:14%; margin-top: 1em">/* Create an
+event loop data structure, with default parameters. <br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_event_default.html
+<br/>
+*/ <br/>
+r = sd_event_default(&amp;event); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_event_default()");</p>
+<p style="margin-left:14%; margin-top: 1em">/* By default
+the event loop will terminate when all sources have
+disappeared, <br/>
+* so we have to keep it 'occupied'. Register signal handling
+to do so. <br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_event_add_signal.html
+<br/>
+*/ <br/>
+r = sd_event_add_signal(event, NULL,
+SIGINT|SD_EVENT_SIGNAL_PROCMASK, NULL, NULL); <br/>
+if (r &lt; 0) <br/>
+return log_error(r,
+"sd_event_add_signal(SIGINT)");</p>
+<p style="margin-left:14%; margin-top: 1em">r =
+sd_event_add_signal(event, NULL,
+SIGTERM|SD_EVENT_SIGNAL_PROCMASK, NULL, NULL); <br/>
+if (r &lt; 0) <br/>
+return log_error(r,
+"sd_event_add_signal(SIGTERM)");</p>
+<p style="margin-left:14%; margin-top: 1em">r =
+setup(&amp;o); <br/>
+if (r &lt; 0) <br/>
+return EXIT_FAILURE;</p>
+<p style="margin-left:14%; margin-top: 1em">/* Enter the
+main loop, it will exit only on sigint/sigterm. <br/>
+*
+https://www.freedesktop.org/software/systemd/man/sd_event_loop.html
+<br/>
+*/ <br/>
+r = sd_event_loop(event); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_event_loop()");</p>
+<p style="margin-left:14%; margin-top: 1em">/*
+https://www.freedesktop.org/software/systemd/man/sd_bus_release_name.html
+*/ <br/>
+r = sd_bus_release_name(bus,
+"org.freedesktop.ReconnectExample"); <br/>
+if (r &lt; 0) <br/>
+return log_error(r, "sd_bus_release_name()");</p>
+<p style="margin-left:14%; margin-top: 1em">return 0; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">This is
+particularly useful for services that are configured to
+survive a soft−reboot, see
+<b>systemd-soft-reboot.service</b>(8) for more details.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>sd_bus_set_watch_bind()</b>
+and <b>sd_bus_get_watch_bind()</b> were added in version
+237.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>systemd</b>(1),
+<b>sd-bus</b>(3), <b>inotify</b>(7), <b>sd_bus_call</b>(3),
+<b>sd_bus_add_match</b>(3), <b>sd_bus_request_name</b>(3),
+<b>sd_bus_is_ready</b>(3),
+<b>sd_bus_set_connected_signal</b>(3)</p>
+<hr/>
+</body>
+</html>

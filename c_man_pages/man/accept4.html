@@ -1,0 +1,424 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>accept</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">accept</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#Error handling">Error handling</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#VERSIONS">VERSIONS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#The socklen_t type">The socklen_t type</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">accept, accept4
+− accept a connection on a socket</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;sys/socket.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+accept(int</b> <i>sockfd</i><b>, struct sockaddr *_Nullable
+restrict</b> <i>addr</i><b>, <br/>
+socklen_t *_Nullable restrict</b>
+<i>addrlen</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>#define
+_GNU_SOURCE</b> /* See feature_test_macros(7) */ <b><br/>
+#include &lt;sys/socket.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+accept4(int</b> <i>sockfd</i><b>, struct sockaddr *_Nullable
+restrict</b> <i>addr</i><b>, <br/>
+socklen_t *_Nullable restrict</b> <i>addrlen</i><b>, int</b>
+<i>flags</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>accept</b>() system call is used with connection-based
+socket types (<b>SOCK_STREAM</b>, <b>SOCK_SEQPACKET</b>). It
+extracts the first connection request on the queue of
+pending connections for the listening socket, <i>sockfd</i>,
+creates a new connected socket, and returns a new file
+descriptor referring to that socket. The newly created
+socket is not in the listening state. The original socket
+<i>sockfd</i> is unaffected by this call.</p>
+<p style="margin-left:9%; margin-top: 1em">The argument
+<i>sockfd</i> is a socket that has been created with
+<b>socket</b>(2), bound to a local address with
+<b>bind</b>(2), and is listening for connections after a
+<b>listen</b>(2).</p>
+<p style="margin-left:9%; margin-top: 1em">The argument
+<i>addr</i> is a pointer to a <i>sockaddr</i> structure.
+This structure is filled in with the address of the peer
+socket, as known to the communications layer. The exact
+format of the address returned <i>addr</i> is determined by
+the socket’s address family (see <b>socket</b>(2) and
+the respective protocol man pages). When <i>addr</i> is
+NULL, nothing is filled in; in this case, <i>addrlen</i> is
+not used, and should also be NULL.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>addrlen</i> argument is a value-result argument: the
+caller must initialize it to contain the size (in bytes) of
+the structure pointed to by <i>addr</i>; on return it will
+contain the actual size of the peer address.</p>
+<p style="margin-left:9%; margin-top: 1em">The returned
+address is truncated if the buffer provided is too small; in
+this case, <i>addrlen</i> will return a value greater than
+was supplied to the call.</p>
+<p style="margin-left:9%; margin-top: 1em">If no pending
+connections are present on the queue, and the socket is not
+marked as nonblocking, <b>accept</b>() blocks the caller
+until a connection is present. If the socket is marked
+nonblocking and no pending connections are present on the
+queue, <b>accept</b>() fails with the error <b>EAGAIN</b> or
+<b>EWOULDBLOCK</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">In order to be
+notified of incoming connections on a socket, you can use
+<b>select</b>(2), <b>poll</b>(2), or <b>epoll</b>(7). A
+readable event will be delivered when a new connection is
+attempted and you may then call <b>accept</b>() to get a
+socket for that connection. Alternatively, you can set the
+socket to deliver <b>SIGIO</b> when activity occurs on a
+socket; see <b>socket</b>(7) for details.</p>
+<p style="margin-left:9%; margin-top: 1em">If <i>flags</i>
+is 0, then <b>accept4</b>() is the same as <b>accept</b>().
+The following values can be bitwise ORed in <i>flags</i> to
+obtain different behavior:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="17%">
+<p><b>SOCK_NONBLOCK</b></p></td>
+<td width="3%"></td>
+<td width="71%">
+<p>Set the <b>O_NONBLOCK</b> file status flag on the open
+file description (see <b>open</b>(2)) referred to by the new
+file descriptor. Using this flag saves extra calls to
+<b>fcntl</b>(2) to achieve the same result.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="17%">
+<p><b>SOCK_CLOEXEC</b></p></td>
+<td width="3%"></td>
+<td width="71%">
+<p>Set the close-on-exec (<b>FD_CLOEXEC</b>) flag on the
+new file descriptor. See the description of the
+<b>O_CLOEXEC</b> flag in <b>open</b>(2) for reasons why this
+may be useful.</p></td></tr>
+</table>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+these system calls return a file descriptor for the accepted
+socket (a nonnegative integer). On error, −1 is
+returned, <i>errno</i> is set to indicate the error, and
+<i>addrlen</i> is left unchanged.</p>
+<h3>Error handling
+<a name="Error handling"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Linux
+<b>accept</b>() (and <b>accept4</b>()) passes
+already-pending network errors on the new socket as an error
+code from <b>accept</b>(). This behavior differs from other
+BSD socket implementations. For reliable operation the
+application should detect the network errors defined for the
+protocol after <b>accept</b>() and treat them like
+<b>EAGAIN</b> by retrying. In the case of TCP/IP, these are
+<b>ENETDOWN</b>, <b>EPROTO</b>, <b>ENOPROTOOPT</b>,
+<b>EHOSTDOWN</b>, <b>ENONET</b>, <b>EHOSTUNREACH</b>,
+<b>EOPNOTSUPP</b>, and <b>ENETUNREACH</b>.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EAGAIN</b> or
+<b>EWOULDBLOCK</b></p>
+<p style="margin-left:18%;">The socket is marked
+nonblocking and no connections are present to be accepted.
+POSIX.1-2001 and POSIX.1-2008 allow either error to be
+returned for this case, and do not require these constants
+to have the same value, so a portable application should
+check for both possibilities.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p><b>EBADF</b></p></td>
+<td width="3%"></td>
+<td width="49%">
+<p><i>sockfd</i> is not an open file descriptor.</p></td>
+<td width="33%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><b>ECONNABORTED</b></p>
+<p style="margin-left:18%;">A connection has been
+aborted.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EFAULT</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The <i>addr</i> argument is not in a writable part of
+the user address space.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINTR</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The system call was interrupted by a signal that was
+caught before a valid connection arrived; see
+<b>signal</b>(7).</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>Socket is not listening for connections, or
+<i>addrlen</i> is invalid (e.g., is negative).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>(<b>accept4</b>()) invalid value in <i>flags</i>.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EMFILE</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The per-process limit on the number of open file
+descriptors has been reached.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENFILE</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The system-wide limit on the total number of open files
+has been reached.</p></td></tr>
+</table>
+<p style="margin-left:9%;"><b>ENOBUFS</b></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOMEM</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>Not enough free memory. This often means that the memory
+allocation is limited by the socket buffer limits, not by
+the system memory.</p></td></tr>
+</table>
+<p style="margin-left:9%;"><b>ENOTSOCK</b></p>
+<p style="margin-left:18%;">The file descriptor
+<i>sockfd</i> does not refer to a socket.</p>
+<p style="margin-left:9%;"><b>EOPNOTSUPP</b></p>
+<p style="margin-left:18%;">The referenced socket is not of
+type <b>SOCK_STREAM</b>.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EPERM</b></p></td>
+<td width="1%"></td>
+<td width="42%">
+<p>Firewall rules forbid connection.</p></td>
+<td width="40%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EPROTO</b></p></td>
+<td width="1%"></td>
+<td width="42%">
+<p>Protocol error.</p></td>
+<td width="40%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">In addition,
+network errors for the new socket and as defined for the
+protocol may be returned. Various Linux kernels can return
+other errors such as <b>ENOSR</b>, <b>ESOCKTNOSUPPORT</b>,
+<b>EPROTONOSUPPORT</b>, <b>ETIMEDOUT</b>. The value
+<b>ERESTARTSYS</b> may be seen during a trace.</p>
+<h2>VERSIONS
+<a name="VERSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On Linux, the
+new socket returned by <b>accept</b>() does <i>not</i>
+inherit file status flags such as <b>O_NONBLOCK</b> and
+<b>O_ASYNC</b> from the listening socket. This behavior
+differs from the canonical BSD sockets implementation.
+Portable programs should not rely on inheritance or
+noninheritance of file status flags and always explicitly
+set all required flags on the socket returned from
+<b>accept</b>().</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>accept</b>()</p>
+<p style="margin-left:18%;">POSIX.1-2008.</p>
+<p style="margin-left:9%;"><b>accept4</b>()</p>
+<p style="margin-left:18%;">Linux.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>accept</b>()</p>
+<p style="margin-left:18%;">POSIX.1-2001, SVr4, 4.4BSD
+(<b>accept</b>() first appeared in 4.2BSD).</p>
+<p style="margin-left:9%;"><b>accept4</b>()</p>
+<p style="margin-left:18%;">Linux 2.6.28, glibc 2.10.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">There may not
+always be a connection waiting after a <b>SIGIO</b> is
+delivered or <b>select</b>(2), <b>poll</b>(2), or
+<b>epoll</b>(7) return a readability event because the
+connection might have been removed by an asynchronous
+network error or another thread before <b>accept</b>() is
+called. If this happens, then the call will block waiting
+for the next connection to arrive. To ensure that
+<b>accept</b>() never blocks, the passed socket
+<i>sockfd</i> needs to have the <b>O_NONBLOCK</b> flag set
+(see <b>socket</b>(7)).</p>
+<p style="margin-left:9%; margin-top: 1em">For certain
+protocols which require an explicit confirmation, such as
+DECnet, <b>accept</b>() can be thought of as merely
+dequeuing the next connection request and not implying
+confirmation. Confirmation can be implied by a normal read
+or write on the new file descriptor, and rejection can be
+implied by closing the new socket. Currently, only DECnet
+has these semantics on Linux.</p>
+<h3>The socklen_t type
+<a name="The socklen_t type"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">In the original
+BSD sockets implementation (and on other older systems) the
+third argument of <b>accept</b>() was declared as an
+<i>int *</i>. A POSIX.1g draft standard wanted to
+change it into a <i>size_t *</i>C; later POSIX
+standards and glibc 2.x have <i>socklen_t *</i> .</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See
+<b>bind</b>(2).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>bind</b>(2),
+<b>connect</b>(2), <b>listen</b>(2), <b>select</b>(2),
+<b>socket</b>(2), <b>socket</b>(7)</p>
+<hr/>
+</body>
+</html>

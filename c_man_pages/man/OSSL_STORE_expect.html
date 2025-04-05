@@ -1,0 +1,193 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:24 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OSSL_STORE_EXPECT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OSSL_STORE_EXPECT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OSSL_STORE_expect,
+OSSL_STORE_supports_search, OSSL_STORE_find − Specify
+what object type is expected</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/store.h&gt; <br/>
+int OSSL_STORE_expect(OSSL_STORE_CTX *ctx, int
+expected_type); <br/>
+int OSSL_STORE_supports_search(OSSL_STORE_CTX *ctx, int
+criterion_type); <br/>
+int OSSL_STORE_find(OSSL_STORE_CTX *ctx, OSSL_STORE_SEARCH
+*search);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_STORE_expect()</b>
+helps applications filter what <b>OSSL_STORE_load()</b>
+returns by specifying a <b>OSSL_STORE_INFO</b> type. By
+default, no expectations on the types of objects to be
+loaded are made. <i>expected_type</i> may be 0 to indicate
+explicitly that no expectation is made, or it may be any of
+the known object types (see "SUPPORTED OBJECTS" in
+<b>OSSL_STORE_INFO</b>(3)) except for
+<b>OSSL_STORE_INFO_NAME</b>. For example, if
+"file:/foo/bar/store.pem" contains several objects
+of different type and only certificates are interesting, the
+application can simply say that it expects the type
+<b>OSSL_STORE_INFO_CERT</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_STORE_find()</b>
+helps applications specify a criterion for a more fine
+grained search of objects.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_STORE_supports_search()</b>
+checks if the loader of the given OSSL_STORE context
+supports the given search type. See "SUPPORTED
+CRITERION TYPES" in <b>OSSL_STORE_SEARCH</b>(3) for
+information on the supported search criterion types.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_STORE_expect()</b>
+and OSSL_STORE_find <i>must</i> be called before the first
+<b>OSSL_STORE_load()</b> of a given session, or they will
+fail.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If a more
+elaborate filter is required by the application, a better
+choice would be to use a post−processing function. See
+<b>OSSL_STORE_open</b>(3) for more information.</p>
+<p style="margin-left:9%; margin-top: 1em">However, some
+loaders may take advantage of the knowledge of an expected
+type to make object retrieval more efficient, so if a single
+type is expected, this method is usually preferable.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_STORE_expect()</b>
+returns 1 on success, or 0 on failure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_STORE_supports_search()</b>
+returns 1 if the criterion is supported, or 0 otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_STORE_find()</b>
+returns 1 on success, or 0 on failure.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ossl_store</b>(7),
+<b>OSSL_STORE_INFO</b>(3), <b>OSSL_STORE_SEARCH</b>(3),
+<b>OSSL_STORE_load</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_STORE_expect()</b>,
+<b>OSSL_STORE_supports_search()</b> and
+<b>OSSL_STORE_find()</b> were added in OpenSSL 1.1.1.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2018−2021 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

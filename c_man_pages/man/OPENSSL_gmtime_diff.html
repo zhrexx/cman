@@ -1,0 +1,176 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:49 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OPENSSL_GMTIME</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OPENSSL_GMTIME</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OPENSSL_gmtime,
+OPENSSL_gmtime_adj, OPENSSL_gmtime_diff −
+platform−agnostic OpenSSL time routines</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/crypto.h&gt; <br/>
+struct tm *OPENSSL_gmtime(const time_t *timer, struct tm
+*result); <br/>
+int OPENSSL_gmtime_adj(struct tm *tm, int offset_day, long
+offset_sec); <br/>
+int OPENSSL_gmtime_diff(int *pday, int *psec, <br/>
+const struct tm *from, const struct tm *to);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OPENSSL_gmtime()</b>
+returns the UTC time specified by <i>timer</i> into the
+provided <i>result</i> argument.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OPENSSL_gmtime_adj()</b>
+adds the offsets in <i>offset_day</i> and <i>offset_sec</i>
+to <i>tm</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OPENSSL_gmtime_diff()</b>
+calculates the difference between <i>from</i> and
+<i>to</i>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">It is an error
+to call <b>OPENSSL_gmtime()</b> with <i>result</i> equal to
+NULL. The contents of the time_t given by <i>timer</i> are
+stored into the <i>result</i>. Calling with <i>timer</i>
+equal to NULL means use the current time.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OPENSSL_gmtime_adj()</b>
+converts <i>tm</i> into a days and seconds value, adds the
+offsets, then converts back into a <i>struct tm</i>
+specified by <i>tm</i>. Leap seconds are not considered.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OPENSSL_gmtime_diff()</b>
+calculates the difference between the two <i>struct tm</i>
+structures <i>from</i> and <i>to</i>. The difference in days
+is placed into <i>*pday</i>, the remaining seconds are
+placed to <i>*psec</i>. The value in <i>*psec</i> will be
+less than the number of seconds per day (3600). Leap seconds
+are not considered.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OPENSSL_gmtime()</b>
+returns NULL on error, or <i>result</i> on success.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OPENSSL_gmtime_adj()</b>
+and <b>OPENSSL_gmtime_diff()</b> return 0 on error, and 1 on
+success.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OPENSSL_gmtime()</b>,
+<b>OPENSSL_gmtime_adj()</b> and <b>OPENSSL_gmtime_diff()</b>
+have been in OpenSSL since 1.0.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright 2022
+The OpenSSL Project Authors. All Rights Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,954 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:18 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CPAN::Meta</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CPAN::Meta</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#new">new</a><br/>
+<a href="#create">create</a><br/>
+<a href="#load_file">load_file</a><br/>
+<a href="#load_yaml_string">load_yaml_string</a><br/>
+<a href="#load_json_string">load_json_string</a><br/>
+<a href="#load_string">load_string</a><br/>
+<a href="#save">save</a><br/>
+<a href="#meta_spec_version">meta_spec_version</a><br/>
+<a href="#effective_prereqs">effective_prereqs</a><br/>
+<a href="#should_index_file">should_index_file</a><br/>
+<a href="#should_index_package">should_index_package</a><br/>
+<a href="#features">features</a><br/>
+<a href="#feature">feature</a><br/>
+<a href="#as_struct">as_struct</a><br/>
+<a href="#as_string">as_string</a><br/>
+<a href="#STRING DATA">STRING DATA</a><br/>
+<a href="#LIST DATA">LIST DATA</a><br/>
+<a href="#MAP DATA">MAP DATA</a><br/>
+<a href="#CUSTOM DATA">CUSTOM DATA</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#SUPPORT">SUPPORT</a><br/>
+<a href="#Bugs / Feature Requests">Bugs / Feature Requests</a><br/>
+<a href="#Source Code">Source Code</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#CONTRIBUTORS">CONTRIBUTORS</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CPAN::Meta
+− the distribution metadata for a CPAN dist</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version
+2.150010</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use v5.10; <br/>
+use strict; <br/>
+use warnings; <br/>
+use CPAN::Meta; <br/>
+use Module::Load; <br/>
+my $meta = CPAN::Meta−&gt;load_file('META.json'); <br/>
+printf "testing requirements for %s version %s\n",
+<br/>
+$meta−&gt;name, <br/>
+$meta−&gt;version; <br/>
+my $prereqs = $meta−&gt;effective_prereqs; <br/>
+for my $phase ( qw/configure runtime build test/ ) { <br/>
+say "Requirements for $phase:"; <br/>
+my $reqs = $prereqs−&gt;requirements_for($phase,
+"requires"); <br/>
+for my $module ( sort $reqs−&gt;required_modules ) {
+<br/>
+my $status; <br/>
+if ( eval { load $module unless $module eq 'perl'; 1 } ) {
+<br/>
+my $version = $module eq 'perl' ? $] :
+$module−&gt;VERSION; <br/>
+$status = $reqs−&gt;accepts_module($module, $version)
+<br/>
+? "$version ok" : "$version not ok";
+<br/>
+} else { <br/>
+$status = "missing" <br/>
+}; <br/>
+say " $module ($status)"; <br/>
+} <br/>
+}</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Software
+distributions released to the CPAN include a
+<i>META.json</i> or, for older distributions,
+<i>META.yml</i>, which describes the distribution, its
+contents, and the requirements for building and installing
+the distribution. The data structure stored in the
+<i>META.json</i> file is described in CPAN::Meta::Spec.</p>
+<p style="margin-left:9%; margin-top: 1em">CPAN::Meta
+provides a simple class to represent this distribution
+metadata (or <i>distmeta</i>), along with some helpful
+methods for interrogating that data.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+documentation below is only for the methods of the
+CPAN::Meta object. For information on the meaning of
+individual fields, consult the spec.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>new
+<a name="new"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $meta =
+CPAN::Meta−&gt;new($distmeta_struct, \%options);</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a valid
+CPAN::Meta object or dies if the supplied metadata hash
+reference fails to validate. Older−format metadata
+will be up−converted to version 2 if they validate
+against the original stated specification.</p>
+<p style="margin-left:9%; margin-top: 1em">It takes an
+optional hashref of options. Valid options include:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>lazy_validation −− if true, new will attempt
+to convert the given metadata to version 2 before attempting
+to validate it. This means than any fixable errors will be
+handled by CPAN::Meta::Converter before validation. (Note
+that this might result in invalid optional data being
+silently dropped.) The default is false.</p></td></tr>
+</table>
+<h3>create
+<a name="create"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $meta =
+CPAN::Meta−&gt;create($distmeta_struct,
+\%options);</p>
+<p style="margin-left:9%; margin-top: 1em">This is same as
+new(), except that "generated_by" and
+"meta−spec" fields will be generated if not
+provided. This means the metadata structure is assumed to
+otherwise follow the latest CPAN::Meta::Spec.</p>
+<h3>load_file
+<a name="load_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $meta =
+CPAN::Meta−&gt;load_file($distmeta_file,
+\%options);</p>
+<p style="margin-left:9%; margin-top: 1em">Given a pathname
+to a file containing metadata, this deserializes the file
+according to its file suffix and constructs a new
+"CPAN::Meta" object, just like new(). It will die
+if the deserialized version fails to validate against its
+stated specification version.</p>
+<p style="margin-left:9%; margin-top: 1em">It takes the
+same options as new() but "lazy_validation"
+defaults to true.</p>
+<h3>load_yaml_string
+<a name="load_yaml_string"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $meta =
+CPAN::Meta−&gt;load_yaml_string($yaml, \%options);</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a new CPAN::Meta object using the first document in
+the given YAML string. In other respects it is identical to
+load_file().</p>
+<h3>load_json_string
+<a name="load_json_string"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $meta =
+CPAN::Meta−&gt;load_json_string($json, \%options);</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a new CPAN::Meta object using the structure
+represented by the given JSON string. In other respects it
+is identical to load_file().</p>
+<h3>load_string
+<a name="load_string"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $meta =
+CPAN::Meta−&gt;load_string($string, \%options);</p>
+<p style="margin-left:9%; margin-top: 1em">If you don't
+know if a string contains YAML or JSON, this method will use
+Parse::CPAN::Meta to guess. In other respects it is
+identical to load_file().</p>
+<h3>save
+<a name="save"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$meta−&gt;save($distmeta_file,
+\%options);</p>
+<p style="margin-left:9%; margin-top: 1em">Serializes the
+object as JSON and writes it to the given file. The only
+valid option is "version", which defaults to '2'.
+On Perl 5.8.1 or later, the file is saved with UTF−8
+encoding.</p>
+<p style="margin-left:9%; margin-top: 1em">For
+"version" 2 (or higher), the filename should end
+in '.json'. JSON::PP is the default JSON backend. Using
+another JSON backend requires JSON 2.5 or later and you must
+set the $ENV{PERL_JSON_BACKEND} to a supported alternate
+backend like JSON::XS.</p>
+<p style="margin-left:9%; margin-top: 1em">For
+"version" less than 2, the filename should end in
+'.yml'. CPAN::Meta::Converter is used to generate an older
+metadata structure, which is serialized to YAML.
+CPAN::Meta::YAML is the default YAML backend. You may set
+the $ENV{PERL_YAML_BACKEND} to a supported alternative
+backend, though this is not recommended due to subtle
+incompatibilities between YAML parsers on CPAN.</p>
+<h3>meta_spec_version
+<a name="meta_spec_version"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns the version part of the "meta_spec" entry
+in the distmeta structure. It is equivalent to:</p>
+<p style="margin-left:9%; margin-top: 1em">$meta−&gt;meta_spec−&gt;{version};</p>
+<h3>effective_prereqs
+<a name="effective_prereqs"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $prereqs =
+$meta−&gt;effective_prereqs; <br/>
+my $prereqs = $meta−&gt;effective_prereqs(
+\@feature_identifiers );</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a CPAN::Meta::Prereqs object describing all the
+prereqs for the distribution. If an arrayref of feature
+identifiers is given, the prereqs for the identified
+features are merged together with the distribution's core
+prereqs before the CPAN::Meta::Prereqs object is
+returned.</p>
+<h3>should_index_file
+<a name="should_index_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">... if
+$meta−&gt;should_index_file( $filename );</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns true if the given file should be indexed. It decides
+this by checking the "file" and
+"directory" keys in the "no_index"
+property of the distmeta structure. Note that neither the
+version format nor "release_status" are
+considered.</p>
+<p style="margin-left:9%; margin-top: 1em">$filename should
+be given in unix format.</p>
+<h3>should_index_package
+<a name="should_index_package"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">... if
+$meta−&gt;should_index_package( $package );</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns true if the given package should be indexed. It
+decides this by checking the "package" and
+"namespace" keys in the "no_index"
+property of the distmeta structure. Note that neither the
+version format nor "release_status" are
+considered.</p>
+<h3>features
+<a name="features"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my
+@feature_objects = $meta−&gt;features;</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a list of CPAN::Meta::Feature objects, one for each
+optional feature described by the distribution's
+metadata.</p>
+<h3>feature
+<a name="feature"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my
+$feature_object = $meta−&gt;feature( $identifier
+);</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a CPAN::Meta::Feature object for the optional
+feature with the given identifier. If no feature with that
+identifier exists, an exception will be raised.</p>
+<h3>as_struct
+<a name="as_struct"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $copy =
+$meta−&gt;as_struct( \%options );</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a deep copy of the object's metadata as an unblessed
+hash reference. It takes an optional hashref of options. If
+the hashref contains a "version" argument, the
+copied metadata will be converted to the version of the
+specification and returned. For example:</p>
+<p style="margin-left:9%; margin-top: 1em">my $old_spec =
+$meta−&gt;as_struct( {version =&gt; "1.4"}
+);</p>
+<h3>as_string
+<a name="as_string"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $string =
+$meta−&gt;as_string( \%options );</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a serialized copy of the object's metadata as a
+character string. (The strings are <b>not</b> UTF−8
+encoded.) It takes an optional hashref of options. If the
+hashref contains a "version" argument, the copied
+metadata will be converted to the version of the
+specification and returned. For example:</p>
+<p style="margin-left:9%; margin-top: 1em">my $string =
+$meta−&gt;as_string( {version =&gt; "1.4"}
+);</p>
+<p style="margin-left:9%; margin-top: 1em">For
+"version" greater than or equal to 2, the string
+will be serialized as JSON. For "version" less
+than 2, the string will be serialized as YAML. In both
+cases, the same rules are followed as in the save() method
+for choosing a serialization backend.</p>
+<p style="margin-left:9%; margin-top: 1em">The serialized
+structure will include a "x_serialization_backend"
+entry giving the package and version used to serialize. Any
+existing key in the given $meta object will be
+clobbered.</p>
+<h2>STRING DATA
+<a name="STRING DATA"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+methods return a single value, which is the value for the
+corresponding entry in the distmeta structure. Values should
+be either undef or strings.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="18%">
+<p style="margin-top: 1em">abstract</p></td>
+<td width="68%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="18%">
+<p>description</p></td>
+<td width="68%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="18%">
+<p>dynamic_config</p></td>
+<td width="68%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="18%">
+<p>generated_by</p></td>
+<td width="68%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="18%">
+<p>name</p></td>
+<td width="68%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="18%">
+<p>release_status</p></td>
+<td width="68%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="18%">
+<p>version</p></td>
+<td width="68%">
+</td></tr>
+</table>
+<h2>LIST DATA
+<a name="LIST DATA"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These methods
+return lists of string values, which might be represented in
+the distmeta structure as arrayrefs or scalars:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p style="margin-top: 1em">authors</p></td>
+<td width="76%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p>keywords</p></td>
+<td width="76%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p>licenses</p></td>
+<td width="76%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The
+"authors" and "licenses" methods may
+also be called as "author" and
+"license", respectively, to match the field name
+in the distmeta structure.</p>
+<h2>MAP DATA
+<a name="MAP DATA"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These readers
+return hashrefs of arbitrary unblessed data structures, each
+described more fully in the specification:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="22%">
+<p style="margin-top: 1em">meta_spec</p></td>
+<td width="64%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="22%">
+<p>resources</p></td>
+<td width="64%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="22%">
+<p>provides</p></td>
+<td width="64%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="22%">
+<p>no_index</p></td>
+<td width="64%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="22%">
+<p>prereqs</p></td>
+<td width="64%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="22%">
+<p>optional_features</p></td>
+<td width="64%">
+</td></tr>
+</table>
+<h2>CUSTOM DATA
+<a name="CUSTOM DATA"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A list of custom
+keys are available from the "custom_keys" method
+and particular keys may be retrieved with the
+"custom" method.</p>
+<p style="margin-left:9%; margin-top: 1em">say
+$meta−&gt;custom($_) for
+$meta−&gt;custom_keys;</p>
+<p style="margin-left:9%; margin-top: 1em">If a custom key
+refers to a data structure, a deep clone is returned.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please report
+any bugs or feature using the CPAN Request Tracker. Bugs can
+be submitted through the web interface at
+&lt;http://rt.cpan.org/Dist/Display.html?Queue=CPAN−Meta&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">When submitting
+a bug or request, please include a test−file or a
+patch to an existing test−file that illustrates the
+bug or desired feature.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="27%">
+<p style="margin-top: 1em">CPAN::Meta::Converter</p></td>
+<td width="59%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="27%">
+<p>CPAN::Meta::Validator</p></td>
+<td width="59%">
+</td></tr>
+</table>
+<h2>SUPPORT
+<a name="SUPPORT"></a>
+</h2>
+<h3>Bugs / Feature Requests
+<a name="Bugs / Feature Requests"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Please report
+any bugs or feature requests through the issue tracker at
+&lt;https://github.com/Perl−Toolchain−Gang/CPAN−Meta/issues&gt;.
+You will be notified automatically of any progress on your
+issue.</p>
+<h3>Source Code
+<a name="Source Code"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is open
+source software. The code repository is available for public
+review and contribution under the terms of the license.</p>
+<p style="margin-left:9%; margin-top: 1em">&lt;https://github.com/Perl−Toolchain−Gang/CPAN−Meta&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">git clone
+https://github.com/Perl−Toolchain−Gang/CPAN−Meta.git</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p style="margin-top: 1em">David Golden
+&lt;dagolden@cpan.org&gt;</p> </td>
+<td width="45%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p>Ricardo Signes &lt;rjbs@cpan.org&gt;</p></td>
+<td width="45%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p>Adam Kennedy &lt;adamk@cpan.org&gt;</p></td>
+<td width="45%">
+</td></tr>
+</table>
+<h2>CONTRIBUTORS
+<a name="CONTRIBUTORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p style="margin-top: 1em">Ansgar Burchardt
+&lt;ansgar@cpan.org&gt;</p> </td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Avar Arnfjord Bjarmason &lt;avar@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Benjamin Noggle
+&lt;agwind@users.noreply.github.com&gt;</p> </td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Christopher J. Madsen &lt;cjm@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Chuck Adams &lt;cja987@gmail.com&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Cory G Watson &lt;gphat@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Damyan Ivanov &lt;dam@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>David Golden &lt;xdg@xdg.me&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Eric Wilhelm &lt;ewilhelm@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Graham Knop &lt;haarg@haarg.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Gregor Hermann &lt;gregoa@debian.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Karen Etheridge &lt;ether@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Kenichi Ishigaki &lt;ishigaki@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Kent Fredric &lt;kentfredric@gmail.com&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Ken Williams &lt;kwilliams@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Lars Dieckow &lt;daxim@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Leon Timmermans &lt;leont@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>majensen &lt;maj@fortinbras.us&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Mark Fowler &lt;markf@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Matt S Trout &lt;mst@shadowcat.co.uk&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Michael G. Schwern &lt;mschwern@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Mohammad S Anwar &lt;mohammad.anwar@yahoo.com&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>mohawk2 &lt;mohawk2@users.noreply.github.com&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>moznion &lt;moznion@gmail.com&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Niko Tyni &lt;ntyni@debian.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Olaf Alders &lt;olaf@wundersolutions.com&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Olivier Mengué &lt;dolmen@cpan.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Randy Sims &lt;randys@thepierianspring.org&gt;</p></td>
+<td width="23%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>Tomohiro Hosaka &lt;bokutin@bokut.in&gt;</p></td>
+<td width="23%">
+</td></tr>
+</table>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2010 by David Golden, Ricardo Signes, Adam
+Kennedy and Contributors.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

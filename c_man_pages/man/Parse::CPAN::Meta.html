@@ -1,0 +1,374 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:33 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Parse::CPAN::Meta</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Parse::CPAN::Meta</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#load_file">load_file</a><br/>
+<a href="#load_yaml_string">load_yaml_string</a><br/>
+<a href="#load_json_string">load_json_string</a><br/>
+<a href="#load_string">load_string</a><br/>
+<a href="#yaml_backend">yaml_backend</a><br/>
+<a href="#json_backend">json_backend</a><br/>
+<a href="#json_decoder">json_decoder</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#Load">Load</a><br/>
+<a href="#LoadFile">LoadFile</a><br/>
+<a href="#ENVIRONMENT">ENVIRONMENT</a><br/>
+<a href="#CPAN_META_JSON_DECODER">CPAN_META_JSON_DECODER</a><br/>
+<a href="#CPAN_META_JSON_BACKEND">CPAN_META_JSON_BACKEND</a><br/>
+<a href="#PERL_JSON_BACKEND">PERL_JSON_BACKEND</a><br/>
+<a href="#PERL_YAML_BACKEND">PERL_YAML_BACKEND</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Parse::CPAN::Meta
+− Parse META.yml and META.json CPAN metadata files</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version
+2.150010</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#############################################
+<br/>
+# In your file <br/>
+−−− <br/>
+name: My−Distribution <br/>
+version: 1.23 <br/>
+resources: <br/>
+homepage:
+"http://example.com/dist/My−Distribution"
+<br/>
+############################################# <br/>
+# In your program <br/>
+use Parse::CPAN::Meta; <br/>
+my $distmeta =
+Parse::CPAN::Meta−&gt;load_file('META.yml'); <br/>
+# Reading properties <br/>
+my $name = $distmeta−&gt;{name}; <br/>
+my $version = $distmeta−&gt;{version}; <br/>
+my $homepage =
+$distmeta−&gt;{resources}{homepage};</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Parse::CPAN::Meta</b>
+is a parser for <i>META.json</i> and <i>META.yml</i> files,
+using JSON::PP and/or CPAN::Meta::YAML.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Parse::CPAN::Meta</b>
+provides three methods: "load_file",
+"load_json_string", and
+"load_yaml_string". These will read and
+deserialize CPAN metafiles, and are described below in
+detail.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Parse::CPAN::Meta</b>
+provides a legacy API of only two functions, based on the
+YAML functions of the same name. Wherever possible,
+identical calling semantics are used. These may only be used
+with YAML sources.</p>
+<p style="margin-left:9%; margin-top: 1em">All error
+reporting is done with exceptions (die'ing).</p>
+<p style="margin-left:9%; margin-top: 1em">Note that META
+files are expected to be in UTF−8 encoding, only. When
+converted string data, it must first be decoded from
+UTF−8.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>load_file
+<a name="load_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my
+$metadata_structure =
+Parse::CPAN::Meta−&gt;load_file('META.json'); <br/>
+my $metadata_structure =
+Parse::CPAN::Meta−&gt;load_file('META.yml');</p>
+<p style="margin-left:9%; margin-top: 1em">This method will
+read the named file and deserialize it to a data structure,
+determining whether it should be JSON or YAML based on the
+filename. The file will be read using the ":utf8"
+IO layer.</p>
+<h3>load_yaml_string
+<a name="load_yaml_string"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my
+$metadata_structure =
+Parse::CPAN::Meta−&gt;load_yaml_string($yaml_string);</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+deserializes the given string of YAML and returns the first
+document in it. (CPAN metadata files should always have only
+one document.) If the source was UTF−8 encoded, the
+string must be decoded before calling
+"load_yaml_string".</p>
+<h3>load_json_string
+<a name="load_json_string"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my
+$metadata_structure =
+Parse::CPAN::Meta−&gt;load_json_string($json_string);</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+deserializes the given string of JSON and the result. If the
+source was UTF−8 encoded, the string must be decoded
+before calling "load_json_string".</p>
+<h3>load_string
+<a name="load_string"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my
+$metadata_structure =
+Parse::CPAN::Meta−&gt;load_string($some_string);</p>
+<p style="margin-left:9%; margin-top: 1em">If you don't
+know whether a string contains YAML or JSON data, this
+method will use some heuristics and guess. If it can't tell,
+it assumes YAML.</p>
+<h3>yaml_backend
+<a name="yaml_backend"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $backend =
+Parse::CPAN::Meta−&gt;yaml_backend;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+module name of the YAML serializer. See
+"ENVIRONMENT" for details.</p>
+<h3>json_backend
+<a name="json_backend"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $backend =
+Parse::CPAN::Meta−&gt;json_backend;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+module name of the JSON serializer. If
+"CPAN_META_JSON_BACKEND" is set, this will be
+whatever that's set to. If not, this will either be JSON::PP
+or JSON. If "PERL_JSON_BACKEND" is set, this will
+return JSON as further delegation is handled by the JSON
+module. See "ENVIRONMENT" for details.</p>
+<h3>json_decoder
+<a name="json_decoder"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $decoder =
+Parse::CPAN::Meta−&gt;json_decoder;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+module name of the JSON decoder. Unlike
+"json_backend", this is not necessarily a full
+JSON−style module, but only something that will
+provide a "decode_json" subroutine. If
+"CPAN_META_JSON_DECODER" is set, this will be
+whatever that's set to. If not, this will be whatever has
+been selected as "json_backend". See
+"ENVIRONMENT" for more notes.</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For maintenance
+clarity, no functions are exported by default. These
+functions are available for backwards compatibility only and
+are best avoided in favor of "load_file".</p>
+<h3>Load
+<a name="Load"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @yaml =
+Parse::CPAN::Meta::Load( $string );</p>
+<p style="margin-left:9%; margin-top: 1em">Parses a string
+containing a valid YAML stream into a list of Perl data
+structures.</p>
+<h3>LoadFile
+<a name="LoadFile"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @yaml =
+Parse::CPAN::Meta::LoadFile( 'META.yml' );</p>
+<p style="margin-left:9%; margin-top: 1em">Reads the YAML
+stream from a file instead of a string.</p>
+<h2>ENVIRONMENT
+<a name="ENVIRONMENT"></a>
+</h2>
+<h3>CPAN_META_JSON_DECODER
+<a name="CPAN_META_JSON_DECODER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default,
+JSON::PP will be used for deserializing JSON data. If the
+"CPAN_META_JSON_DECODER" environment variable
+exists, this is expected to be the name of a loadable module
+that provides a "decode_json" subroutine, which
+will then be used for deserialization. Relying only on the
+existence of said subroutine allows for maximum
+compatibility, since this API is provided by all of
+JSON::PP, JSON::XS, Cpanel::JSON::XS, JSON::MaybeXS,
+JSON::Tiny, and Mojo::JSON.</p>
+<h3>CPAN_META_JSON_BACKEND
+<a name="CPAN_META_JSON_BACKEND"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default,
+JSON::PP will be used for deserializing JSON data. If the
+"CPAN_META_JSON_BACKEND" environment variable
+exists, this is expected to be the name of a loadable module
+that provides the JSON API, since downstream code expects to
+be able to call "new" on this class. As such,
+while JSON::PP, JSON::XS, Cpanel::JSON::XS and JSON::MaybeXS
+will work for this, to use Mojo::JSON or JSON::Tiny for
+decoding requires setting
+"CPAN_META_JSON_DECODER".</p>
+<h3>PERL_JSON_BACKEND
+<a name="PERL_JSON_BACKEND"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If the
+"CPAN_META_JSON_BACKEND" environment variable does
+not exist, and if "PERL_JSON_BACKEND" environment
+variable exists, is true and is not "JSON::PP",
+then the JSON module (version 2.5 or greater) will be loaded
+and used to interpret "PERL_JSON_BACKEND". If JSON
+is not installed or is too old, an exception will be thrown.
+Note that at the time of writing, the only useful values are
+1, which will tell JSON to guess, or JSON::XS − if you
+want to use a newer JSON module, see
+"CPAN_META_JSON_BACKEND".</p>
+<h3>PERL_YAML_BACKEND
+<a name="PERL_YAML_BACKEND"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default,
+CPAN::Meta::YAML will be used for deserializing YAML data.
+If the "PERL_YAML_BACKEND" environment variable is
+defined, then it is interpreted as a module to use for
+deserialization. The given module must be installed, must
+load correctly and must implement the Load() function or an
+exception will be thrown.</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p style="margin-top: 1em">David Golden
+&lt;dagolden@cpan.org&gt;</p> </td>
+<td width="45%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p>Ricardo Signes &lt;rjbs@cpan.org&gt;</p></td>
+<td width="45%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p>Adam Kennedy &lt;adamk@cpan.org&gt;</p></td>
+<td width="45%">
+</td></tr>
+</table>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2010 by David Golden, Ricardo Signes, Adam
+Kennedy and Contributors.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

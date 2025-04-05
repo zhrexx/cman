@@ -1,0 +1,402 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:01 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LIBTRACEEVENT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LIBTRACEEVENT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#FILES">FILES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#RESOURCES">RESOURCES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">tep_plugin_kvm_get_func,
+tep_plugin_kvm_put_func − Add function name for
+instruction pointer of kvm plugin</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;event−parse.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em">const char
+*<b>tep_plugin_kvm_get_func</b>(struct tep_event *event,
+<br/>
+struct tep_record *record, <br/>
+unsigned long long *paddr); <br/>
+void <b>tep_plugin_kvm_put_func</b>(const char *func);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The functions
+<b>tep_plugin_kvm_get_func()</b> and
+<b>tep_plugin_kvm_put_func()</b> are not to be called by an
+application, but instead are to be defined by an
+application.</p>
+<p style="margin-left:9%; margin-top: 1em">Certain events
+(like kvm_exit and kvm_entry) have the instruction pointer
+of where in the guest the context changed from guest to
+host. As the host only knows the instruction pointer and
+does not have information about what function in the guest
+that instruction pointer belongs to, it can only print the
+address.</p>
+<p style="margin-left:9%; margin-top: 1em">But the
+application may have more information about the guest, and
+know where the guest was when the exit occurred, and also
+even know the function name of that address.</p>
+<p style="margin-left:9%; margin-top: 1em">The KVM plugin
+for libtraceevent is called on these events, and then calls
+<b>tep_plugin_kvm_get_func()</b> to see if that function can
+resolve the instruction pointer address to a real function
+name. If the return is non NULL, it will print the function
+in the output for that event.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+are currently defined as weak functions within the plugin,
+as to not require them to be defined elsewhere. For an
+application to override the weak function, it will need to
+define the function in a file that gets compiled with
+<b>−rdynamic</b>. That will tell the dynamic linker to
+examine that object file and use function names to resolve
+weak functions in other shared objects (in this case the KVM
+plugin shared object).</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+application defines <b>tep_plugin_kvm_get_func()</b>, it
+must use the above prototype. The <i>event</i> will hold the
+KVM event that has the instruction pointer field. The
+<i>record</i> will be the instance of that event. The
+application’s function does not need to use these
+parameters, but they may be useful for finding the function
+name for the address. The <i>paddr</i> is a pointer to a 64
+bit value (where only 32 bits may be used on 32 bit
+machines). This value is the instruction pointer to look up.
+If the application knows the start address of the function
+as well, it can set <i>paddr</i> to that address, and the
+KVM plugin will also append a "+offset" to the
+function name where the offset is the original value in
+<i>paddr</i> minus the value in <i>paddr</i> when it is
+called. Finally, the application should return the function
+name as a nul terminated string if one is found.</p>
+<p style="margin-left:9%; margin-top: 1em">If the returned
+string of <b>tep_plugin_kvm_get_func()</b> was allocated,
+the KVM plugin will call <b>tep_plugin_kvm_put_func()</b>
+when it is through with it, passing the value returned by
+<b>tep_plugin_kvm_get_func()</b> as <i>func</i>. This allows
+the application to free it if necessary.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>tep_plugin_kvm_get_func()</b> is not to be called by the
+application but instead is to be defined by the application.
+It should return a nul terminated string representing the
+function for the given instruction pointer passed to it by
+reference in <i>paddr</i>. It can then optionally update the
+<i>paddr</i> to a value that holds the start of the
+function. The string returned may be freed by the
+<b>tep_plugin_kvm_put_func()</b> that the application should
+define to clean up the string.</p>
+<p style="margin-left:9%; margin-top: 1em">The below
+example needs to be compiled with the <b>−rdynamic</b>
+flag so that the dynamic linker can resolve the
+<b>tep_plugin_kvm_get_func()</b> and
+<b>tep_plugin_kvm_put_func()</b> functions.</p>
+<p style="margin-left:9%; margin-top: 1em">When run against
+a trace.dat file produced by <b>trace−cmd(1)</b>
+recording the kvm_exit and kvm_entry events on a guest, and
+then the guest’s /proc/kallsyms file is passed as the
+second parameter, the output produced will look something
+like:</p>
+<p style="margin-left:14%; margin-top: 1em">CPU
+0/KVM−20407 83156.177626 [000] kvm_exit reason
+APIC_ACCESS rip 0xffffffffb0056ee2 exit
+native_apic_mem_write+0x2 info 10b0 0 <br/>
+CPU 0/KVM−20407 83156.177632 [000] kvm_entry vcpu 0
+rip 0xffffffffb0056ee8 enter native_apic_mem_write+0x8</p>
+<p style="margin-left:9%; margin-top: 1em">But without
+those callbacks, it would look like:</p>
+<p style="margin-left:14%; margin-top: 1em">CPU
+0/KVM−20407 83156.177626 [000] kvm_exit reason
+APIC_ACCESS rip 0xffffffffb0056ee2 info 10b0 0 <br/>
+CPU 0/KVM−20407 83156.177632 [000] kvm_entry vcpu 0
+rip 0xffffffffb0056ee8</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em">#include
+&lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;event−parse.h&gt; <br/>
+#include &lt;trace−cmd.h&gt; <br/>
+#include &lt;sys/stat.h&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">static struct
+tep_handle *tep;</p>
+<p style="margin-left:14%; margin-top: 1em">const char
+*tep_plugin_kvm_get_func(struct tep_event *event, struct
+tep_record *record, <br/>
+unsigned long long *paddr) <br/>
+{ <br/>
+const char *func; <br/>
+char *event_func; <br/>
+char *ename;</p>
+<p style="margin-left:14%; margin-top: 1em">func =
+tep_find_function(tep, *paddr); <br/>
+if (!func) <br/>
+return NULL;</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(strcmp(event−&gt;name, "kvm_exit") == 0)
+<br/>
+ename = "exit"; <br/>
+else <br/>
+ename = "enter";</p>
+<p style="margin-left:14%; margin-top: 1em">/* <br/>
+* Normally, passing back func directly is sufficient and
+then <br/>
+* tep_plugin_kvm_put_func() would not be required. But this
+example <br/>
+* is showing how to handle allocation of the returned
+string. <br/>
+*/ <br/>
+event_func = malloc(strlen(ename) + strlen(func) + 2); <br/>
+if (!event_func) <br/>
+return NULL; <br/>
+sprintf(event_func, "%s %s", ename, func);</p>
+<p style="margin-left:14%; margin-top: 1em">*paddr =
+tep_find_function_address(tep, *paddr);</p>
+<p style="margin-left:14%; margin-top: 1em">return
+event_func; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">void
+tep_plugin_kvm_put_func(const char *func) <br/>
+{ <br/>
+char *f = (char *)func;</p>
+<p style="margin-left:14%; margin-top: 1em">free(f); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">static int
+show_event(struct tracecmd_input *handle, struct tep_event
+*event, <br/>
+struct tep_record *record, int cpu, void *data) <br/>
+{ <br/>
+static struct trace_seq seq; <br/>
+tep = data;</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(!seq.buffer) <br/>
+trace_seq_init(&amp;seq);</p>
+<p style="margin-left:14%; margin-top: 1em">trace_seq_reset(&amp;seq);
+<br/>
+tep_print_event(tracecmd_get_tep(handle), &amp;seq, record,
+<br/>
+"%s−%d\t%6.1000d [%03d] %s\t%s\n", <br/>
+TEP_PRINT_COMM, TEP_PRINT_PID, <br/>
+TEP_PRINT_TIME, TEP_PRINT_CPU, <br/>
+TEP_PRINT_NAME, TEP_PRINT_INFO); <br/>
+trace_seq_terminate(&amp;seq); <br/>
+trace_seq_do_printf(&amp;seq); <br/>
+return 0; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">int main(int
+argc, char **argv) <br/>
+{ <br/>
+struct tracecmd_input *handle; <br/>
+struct tep_handle *guest_tep; <br/>
+struct stat st; <br/>
+FILE *fp; <br/>
+char *buf;</p>
+<p style="margin-left:14%; margin-top: 1em">if (argc &lt;
+3) { <br/>
+printf("usage: trace.dat guest_kallsyms_file\n");
+<br/>
+exit(−1); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">handle =
+tracecmd_open(argv[1], 0); <br/>
+if (!handle) { <br/>
+perror(argv[1]); <br/>
+exit(−1); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">/* Just for
+kallsyms parsing */ <br/>
+guest_tep = tep_alloc(); <br/>
+if (!guest_tep) <br/>
+exit(−1);</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(stat(argv[2], &amp;st) &lt; 0) { <br/>
+perror(argv[2]); <br/>
+exit(−1); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">buf =
+malloc(st.st_size + 1); <br/>
+if (!buf) <br/>
+exit(−1);</p>
+<p style="margin-left:14%; margin-top: 1em">fp =
+fopen(argv[2], "r"); <br/>
+if (!fp) { <br/>
+perror(argv[2]); <br/>
+exit(−1); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">if (fread(buf,
+st.st_size, 1, fp) &lt; 0) { <br/>
+perror(argv[2]); <br/>
+exit(−1); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">buf[st.st_size]
+= '\0';</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(tep_parse_kallsyms(guest_tep, buf) &lt; 0) { <br/>
+printf("Failed to parse %s\n", argv[2]); <br/>
+exit(−1); <br/>
+} <br/>
+free(buf);</p>
+<p style="margin-left:14%; margin-top: 1em">tracecmd_follow_event(handle,
+"kvm", "kvm_exit", show_event,
+guest_tep); <br/>
+tracecmd_follow_event(handle, "kvm",
+"kvm_entry", show_event, guest_tep);</p>
+<p style="margin-left:14%; margin-top: 1em">tracecmd_iterate_events(handle,
+NULL, 0, NULL, NULL);</p>
+<p style="margin-left:14%; margin-top: 1em">tep_free(guest_tep);
+<br/>
+tracecmd_close(handle); <br/>
+}</p>
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em"><b>event−parse.h</b>
+<br/>
+Header file to include in order to have access to the
+library APIs. <b><br/>
+−ltraceevent</b> <br/>
+Linker switch to add when building a program that uses the
+library.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>libtraceevent</b>(3),
+<b>trace−cmd</b>(1)</p>
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Report bugs to
+&lt;<b><font color="#0000FF">linux−trace−devel@vger.kernel.org</font></b>
+<small><font color="#000000">[1]</font></small>
+<font color="#000000">&gt;</font></p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><font color="#000000">libtraceevent
+is Free Software licensed under the GNU LGPL 2.1</font></p>
+<h2>RESOURCES
+<a name="RESOURCES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b><font color="#0000FF">https://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git/</font></b></p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">1.</font></p> </td>
+<td width="1%"></td>
+<td width="42%">
+<p style="margin-top: 1em"><font color="#000000">linux-trace-devel@vger.kernel.org</font></p> </td>
+<td width="44%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:linux-trace-devel@vger.kernel.org</font></p>
+<hr/>
+</body>
+</html>

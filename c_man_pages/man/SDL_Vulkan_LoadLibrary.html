@@ -1,0 +1,209 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:52:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SDL_Vulkan_LoadLibrary</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SDL_Vulkan_LoadLibrary</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#HEADER FILE">HEADER FILE</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTION PARAMETERS">FUNCTION PARAMETERS</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#THREAD SAFETY">THREAD SAFETY</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SDL_Vulkan_LoadLibrary
+− Dynamically load the Vulkan loader library.</p>
+<h2>HEADER FILE
+<a name="HEADER FILE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Defined in
+SDL3/SDL_vulkan.h</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+"SDL3/SDL.h"</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>bool
+SDL_Vulkan_LoadLibrary(const char *path);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This should be
+called after initializing the video driver, but before
+creating any Vulkan windows. If no Vulkan loader library is
+loaded, the default library will be loaded upon creation of
+the first Vulkan window.</p>
+<p style="margin-left:9%; margin-top: 1em">SDL keeps a
+counter of how many times this function has been
+successfully called, so it is safe to call this function
+multiple times, so long as it is eventually paired with an
+equivalent number of calls to</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_Vulkan_UnloadLibrary</b>
+. The <b>path</b> argument is ignored unless there is no
+library currently loaded, and and the library isn’t
+actually unloaded until there have been an equivalent number
+of calls to <b>SDL_Vulkan_UnloadLibrary</b> .</p>
+<p style="margin-left:9%; margin-top: 1em">It is fairly
+common for Vulkan applications to link with libvulkan
+instead of explicitly loading it at run time. This will work
+with SDL provided the application links to a dynamic library
+and both it and SDL use the same search path.</p>
+<p style="margin-left:9%; margin-top: 1em">If you specify a
+non-NULL <b>path</b> , an application should retrieve all of
+the Vulkan functions it uses from the dynamic library
+using</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_Vulkan_GetVkGetInstanceProcAddr</b></p>
+<p style="margin-left:9%; margin-top: 1em">unless you can
+guarantee <b>path</b> points to the same vulkan loader
+library the application linked to.</p>
+<p style="margin-left:9%; margin-top: 1em">On Apple
+devices, if <b>path</b> is NULL, SDL will attempt to find
+the <b>vkGetInstanceProcAddr</b> address within all the
+Mach-O images of the current process. This is because it is
+fairly common for Vulkan applications to link with libvulkan
+(and historically MoltenVK was provided as a static
+library). If it is not found, on macOS, SDL will attempt to
+load <b>vulkan.framework/vulkan</b> ,
+<b>libvulkan.1.dylib</b> ,
+<b>MoltenVK.framework/MoltenVK</b> , and
+<b>libMoltenVK.dylib</b> , in that order. On iOS, SDL will
+attempt to load <b>libMoltenVK.dylib</b> . Applications
+using a dynamic framework or .dylib must ensure it is
+included in its application bundle.</p>
+<p style="margin-left:9%; margin-top: 1em">On non-Apple
+devices, application linking with a static libvulkan is not
+supported. Either do not link to the Vulkan loader or link
+to a dynamic library version.</p>
+<h2>FUNCTION PARAMETERS
+<a name="FUNCTION PARAMETERS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p style="margin-top: 1em"><i>path</i></p></td>
+<td width="4%"></td>
+<td width="74%">
+<p style="margin-top: 1em">the platform dependent Vulkan
+loader library name or NULL.</p></td>
+<td width="8%">
+</td></tr>
+</table>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns true on
+success or false on failure; call</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_GetError</b>
+() for more information.</p>
+<h2>THREAD SAFETY
+<a name="THREAD SAFETY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function is
+not thread safe.</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function is
+available since SDL 3.2.0.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>•</b>(3),
+<b>SDL_Vulkan_GetVkGetInstanceProcAddr</b>(3),
+<b>•</b>(3), <b>SDL_Vulkan_UnloadLibrary</b>(3)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:29 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_easy_recv</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_easy_recv</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_recv
+− receives raw data on an "easy"
+connection</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_recv(CURL *curl, void *buffer, size_t buflen,
+size_t *n);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function
+receives raw data from the established connection. You may
+use it together with <i>curl_easy_send(3)</i> to implement
+custom protocols using libcurl. This functionality can be
+particularly useful if you use proxies and/or SSL
+encryption: libcurl takes care of proxy negotiation and
+connection setup.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>buffer</b> is
+a pointer to your buffer memory that gets populated by the
+received data. <b>buflen</b> is the maximum amount of data
+you can get in that buffer. The variable <b>n</b> points to
+receives the number of received bytes.</p>
+<p style="margin-left:9%; margin-top: 1em">To establish the
+connection, set <i>CURLOPT_CONNECT_ONLY(3)</i> option before
+calling <i>curl_easy_perform(3)</i> or
+<i>curl_multi_perform(3)</i>. Note that
+<i>curl_easy_recv(3)</i> does not work on connections that
+were created without this option.</p>
+<p style="margin-left:9%; margin-top: 1em">The call returns
+<b>CURLE_AGAIN</b> if there is no data to read − the
+socket is used in non−blocking mode internally. When
+<b>CURLE_AGAIN</b> is returned, use your operating system
+facilities like <i>select(2)</i> to wait for data. The
+socket may be obtained using <i>curl_easy_getinfo(3)</i>
+with <i>CURLINFO_ACTIVESOCKET(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Wait on the
+socket only if <i>curl_easy_recv(3)</i> returns
+<b>CURLE_AGAIN</b>. The reason for this is libcurl or the
+SSL library may internally cache some data, therefore you
+should call <i>curl_easy_recv(3)</i> until all data is read
+which would include any cached data.</p>
+<p style="margin-left:9%; margin-top: 1em">Furthermore if
+you wait on the socket and it tells you there is data to
+read, <i>curl_easy_recv(3)</i> may return <b>CURLE_AGAIN</b>
+if the only data that was read was for internal SSL
+processing, and no other data is available.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+CURLcode res; <br/>
+curl_easy_setopt(curl, CURLOPT_URL,
+"https://example.com"); <br/>
+/* Do not do the transfer - only connect to host */ <br/>
+curl_easy_setopt(curl, CURLOPT_CONNECT_ONLY, 1L); <br/>
+res = curl_easy_perform(curl);</p>
+<p style="margin-left:9%; margin-top: 1em">if(res ==
+CURLE_OK) { <br/>
+char buf[256]; <br/>
+size_t nread; <br/>
+long sockfd;</p>
+<p style="margin-left:9%; margin-top: 1em">/* Extract the
+socket from the curl handle - we need it for waiting. */
+<br/>
+res = curl_easy_getinfo(curl, CURLINFO_ACTIVESOCKET,
+&amp;sockfd);</p>
+<p style="margin-left:9%; margin-top: 1em">/* read data */
+<br/>
+res = curl_easy_recv(curl, buf, sizeof(buf), &amp;nread);
+<br/>
+} <br/>
+} <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.18.2</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+returns <b>CURLE_OK</b>, stores the received data into
+<b>buffer</b>, and the number of bytes it actually read into
+<b>*n</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">On failure,
+returns the appropriate error code.</p>
+<p style="margin-left:9%; margin-top: 1em">The function may
+return <b>CURLE_AGAIN</b>. In this case, use your operating
+system facilities to wait until data can be read, and
+retry.</p>
+<p style="margin-left:9%; margin-top: 1em">Reading exactly
+0 bytes indicates a closed connection.</p>
+<p style="margin-left:9%; margin-top: 1em">If there is no
+socket available to use from the previous transfer, this
+function returns <b>CURLE_UNSUPPORTED_PROTOCOL</b>.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curl_easy_getinfo</b>(3),
+<b>curl_easy_perform</b>(3), <b>curl_easy_send</b>(3),
+<b>curl_easy_setopt</b>(3)</p>
+<hr/>
+</body>
+</html>

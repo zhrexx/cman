@@ -1,0 +1,374 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:44 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Zlib</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Zlib</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CONSTRUCTOR">CONSTRUCTOR</a><br/>
+<a href="#OBJECT METHODS">OBJECT METHODS</a><br/>
+<a href="#USING THE EXTERNAL GZIP">USING THE EXTERNAL GZIP</a><br/>
+<a href="#CLASS METHODS">CLASS METHODS</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Zlib −
+IO:: style interface to Compress::Zlib</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">With any version
+of Perl 5 you can use the basic OO interface:</p>
+<p style="margin-left:9%; margin-top: 1em">use IO::Zlib;
+<br/>
+$fh = new IO::Zlib; <br/>
+if ($fh−&gt;open("file.gz", "rb"))
+{ <br/>
+print &lt;$fh&gt;; <br/>
+$fh−&gt;close; <br/>
+} <br/>
+$fh = IO::Zlib−&gt;new("file.gz",
+"wb9"); <br/>
+if (defined $fh) { <br/>
+print $fh "bar\n"; <br/>
+$fh−&gt;close; <br/>
+} <br/>
+$fh = IO::Zlib−&gt;new("file.gz",
+"rb"); <br/>
+if (defined $fh) { <br/>
+print &lt;$fh&gt;; <br/>
+undef $fh; # automatically closes the file <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">With Perl 5.004
+you can also use the TIEHANDLE interface to access
+compressed files just like ordinary files:</p>
+<p style="margin-left:9%; margin-top: 1em">use IO::Zlib;
+<br/>
+tie *FILE, 'IO::Zlib', "file.gz", "wb";
+<br/>
+print FILE "line 1\nline2\n"; <br/>
+tie *FILE, 'IO::Zlib', "file.gz", "rb";
+<br/>
+while (&lt;FILE&gt;) { print "LINE: ", $_ };</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"IO::Zlib"
+provides an IO:: style interface to Compress::Zlib and hence
+to gzip/zlib compressed files. It provides many of the same
+methods as the IO::Handle interface.</p>
+<p style="margin-left:9%; margin-top: 1em">Starting from
+IO::Zlib version 1.02, IO::Zlib can also use an external
+<i>gzip</i> command. The default behaviour is to try to use
+an external <i>gzip</i> if no "Compress::Zlib" can
+be loaded, unless explicitly disabled by</p>
+<p style="margin-left:9%; margin-top: 1em">use IO::Zlib
+qw(:gzip_external 0);</p>
+<p style="margin-left:9%; margin-top: 1em">If explicitly
+enabled by</p>
+<p style="margin-left:9%; margin-top: 1em">use IO::Zlib
+qw(:gzip_external 1);</p>
+<p style="margin-left:9%; margin-top: 1em">then the
+external <i>gzip</i> is used <b>instead</b> of
+"Compress::Zlib".</p>
+<h2>CONSTRUCTOR
+<a name="CONSTRUCTOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">new ( [ARGS]
+)</p>
+<p style="margin-left:14%;">Creates an "IO::Zlib"
+object. If it receives any parameters, they are passed to
+the method "open"; if the open fails, the object
+is destroyed. Otherwise, it is returned to the caller.</p>
+<h2>OBJECT METHODS
+<a name="OBJECT METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">open ( FILENAME,
+MODE )</p>
+<p style="margin-left:14%;">"open" takes two
+arguments. The first is the name of the file to open and the
+second is the open mode. The mode can be anything acceptable
+to Compress::Zlib and by extension anything acceptable to
+<i>zlib</i> (that basically means POSIX <b>fopen()</b> style
+mode strings plus an optional number to indicate the
+compression level).</p>
+<p style="margin-left:9%;">opened</p>
+<p style="margin-left:14%;">Returns true if the object
+currently refers to a opened file.</p>
+<p style="margin-left:9%;">close</p>
+<p style="margin-left:14%;">Close the file associated with
+the object and disassociate the file from the handle. Done
+automatically on destroy.</p>
+<p style="margin-left:9%;">getc</p>
+<p style="margin-left:14%;">Return the next character from
+the file, or undef if none remain.</p>
+<p style="margin-left:9%;">getline</p>
+<p style="margin-left:14%;">Return the next line from the
+file, or undef on end of string. Can safely be called in an
+array context. Currently ignores $/ ($INPUT_RECORD_SEPARATOR
+or $RS when English is in use) and treats lines as delimited
+by "\n".</p>
+<p style="margin-left:9%;">getlines</p>
+<p style="margin-left:14%;">Get all remaining lines from
+the file. It will <b>croak()</b> if accidentally called in a
+scalar context.</p>
+<p style="margin-left:9%;">print ( ARGS... )</p>
+<p style="margin-left:14%;">Print ARGS to the file.</p>
+<p style="margin-left:9%;">read ( BUF, NBYTES, [OFFSET]
+)</p>
+<p style="margin-left:14%;">Read some bytes from the file.
+Returns the number of bytes actually read, 0 on
+end−of−file, undef on error.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>eof</p></td>
+<td width="1%"></td>
+<td width="85%">
+<p>Returns true if the handle is currently positioned at
+end of file?</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:9%;">seek ( OFFSET, WHENCE )</p>
+<p style="margin-left:14%;">Seek to a given position in the
+stream. Not yet supported.</p>
+<p style="margin-left:9%;">tell</p>
+<p style="margin-left:14%;">Return the current position in
+the stream, as a numeric offset. Not yet supported.</p>
+<p style="margin-left:9%;">setpos ( POS )</p>
+<p style="margin-left:14%;">Set the current position, using
+the opaque value returned by getpos(). Not yet
+supported.</p>
+<p style="margin-left:9%;">getpos ( POS )</p>
+<p style="margin-left:14%;">Return the current position in
+the string, as an opaque object. Not yet supported.</p>
+<h2>USING THE EXTERNAL GZIP
+<a name="USING THE EXTERNAL GZIP"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If the external
+<i>gzip</i> is used, the following "open"s are
+used:</p>
+<p style="margin-left:9%; margin-top: 1em">open(FH,
+"gzip −dc $filename |") # for read opens
+<br/>
+open(FH, " | gzip &gt; $filename") # for write
+opens</p>
+<p style="margin-left:9%; margin-top: 1em">You can modify
+the 'commands' for example to hardwire an absolute path by
+e.g.</p>
+<p style="margin-left:9%; margin-top: 1em">use IO::Zlib
+':gzip_read_open' =&gt; '/some/where/gunzip −c %s |';
+<br/>
+use IO::Zlib ':gzip_write_open' =&gt; '|
+/some/where/gzip.exe &gt; %s';</p>
+<p style="margin-left:9%; margin-top: 1em">The %s is
+expanded to be the filename ("sprintf" is used, so
+be careful to escape any other "%" signs). The
+'commands' are checked for sanity − they must contain
+the %s, and the read open must end with the pipe sign, and
+the write open must begin with the pipe sign.</p>
+<h2>CLASS METHODS
+<a name="CLASS METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">has_Compress_Zlib</p>
+<p style="margin-left:14%;">Returns true if
+"Compress::Zlib" is available. Note that this does
+not mean that "Compress::Zlib" is being used: see
+"gzip_external" and gzip_used.</p>
+<p style="margin-left:9%;">gzip_external</p>
+<p style="margin-left:14%;">Undef if an external
+<i>gzip</i> <b>can</b> be used if "Compress::Zlib"
+is not available (see "has_Compress_Zlib"), true
+if an external <i>gzip</i> is explicitly used, false if an
+external <i>gzip</i> must not be used. See
+"gzip_used".</p>
+<p style="margin-left:9%;">gzip_used</p>
+<p style="margin-left:14%;">True if an external <i>gzip</i>
+is being used, false if not.</p>
+<p style="margin-left:9%;">gzip_read_open</p>
+<p style="margin-left:14%;">Return the 'command' being used
+for opening a file for reading using an external
+<i>gzip</i>.</p>
+<p style="margin-left:9%;">gzip_write_open</p>
+<p style="margin-left:14%;">Return the 'command' being used
+for opening a file for writing using an external
+<i>gzip</i>.</p>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Zlib::getlines:
+must be called in list context</p>
+<p style="margin-left:14%;">If you want read lines, you
+must read in list context.</p>
+<p style="margin-left:9%;">IO::Zlib::gzopen_external: mode
+'...' is illegal</p>
+<p style="margin-left:14%;">Use only modes 'rb' or 'wb' or
+/wb[1−9]/.</p>
+<p style="margin-left:9%;">IO::Zlib::import: '...' is
+illegal</p>
+<p style="margin-left:14%;">The known import symbols are
+the ":gzip_external", ":gzip_read_open",
+and ":gzip_write_open". Anything else is not
+recognized.</p>
+<p style="margin-left:9%;">IO::Zlib::import:
+':gzip_external' requires an argument</p>
+<p style="margin-left:14%;">The ":gzip_external"
+requires one boolean argument.</p>
+<p style="margin-left:9%;">IO::Zlib::import:
+'gzip_read_open' requires an argument</p>
+<p style="margin-left:14%;">The ":gzip_external"
+requires one string argument.</p>
+<p style="margin-left:9%;">IO::Zlib::import: 'gzip_read'
+'...' is illegal</p>
+<p style="margin-left:14%;">The ":gzip_read_open"
+argument must end with the pipe sign (|) and have the %s for
+the filename. See "USING THE EXTERNAL GZIP".</p>
+<p style="margin-left:9%;">IO::Zlib::import:
+'gzip_write_open' requires an argument</p>
+<p style="margin-left:14%;">The ":gzip_external"
+requires one string argument.</p>
+<p style="margin-left:9%;">IO::Zlib::import:
+'gzip_write_open' '...' is illegal</p>
+<p style="margin-left:14%;">The
+":gzip_write_open" argument must begin with the
+pipe sign (|) and have the %s for the filename. An output
+redirect (&gt;) is also often a good idea, depending on your
+operating system shell syntax. See "USING THE EXTERNAL
+GZIP".</p>
+<p style="margin-left:9%;">IO::Zlib::import: no
+Compress::Zlib and no external gzip</p>
+<p style="margin-left:14%;">Given that we failed to load
+"Compress::Zlib" and that the use of <br/>
+an external <i>gzip</i> was disabled, IO::Zlib has not much
+chance of working.</p>
+<p style="margin-left:9%;">IO::Zlib::open: needs a
+filename</p>
+<p style="margin-left:14%;">No filename, no open.</p>
+<p style="margin-left:9%;">IO::Zlib::READ: NBYTES must be
+specified</p>
+<p style="margin-left:14%;">We must know how much to
+read.</p>
+<p style="margin-left:9%;">IO::Zlib::WRITE: too long
+LENGTH</p>
+<p style="margin-left:14%;">The LENGTH must be less than or
+equal to the buffer size.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">perlfunc,
+"I/O Operators" in perlop, IO::Handle,
+Compress::Zlib</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Created by Tom
+Hughes &lt;<i>tom@compton.nu</i>&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">Support for
+external gzip added by Jarkko Hietaniemi
+&lt;<i>jhi@iki.fi</i>&gt;.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+1998−2004 Tom Hughes &lt;<i>tom@compton.nu</i>&gt;.
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as
+Perl itself.</p>
+<hr/>
+</body>
+</html>

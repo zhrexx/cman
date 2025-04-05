@@ -1,0 +1,266 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Net::Netrc</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Net::Netrc</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#The .netrc File">The .netrc File</a><br/>
+<a href="#Class Methods">Class Methods</a><br/>
+<a href="#Object Methods">Object Methods</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#KNOWN BUGS">KNOWN BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href="#LICENCE">LICENCE</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#DATE">DATE</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Net::Netrc
+− OO interface to users netrc file</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Net::Netrc;
+<br/>
+$mach = Net::Netrc−&gt;lookup('some.machine'); <br/>
+$login = $mach−&gt;login; <br/>
+($login, $password, $account) = $mach−&gt;lpa;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Net::Netrc"
+is a class implementing a simple interface to the .netrc
+file used as by the ftp program.</p>
+<p style="margin-left:9%; margin-top: 1em">"Net::Netrc"
+also implements security checks just like the ftp program,
+these checks are, first that the .netrc file must be owned
+by the user and second the ownership permissions should be
+such that only the owner has read and write access. If these
+conditions are not met then a warning is output and the
+.netrc file is not read.</p>
+<h3>The .netrc File
+<a name="The .netrc File"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The .netrc file
+contains login and initialization information used by the
+auto−login process. It resides in the user's home
+directory. The following tokens are recognized; they may be
+separated by spaces, tabs, or new−lines: <br/>
+machine name</p>
+<p style="margin-left:14%;">Identify a remote machine name.
+The auto−login process searches the .netrc file for a
+machine token that matches the remote machine specified.
+Once a match is made, the subsequent .netrc tokens are
+processed, stopping when the end of file is reached or
+an− other machine or a default token is
+encountered.</p>
+<p style="margin-left:9%;">default</p>
+<p style="margin-left:14%;">This is the same as machine
+name except that default matches any name. There can be only
+one default token, and it must be after all machine tokens.
+This is normally used as:</p>
+<p style="margin-left:14%; margin-top: 1em">default login
+anonymous password user@site</p>
+<p style="margin-left:14%; margin-top: 1em">thereby giving
+the user automatic anonymous login to machines not specified
+in .netrc.</p>
+<p style="margin-left:9%;">login name</p>
+<p style="margin-left:14%;">Identify a user on the remote
+machine. If this token is present, the auto−login
+process will initiate a login using the specified name.</p>
+<p style="margin-left:9%;">password string</p>
+<p style="margin-left:14%;">Supply a password. If this
+token is present, the auto−login process will supply
+the specified string if the remote server requires a
+password as part of the login process.</p>
+<p style="margin-left:9%;">account string</p>
+<p style="margin-left:14%;">Supply an additional account
+password. If this token is present, the auto−login
+process will supply the specified string if the remote
+server requires an additional account password.</p>
+<p style="margin-left:9%;">macdef name</p>
+<p style="margin-left:14%;">Define a macro.
+"Net::Netrc" only parses this field to be
+compatible with <i>ftp</i>.</p>
+<h3>Class Methods
+<a name="Class Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The constructor
+for a "Net::Netrc" object is not called new as it
+does not really create a new object. But instead is called
+"lookup" as this is essentially what it does. <br/>
+"lookup($machine[, $login])"</p>
+<p style="margin-left:14%;">Lookup and return a reference
+to the entry for $machine. If $login is given then the entry
+returned will have the given login. If $login is not given
+then the first entry in the .netrc file for $machine will be
+returned.</p>
+<p style="margin-left:14%; margin-top: 1em">If a matching
+entry cannot be found, and a default entry exists, then a
+reference to the default entry is returned.</p>
+<p style="margin-left:14%; margin-top: 1em">If there is no
+matching entry found and there is no default defined, or no
+.netrc file is found, then "undef" is
+returned.</p>
+<h3>Object Methods
+<a name="Object Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">login()</p>
+<p style="margin-left:14%;">Return the login id for the
+netrc entry</p>
+<p style="margin-left:9%;">password()</p>
+<p style="margin-left:14%;">Return the password for the
+netrc entry</p>
+<p style="margin-left:9%;">account()</p>
+<p style="margin-left:14%;">Return the account information
+for the netrc entry</p>
+<p style="margin-left:9%;">lpa()</p>
+<p style="margin-left:14%;">Return a list of login,
+password and account information for the netrc entry</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>None</i>.</p>
+<h2>KNOWN BUGS
+<a name="KNOWN BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;https://rt.cpan.org/Dist/Display.html?Status=Active&amp;Queue=libnet&gt;.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Net::Cmd.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Graham Barr
+&lt;gbarr@pobox.com &lt;mailto:gbarr@pobox.com&gt;&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">Steve Hay
+&lt;shay@cpan.org &lt;mailto:shay@cpan.org&gt;&gt; is now
+maintaining libnet as of version 1.22_02.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+1995−1998 Graham Barr. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2013−2014, 2020 Steve Hay. All rights reserved.</p>
+<h2>LICENCE
+<a name="LICENCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself, i.e. under the terms of
+either the GNU General Public License or the Artistic
+License, as specified in the <i>LICENCE</i> file.</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Version 3.15</p>
+<h2>DATE
+<a name="DATE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">20 March
+2023</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the
+<i>Changes</i> file.</p>
+<hr/>
+</body>
+</html>

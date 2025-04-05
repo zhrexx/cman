@@ -1,0 +1,479 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:35 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Scalar::Util</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Scalar::Util</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href='#Core Perl "builtin" Functions'>Core Perl "builtin" Functions</a><br/>
+<a href="#FUNCTIONS FOR REFERENCES">FUNCTIONS FOR REFERENCES</a><br/>
+<a href="#blessed">blessed</a><br/>
+<a href="#refaddr">refaddr</a><br/>
+<a href="#reftype">reftype</a><br/>
+<a href="#weaken">weaken</a><br/>
+<a href="#unweaken">unweaken</a><br/>
+<a href="#isweak">isweak</a><br/>
+<a href="#OTHER FUNCTIONS">OTHER FUNCTIONS</a><br/>
+<a href="#dualvar">dualvar</a><br/>
+<a href="#isdual">isdual</a><br/>
+<a href="#isvstring">isvstring</a><br/>
+<a href="#looks_like_number">looks_like_number</a><br/>
+<a href="#openhandle">openhandle</a><br/>
+<a href="#readonly">readonly</a><br/>
+<a href="#set_prototype">set_prototype</a><br/>
+<a href="#tainted">tainted</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#KNOWN BUGS">KNOWN BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Scalar::Util
+− A selection of general−utility scalar
+subroutines</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Scalar::Util
+qw(blessed dualvar isdual readonly refaddr reftype <br/>
+tainted weaken isweak isvstring looks_like_number <br/>
+set_prototype); <br/>
+# and other useful utils appearing below</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Scalar::Util"
+contains a selection of subroutines that people have
+expressed would be nice to have in the perl core, but the
+usage would not really be high enough to warrant the use of
+a keyword, and the size would be so small that being
+individual extensions would be wasteful.</p>
+<p style="margin-left:9%; margin-top: 1em">By default
+"Scalar::Util" does not export any
+subroutines.</p>
+<h3>Core Perl "builtin" Functions
+<a name='Core Perl "builtin" Functions'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Many functions
+in this module have served as the inspiration for a new
+experimental facility in recent versions of Perl. From
+various development versions, starting at 5.35.7, equivalent
+functions to many of these utilities are available in the
+"builtin::" package.</p>
+<p style="margin-left:9%; margin-top: 1em">use Scalar::Util
+qw(blessed); <br/>
+$class = blessed $obj; <br/>
+$class = builtin::blessed $obj; # equivalent</p>
+<p style="margin-left:9%; margin-top: 1em">For more
+information, see the documentation on builtin.</p>
+<h2>FUNCTIONS FOR REFERENCES
+<a name="FUNCTIONS FOR REFERENCES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions all perform some useful activity on reference
+values.</p>
+<h3>blessed
+<a name="blessed"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $pkg =
+blessed( $ref );</p>
+<p style="margin-left:9%; margin-top: 1em">If $ref is a
+blessed reference, the name of the package that it is
+blessed into is returned. Otherwise "undef" is
+returned.</p>
+<p style="margin-left:9%; margin-top: 1em">$scalar =
+"foo"; <br/>
+$class = blessed $scalar; # undef <br/>
+$ref = []; <br/>
+$class = blessed $ref; # undef <br/>
+$obj = bless [], "Foo"; <br/>
+$class = blessed $obj; # "Foo"</p>
+<p style="margin-left:9%; margin-top: 1em">Take care when
+using this function simply as a truth test (such as in
+"if(blessed $ref)...") because the package name
+"0" is defined yet false.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since Perl
+version 5.35.7</i> an equivalent function is available as
+"builtin::blessed".</p>
+<h3>refaddr
+<a name="refaddr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $addr =
+refaddr( $ref );</p>
+<p style="margin-left:9%; margin-top: 1em">If $ref is
+reference, the internal memory address of the referenced
+value is returned as a plain integer. Otherwise
+"undef" is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">$addr = refaddr
+"string"; # undef <br/>
+$addr = refaddr \$var; # eg 12345678 <br/>
+$addr = refaddr []; # eg 23456784 <br/>
+$obj = bless {}, "Foo"; <br/>
+$addr = refaddr $obj; # eg 88123488</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since Perl
+version 5.35.7</i> an equivalent function is available as
+"builtin::refaddr".</p>
+<h3>reftype
+<a name="reftype"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $type =
+reftype( $ref );</p>
+<p style="margin-left:9%; margin-top: 1em">If $ref is a
+reference, the basic Perl type of the variable referenced is
+returned as a plain string (such as "ARRAY" or
+"HASH"). Otherwise "undef" is
+returned.</p>
+<p style="margin-left:9%; margin-top: 1em">$type = reftype
+"string"; # undef <br/>
+$type = reftype \$var; # SCALAR <br/>
+$type = reftype []; # ARRAY <br/>
+$obj = bless {}, "Foo"; <br/>
+$type = reftype $obj; # HASH</p>
+<p style="margin-left:9%; margin-top: 1em">Note that for
+internal reasons, all precompiled regexps
+("qr/.../") are blessed references; thus ref()
+returns the package name string "Regexp" on these
+but reftype() will return the underlying C structure type of
+"REGEXP" in all capitals.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since Perl
+version 5.35.7</i> an equivalent function is available as
+"builtin::reftype".</p>
+<h3>weaken
+<a name="weaken"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">weaken( $ref
+);</p>
+<p style="margin-left:9%; margin-top: 1em">The lvalue $ref
+will be turned into a weak reference. This means that it
+will not hold a reference count on the object it references.
+Also, when the reference count on that object reaches zero,
+the reference will be set to undef. This function mutates
+the lvalue passed as its argument and returns no value.</p>
+<p style="margin-left:9%; margin-top: 1em">This is useful
+for keeping copies of references, but you don't want to
+prevent the object being DESTROY−ed at its usual
+time.</p>
+<p style="margin-left:9%; margin-top: 1em">{ <br/>
+my $var; <br/>
+$ref = \$var; <br/>
+weaken($ref); # Make $ref a weak reference <br/>
+} <br/>
+# $ref is now undef</p>
+<p style="margin-left:9%; margin-top: 1em">Note that if you
+take a copy of a scalar with a weakened reference, the copy
+will be a strong reference.</p>
+<p style="margin-left:9%; margin-top: 1em">my $var; <br/>
+my $foo = \$var; <br/>
+weaken($foo); # Make $foo a weak reference <br/>
+my $bar = $foo; # $bar is now a strong reference</p>
+<p style="margin-left:9%; margin-top: 1em">This may be less
+obvious in other situations, such as grep(), for instance
+when grepping through a list of weakened references to
+objects that may have been destroyed already:</p>
+<p style="margin-left:9%; margin-top: 1em">@object = grep {
+defined } @object;</p>
+<p style="margin-left:9%; margin-top: 1em">This will indeed
+remove all references to destroyed objects, but the
+remaining references to objects will be strong, causing the
+remaining objects to never be destroyed because there is now
+always a strong reference to them in the @object array.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since Perl
+version 5.35.7</i> an equivalent function is available as
+"builtin::weaken".</p>
+<h3>unweaken
+<a name="unweaken"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">unweaken( $ref
+);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.36.</i></p>
+<p style="margin-left:9%; margin-top: 1em">The lvalue
+"REF" will be turned from a weak reference back
+into a normal (strong) reference again. This function
+mutates the lvalue passed as its argument and returns no
+value. This undoes the action performed by
+"weaken".</p>
+<p style="margin-left:9%; margin-top: 1em">This function is
+slightly neater and more convenient than the
+otherwise−equivalent code</p>
+<p style="margin-left:9%; margin-top: 1em">my $tmp = $REF;
+<br/>
+undef $REF; <br/>
+$REF = $tmp;</p>
+<p style="margin-left:9%; margin-top: 1em">(because in
+particular, simply assigning a weak reference back to itself
+does not work to unweaken it; "$REF = $REF" does
+not work).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since Perl
+version 5.35.7</i> an equivalent function is available as
+"builtin::unweaken".</p>
+<h3>isweak
+<a name="isweak"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $weak =
+isweak( $ref );</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+$ref is a weak reference.</p>
+<p style="margin-left:9%; margin-top: 1em">$ref = \$foo;
+<br/>
+$weak = isweak($ref); # false <br/>
+weaken($ref); <br/>
+$weak = isweak($ref); # true</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NOTE</b>:
+Copying a weak reference creates a normal, strong,
+reference.</p>
+<p style="margin-left:9%; margin-top: 1em">$copy = $ref;
+<br/>
+$weak = isweak($copy); # false</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since Perl
+version 5.35.7</i> an equivalent function is available as
+"builtin::is_weak".</p>
+<h2>OTHER FUNCTIONS
+<a name="OTHER FUNCTIONS"></a>
+</h2>
+<h3>dualvar
+<a name="dualvar"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $var =
+dualvar( $num, $string );</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a scalar
+that has the value $num in a numeric context and the value
+$string in a string context.</p>
+<p style="margin-left:9%; margin-top: 1em">$foo = dualvar
+10, "Hello"; <br/>
+$num = $foo + 2; # 12 <br/>
+$str = $foo . " world"; # Hello world</p>
+<h3>isdual
+<a name="isdual"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $dual =
+isdual( $var );</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.26.</i></p>
+<p style="margin-left:9%; margin-top: 1em">If $var is a
+scalar that has both numeric and string values, the result
+is true.</p>
+<p style="margin-left:9%; margin-top: 1em">$foo = dualvar
+86, "Nix"; <br/>
+$dual = isdual($foo); # true</p>
+<p style="margin-left:9%; margin-top: 1em">Note that a
+scalar can be made to have both string and numeric content
+through standard operations:</p>
+<p style="margin-left:9%; margin-top: 1em">$foo =
+"10"; <br/>
+$dual = isdual($foo); # false <br/>
+$bar = $foo + 0; <br/>
+$dual = isdual($foo); # true</p>
+<p style="margin-left:9%; margin-top: 1em">The $! variable
+is commonly dual−valued, though it is also magical in
+other ways:</p>
+<p style="margin-left:9%; margin-top: 1em">$! = 1; <br/>
+$dual = isdual($!); # true <br/>
+print("$!\n"); # "Operation not
+permitted"</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CAUTION</b>:
+This function is not as useful as it may seem. Dualvars are
+not a distinct concept in Perl, but a standard internal
+construct of all scalar values. Almost any value could be
+considered as a dualvar by this function through the course
+of normal operations.</p>
+<h3>isvstring
+<a name="isvstring"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $vstring =
+isvstring( $var );</p>
+<p style="margin-left:9%; margin-top: 1em">If $var is a
+scalar which was coded as a vstring, the result is true.</p>
+<p style="margin-left:9%; margin-top: 1em">$vs = v49.46.48;
+<br/>
+$fmt = isvstring($vs) ? "%vd" : "%s";
+#true <br/>
+printf($fmt,$vs);</p>
+<h3>looks_like_number
+<a name="looks_like_number"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $isnum =
+looks_like_number( $var );</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+perl thinks $var is a number. See
+"looks_like_number" in perlapi.</p>
+<h3>openhandle
+<a name="openhandle"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $fh =
+openhandle( $fh );</p>
+<p style="margin-left:9%; margin-top: 1em">Returns $fh
+itself, if $fh may be used as a filehandle and is open, or
+if it is a tied handle. Otherwise "undef" is
+returned.</p>
+<p style="margin-left:9%; margin-top: 1em">$fh =
+openhandle(*STDIN); # \*STDIN <br/>
+$fh = openhandle(\*STDIN); # \*STDIN <br/>
+$fh = openhandle(*NOTOPEN); # undef <br/>
+$fh = openhandle("scalar"); # undef</p>
+<h3>readonly
+<a name="readonly"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $ro =
+readonly( $var );</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+$var is readonly.</p>
+<p style="margin-left:9%; margin-top: 1em">sub foo {
+readonly($_[0]) } <br/>
+$readonly = foo($bar); # false <br/>
+$readonly = foo(0); # true</p>
+<h3>set_prototype
+<a name="set_prototype"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $code =
+set_prototype( $code, $prototype );</p>
+<p style="margin-left:9%; margin-top: 1em">Sets the
+prototype of the function given by the $code reference, or
+deletes it if $prototype is "undef". Returns the
+$code reference itself.</p>
+<p style="margin-left:9%; margin-top: 1em">set_prototype
+\&amp;foo, '$$';</p>
+<h3>tainted
+<a name="tainted"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $t = tainted(
+$var );</p>
+<p style="margin-left:9%; margin-top: 1em">Return true if
+$var is tainted.</p>
+<p style="margin-left:9%; margin-top: 1em">$taint =
+tainted("constant"); # false <br/>
+$taint = tainted($ENV{PWD}); # true if running under
+−T</p>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Module use may
+give one of the following errors during import. <br/>
+Vstrings are not implemented in this version of perl</p>
+<p style="margin-left:14%;">The version of perl that you
+are using does not implement Vstrings, to use
+"isvstring" you will need to use a newer release
+of perl.</p>
+<h2>KNOWN BUGS
+<a name="KNOWN BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">There is a bug
+in perl5.6.0 with UV's that are &gt;= 1&lt;&lt;31. This will
+show up as tests 8 and 9 of dualvar.t failing</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">List::Util</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+1997−2007 Graham Barr &lt;gbarr@pobox.com&gt;. All
+rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as
+Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">Additionally
+"weaken" and "isweak" which are</p>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+1999 Tuomas J. Lukka &lt;lukka@iki.fi&gt;. All rights
+reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as
+perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2004, 2008 Matthijs van Duin. All rights reserved. Copyright
+(C) 2014 cPanel Inc. All rights reserved. This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

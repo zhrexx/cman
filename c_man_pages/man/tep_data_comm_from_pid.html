@@ -1,0 +1,335 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:58 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LIBTRACEEVENT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LIBTRACEEVENT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#FILES">FILES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#RESOURCES">RESOURCES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">tep_register_comm,
+tep_override_comm, tep_is_pid_registered,
+tep_data_comm_from_pid, tep_data_pid_from_comm,
+tep_cmdline_pid − Manage pid to process name
+mappings.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;event−parse.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em">int
+<b>tep_register_comm</b>(struct tep_handle *<i>tep</i>,
+const char *<i>comm</i>, int <i>pid</i>); <br/>
+int <b>tep_override_comm</b>(struct tep_handle *<i>tep</i>,
+const char *<i>comm</i>, int <i>pid</i>); <br/>
+bool <b>tep_is_pid_registered</b>(struct tep_handle
+*<i>tep</i>, int <i>pid</i>); <br/>
+const char *<b>tep_data_comm_from_pid</b>(struct tep_handle
+*<i>pevent</i>, int <i>pid</i>); <br/>
+struct cmdline *<b>tep_data_pid_from_comm</b>(struct
+tep_handle *<i>pevent</i>, const char *<i>comm</i>, struct
+cmdline *<i>next</i>); <br/>
+int <b>tep_cmdline_pid</b>(struct tep_handle *<i>pevent</i>,
+struct cmdline *<i>cmdline</i>);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+can be used to handle the mapping between pid and process
+name. The library builds a cache of these mappings, which is
+used to display the name of the process, instead of its pid.
+This information can be retrieved from
+tracefs/saved_cmdlines file.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>tep_register_comm()</b> function registers a <i>pid</i> /
+process name mapping. If a command with the same <i>pid</i>
+is already registered, an error is returned. The <i>pid</i>
+argument is the process ID, the <i>comm</i> argument is the
+process name, <i>tep</i> is the event context. The
+<i>comm</i> is duplicated internally.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>tep_override_comm()</b> function registers a <i>pid</i> /
+process name mapping. If a process with the same pid is
+already registered, the process name string is udapted with
+the new one. The <i>pid</i> argument is the process ID, the
+<i>comm</i> argument is the process name, <i>tep</i> is the
+event context. The <i>comm</i> is duplicated internally.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>tep_is_pid_registered()</b> function checks if a pid has
+a process name mapping registered. The <i>pid</i> argument
+is the process ID, <i>tep</i> is the event context.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>tep_data_comm_from_pid()</b> function returns the process
+name for a given pid. The <i>pid</i> argument is the process
+ID, <i>tep</i> is the event context. The returned string
+should not be freed, but will be freed when the <i>tep</i>
+handler is closed.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>tep_data_pid_from_comm()</b> function returns a pid for a
+given process name. The <i>comm</i> argument is the process
+name, <i>tep</i> is the event context. The argument
+<i>next</i> is the cmdline structure to search for the next
+pid. As there may be more than one pid for a given process,
+the result of this call can be passed back into a recurring
+call in the <i>next</i> parameter, to search for the next
+pid. If <i>next</i> is NULL, it will return the first pid
+associated with the <i>comm</i>. The function performs a
+linear search, so it may be slow.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>tep_cmdline_pid()</b> function returns the pid associated
+with a given <i>cmdline</i>. The <i>tep</i> argument is the
+event context.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>tep_register_comm()</b>
+function returns 0 on success. In case of an error −1
+is returned and errno is set to indicate the cause of the
+problem: ENOMEM, if there is not enough memory to duplicate
+the <i>comm</i> or EEXIST if a mapping for this <i>pid</i>
+is already registered.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tep_override_comm()</b>
+function returns 0 on success. In case of an error −1
+is returned and errno is set to indicate the cause of the
+problem: ENOMEM, if there is not enough memory to duplicate
+the <i>comm</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tep_is_pid_registered()</b>
+function returns true if the <i>pid</i> has a process name
+mapped to it, false otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tep_data_comm_from_pid()</b>
+function returns the process name as string, or the string
+"&lt;...&gt;" if there is no mapping for the given
+pid.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tep_data_pid_from_comm()</b>
+function returns a pointer to a struct cmdline, that holds a
+pid for a given process, or NULL if none is found. This
+result can be passed back into a recurring call as the
+<i>next</i> parameter of the function.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tep_cmdline_pid()</b>
+functions returns the pid for the give cmdline. If
+<i>cmdline</i> is NULL, then −1 is returned.</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+example registers pid for command "ls", in context
+of event <i>tep</i> and performs various searches for pid /
+process name mappings:</p>
+<p style="margin-left:14%; margin-top: 1em">#include
+&lt;event−parse.h&gt; <br/>
+... <br/>
+int ret; <br/>
+int ls_pid = 1021; <br/>
+struct tep_handle *tep = tep_alloc(); <br/>
+... <br/>
+ret = tep_register_comm(tep, "ls", ls_pid); <br/>
+if (ret != 0 &amp;&amp; errno == EEXIST) <br/>
+ret = tep_override_comm(tep, "ls", ls_pid); <br/>
+if (ret != 0) { <br/>
+/* Failed to register pid / command mapping */ <br/>
+} <br/>
+... <br/>
+if (tep_is_pid_registered(tep, ls_pid) == 0) { <br/>
+/* Command mapping for ls_pid is not registered */ <br/>
+} <br/>
+... <br/>
+const char *comm = tep_data_comm_from_pid(tep, ls_pid); <br/>
+if (comm) { <br/>
+/* Found process name for ls_pid */ <br/>
+} <br/>
+... <br/>
+int pid; <br/>
+struct cmdline *cmd = tep_data_pid_from_comm(tep,
+"ls", NULL); <br/>
+while (cmd) { <br/>
+pid = tep_cmdline_pid(tep, cmd); <br/>
+/* Found pid for process "ls" */ <br/>
+cmd = tep_data_pid_from_comm(tep, "ls", cmd); <br/>
+}</p>
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em"><b>event−parse.h</b>
+<br/>
+Header file to include in order to have access to the
+library APIs. <b><br/>
+−ltraceevent</b> <br/>
+Linker switch to add when building a program that uses the
+library.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>libtraceevent</b>(3),
+<b>trace−cmd</b>(1)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em"><b>Steven
+Rostedt</b>
+&lt;<b><font color="#0000FF">rostedt@goodmis.org</font></b>
+<small><font color="#000000">[1]</font></small>
+<font color="#000000">&gt;, author of <b>libtraceevent</b>.
+<b><br/>
+Tzvetomir Stoyanov</b>
+&lt;</font><b><font color="#0000FF">tz.stoyanov@gmail.com</font></b>
+<small><font color="#000000">[2]</font></small>
+<font color="#000000">&gt;, author of this man
+page.</font></p>
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><font color="#000000">Report
+bugs to
+&lt;</font><b><font color="#0000FF">linux−trace−devel@vger.kernel.org</font></b>
+<small><font color="#000000">[3]</font></small>
+<font color="#000000">&gt;</font></p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><font color="#000000">libtraceevent
+is Free Software licensed under the GNU LGPL 2.1</font></p>
+<h2>RESOURCES
+<a name="RESOURCES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b><font color="#0000FF">https://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git/</font></b></p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">1.</font></p> </td>
+<td width="1%"></td>
+<td width="24%">
+<p style="margin-top: 1em"><font color="#000000">rostedt@goodmis.org</font></p> </td>
+<td width="62%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:rostedt@goodmis.org</font></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">2.</font></p> </td>
+<td width="1%"></td>
+<td width="27%">
+<p style="margin-top: 1em"><font color="#000000">tz.stoyanov@gmail.com</font></p> </td>
+<td width="59%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:tz.stoyanov@gmail.com</font></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">3.</font></p> </td>
+<td width="1%"></td>
+<td width="42%">
+<p style="margin-top: 1em"><font color="#000000">linux-trace-devel@vger.kernel.org</font></p> </td>
+<td width="44%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:linux-trace-devel@vger.kernel.org</font></p>
+<hr/>
+</body>
+</html>

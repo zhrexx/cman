@@ -1,0 +1,1094 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:57 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Pod::Checker</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Pod::Checker</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#OPTIONS/ARGUMENTS">OPTIONS/ARGUMENTS</a><br/>
+<a href="#podchecker()">podchecker()</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#Errors">Errors</a><br/>
+<a href="#Warnings">Warnings</a><br/>
+<a href="#Hyperlinks">Hyperlinks</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SCRIPTS">SCRIPTS</a><br/>
+<a href="#INTERFACE">INTERFACE</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pod::Checker
+− check pod documents for syntax errors</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Pod::Checker; <br/>
+$syntax_okay = podchecker($filepath, $outputpath, %options);
+<br/>
+my $checker = Pod::Checker−&gt;new(%options); <br/>
+$checker−&gt;parse_from_file($filepath, \*STDERR);</p>
+<h2>OPTIONS/ARGUMENTS
+<a name="OPTIONS/ARGUMENTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">$filepath is the
+input POD to read and $outputpath is where to write POD
+syntax error messages. Either argument may be a scalar
+indicating a file−path, or else a reference to an open
+filehandle. If unspecified, the input−file it defaults
+to "\*STDIN", and the output−file defaults
+to "\*STDERR".</p>
+<h3>podchecker()
+<a name="podchecker()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This function
+can take a hash of options: <b><br/>
+−warnings</b> =&gt; <i>val</i></p>
+<p style="margin-left:14%;">Turn warnings on/off.
+<i>val</i> is usually 1 for on, but higher values trigger
+additional warnings. See "Warnings".</p>
+<p style="margin-left:9%;"><b>−quiet</b> =&gt;
+<i>val</i></p>
+<p style="margin-left:14%;">If "val" is true, do
+not print any errors/warnings.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>podchecker</b>
+will perform syntax checking of Perl5 POD format
+documentation.</p>
+<p style="margin-left:9%; margin-top: 1em">Curious/ambitious
+users are welcome to propose additional features they wish
+to see in <b>Pod::Checker</b> and <b>podchecker</b> and
+verify that the checks are consistent with perlpod.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+checks are currently performed:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Unknown '=xxxx' commands, unknown 'X&lt;...&gt;'
+interior−sequences, and unterminated interior
+sequences.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Check for proper balancing of "=begin" and
+"=end". The contents of such a block are generally
+ignored, i.e. no syntax checks are performed.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Check for proper nesting and balancing of
+"=over", "=item" and
+"=back".</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Check for same nested interior−sequences (e.g.
+"L&lt;...L&lt;...&gt;...&gt;").</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Check for malformed or non−existing entities
+"E&lt;...&gt;".</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Check for correct syntax of hyperlinks
+"L&lt;...&gt;". See perlpod for details.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Check for unresolved document−internal links. This
+check may also reveal misspelled links that seem to be
+internal links but should be links to something else.</p></td></tr>
+</table>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<h3>Errors
+<a name="Errors"></a>
+</h3>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="15%">
+<p style="margin-top: 1em">empty =headn</p></td>
+<td width="71%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">A heading
+("=head1" or "=head2") without any text?
+That ain't no heading!</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="53%">
+<p style="margin-top: 1em">=over on line <i>N</i> without
+closing =back</p></td>
+<td width="33%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="53%">
+<p>You forgot a '=back' before '=head<i>N</i>'</p></td>
+<td width="33%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="53%">
+<p>=over is the last thing in the document?!</p></td>
+<td width="33%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"=over" command does not have a corresponding
+"=back" before the next heading
+("=head1" or "=head2") or the end of the
+file.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="39%">
+<p style="margin-top: 1em">'=item' outside of any
+'=over'</p> </td>
+<td width="47%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="39%">
+<p>=back without =over</p></td>
+<td width="47%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">An
+"=item" or "=back" command has been
+found outside a "=over"/"=back"
+block.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="32%">
+<p style="margin-top: 1em">Can't have a 0 in =over
+<i>N</i></p> </td>
+<td width="54%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">You need to
+indent a strictly positive number of spaces, not 0.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="65%">
+<p style="margin-top: 1em">=over should be: '=over' or
+'=over positive_number'</p></td>
+<td width="21%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Either have an
+argumentless =over, or have its argument a strictly positive
+number.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="54%">
+<p style="margin-top: 1em">=begin <i>TARGET</i> without
+matching =end <i>TARGET</i></p></td>
+<td width="32%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">A
+"=begin" command was found that has no matching
+=end command.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="31%">
+<p style="margin-top: 1em">=begin without a target?</p></td>
+<td width="55%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">A
+"=begin" command was found that is not followed by
+the formatter specification.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p style="margin-top: 1em">=end <i>TARGET</i> without
+matching =begin.</p></td>
+<td width="40%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">A standalone
+"=end" command was found.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="31%">
+<p style="margin-top: 1em">'=end' without a target?</p></td>
+<td width="55%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">'=end'
+directives need to have a target, just like =begin
+directives.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="32%">
+<p style="margin-top: 1em">'=end <i>TARGET</i>' is
+invalid.</p> </td>
+<td width="54%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em"><i>TARGET</i>
+needs to be one word</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="51%">
+<p style="margin-top: 1em">=end <i>CONTENT</i> doesn't
+match =begin <i>TARGET</i></p></td>
+<td width="35%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em"><i>CONTENT</i>
+needs to match =begin's <i>TARGET</i>.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="28%">
+<p style="margin-top: 1em">=for without a target?</p></td>
+<td width="58%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">There is no
+specification of the formatter after the "=for"
+command.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="37%">
+<p style="margin-top: 1em">unresolved internal link
+<i>NAME</i></p> </td>
+<td width="49%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The given link
+to <i>NAME</i> does not have a matching node in the current
+POD. This also happened when a single word node name is not
+enclosed in "".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="28%">
+<p style="margin-top: 1em">Unknown directive:
+<i>CMD</i></p> </td>
+<td width="58%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">An invalid POD
+command has been found. Valid are "=head1",
+"=head2", "=head3", "=head4",
+"=over", "=item", "=back",
+"=begin", "=end", "=for",
+"=pod", "=cut"</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p style="margin-top: 1em">Deleting unknown formatting code
+<i>SEQ</i></p> </td>
+<td width="40%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">An invalid
+markup command has been encountered. Valid are:
+"B&lt;&gt;", "C&lt;&gt;",
+"E&lt;&gt;", "F&lt;&gt;",
+"I&lt;&gt;", "L&lt;&gt;",
+"S&lt;&gt;", "X&lt;&gt;",
+"Z&lt;&gt;"</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="35%">
+<p style="margin-top: 1em">Unterminated <i>SEQ</i>&lt;&gt;
+sequence</p> </td>
+<td width="51%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">An unclosed
+formatting code</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="48%">
+<p style="margin-top: 1em">An E&lt;...&gt; surrounding
+strange content</p></td>
+<td width="38%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+<i>STRING</i> found cannot be interpreted as a character
+entity.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="18%">
+<p style="margin-top: 1em">An empty E&lt;&gt;</p></td>
+<td width="68%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="18%">
+<p>An empty "L&lt;&gt;"</p></td>
+<td width="68%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="18%">
+<p>An empty X&lt;&gt;</p></td>
+<td width="68%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">There needs to
+be content inside E, L, and X formatting codes.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="40%">
+<p style="margin-top: 1em">Spurious text after =pod /
+=cut</p> </td>
+<td width="46%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The commands
+"=pod" and "=cut" do not take any
+arguments.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="80%">
+<p style="margin-top: 1em">=back doesn't take any
+parameters, but you said =back <i>ARGUMENT</i></p></td>
+<td width="6%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"=back" command does not take any arguments.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="82%">
+<p style="margin-top: 1em">=pod directives shouldn't be
+over one line long! Ignoring all <i>N</i> lines of
+content</p> </td>
+<td width="4%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Self
+explanatory</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="40%">
+<p style="margin-top: 1em">=cut found outside a pod
+block.</p> </td>
+<td width="46%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">A '=cut'
+directive found in the middle of non−POD</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="42%">
+<p style="margin-top: 1em">Invalid =encoding syntax:
+<i>CONTENT</i></p> </td>
+<td width="44%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Syntax error in
+=encoding directive</p>
+<h3>Warnings
+<a name="Warnings"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These may not
+necessarily cause trouble, but indicate mediocre style.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="45%">
+<p style="margin-top: 1em">nested commands
+<i>CMD</i>&lt;...<i>CMD</i>&lt;...&gt;...&gt;</p> </td>
+<td width="41%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Two nested
+identical markup commands have been found. Generally this
+does not make sense.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="57%">
+<p style="margin-top: 1em">multiple occurrences (<i>N</i>)
+of link target <i>name</i></p></td>
+<td width="29%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The POD file
+has some "=item" and/or "=head" commands
+that have the same text. Potential hyperlinks to such a text
+cannot be unique then. This warning is printed only with
+warning level greater than one.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="65%">
+<p style="margin-top: 1em">line containing nothing but
+whitespace in paragraph</p></td>
+<td width="21%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">There is some
+whitespace on a seemingly empty line. POD is very sensitive
+to such things, so this is flagged. <b>vi</b> users switch
+on the <b>list</b> option to avoid this problem.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="27%">
+<p style="margin-top: 1em">=item has no contents</p></td>
+<td width="59%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">There is a list
+"=item" that has no text contents. You probably
+want to delete empty items.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="83%">
+<p style="margin-top: 1em">You can't have =items (as at
+line <i>N</i>) unless the first thing after the =over is an
+=item</p> </td>
+<td width="3%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">A list
+introduced by "=over" starts with a text or
+verbatim paragraph, but continues with "=item"s.
+Move the non−item paragraph out of the
+"=over"/"=back" block.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="74%">
+<p style="margin-top: 1em">Expected '=item <i>EXPECTED
+VALUE</i>'</p> </td>
+<td width="12%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="74%">
+<p>Expected '=item *'</p></td>
+<td width="12%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="74%">
+<p>Possible =item type mismatch: '<i>x</i>' found leading a
+supposed definition =item</p></td>
+<td width="12%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">A list started
+with e.g. a bullet−like "=item" and
+continued with a numbered one. This is obviously
+inconsistent. For most translators the type of the
+<i>first</i> "=item" determines the type of the
+list.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="67%">
+<p style="margin-top: 1em">You have '=item x' instead of
+the expected '=item <i>N</i>'</p></td>
+<td width="19%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Erroneous
+numbering of =item numbers; they need to ascend
+consecutively.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="40%">
+<p style="margin-top: 1em">Unknown E content in
+E&lt;<i>CONTENT</i>&gt;</p> </td>
+<td width="46%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">A character
+entity was found that does not belong to the standard ISO
+set or the POD specials "verbar" and
+"sol". <i>Currently, this warning only appears if
+a character entity was found that does not have a Unicode
+character. This should be fixed to adhere to the original
+warning.</i></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="30%">
+<p style="margin-top: 1em">empty =over/=back block</p></td>
+<td width="56%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The list opened
+with "=over" does not contain anything.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="45%">
+<p style="margin-top: 1em">empty section in previous
+paragraph</p> </td>
+<td width="41%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The previous
+section (introduced by a "=head" command) does not
+contain any valid content. This usually indicates that
+something is missing. Note: A "=head1" followed
+immediately by "=head2" does not trigger this
+warning.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="44%">
+<p style="margin-top: 1em">Verbatim paragraph in NAME
+section</p> </td>
+<td width="42%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The NAME
+section ("=head1 NAME") should consist of a single
+paragraph with the script/module name, followed by a dash
+`−' and a very short description of what the thing is
+good for.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="48%">
+<p style="margin-top: 1em">=head<i>n</i> without preceding
+higher level</p></td>
+<td width="38%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">For example if
+there is a "=head2" in the POD file prior to a
+"=head1".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="19%">
+<p style="margin-top: 1em">A non−empty Z&lt;&gt;</p></td>
+<td width="67%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"Z&lt;&gt;" sequence is supposed to be empty.
+Caveat: this issue is detected in Pod::Simple and will be
+flagged as an <i>ERROR</i> by any client code; any contents
+of "Z&lt;...&gt;" will be disregarded, anyway.</p>
+<h3>Hyperlinks
+<a name="Hyperlinks"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">There are some
+warnings with respect to malformed hyperlinks:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="57%">
+<p style="margin-top: 1em">ignoring leading/trailing
+whitespace in link</p></td>
+<td width="29%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">There is
+whitespace at the beginning or the end of the contents of
+L&lt;...&gt;.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="69%">
+<p style="margin-top: 1em">alternative text/node '%s'
+contains non−escaped | or /</p></td>
+<td width="17%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The characters
+"|" and "/" are special in the
+L&lt;...&gt; context. Although the hyperlink parser does its
+best to determine which "/" is text and which is a
+delimiter in case of doubt, one ought to escape these
+literal characters like this:</p>
+<p style="margin-left:14%; margin-top: 1em">/ E&lt;sol&gt;
+<br/>
+| E&lt;verbar&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">Note that the
+line number of the error/warning may refer to the line
+number of the start of the paragraph in which the
+error/warning exists, not the line number that the
+error/warning is on. This bug is present in errors/warnings
+related to formatting codes. <i>This should be
+fixed.</i></p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i><b>podchecker</b></i>
+returns the number of POD syntax errors found or −1 if
+there were no POD commands at all found in the file.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See
+"SYNOPSIS"</p>
+<h2>SCRIPTS
+<a name="SCRIPTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>podchecker</b> script that comes with this distribution
+is a lean wrapper around this module. See the online manual
+with</p>
+<p style="margin-left:9%; margin-top: 1em">podchecker
+−help <br/>
+podchecker −man</p>
+<h2>INTERFACE
+<a name="INTERFACE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">While checking,
+this module collects document properties, e.g. the nodes for
+hyperlinks ("=headX", "=item") and index
+entries ("X&lt;&gt;"). POD translators can use
+this feature to syntax−check and get the nodes in a
+first pass before actually starting to convert. This is
+expensive in terms of execution time, but allows for very
+robust conversions.</p>
+<p style="margin-left:9%; margin-top: 1em">Since v1.24 the
+<b>Pod::Checker</b> module uses only the <b>poderror</b>
+method to print errors and warnings. The summary output
+(e.g. "Pod syntax OK") has been dropped from the
+module and has been included in <b>podchecker</b> (the
+script). This allows users of <b>Pod::Checker</b> to control
+completely the output behavior. Users of <b>podchecker</b>
+(the script) get the well−known behavior.</p>
+<p style="margin-left:9%; margin-top: 1em">v1.45 inherits
+from Pod::Simple as opposed to all previous versions
+inheriting from Pod::Parser. Do <b>not</b> use Pod::Simple's
+interface when using Pod::Checker unless it is documented
+somewhere on this page. I repeat, DO <b>NOT</b> USE
+POD::SIMPLE'S INTERFACE.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+list documents the overrides to Pod::Simple, primarily to
+make Pod::Coverage happy: <br/>
+end_B <br/>
+end_C <br/>
+end_Document <br/>
+end_F <br/>
+end_I <br/>
+end_L <br/>
+end_Para <br/>
+end_S <br/>
+end_X <br/>
+end_fcode <br/>
+end_for <br/>
+end_head <br/>
+end_head1 <br/>
+end_head2 <br/>
+end_head3 <br/>
+end_head4 <br/>
+end_item <br/>
+end_item_bullet <br/>
+end_item_number <br/>
+end_item_text <br/>
+handle_pod_and_cut <br/>
+handle_text <br/>
+handle_whiteline <br/>
+hyperlink <br/>
+scream <br/>
+start_B <br/>
+start_C <br/>
+start_Data <br/>
+start_F <br/>
+start_I <br/>
+start_L <br/>
+start_Para <br/>
+start_S <br/>
+start_Verbatim <br/>
+start_X <br/>
+start_fcode <br/>
+start_for <br/>
+start_head <br/>
+start_head1 <br/>
+start_head2 <br/>
+start_head3 <br/>
+start_head4 <br/>
+start_item_bullet <br/>
+start_item_number <br/>
+start_item_text <br/>
+start_over <br/>
+start_over_block <br/>
+start_over_bullet <br/>
+start_over_empty <br/>
+start_over_number <br/>
+start_over_text <br/>
+whine <br/>
+"Pod::Checker−&gt;new( %options )"</p>
+<p style="margin-left:14%;">Return a reference to a new
+Pod::Checker object that inherits from Pod::Simple and is
+used for calling the required methods later. The following
+options are recognized:</p>
+<p style="margin-left:14%; margin-top: 1em">"−warnings
+=&gt; num" <br/>
+Print warnings if "num" is true. The higher the
+value of "num", the more warnings are printed.
+Currently there are only levels 1 and 2.</p>
+<p style="margin-left:14%; margin-top: 1em">"−quiet
+=&gt; num" <br/>
+If "num" is true, do not print any
+errors/warnings. This is useful when Pod::Checker is used to
+munge POD code into plain text from within POD
+formatters.</p>
+<p style="margin-left:9%;">"$checker−&gt;poderror(
+@args )" <br/>
+"$checker−&gt;poderror( {%opts}, @args
+)"</p>
+<p style="margin-left:14%;">Internal method for printing
+errors and warnings. If no options are given, simply prints
+"@_". The following options are recognized and
+used to form the output:</p>
+<p style="margin-left:14%; margin-top: 1em">−msg</p>
+<p style="margin-left:14%; margin-top: 1em">A message to
+print prior to @args.</p>
+<p style="margin-left:14%; margin-top: 1em">−line</p>
+<p style="margin-left:14%; margin-top: 1em">The line number
+the error occurred in.</p>
+<p style="margin-left:14%; margin-top: 1em">−file</p>
+<p style="margin-left:14%; margin-top: 1em">The file (name)
+the error occurred in. Defaults to the name of the current
+file being processed.</p>
+<p style="margin-left:14%; margin-top: 1em">−severity</p>
+<p style="margin-left:14%; margin-top: 1em">The error
+level, should be 'WARNING' or 'ERROR'.</p>
+<p style="margin-left:9%;">"$checker−&gt;num_errors()"</p>
+<p style="margin-left:14%;">Set (if argument specified) and
+retrieve the number of errors found.</p>
+<p style="margin-left:9%;">"$checker−&gt;num_warnings()"</p>
+<p style="margin-left:14%;">Set (if argument specified) and
+retrieve the number of warnings found.</p>
+<p style="margin-left:9%;">"$checker−&gt;name()"</p>
+<p style="margin-left:14%;">Set (if argument specified) and
+retrieve the canonical name of POD as found in the
+"=head1 NAME" section.</p>
+<p style="margin-left:9%;">"$checker−&gt;node()"</p>
+<p style="margin-left:14%;">Add (if argument specified) and
+retrieve the nodes (as defined by "=headX" and
+"=item") of the current POD. The nodes are
+returned in the order of their occurrence. They consist of
+plain text, each piece of whitespace is collapsed to a
+single blank.</p>
+<p style="margin-left:9%;">"$checker−&gt;idx()"</p>
+<p style="margin-left:14%;">Add (if argument specified) and
+retrieve the index entries (as defined by
+"X&lt;&gt;") of the current POD. They consist of
+plain text, each piece of whitespace is collapsed to a
+single blank.</p>
+<p style="margin-left:9%;">"$checker−&gt;hyperlinks()"</p>
+<p style="margin-left:14%;">Retrieve an array containing
+the hyperlinks to things outside the current POD (as defined
+by "L&lt;&gt;").</p>
+<p style="margin-left:14%; margin-top: 1em">Each is an
+instance of a class with the following methods:</p>
+<p style="margin-left:9%;"><b>line()</b></p>
+<p style="margin-left:14%;">Returns the approximate line
+number in which the link was encountered</p>
+<p style="margin-left:9%;"><b>type()</b></p>
+<p style="margin-left:14%;">Returns the type of the link;
+one of: "url" for things like
+"http://www.foo", "man" for man pages,
+or "pod".</p>
+<p style="margin-left:9%;"><b>page()</b></p>
+<p style="margin-left:14%;">Returns the linked−to
+page or url.</p>
+<p style="margin-left:9%;"><b>node()</b></p>
+<p style="margin-left:14%;">Returns the anchor or node
+within the linked−to page, or an empty string
+("") if none appears in the link.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please report
+bugs using &lt;http://rt.cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">Brad Appleton
+&lt;bradapp@enteract.com&gt; (initial version), Marek
+Rouchal &lt;marekr@cpan.org&gt;, Marc Green
+&lt;marcgreen@cpan.org&gt; (port to Pod::Simple) Ricardo
+Signes &lt;rjbs@cpan.org&gt; (more porting to Pod::Simple)
+Karl Williamson &lt;khw@cpan.org&gt; (more porting to
+Pod::Simple)</p>
+<p style="margin-left:9%; margin-top: 1em">Based on code
+for <b>Pod::Text::pod2text()</b> written by Tom Christiansen
+&lt;tchrist@mox.perl.com&gt;</p>
+<hr/>
+</body>
+</html>

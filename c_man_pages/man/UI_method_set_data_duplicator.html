@@ -1,0 +1,364 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:30 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>UI_CREATE_METHOD</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">UI_CREATE_METHOD</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">UI_METHOD,
+UI_create_method, UI_destroy_method, UI_method_set_opener,
+UI_method_set_writer, UI_method_set_flusher,
+UI_method_set_reader, UI_method_set_closer,
+UI_method_set_data_duplicator,
+UI_method_set_prompt_constructor, UI_method_set_ex_data,
+UI_method_get_opener, UI_method_get_writer,
+UI_method_get_flusher, UI_method_get_reader,
+UI_method_get_closer, UI_method_get_data_duplicator,
+UI_method_get_data_destructor,
+UI_method_get_prompt_constructor, UI_method_get_ex_data
+− user interface method creation and destruction</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ui.h&gt; <br/>
+typedef struct ui_method_st UI_METHOD; <br/>
+UI_METHOD *UI_create_method(const char *name); <br/>
+void UI_destroy_method(UI_METHOD *ui_method); <br/>
+int UI_method_set_opener(UI_METHOD *method, int (*opener)
+(UI *ui)); <br/>
+int UI_method_set_writer(UI_METHOD *method, <br/>
+int (*writer) (UI *ui, UI_STRING *uis)); <br/>
+int UI_method_set_flusher(UI_METHOD *method, int (*flusher)
+(UI *ui)); <br/>
+int UI_method_set_reader(UI_METHOD *method, <br/>
+int (*reader) (UI *ui, UI_STRING *uis)); <br/>
+int UI_method_set_closer(UI_METHOD *method, int (*closer)
+(UI *ui)); <br/>
+int UI_method_set_data_duplicator(UI_METHOD *method, <br/>
+void *(*duplicator) (UI *ui, void *ui_data), <br/>
+void (*destructor)(UI *ui, void *ui_data)); <br/>
+int UI_method_set_prompt_constructor(UI_METHOD *method, <br/>
+char *(*prompt_constructor) (UI *ui, <br/>
+const char <br/>
+*object_desc, <br/>
+const char <br/>
+*object_name)); <br/>
+int UI_method_set_ex_data(UI_METHOD *method, int idx, void
+*data); <br/>
+int (*UI_method_get_opener(const UI_METHOD *method)) (UI *);
+<br/>
+int (*UI_method_get_writer(const UI_METHOD *method)) (UI *,
+UI_STRING *); <br/>
+int (*UI_method_get_flusher(const UI_METHOD *method)) (UI
+*); <br/>
+int (*UI_method_get_reader(const UI_METHOD *method)) (UI *,
+UI_STRING *); <br/>
+int (*UI_method_get_closer(const UI_METHOD *method)) (UI *);
+<br/>
+char *(*UI_method_get_prompt_constructor(const UI_METHOD
+*method)) <br/>
+(UI *, const char *, const char *); <br/>
+void *(*UI_method_get_data_duplicator(const UI_METHOD
+*method)) (UI *, void *); <br/>
+void (*UI_method_get_data_destructor(const UI_METHOD
+*method)) (UI *, void *); <br/>
+const void *UI_method_get_ex_data(const UI_METHOD *method,
+int idx);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A method
+contains a few functions that implement the low−level
+of the User Interface. These functions are: <br/>
+an opener</p>
+<p style="margin-left:14%;">This function takes a reference
+to a UI and starts a session, for example by opening a
+channel to a tty, or by creating a dialog box.</p>
+<p style="margin-left:9%;">a writer</p>
+<p style="margin-left:14%;">This function takes a reference
+to a UI and a UI String, and writes the string where
+appropriate, maybe to the tty, maybe added as a field label
+in a dialog box. Note that this gets fed all strings
+associated with a UI, one after the other, so care must be
+taken which ones it actually uses.</p>
+<p style="margin-left:9%;">a flusher</p>
+<p style="margin-left:14%;">This function takes a reference
+to a UI, and flushes everything that has been output so far.
+For example, if the method builds up a dialog box, this can
+be used to actually display it and accepting input ended
+with a pressed button.</p>
+<p style="margin-left:9%;">a reader</p>
+<p style="margin-left:14%;">This function takes a reference
+to a UI and a UI string and reads off the given prompt,
+maybe from the tty, maybe from a field in a dialog box. Note
+that this gets fed all strings associated with a UI, one
+after the other, so care must be taken which ones it
+actually uses.</p>
+<p style="margin-left:9%;">a closer</p>
+<p style="margin-left:14%;">This function takes a reference
+to a UI, and closes the session, maybe by closing the
+channel to the tty, maybe by destroying a dialog box.</p>
+<p style="margin-left:9%; margin-top: 1em">All of these
+functions are expected to return 0 on error, 1 on success,
+or −1 on out−off−band events, for example
+if some prompting has been cancelled (by pressing
+Ctrl−C, for example). Only the flusher or the reader
+are expected to return −1. If returned by another of
+the functions, it's treated as if 0 was returned.</p>
+<p style="margin-left:9%; margin-top: 1em">Regarding the
+writer and the reader, don't assume the former should only
+write and don't assume the latter should only read. This
+depends on the needs of the method.</p>
+<p style="margin-left:9%; margin-top: 1em">For example, a
+typical tty reader wouldn't write the prompts in the write,
+but would rather do so in the reader, because of the
+sequential nature of prompting on a tty. This is how the
+<b>UI_OpenSSL()</b> method does it.</p>
+<p style="margin-left:9%; margin-top: 1em">In contrast, a
+method that builds up a dialog box would add all prompt text
+in the writer, have all input read in the flusher and store
+the results in some temporary buffer, and finally have the
+reader just fetch those results.</p>
+<p style="margin-left:9%; margin-top: 1em">The central
+function that uses these method functions is
+<b>UI_process()</b>, and it does it in five steps:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>1.</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p>Open the session using the opener function if that one's
+defined. If an error occurs, jump to 5.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>2.</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p>For every UI String associated with the UI, call the
+writer function if that one's defined. If an error occurs,
+jump to 5.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>3.</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p>Flush everything using the flusher function if that
+one's defined. If an error occurs, jump to 5.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>4.</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p>For every UI String associated with the UI, call the
+reader function if that one's defined. If an error occurs,
+jump to 5.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>5.</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p>Close the session using the closer function if that
+one's defined.</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_create_method()</b>
+creates a new UI method with a given <b>name</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_destroy_method()</b>
+destroys the given UI method <b>ui_method</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_method_set_opener()</b>,
+<b>UI_method_set_writer()</b>,
+<b>UI_method_set_flusher()</b>,
+<b>UI_method_set_reader()</b> and
+<b>UI_method_set_closer()</b> set the five main method
+function to the given function pointer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_method_set_data_duplicator()</b>
+sets the user data duplicator and destructor. See
+<b>UI_dup_user_data</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_method_set_prompt_constructor()</b>
+sets the prompt constructor. See
+<b>UI_construct_prompt</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_method_set_ex_data()</b>
+sets application specific data with a given EX_DATA index.
+See <b>CRYPTO_get_ex_new_index</b>(3) for general
+information on how to get that index.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_method_get_opener()</b>,
+<b>UI_method_get_writer()</b>,
+<b>UI_method_get_flusher()</b>,
+<b>UI_method_get_reader()</b>,
+<b>UI_method_get_closer()</b>,
+<b>UI_method_get_data_duplicator()</b>,
+<b>UI_method_get_data_destructor()</b> and
+<b>UI_method_get_prompt_constructor()</b> return the
+different method functions.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_method_get_ex_data()</b>
+returns the application data previously stored with
+<b>UI_method_set_ex_data()</b>.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_create_method()</b>
+returns a UI_METHOD pointer on success, NULL on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_method_set_opener()</b>,
+<b>UI_method_set_writer()</b>,
+<b>UI_method_set_flusher()</b>,
+<b>UI_method_set_reader()</b>,
+<b>UI_method_set_closer()</b>,
+<b>UI_method_set_data_duplicator()</b> and
+<b>UI_method_set_prompt_constructor()</b> return 0 on
+success, −1 if the given <b>method</b> is NULL.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_method_set_ex_data()</b>
+returns 1 on success and 0 on error (because
+<b>CRYPTO_set_ex_data()</b> does so).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_method_get_opener()</b>,
+<b>UI_method_get_writer()</b>,
+<b>UI_method_get_flusher()</b>,
+<b>UI_method_get_reader()</b>,
+<b>UI_method_get_closer()</b>,
+<b>UI_method_get_data_duplicator()</b>,
+<b>UI_method_get_data_destructor()</b> and
+<b>UI_method_get_prompt_constructor()</b> return the
+requested function pointer if it's set in the method,
+otherwise NULL.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>UI_method_get_ex_data()</b>
+returns a pointer to the application specific data
+associated with the method.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>UI</b>(3),
+<b>CRYPTO_get_ex_data</b>(3), <b>UI_STRING</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>UI_method_set_data_duplicator()</b>,
+<b>UI_method_get_data_duplicator()</b> and
+<b>UI_method_get_data_destructor()</b> functions were added
+in OpenSSL 1.1.1.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2001−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

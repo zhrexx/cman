@@ -1,0 +1,222 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:25 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_GET_CLIENT_RANDOM</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_GET_CLIENT_RANDOM</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_get_client_random,
+SSL_get_server_random, SSL_SESSION_get_master_key,
+SSL_SESSION_set1_master_key − get internal TLS/SSL
+random values and get/set master key</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+size_t SSL_get_client_random(const SSL *ssl, unsigned char
+*out, size_t outlen); <br/>
+size_t SSL_get_server_random(const SSL *ssl, unsigned char
+*out, size_t outlen); <br/>
+size_t SSL_SESSION_get_master_key(const SSL_SESSION
+*session, <br/>
+unsigned char *out, size_t outlen); <br/>
+int SSL_SESSION_set1_master_key(SSL_SESSION *sess, const
+unsigned char *in, <br/>
+size_t len);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_client_random()</b>
+extracts the random value sent from the client to the server
+during the initial SSL/TLS handshake. It copies as many
+bytes as it can of this value into the buffer provided in
+<b>out</b>, which must have at least <b>outlen</b> bytes
+available. It returns the total number of bytes that were
+actually copied. If <b>outlen</b> is zero,
+<b>SSL_get_client_random()</b> copies nothing, and returns
+the total size of the client_random value.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_server_random()</b>
+behaves the same, but extracts the random value sent from
+the server to the client during the initial SSL/TLS
+handshake.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_SESSION_get_master_key()</b>
+behaves the same, but extracts the master secret used to
+guarantee the security of the SSL/TLS session. This one can
+be dangerous if misused; see NOTES below.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_SESSION_set1_master_key()</b>
+sets the master key value associated with the SSL_SESSION
+<b>sess</b>. For example, this could be used to set up a
+session based PSK (see
+<b>SSL_CTX_set_psk_use_session_callback</b>(3)). The master
+key of length <b>len</b> should be provided at <b>in</b>.
+The supplied master key is copied by the function, so the
+caller is responsible for freeing and cleaning any memory
+associated with <b>in</b>. The caller must ensure that the
+length of the key is suitable for the ciphersuite associated
+with the SSL_SESSION.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You probably
+shouldn't use these functions.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+expose internal values from the TLS handshake, for use in
+low−level protocols. You probably should not use them,
+unless you are implementing something that needs access to
+the internal protocol details.</p>
+<p style="margin-left:9%; margin-top: 1em">Despite the
+names of <b>SSL_get_client_random()</b> and
+<b>SSL_get_server_random()</b>, they ARE NOT random number
+generators. Instead, they return the mostly−random
+values that were already generated and used in the TLS
+protocol. Using them in place of <b>RAND_bytes()</b> would
+be grossly foolish.</p>
+<p style="margin-left:9%; margin-top: 1em">The security of
+your TLS session depends on keeping the master key secret:
+do not expose it, or any information about it, to anybody.
+If you need to calculate another secret value that depends
+on the master secret, you should probably use
+<b>SSL_export_keying_material()</b> instead, and forget that
+you ever saw these functions.</p>
+<p style="margin-left:9%; margin-top: 1em">In current
+versions of the TLS protocols, the length of client_random
+(and also server_random) is always SSL3_RANDOM_SIZE bytes.
+Support for other outlen arguments to the
+SSL_get_*<b>_random()</b> functions is provided in case of
+the unlikely event that a future version or variant of TLS
+uses some other length there.</p>
+<p style="margin-left:9%; margin-top: 1em">Finally, though
+the "client_random" and "server_random"
+values are called "random", many TLS
+implementations will generate four bytes of those values
+based on their view of the current time.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_SESSION_set1_master_key()</b>
+returns 1 on success or 0 on failure.</p>
+<p style="margin-left:9%; margin-top: 1em">For the other
+functions, if <b>outlen</b> is greater than 0 then these
+functions return the number of bytes actually copied, which
+will be less than or equal to <b>outlen</b>. If
+<b>outlen</b> is 0 then these functions return the maximum
+number of bytes they would copy −− that is, the
+length of the underlying field.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>RAND_bytes</b>(3), <b>SSL_export_keying_material</b>(3),
+<b>SSL_CTX_set_psk_use_session_callback</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2015−2017 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

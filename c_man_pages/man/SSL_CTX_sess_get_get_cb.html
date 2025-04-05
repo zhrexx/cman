@@ -1,0 +1,251 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:15 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SESS_SET_GET_CB</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SESS_SET_GET_CB</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_sess_set_new_cb,
+SSL_CTX_sess_set_remove_cb, SSL_CTX_sess_set_get_cb,
+SSL_CTX_sess_get_new_cb, SSL_CTX_sess_get_remove_cb,
+SSL_CTX_sess_get_get_cb − provide callback functions
+for server side external session caching</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+void SSL_CTX_sess_set_new_cb(SSL_CTX *ctx, <br/>
+int (*new_session_cb)(SSL *, SSL_SESSION *)); <br/>
+void SSL_CTX_sess_set_remove_cb(SSL_CTX *ctx, <br/>
+void (*remove_session_cb)(SSL_CTX *ctx, <br/>
+SSL_SESSION *)); <br/>
+void SSL_CTX_sess_set_get_cb(SSL_CTX *ctx, <br/>
+SSL_SESSION (*get_session_cb)(SSL *, <br/>
+const unsigned char *, <br/>
+int, int *)); <br/>
+int (*SSL_CTX_sess_get_new_cb(SSL_CTX *ctx))(struct ssl_st
+*ssl, <br/>
+SSL_SESSION *sess); <br/>
+void (*SSL_CTX_sess_get_remove_cb(SSL_CTX *ctx))(struct
+ssl_ctx_st *ctx, <br/>
+SSL_SESSION *sess); <br/>
+SSL_SESSION *(*SSL_CTX_sess_get_get_cb(SSL_CTX *ctx))(struct
+ssl_st *ssl, <br/>
+const unsigned char *data, <br/>
+int len, int *copy);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_sess_set_new_cb()</b>
+sets the callback function that is called whenever a new
+session was negotiated.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_sess_set_remove_cb()</b>
+sets the callback function that is called whenever a session
+is removed by the SSL engine. For example, this can occur
+because a session is considered faulty or has become
+obsolete because of exceeding the timeout value.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_sess_set_get_cb()</b>
+sets the callback function that is called whenever a TLS
+client proposed to resume a session but the session could
+not be found in the internal session cache (see
+<b>SSL_CTX_set_session_cache_mode</b>(3)). (TLS server
+only.)</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_sess_get_new_cb()</b>,
+<b>SSL_CTX_sess_get_remove_cb()</b>, and
+<b>SSL_CTX_sess_get_get_cb()</b> retrieve the function
+pointers set by the corresponding set callback functions. If
+a callback function has not been set, the NULL pointer is
+returned.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">In order to
+allow external session caching, synchronization with the
+internal session cache is realized via callback functions.
+Inside these callback functions, session can be saved to
+disk or put into a database using the
+<b>d2i_SSL_SESSION</b>(3) interface.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>new_session_cb()</b> is called whenever a new session has
+been negotiated and session caching is enabled (see
+<b>SSL_CTX_set_session_cache_mode</b>(3)). The
+<b>new_session_cb()</b> is passed the <b>ssl</b> connection
+and the nascent ssl session <b>sess</b>. Since sessions are
+reference−counted objects, the reference count on the
+session is incremented before the callback, on behalf of the
+application. If the callback returns <b>0</b>, the session
+will be immediately removed from the internal cache and the
+reference count released. If the callback returns <b>1</b>,
+the application retains the reference (for an entry in the
+application−maintained "external session
+cache"), and is responsible for calling
+<b>SSL_SESSION_free()</b> when the session reference is no
+longer in use.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that in
+TLSv1.3, sessions are established after the main handshake
+has completed. The server decides when to send the client
+the session information and this may occur some time after
+the end of the handshake (or not at all). This means that
+applications should expect the <b>new_session_cb()</b>
+function to be invoked during the handshake (for &lt;=
+TLSv1.2) or after the handshake (for TLSv1.3). It is also
+possible in TLSv1.3 for multiple sessions to be established
+with a single connection. In these case the
+<b>new_session_cb()</b> function will be invoked multiple
+times.</p>
+<p style="margin-left:9%; margin-top: 1em">In TLSv1.3 it is
+recommended that each SSL_SESSION object is only used for
+resumption once. One way of enforcing that is for
+applications to call <b>SSL_CTX_remove_session</b>(3) after
+a session has been used.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>remove_session_cb()</b> is called whenever the SSL engine
+removes a session from the internal cache. This can happen
+when the session is removed because it is expired or when a
+connection was not shutdown cleanly. It also happens for all
+sessions in the internal session cache when
+<b>SSL_CTX_free</b>(3) is called. The
+<b>remove_session_cb()</b> is passed the <b>ctx</b> and the
+ssl session <b>sess</b>. It does not provide any
+feedback.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>get_session_cb()</b> is only called on SSL/TLS servers,
+and is given the session id proposed by the client. The
+<b>get_session_cb()</b> is always called, even when session
+caching was disabled. The <b>get_session_cb()</b> is passed
+the <b>ssl</b> connection and the session id of length
+<b>length</b> at the memory location <b>data</b>. By setting
+the parameter <b>copy</b> to <b>1</b>, the callback can
+require the SSL engine to increment the reference count of
+the SSL_SESSION object; setting <b>copy</b> to <b>0</b>
+causes the reference count to remain unchanged. If the
+<b>get_session_cb()</b> does not write to <b>copy</b>, the
+reference count is incremented and the session must be
+explicitly freed with <b>SSL_SESSION_free</b>(3).</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_sess_get_new_cb()</b>,
+<b>SSL_CTX_sess_get_remove_cb()</b> and
+<b>SSL_CTX_sess_get_get_cb()</b> return different callback
+function pointers respectively.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>d2i_SSL_SESSION</b>(3),
+<b>SSL_CTX_set_session_cache_mode</b>(3),
+<b>SSL_CTX_flush_sessions</b>(3),
+<b>SSL_SESSION_free</b>(3), <b>SSL_CTX_free</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2001−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

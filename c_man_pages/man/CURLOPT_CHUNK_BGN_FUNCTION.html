@@ -1,0 +1,266 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:37 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_CHUNK_BGN_FUNCTION</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_CHUNK_BGN_FUNCTION</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_CHUNK_BGN_FUNCTION
+− callback before a transfer with FTP wildcard
+match</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">struct
+curl_fileinfo { <br/>
+char *filename; <br/>
+curlfiletype filetype; <br/>
+time_t time; /* always zero! */ <br/>
+unsigned int perm; <br/>
+int uid; <br/>
+int gid; <br/>
+curl_off_t size; <br/>
+long int hardlinks;</p>
+<p style="margin-left:9%; margin-top: 1em">struct { <br/>
+/* If some of these fields is not NULL, it is a pointer to
+b_data. */ <br/>
+char *time; <br/>
+char *perm; <br/>
+char *user; <br/>
+char *group; <br/>
+char *target; /* pointer to the target filename of a symlink
+*/ <br/>
+} strings;</p>
+<p style="margin-left:9%; margin-top: 1em">unsigned int
+flags;</p>
+<p style="margin-left:9%; margin-top: 1em">/* used
+internally */ <br/>
+char *b_data; <br/>
+size_t b_size; <br/>
+size_t b_used; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">long
+chunk_bgn_callback(const void *transfer_info, void *ptr,
+<br/>
+int remains);</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_CHUNK_BGN_FUNCTION,
+<br/>
+chunk_bgn_callback);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a pointer
+to your callback function, which should match the prototype
+shown above.</p>
+<p style="margin-left:9%; margin-top: 1em">This callback
+function gets called by libcurl before a part of the stream
+is going to be transferred (if the transfer supports
+chunks).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>transfer_info</i> pointer points to a
+<b>curl_fileinfo</b> struct with details about the file that
+is about to get transferred.</p>
+<p style="margin-left:9%; margin-top: 1em">This callback
+makes sense only when using the
+<i>CURLOPT_WILDCARDMATCH(3)</i> option for now.</p>
+<p style="margin-left:9%; margin-top: 1em">The target of
+transfer_info parameter is a "feature depended"
+structure. For the FTP wildcard download, the target is
+<b>curl_fileinfo</b> structure (see <i>curl/curl.h</i>). The
+parameter <i>ptr</i> is a pointer given by
+<i>CURLOPT_CHUNK_DATA(3)</i>. The parameter remains contains
+number of chunks remaining per the transfer. If the feature
+is not available, the parameter has zero value.</p>
+<p style="margin-left:9%; margin-top: 1em">Return
+<i>CURL_CHUNK_BGN_FUNC_OK</i> if everything is fine,
+<i>CURL_CHUNK_BGN_FUNC_SKIP</i> if you want to skip the
+concrete chunk or <i>CURL_CHUNK_BGN_FUNC_FAIL</i> to tell
+libcurl to stop if some error occurred.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects ftp only</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;stdio.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">struct
+callback_data { <br/>
+FILE *output; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">static long
+file_is_coming(struct curl_fileinfo *finfo, <br/>
+void *ptr, <br/>
+int remains) <br/>
+{ <br/>
+struct callback_data *data = ptr; <br/>
+printf("%3d %40s %10luB ", remains,
+finfo-&gt;filename, <br/>
+(unsigned long)finfo-&gt;size);</p>
+<p style="margin-left:9%; margin-top: 1em">switch(finfo-&gt;filetype)
+{ <br/>
+case CURLFILETYPE_DIRECTORY: <br/>
+printf(" DIR\n"); <br/>
+break; <br/>
+case CURLFILETYPE_FILE: <br/>
+printf("FILE "); <br/>
+break; <br/>
+default: <br/>
+printf("OTHER\n"); <br/>
+break; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">if(finfo-&gt;filetype
+== CURLFILETYPE_FILE) { <br/>
+/* do not transfer files &gt;= 50B */ <br/>
+if(finfo-&gt;size &gt; 50) { <br/>
+printf("SKIPPED\n"); <br/>
+return CURL_CHUNK_BGN_FUNC_SKIP; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">data-&gt;output
+= fopen(finfo-&gt;filename, "wb"); <br/>
+if(!data-&gt;output) { <br/>
+return CURL_CHUNK_BGN_FUNC_FAIL; <br/>
+} <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">return
+CURL_CHUNK_BGN_FUNC_OK; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int main() <br/>
+{ <br/>
+/* data for callback */ <br/>
+struct callback_data callback_info;</p>
+<p style="margin-left:9%; margin-top: 1em">CURL *curl =
+curl_easy_init();</p>
+<p style="margin-left:9%; margin-top: 1em">/* callback is
+called before download of concrete file started */ <br/>
+curl_easy_setopt(curl, CURLOPT_CHUNK_BGN_FUNCTION,
+file_is_coming); <br/>
+curl_easy_setopt(curl, CURLOPT_CHUNK_DATA,
+&amp;callback_info); <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.21.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLE_OK
+if the option is supported, and CURLE_UNKNOWN_OPTION if
+not.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_CHUNK_END_FUNCTION</b>(3),
+<b>CURLOPT_WILDCARDMATCH</b>(3)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,450 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:57:24 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ZMQ_SOCKET_MONITOR</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">ZMQ_SOCKET_MONITOR</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SUPPORTED EVENTS">SUPPORTED EVENTS</a><br/>
+<a href="#ZMQ_EVENT_CONNECTED">ZMQ_EVENT_CONNECTED</a><br/>
+<a href="#ZMQ_EVENT_CONNECT_DELAYED">ZMQ_EVENT_CONNECT_DELAYED</a><br/>
+<a href="#ZMQ_EVENT_CONNECT_RETRIED">ZMQ_EVENT_CONNECT_RETRIED</a><br/>
+<a href="#ZMQ_EVENT_LISTENING">ZMQ_EVENT_LISTENING</a><br/>
+<a href="#ZMQ_EVENT_BIND_FAILED">ZMQ_EVENT_BIND_FAILED</a><br/>
+<a href="#ZMQ_EVENT_ACCEPTED">ZMQ_EVENT_ACCEPTED</a><br/>
+<a href="#ZMQ_EVENT_ACCEPT_FAILED">ZMQ_EVENT_ACCEPT_FAILED</a><br/>
+<a href="#ZMQ_EVENT_CLOSED">ZMQ_EVENT_CLOSED</a><br/>
+<a href="#ZMQ_EVENT_CLOSE_FAILED">ZMQ_EVENT_CLOSE_FAILED</a><br/>
+<a href="#ZMQ_EVENT_DISCONNECTED">ZMQ_EVENT_DISCONNECTED</a><br/>
+<a href="#ZMQ_EVENT_MONITOR_STOPPED">ZMQ_EVENT_MONITOR_STOPPED</a><br/>
+<a href="#ZMQ_EVENT_HANDSHAKE_FAILED_NO_DETAIL">ZMQ_EVENT_HANDSHAKE_FAILED_NO_DETAIL</a><br/>
+<a href="#ZMQ_EVENT_HANDSHAKE_SUCCEEDED">ZMQ_EVENT_HANDSHAKE_SUCCEEDED</a><br/>
+<a href="#ZMQ_EVENT_HANDSHAKE_FAILED_PROTOCOL">ZMQ_EVENT_HANDSHAKE_FAILED_PROTOCOL</a><br/>
+<a href="#ZMQ_EVENT_HANDSHAKE_FAILED_AUTH">ZMQ_EVENT_HANDSHAKE_FAILED_AUTH</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">zmq_socket_monitor
+− monitor socket events</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+zmq_socket_monitor (void</b> <i>*socket</i><b>, char</b>
+<i>*endpoint</i><b>, int</b> <i>events</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>zmq_socket_monitor()</i> method lets an application
+thread track socket events (like connects) on a ZeroMQ
+socket. Each call to this method creates a <i>ZMQ_PAIR</i>
+socket and binds that to the specified inproc://
+<i>endpoint</i>. To collect the socket events, you must
+create your own <i>ZMQ_PAIR</i> socket, and connect that to
+the endpoint.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that there
+is also a DRAFT function
+<b>zmq_socket_monitor_versioned</b>(3), which allows to
+subscribe to events that provide more information. Calling
+zmq_socket_monitor is equivalent to calling
+<i>zmq_socket_monitor_versioned</i> with the
+<i>event_version</i> parameter set to 1, with the exception
+of error cases.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>events</i> argument is a bitmask of the socket events you
+wish to monitor, see <i>Supported events</i> below. To
+monitor all events, use the event value ZMQ_EVENT_ALL. NOTE:
+as new events are added, the catch−all value will
+start returning them. An application that relies on a strict
+and fixed sequence of events must not use ZMQ_EVENT_ALL in
+order to guarantee compatibility with future versions.</p>
+<p style="margin-left:9%; margin-top: 1em">Each event is
+sent as two frames. The first frame contains an event number
+(16 bits), and an event value (32 bits) that provides
+additional data according to the event number. The second
+frame contains a string that specifies the affected
+endpoint.</p>
+<p style="margin-left:14%; margin-top: 1em">The
+_zmq_socket_monitor()_ method supports only
+connection−oriented <br/>
+transports, that is, TCP, IPC, and TIPC.</p>
+<h2>SUPPORTED EVENTS
+<a name="SUPPORTED EVENTS"></a>
+</h2>
+<h3>ZMQ_EVENT_CONNECTED
+<a name="ZMQ_EVENT_CONNECTED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The socket has
+successfully connected to a remote peer. The event value is
+the file descriptor (FD) of the underlying network socket.
+Warning: there is no guarantee that the FD is still valid by
+the time your code receives this event.</p>
+<h3>ZMQ_EVENT_CONNECT_DELAYED
+<a name="ZMQ_EVENT_CONNECT_DELAYED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A connect
+request on the socket is pending. The event value is
+unspecified.</p>
+<h3>ZMQ_EVENT_CONNECT_RETRIED
+<a name="ZMQ_EVENT_CONNECT_RETRIED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A connect
+request failed, and is now being retried. The event value is
+the reconnect interval in milliseconds. Note that the
+reconnect interval is recalculated at each retry.</p>
+<h3>ZMQ_EVENT_LISTENING
+<a name="ZMQ_EVENT_LISTENING"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The socket was
+successfully bound to a network interface. The event value
+is the FD of the underlying network socket. Warning: there
+is no guarantee that the FD is still valid by the time your
+code receives this event.</p>
+<h3>ZMQ_EVENT_BIND_FAILED
+<a name="ZMQ_EVENT_BIND_FAILED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The socket could
+not bind to a given interface. The event value is the errno
+generated by the system bind call.</p>
+<h3>ZMQ_EVENT_ACCEPTED
+<a name="ZMQ_EVENT_ACCEPTED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The socket has
+accepted a connection from a remote peer. The event value is
+the FD of the underlying network socket. Warning: there is
+no guarantee that the FD is still valid by the time your
+code receives this event.</p>
+<h3>ZMQ_EVENT_ACCEPT_FAILED
+<a name="ZMQ_EVENT_ACCEPT_FAILED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The socket has
+rejected a connection from a remote peer. The event value is
+the errno generated by the accept call.</p>
+<h3>ZMQ_EVENT_CLOSED
+<a name="ZMQ_EVENT_CLOSED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The socket was
+closed. The event value is the FD of the (now closed)
+network socket.</p>
+<h3>ZMQ_EVENT_CLOSE_FAILED
+<a name="ZMQ_EVENT_CLOSE_FAILED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The socket close
+failed. The event value is the errno returned by the system
+call. Note that this event occurs only on IPC
+transports.</p>
+<h3>ZMQ_EVENT_DISCONNECTED
+<a name="ZMQ_EVENT_DISCONNECTED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The socket was
+disconnected unexpectedly. The event value is the FD of the
+underlying network socket. Warning: this socket will be
+closed.</p>
+<h3>ZMQ_EVENT_MONITOR_STOPPED
+<a name="ZMQ_EVENT_MONITOR_STOPPED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Monitoring on
+this socket ended.</p>
+<h3>ZMQ_EVENT_HANDSHAKE_FAILED_NO_DETAIL
+<a name="ZMQ_EVENT_HANDSHAKE_FAILED_NO_DETAIL"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Unspecified
+error during handshake. The event value is an errno.</p>
+<h3>ZMQ_EVENT_HANDSHAKE_SUCCEEDED
+<a name="ZMQ_EVENT_HANDSHAKE_SUCCEEDED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The ZMTP
+security mechanism handshake succeeded. The event value is
+unspecified.</p>
+<h3>ZMQ_EVENT_HANDSHAKE_FAILED_PROTOCOL
+<a name="ZMQ_EVENT_HANDSHAKE_FAILED_PROTOCOL"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The ZMTP
+security mechanism handshake failed due to some mechanism
+protocol error, either between the ZMTP mechanism peers, or
+between the mechanism server and the ZAP handler. This
+indicates a configuration or implementation error in either
+peer resp. the ZAP handler. The event value is one of the
+ZMQ_PROTOCOL_ERROR_* values:
+ZMQ_PROTOCOL_ERROR_ZMTP_UNSPECIFIED
+ZMQ_PROTOCOL_ERROR_ZMTP_UNEXPECTED_COMMAND
+ZMQ_PROTOCOL_ERROR_ZMTP_INVALID_SEQUENCE
+ZMQ_PROTOCOL_ERROR_ZMTP_KEY_EXCHANGE
+ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_UNSPECIFIED
+ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_MESSAGE
+ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_HELLO
+ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_INITIATE
+ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_ERROR
+ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_READY
+ZMQ_PROTOCOL_ERROR_ZMTP_MALFORMED_COMMAND_WELCOME
+ZMQ_PROTOCOL_ERROR_ZMTP_INVALID_METADATA
+ZMQ_PROTOCOL_ERROR_ZMTP_CRYPTOGRAPHIC
+ZMQ_PROTOCOL_ERROR_ZMTP_MECHANISM_MISMATCH
+ZMQ_PROTOCOL_ERROR_ZAP_UNSPECIFIED
+ZMQ_PROTOCOL_ERROR_ZAP_MALFORMED_REPLY
+ZMQ_PROTOCOL_ERROR_ZAP_BAD_REQUEST_ID
+ZMQ_PROTOCOL_ERROR_ZAP_BAD_VERSION
+ZMQ_PROTOCOL_ERROR_ZAP_INVALID_STATUS_CODE
+ZMQ_PROTOCOL_ERROR_ZAP_INVALID_METADATA</p>
+<h3>ZMQ_EVENT_HANDSHAKE_FAILED_AUTH
+<a name="ZMQ_EVENT_HANDSHAKE_FAILED_AUTH"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The ZMTP
+security mechanism handshake failed due to an authentication
+failure. The event value is the status code returned by the
+ZAP handler (i.e. 300, 400 or 500).</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>zmq_socket_monitor()</i> function returns a value of 0 or
+greater if successful. Otherwise it returns −1 and
+sets <i>errno</i> to one of the values defined below.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ETERM</b></p>
+<p style="margin-left:14%;">The 0MQ <i>context</i>
+associated with the specified <i>socket</i> was
+terminated.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EPROTONOSUPPORT</b></p>
+<p style="margin-left:14%;">The requested <i>transport</i>
+protocol is not supported. Monitor sockets are required to
+use the inproc:// transport.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EINVAL</b></p>
+<p style="margin-left:14%;">The endpoint supplied is
+invalid.</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Monitoring
+client and server sockets</b>.</p>
+<p style="margin-left:14%; margin-top: 1em">// Read one
+event off the monitor socket; return value and address <br/>
+// by reference, if not null, and event number by value.
+Returns −1 <br/>
+// in case of error.</p>
+<p style="margin-left:14%; margin-top: 1em">static int <br/>
+get_monitor_event (void *monitor, int *value, char
+**address) <br/>
+{ <br/>
+// First frame in message contains event number and value
+<br/>
+zmq_msg_t msg; <br/>
+zmq_msg_init (&amp;msg); <br/>
+if (zmq_msg_recv (&amp;msg, monitor, 0) == −1) <br/>
+return −1; // Interrupted, presumably <br/>
+assert (zmq_msg_more (&amp;msg));</p>
+<p style="margin-left:14%; margin-top: 1em">uint8_t *data =
+(uint8_t *) zmq_msg_data (&amp;msg); <br/>
+uint16_t event = *(uint16_t *) (data); <br/>
+if (value) <br/>
+*value = *(uint32_t *) (data + 2);</p>
+<p style="margin-left:14%; margin-top: 1em">// Second frame
+in message contains event address <br/>
+zmq_msg_init (&amp;msg); <br/>
+if (zmq_msg_recv (&amp;msg, monitor, 0) == −1) <br/>
+return −1; // Interrupted, presumably <br/>
+assert (!zmq_msg_more (&amp;msg));</p>
+<p style="margin-left:14%; margin-top: 1em">if (address) {
+<br/>
+uint8_t *data = (uint8_t *) zmq_msg_data (&amp;msg); <br/>
+size_t size = zmq_msg_size (&amp;msg); <br/>
+*address = (char *) malloc (size + 1); <br/>
+memcpy (*address, data, size); <br/>
+(*address)[size] = 0; <br/>
+} <br/>
+return event; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">int main (void)
+<br/>
+{ <br/>
+void *ctx = zmq_ctx_new (); <br/>
+assert (ctx);</p>
+<p style="margin-left:14%; margin-top: 1em">// We'll
+monitor these two sockets <br/>
+void *client = zmq_socket (ctx, ZMQ_DEALER); <br/>
+assert (client); <br/>
+void *server = zmq_socket (ctx, ZMQ_DEALER); <br/>
+assert (server);</p>
+<p style="margin-left:14%; margin-top: 1em">// Socket
+monitoring only works over inproc:// <br/>
+int rc = zmq_socket_monitor (client,
+"tcp://127.0.0.1:9999", 0); <br/>
+assert (rc == −1); <br/>
+assert (zmq_errno () == EPROTONOSUPPORT);</p>
+<p style="margin-left:14%; margin-top: 1em">// Monitor all
+events on client and server sockets <br/>
+rc = zmq_socket_monitor (client,
+"inproc://monitor−client", ZMQ_EVENT_ALL);
+<br/>
+assert (rc == 0); <br/>
+rc = zmq_socket_monitor (server,
+"inproc://monitor−server", ZMQ_EVENT_ALL);
+<br/>
+assert (rc == 0);</p>
+<p style="margin-left:14%; margin-top: 1em">// Create two
+sockets for collecting monitor events <br/>
+void *client_mon = zmq_socket (ctx, ZMQ_PAIR); <br/>
+assert (client_mon); <br/>
+void *server_mon = zmq_socket (ctx, ZMQ_PAIR); <br/>
+assert (server_mon);</p>
+<p style="margin-left:14%; margin-top: 1em">// Connect
+these to the inproc endpoints so they'll get events <br/>
+rc = zmq_connect (client_mon,
+"inproc://monitor−client"); <br/>
+assert (rc == 0); <br/>
+rc = zmq_connect (server_mon,
+"inproc://monitor−server"); <br/>
+assert (rc == 0);</p>
+<p style="margin-left:14%; margin-top: 1em">// Now do a
+basic ping test <br/>
+rc = zmq_bind (server, "tcp://127.0.0.1:9998");
+<br/>
+assert (rc == 0); <br/>
+rc = zmq_connect (client, "tcp://127.0.0.1:9998");
+<br/>
+assert (rc == 0); <br/>
+bounce (client, server);</p>
+<p style="margin-left:14%; margin-top: 1em">// Close client
+and server <br/>
+close_zero_linger (client); <br/>
+close_zero_linger (server);</p>
+<p style="margin-left:14%; margin-top: 1em">// Now collect
+and check events from both sockets <br/>
+int event = get_monitor_event (client_mon, NULL, NULL); <br/>
+if (event == ZMQ_EVENT_CONNECT_DELAYED) <br/>
+event = get_monitor_event (client_mon, NULL, NULL); <br/>
+assert (event == ZMQ_EVENT_CONNECTED); <br/>
+event = get_monitor_event (client_mon, NULL, NULL); <br/>
+assert (event == ZMQ_EVENT_HANDSHAKE_SUCCEEDED); <br/>
+event = get_monitor_event (client_mon, NULL, NULL); <br/>
+assert (event == ZMQ_EVENT_MONITOR_STOPPED);</p>
+<p style="margin-left:14%; margin-top: 1em">// This is the
+flow of server events <br/>
+event = get_monitor_event (server_mon, NULL, NULL); <br/>
+assert (event == ZMQ_EVENT_LISTENING); <br/>
+event = get_monitor_event (server_mon, NULL, NULL); <br/>
+assert (event == ZMQ_EVENT_ACCEPTED); <br/>
+event = get_monitor_event (server_mon, NULL, NULL); <br/>
+assert (event == ZMQ_EVENT_HANDSHAKE_SUCCEEDED); <br/>
+event = get_monitor_event (server_mon, NULL, NULL); <br/>
+assert (event == ZMQ_EVENT_CLOSED); <br/>
+event = get_monitor_event (server_mon, NULL, NULL); <br/>
+assert (event == ZMQ_EVENT_MONITOR_STOPPED);</p>
+<p style="margin-left:14%; margin-top: 1em">// Close down
+the sockets <br/>
+close_zero_linger (client_mon); <br/>
+close_zero_linger (server_mon); <br/>
+zmq_ctx_term (ctx);</p>
+<p style="margin-left:14%; margin-top: 1em">return 0 ; <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>zmq</b>(7)</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This page was
+written by the 0MQ community. To make a change please read
+the 0MQ Contribution Policy at
+<b><font color="#0000FF">http://www.zeromq.org/docs:contributing</font></b><font color="#000000">.</font></p>
+<hr/>
+</body>
+</html>

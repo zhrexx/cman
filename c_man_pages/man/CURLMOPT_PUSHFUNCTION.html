@@ -1,0 +1,269 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:37 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLMOPT_PUSHFUNCTION</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLMOPT_PUSHFUNCTION</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CALLBACK DESCRIPTION">CALLBACK DESCRIPTION</a><br/>
+<a href="#CALLBACK RETURN VALUE">CALLBACK RETURN VALUE</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLMOPT_PUSHFUNCTION
+− callback that approves or denies server pushes</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">int
+curl_push_callback(CURL *parent, <br/>
+CURL *easy, <br/>
+size_t num_headers, <br/>
+struct curl_pushheaders *headers, <br/>
+void *clientp);</p>
+<p style="margin-left:9%; margin-top: 1em">CURLMcode
+curl_multi_setopt(CURLM *handle, CURLMOPT_PUSHFUNCTION, <br/>
+curl_push_callback func);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This callback
+gets called when a new HTTP/2 stream is being pushed by the
+server (using the PUSH_PROMISE frame). If no push callback
+is set, all offered pushes are denied automatically.</p>
+<h2>CALLBACK DESCRIPTION
+<a name="CALLBACK DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The callback
+gets its arguments like this:</p>
+<p style="margin-left:9%; margin-top: 1em"><i>parent</i> is
+the handle of the stream on which this push arrives. The new
+handle has been duplicated from the parent, meaning that it
+has gotten all its options inherited. It is then up to the
+application to alter any options if desired.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>easy</i> is a
+newly created handle that represents this upcoming
+transfer.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>num_headers</i>
+is the number of name+value pairs that was received and can
+be accessed</p>
+<p style="margin-left:9%; margin-top: 1em"><i>headers</i>
+is a handle used to access push headers using the accessor
+functions described below. This only accesses and provides
+the PUSH_PROMISE headers, the normal response headers are
+provided in the header callback as usual.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>clientp</i>
+is the pointer set with <i>CURLMOPT_PUSHDATA(3)</i></p>
+<p style="margin-left:9%; margin-top: 1em">If the callback
+returns CURL_PUSH_OK, the new easy handle is added to the
+multi handle, the callback must not do that by itself.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback can
+access PUSH_PROMISE headers with two accessor functions.
+These functions can only be used from within this callback
+and they can only access the PUSH_PROMISE headers:
+<i>curl_pushheader_byname(3)</i> and
+<i>curl_pushheader_bynum(3)</i>. The normal response headers
+are passed to the header callback for pushed streams just as
+for normal streams.</p>
+<p style="margin-left:9%; margin-top: 1em">The header
+fields can also be accessed with <i>curl_easy_header(3)</i>,
+introduced in later libcurl versions.</p>
+<h2>CALLBACK RETURN VALUE
+<a name="CALLBACK RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURL_PUSH_OK
+(0)</p>
+<p style="margin-left:18%;">The application has accepted
+the stream and it can now start receiving data, the
+ownership of the CURL handle has been taken over by the
+application.</p>
+<p style="margin-left:9%;">CURL_PUSH_DENY (1)</p>
+<p style="margin-left:18%;">The callback denies the stream
+and no data reaches the application, the easy handle is
+destroyed by libcurl.</p>
+<p style="margin-left:9%;">CURL_PUSH_ERROROUT (2)</p>
+<p style="margin-left:18%;">Returning this code rejects the
+pushed stream and returns an error back on the parent stream
+making it get closed with an error. (Added in 7.72.0)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>*</p></td>
+<td width="8%"></td>
+<td width="65%">
+<p>All other return codes are reserved for future use.</p></td>
+<td width="17%">
+</td></tr>
+</table>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL, no
+callback</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects http only</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;string.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">/* only allow
+pushes for filenames starting with "push-" */ <br/>
+int push_callback(CURL *parent, <br/>
+CURL *easy, <br/>
+size_t num_headers, <br/>
+struct curl_pushheaders *headers, <br/>
+void *clientp) <br/>
+{ <br/>
+char *headp; <br/>
+int *transfers = (int *)clientp; <br/>
+FILE *out; <br/>
+headp = curl_pushheader_byname(headers, ":path");
+<br/>
+if(headp &amp;&amp; !strncmp(headp, "/push-", 6))
+{ <br/>
+fprintf(stderr, "The PATH is %s\n", headp);</p>
+<p style="margin-left:9%; margin-top: 1em">/* save the push
+here */ <br/>
+out = fopen("pushed-stream", "wb");</p>
+<p style="margin-left:9%; margin-top: 1em">/* write to this
+file */ <br/>
+curl_easy_setopt(easy, CURLOPT_WRITEDATA, out);</p>
+<p style="margin-left:9%; margin-top: 1em">(*transfers)++;
+/* one more */</p>
+<p style="margin-left:9%; margin-top: 1em">return
+CURL_PUSH_OK; <br/>
+} <br/>
+return CURL_PUSH_DENY; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+int counter; <br/>
+CURLM *multi = curl_multi_init(); <br/>
+curl_multi_setopt(multi, CURLMOPT_PUSHFUNCTION,
+push_callback); <br/>
+curl_multi_setopt(multi, CURLMOPT_PUSHDATA, &amp;counter);
+<br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.44.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLM_OK
+if the option is supported, and CURLM_UNKNOWN_OPTION if
+not.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLMOPT_PIPELINING</b>(3),
+<b>CURLMOPT_PUSHDATA</b>(3), <b>CURLOPT_PIPEWAIT</b>(3),
+<b>RFC</b>7540</p>
+<hr/>
+</body>
+</html>

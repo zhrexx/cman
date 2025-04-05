@@ -1,0 +1,252 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:09 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Util::Facets2Legacy</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Util::Facets2Legacy</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#AS METHODS">AS METHODS</a><br/>
+<a href="#AS FUNCTIONS">AS FUNCTIONS</a><br/>
+<a href="#NOTE ON CYCLES">NOTE ON CYCLES</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Util::Facets2Legacy
+− Convert facet data to the legacy event API.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+exports several subroutines from the older event API (see
+Test2::Event). These subroutines can be used as methods on
+any object that provides a custom facet_data() method. These
+subroutines can also be used as functions that take a facet
+data hashref as arguments.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<h3>AS METHODS
+<a name="AS METHODS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">package
+My::Event; <br/>
+use Test2::Util::Facets2Legacy ':ALL'; <br/>
+sub facet_data { return { ... } }</p>
+<p style="margin-left:9%; margin-top: 1em">Then to use
+it:</p>
+<p style="margin-left:9%; margin-top: 1em">my $e =
+My::Event−&gt;new(...); <br/>
+my $causes_fail = $e−&gt;causes_fail; <br/>
+my $summary = $e−&gt;summary; <br/>
+....</p>
+<h3>AS FUNCTIONS
+<a name="AS FUNCTIONS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::Util::Facets2Legacy ':ALL'; <br/>
+my $f = { <br/>
+assert =&gt; { ... }, <br/>
+info =&gt; [{...}, ...], <br/>
+control =&gt; {...}, <br/>
+... <br/>
+}; <br/>
+my $causes_fail = causes_fail($f); <br/>
+my $summary = summary($f);</p>
+<h2>NOTE ON CYCLES
+<a name="NOTE ON CYCLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">When used as
+methods, all these subroutines call
+"$e−&gt;facet_data()". The default
+facet_data() method in Test2::Event relies on the legacy
+methods this module emulates in order to work. As a result
+of this it is very easy to create infinite recursion
+bugs.</p>
+<p style="margin-left:9%; margin-top: 1em">These methods
+have cycle detection and will throw an exception early if a
+cycle is detected. uuid() is currently the only subroutine
+in this library that has a fallback behavior when cycles are
+detected.</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Nothing is
+exported by default. You must specify which methods to
+import, or use the ':ALL' tag. <br/>
+$bool = $e−&gt;<b>causes_fail()</b> <br/>
+$bool = causes_fail($f)</p>
+<p style="margin-left:14%;">Check if the event or facets
+result in a failing state.</p>
+<p style="margin-left:9%;">$bool =
+$e−&gt;<b>diagnostics()</b> <br/>
+$bool = diagnostics($f)</p>
+<p style="margin-left:14%;">Check if the event or facets
+contain any diagnostics information.</p>
+<p style="margin-left:9%;">$bool =
+$e−&gt;<b>global()</b> <br/>
+$bool = global($f)</p>
+<p style="margin-left:14%;">Check if the event or facets
+need to be globally processed.</p>
+<p style="margin-left:9%;">$bool =
+$e−&gt;<b>increments_count()</b> <br/>
+$bool = increments_count($f)</p>
+<p style="margin-left:14%;">Check if the event or facets
+make an assertion.</p>
+<p style="margin-left:9%;">$bool =
+$e−&gt;<b>no_display()</b> <br/>
+$bool = no_display($f)</p>
+<p style="margin-left:14%;">Check if the event or facets
+should be rendered or hidden.</p>
+<p style="margin-left:9%;">($max, $directive, $reason) =
+$e−&gt;<b>sets_plan()</b> <br/>
+($max, $directive, $reason) = sets_plan($f)</p>
+<p style="margin-left:14%;">Check if the event or facets
+set a plan, and return the plan details.</p>
+<p style="margin-left:9%;">$id =
+$e−&gt;<b>subtest_id()</b> <br/>
+$id = subtest_id($f)</p>
+<p style="margin-left:14%;">Get the subtest id, if any.</p>
+<p style="margin-left:9%;">$string =
+$e−&gt;<b>summary()</b> <br/>
+$string = summary($f)</p>
+<p style="margin-left:14%;">Get the summary of the event or
+facets hash, if any.</p>
+<p style="margin-left:9%;">$undef_or_int =
+$e−&gt;<b>terminate()</b> <br/>
+$undef_or_int = terminate($f)</p>
+<p style="margin-left:14%;">Check if the event or facets
+should result in process termination, if so the exit code is
+returned (which could be 0). undef is returned if no
+termination is requested.</p>
+<p style="margin-left:9%;">$uuid =
+$e−&gt;<b>uuid()</b> <br/>
+$uuid = uuid($f)</p>
+<p style="margin-left:14%;">Get the UUID of the facets or
+event.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+This will fall back to
+"$e−&gt;SUPER::uuid()" if a cycle is
+detected and an event is used as the argument.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2 can be found at
+&lt;https://github.com/Test−More/test−more/&gt;.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;https://dev.perl.org/licenses/&gt;</p>
+<hr/>
+</body>
+</html>

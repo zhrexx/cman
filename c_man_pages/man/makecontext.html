@@ -1,0 +1,305 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:17 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>makecontext</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">makecontext</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Program source">Program source</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">makecontext,
+swapcontext − manipulate user context</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;ucontext.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+makecontext(ucontext_t *</b><i>ucp</i><b>, void
+(*</b><i>func</i><b>)(), int</b> <i>argc</i><b>, ...); <br/>
+int swapcontext(ucontext_t *restrict</b> <i>oucp</i><b>,
+<br/>
+const ucontext_t *restrict</b> <i>ucp</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">In a System
+V-like environment, one has the type <i>ucontext_t</i>
+(defined in <i>&lt;ucontext.h&gt;</i> and described in
+<b>getcontext</b>(3)) and the four functions
+<b>getcontext</b>(3), <b>setcontext</b>(3),
+<b>makecontext</b>(), and <b>swapcontext</b>() that allow
+user-level context switching between multiple threads of
+control within a process.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>makecontext</b>() function modifies the context pointed
+to by <i>ucp</i> (which was obtained from a call to
+<b>getcontext</b>(3)). Before invoking <b>makecontext</b>(),
+the caller must allocate a new stack for this context and
+assign its address to <i>ucp−&gt;uc_stack</i>, and
+define a successor context and assign its address to
+<i>ucp−&gt;uc_link</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">When this
+context is later activated (using <b>setcontext</b>(3) or
+<b>swapcontext</b>()) the function <i>func</i> is called,
+and passed the series of integer (<i>int</i>) arguments that
+follow <i>argc</i>; the caller must specify the number of
+these arguments in <i>argc</i>. When this function returns,
+the successor context is activated. If the successor context
+pointer is NULL, the thread exits.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>swapcontext</b>() function saves the current context in
+the structure pointed to by <i>oucp</i>, and then activates
+the context pointed to by <i>ucp</i>.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">When successful,
+<b>swapcontext</b>() does not return. (But we may return
+later, in case <i>oucp</i> is activated, in which case it
+looks like <b>swapcontext</b>() returns 0.) On error,
+<b>swapcontext</b>() returns −1 and sets <i>errno</i>
+to indicate the error.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>ENOMEM</b></p></td>
+<td width="1%"></td>
+<td width="38%">
+<p style="margin-top: 1em">Insufficient stack space
+left.</p> </td>
+<td width="44%">
+</td></tr>
+</table>
+<h2>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For an
+explanation of the terms used in this section, see
+<b>attributes</b>(7).</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">None.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">glibc 2.1.
+SUSv2, POSIX.1-2001. Removed in POSIX.1-2008, citing
+portability issues, and recommending that applications be
+rewritten to use POSIX threads instead.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+interpretation of <i>ucp−&gt;uc_stack</i> is just as
+in <b>sigaltstack</b>(2), namely, this struct contains the
+start and length of a memory area to be used as the stack,
+regardless of the direction of growth of the stack. Thus, it
+is not necessary for the user program to worry about this
+direction.</p>
+<p style="margin-left:9%; margin-top: 1em">On architectures
+where <i>int</i> and pointer types are the same size (e.g.,
+x86-32, where both types are 32 bits), you may be able to
+get away with passing pointers as arguments to
+<b>makecontext</b>() following <i>argc</i>. However, doing
+this is not guaranteed to be portable, is undefined
+according to the standards, and won’t work on
+architectures where pointers are larger than <i>int</i>s.
+Nevertheless, starting with glibc 2.8, glibc makes some
+changes to <b>makecontext</b>(), to permit this on some
+64-bit architectures (e.g., x86-64).</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The example
+program below demonstrates the use of <b>getcontext</b>(3),
+<b>makecontext</b>(), and <b>swapcontext</b>(). Running the
+program produces the following output:</p>
+<p style="margin-left:14%; margin-top: 1em">$
+<b>./a.out</b> <br/>
+main: swapcontext(&amp;uctx_main, &amp;uctx_func2) <br/>
+func2: started <br/>
+func2: swapcontext(&amp;uctx_func2, &amp;uctx_func1) <br/>
+func1: started <br/>
+func1: swapcontext(&amp;uctx_func1, &amp;uctx_func2) <br/>
+func2: returning <br/>
+func1: returning <br/>
+main: exiting</p>
+<h3>Program source
+<a name="Program source"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;ucontext.h&gt; <br/>
+static ucontext_t uctx_main, uctx_func1, uctx_func2; <br/>
+#define handle_error(msg) \ <br/>
+do { perror(msg); exit(EXIT_FAILURE); } while (0) <br/>
+static void <br/>
+func1(void) <br/>
+{ <br/>
+printf("%s: started\n", __func__); <br/>
+printf("%s: swapcontext(&amp;uctx_func1,
+&amp;uctx_func2)\n", __func__); <br/>
+if (swapcontext(&amp;uctx_func1, &amp;uctx_func2) ==
+−1) <br/>
+handle_error("swapcontext"); <br/>
+printf("%s: returning\n", __func__); <br/>
+} <br/>
+static void <br/>
+func2(void) <br/>
+{ <br/>
+printf("%s: started\n", __func__); <br/>
+printf("%s: swapcontext(&amp;uctx_func2,
+&amp;uctx_func1)\n", __func__); <br/>
+if (swapcontext(&amp;uctx_func2, &amp;uctx_func1) ==
+−1) <br/>
+handle_error("swapcontext"); <br/>
+printf("%s: returning\n", __func__); <br/>
+} <br/>
+int <br/>
+main(int argc, char *argv[]) <br/>
+{ <br/>
+char func1_stack[16384]; <br/>
+char func2_stack[16384]; <br/>
+if (getcontext(&amp;uctx_func1) == −1) <br/>
+handle_error("getcontext"); <br/>
+uctx_func1.uc_stack.ss_sp = func1_stack; <br/>
+uctx_func1.uc_stack.ss_size = sizeof(func1_stack); <br/>
+uctx_func1.uc_link = &amp;uctx_main; <br/>
+makecontext(&amp;uctx_func1, func1, 0); <br/>
+if (getcontext(&amp;uctx_func2) == −1) <br/>
+handle_error("getcontext"); <br/>
+uctx_func2.uc_stack.ss_sp = func2_stack; <br/>
+uctx_func2.uc_stack.ss_size = sizeof(func2_stack); <br/>
+/* Successor context is f1(), unless argc &gt; 1 */ <br/>
+uctx_func2.uc_link = (argc &gt; 1) ? NULL : &amp;uctx_func1;
+<br/>
+makecontext(&amp;uctx_func2, func2, 0); <br/>
+printf("%s: swapcontext(&amp;uctx_main,
+&amp;uctx_func2)\n", __func__); <br/>
+if (swapcontext(&amp;uctx_main, &amp;uctx_func2) ==
+−1) <br/>
+handle_error("swapcontext"); <br/>
+printf("%s: exiting\n", __func__); <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>sigaction</b>(2),
+<b>sigaltstack</b>(2), <b>sigprocmask</b>(2),
+<b>getcontext</b>(3), <b>sigsetjmp</b>(3)</p>
+<hr/>
+</body>
+</html>

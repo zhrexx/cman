@@ -1,0 +1,602 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:49 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curs_mouse</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curs_mouse</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#has_mouse">has_mouse</a><br/>
+<a href="#mousemask">mousemask</a><br/>
+<a href="#Mouse Events">Mouse Events</a><br/>
+<a href="#getmouse">getmouse</a><br/>
+<a href="#ungetmouse">ungetmouse</a><br/>
+<a href="#wenclose">wenclose</a><br/>
+<a href="#wmouse_trafo">wmouse_trafo</a><br/>
+<a href="#mouse_trafo">mouse_trafo</a><br/>
+<a href="#mouseinterval">mouseinterval</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXTENSIONS">EXTENSIONS</a><br/>
+<a href="#PORTABILITY">PORTABILITY</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>has_mouse</b>,
+<b>getmouse</b>, <b>ungetmouse</b>, <b>mousemask</b>,
+<b>wenclose</b>, <b>mouse_trafo</b>, <b>wmouse_trafo</b>,
+<b>mouseinterval</b> − get mouse events in
+<i>curses</i></p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i><b>#include
+&lt;curses.h&gt;</b></i></p>
+<p style="margin-left:9%; margin-top: 1em"><i><b>typedef
+unsigned long mmask_t;</b></i></p>
+<p style="margin-left:9%; margin-top: 1em"><i><b>typedef
+struct { <br/>
+short id;</b> /* ID to distinguish multiple devices */</i>
+<b><br/>
+int x, y, z;</b> <i>/* event coordinates */</i> <b><br/>
+mmask_t bstate;</b> <i>/* button state bits */</i> <b><br/>
+} MEVENT;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>bool
+has_mouse(void);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>mmask_t
+mousemask(mmask_t</b> <i>newmask</i><b>, mmask_t
+*</b><i>oldmask</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+getmouse(MEVENT *</b><i>event</i><b>); <br/>
+int ungetmouse(MEVENT *</b><i>event</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>bool
+wenclose(const WINDOW *</b><i>win</i><b>, int</b>
+<i>y</i><b>, int</b> <i>x</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>bool
+mouse_trafo(int*</b> <i>pY</i><b>, int*</b> <i>pX</i><b>,
+bool</b> <i>to_screen</i><b>); <br/>
+bool wmouse_trafo(const WINDOW*</b> <i>win</i><b>, <br/>
+int*</b> <i>pY</i><b>, int*</b> <i>pX</i><b>, bool</b>
+<i>to_screen</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+mouseinterval(int</b> <i>erval</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+provide an interface to mouse events from
+<b>ncurses</b>(3X). Mouse events are represented by
+<b>KEY_MOUSE</b> pseudo-key values in the <b>wgetch</b>(3X)
+input stream.</p>
+<h3>has_mouse
+<a name="has_mouse"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>has_mouse</b> function returns <b>TRUE</b> if the mouse
+driver has been successfully initialized, and <b>FALSE</b>
+otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em">Mouse events are
+ignored when input is in cooked mode, and cause an error
+beep when cooked mode is being simulated in a window by a
+function such as <b>getstr</b> that expects a linefeed for
+input-loop termination.</p>
+<h3>mousemask
+<a name="mousemask"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">To make mouse
+events visible, use the <b>mousemask</b> function. This sets
+the mouse events to be reported. By default, no mouse events
+are reported.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>The function returns an updated copy of <i>newmask</i>
+to indicate which of the specified mouse events can be
+reported.</p> </td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">If the screen
+has not been initialized, or if the terminal does not
+support mouse-events, this function returns 0.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">If <i>oldmask</i> is
+non-<b>NULL</b>, this function fills the indicated location
+with the previous value of the current screen’s mouse
+event mask.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">As a side
+effect, setting a zero mouse mask may turn off the mouse
+pointer; setting a nonzero mask may turn it on. Whether this
+happens is device-dependent.</p>
+<h3>Mouse Events
+<a name="Mouse Events"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Here are the
+mouse event type masks which may be defined:</p>
+<h3>getmouse
+<a name="getmouse"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Once a class of
+mouse events has been made visible in a window, calling the
+<b>wgetch</b> function on that window may return
+<b>KEY_MOUSE</b> as an indicator that a mouse event has been
+queued. To read the event data and pop the event off the
+queue, call <b>getmouse</b>. This function will return
+<b>OK</b> if a mouse event is actually visible in the given
+window, <b>ERR</b> otherwise. When <b>getmouse</b> returns
+<b>OK</b>, the data deposited as y and x in the event
+structure coordinates will be screen-relative character-cell
+coordinates. The returned state mask will have exactly one
+bit set to indicate the event type. The corresponding data
+in the queue is marked invalid. A subsequent call to
+<b>getmouse</b> will retrieve the next older item from the
+queue.</p>
+<h3>ungetmouse
+<a name="ungetmouse"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>ungetmouse</b> function behaves analogously to
+<b>ungetch</b>. It pushes a <b>KEY_MOUSE</b> event onto the
+input queue, and associates with that event the given state
+data and screen-relative character-cell coordinates.</p>
+<h3>wenclose
+<a name="wenclose"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>wenclose</b> function tests whether a given pair of
+screen-relative character-cell coordinates is enclosed by a
+given window, returning <b>TRUE</b> if it is and
+<b>FALSE</b> otherwise. It is useful for determining what
+subset of the screen windows enclose the location of a mouse
+event.</p>
+<p style="margin-left:9%; margin-top: 1em">If the parameter
+is a pad, <b>wenclose</b> uses the most recent screen
+coordinates used for this pad in <b>prefresh</b>(3X) or
+<b>pnoutrefresh</b>(3X).</p>
+<h3>wmouse_trafo
+<a name="wmouse_trafo"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>wmouse_trafo</b> function transforms a given pair of
+coordinates from <b>stdscr</b>-relative coordinates to
+coordinates relative to the given window or vice versa. The
+resulting <b>stdscr</b>-relative coordinates are not always
+identical to screen coordinates due to the mechanism to
+reserve lines on top or bottom of the screen for other
+purposes (see the <b>ripoffline</b>(3X) and
+<b>slk_init</b>(3X) calls, for example).</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">If the parameter
+<i>to_screen</i> is <b>TRUE</b>, the pointers <i>pY, pX</i>
+must reference the coordinates of a location inside the
+window <i>win</i>. They are converted to
+<b>stdscr</b>-relative coordinates and returned through the
+pointers. If the conversion was successful, the function
+returns <b>TRUE</b>.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">If one of the
+parameters was <b>NULL</b> or the location is not inside the
+window, <b>FALSE</b> is returned.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">If <i>to_screen</i> is
+<b>FALSE</b>, the pointers <i>pY, pX</i> must reference
+<b>stdscr</b>-relative coordinates. They are converted to
+window-relative coordinates if the window <i>win</i>
+encloses this point. In this case the function returns
+<b>TRUE</b>.</p> </td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">If one of the
+parameters is <b>NULL</b> or the point is not inside the
+window, <b>FALSE</b> is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">The referenced
+coordinates are only replaced by the converted coordinates
+if the transformation was successful.</p>
+<h3>mouse_trafo
+<a name="mouse_trafo"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>mouse_trafo</b> function performs the same translation as
+<b>wmouse_trafo</b>, using <b>stdscr</b> for <i>win</i>.</p>
+<h3>mouseinterval
+<a name="mouseinterval"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>mouseinterval</b> function sets the maximum time (in
+thousandths of a second) that can elapse between press and
+release events for them to be resolved as a <i>click</i>. An
+application might interpret button press and release events
+separated by more than the mouse interval as a “long
+press”, or, with motion, as a “drag”.</p>
+<p style="margin-left:9%; margin-top: 1em">Calling
+<b>mouseinterval(0)</b> disables click resolution. When
+<i>ncurses</i> detects a mouse event, it awaits further
+input activity up to this interval, and then checks for a
+subsequent mouse event which can be combined with the first
+event. If the timeout expires without input activity (which
+would happen with a zero interval), then no click resolution
+will occur.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+returns the previous interval value. Use
+<b>mouseinterval(−1)</b> to obtain the interval
+without altering it.</p>
+<p style="margin-left:9%; margin-top: 1em">The mouse
+interval is set to one sixth of a second when the
+corresponding screen is initialized, e.g., in
+<b>initscr</b>(3X) or <b>setupterm</b>(3X).</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>has_mouse</b>,
+<b>wenclose</b>, <b>mouse_trafo</b>, and <b>wmouse_trafo</b>
+return <b>TRUE</b> or <b>FALSE</b> as noted above.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>getmouse</b>
+and <b>ungetmouse</b> return <b>ERR</b> upon failure and
+<b>OK</b> upon success.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>getmouse</b>
+fails if:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="72%">
+<p style="margin-top: 1em">no mouse driver was
+initialized,</p> </td>
+<td width="14%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="72%">
+<p>the mask of reportable events is zero,</p></td>
+<td width="14%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="72%">
+<p>a mouse event was detected that does not match the
+mask,</p> </td>
+<td width="14%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="72%">
+<p>or if no more events remain in the queue.</p></td>
+<td width="14%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>ungetmouse</b>
+returns <b>ERR</b> if the event queue is full.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>mousemask</b>
+returns the mask of reportable events.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>mouseinterval</b>
+returns the previous interval value, unless the terminal was
+not initialized. In that case, it returns the maximum
+interval value (166).</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The order of the
+<b>MEVENT</b> structure members is not guaranteed.
+Additional fields may be added to the structure in the
+future.</p>
+<p style="margin-left:9%; margin-top: 1em">Under
+<i>ncurses</i>, these calls are implemented using either
+<i>xterm</i>’s built-in mouse-tracking API or
+platform-specific drivers including</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="38%">
+<p style="margin-top: 1em">Alessandro Rubini’s gpm
+server</p> </td>
+<td width="44%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="38%">
+<p>FreeBSD sysmouse</p></td>
+<td width="44%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="38%">
+<p>OS/2 EMX</p></td>
+<td width="44%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">If you are using
+an unsupported configuration, mouse events will not be
+visible to <i>ncurses</i> (and the <b>mousemask</b> function
+will always return <b>0</b>).</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+<i>terminfo</i> entry contains a <b>XM</b> string, this is
+used in the <i>xterm</i> mouse driver to control the way the
+terminal is initialized for mouse operation. The default, if
+<b>XM</b> is not found, corresponds to private mode 1000 of
+<i>xterm:</i></p>
+<p style="margin-left:13%; margin-top: 1em">\E[?1000%?%p1%{1}%=%th%el%;</p>
+<p style="margin-left:9%; margin-top: 1em">The mouse driver
+also recognizes a newer <i>xterm</i> private mode 1006,
+e.g.,</p>
+<p style="margin-left:13%; margin-top: 1em">\E[?1006;1000%?%p1%{1}%=%th%el%;</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>z</i>
+member in the event structure is not presently used. It is
+intended for use with touch screens (which may be
+pressure-sensitive) or with 3D-mice/trackballs/power
+gloves.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>ALL_MOUSE_EVENTS</b> class does not include
+<b>REPORT_MOUSE_POSITION</b>. They are distinct. For
+example, in <i>xterm</i>, wheel/scrolling mice send position
+reports as a sequence of presses of buttons 4 or 5 without
+matching button-releases.</p>
+<h2>EXTENSIONS
+<a name="EXTENSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+were designed for <b>ncurses</b>(3X), and are not found in
+SVr4 <i>curses</i>, 4.4BSD <i>curses</i>, or any other
+previous curses implementation. (SVr4 <i>curses</i> did have
+a <i>getmouse</i> function, which took no argument and
+returned a different type.)</p>
+<h2>PORTABILITY
+<a name="PORTABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Applications
+employing the <i>ncurses</i> mouse extension should
+condition its use on the visibility of the
+<b>NCURSES_MOUSE_VERSION</b> preprocessor macro. When the
+interface changes, the macro’s value increments.
+Multiple versions are available when <i>ncurses</i> is
+configured; see section “ALTERNATE
+CONFIGURATIONS” of <b>ncurses</b>(3X). The following
+values may be specified.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p style="margin-top: 1em">1</p></td>
+<td width="3%"></td>
+<td width="83%">
+<p style="margin-top: 1em">has definitions for reserved
+events. The mask uses 28 bits.</p></td></tr>
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p>2</p></td>
+<td width="3%"></td>
+<td width="83%">
+<p>adds definitions for button 5, removes the definitions
+for reserved events. The mask uses 29 bits.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">SVr4
+<i>curses</i> had support for the mouse in a variant of
+<i>xterm</i>(1). It is mentioned in a few places, with
+little supporting documentation.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">Its “libcurses”
+manual page lists functions for this feature prototyped in
+<i>curses.h</i>.</p> </td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">extern int
+mouse_set(long int); <br/>
+extern int mouse_on(long int); <br/>
+extern int mouse_off(long int); <br/>
+extern int request_mouse_pos(void); <br/>
+extern int map_button(unsigned long); <br/>
+extern void wmouse_position(WINDOW *, int *, int *); <br/>
+extern unsigned long getmouse(void), getbmap(void);</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="80%">
+<p style="margin-top: 1em">Its “terminfo”
+manual page lists capabilities for the feature.</p></td>
+<td width="6%">
+</td></tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">The interface made assumptions
+(as does <i>ncurses</i>) about the escape sequences sent to
+and received from the terminal.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">For instance,
+the SVr4 <i>curses</i> library used the <b>get_mouse</b>
+capability to tell the terminal which mouse button events it
+should send, passing the mouse-button bit mask to the
+terminal. Also, it could ask the terminal where the mouse
+was using the <b>req_mouse_pos</b> capability.</p>
+<p style="margin-left:14%; margin-top: 1em">Those features
+required a terminal program that had been modified to work
+with SVr4 <i>curses</i>. They were not part of the X
+Consortium’s <i>xterm</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">When developing
+the <i>xterm</i> mouse support for <i>ncurses</i> in
+September 1995, Eric Raymond was uninterested in using the
+same interface due to its lack of documentation. Later, in
+1998, Mark Hesseling provided support in <i>PDCurses</i> 2.3
+using the SVr4 interface. <i>PDCurses</i>, however, does not
+use video terminals, making it unnecessary to be concerned
+about compatibility with the escape sequences.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Mouse events
+from <i>xterm</i> are <i>not</i> ignored in cooked mode if
+they have been enabled by <b>mousemask</b>. Instead, the
+<i>xterm</i> mouse report sequence appears in the string
+read.</p>
+<p style="margin-left:9%; margin-top: 1em">An
+<i>ncurses</i> window must enable <b>keypad</b>(3X) to
+correctly receive mouse event reports from <i>xterm</i>
+since they are encoded like function keys. Set the
+terminal’s <i>terminfo</i> capability <b>kmous</b> to
+“\E[M” (the beginning of the response from
+<i>xterm</i> for mouse clicks). Other values of <b>kmous</b>
+are permitted under the same assumption, that is, the report
+begins with that sequence.</p>
+<p style="margin-left:9%; margin-top: 1em">Because there
+are no standard response sequences that serve to identify
+terminals supporting the <i>xterm</i> mouse protocol,
+<i>ncurses</i> assumes that if <b>kmous</b> is defined in
+the terminal description, or if the terminal type’s
+primary name or aliases contain the string
+“xterm”, then the terminal may send mouse
+events. The <b>kmous</b> capability is checked first,
+allowing use of newer <i>xterm</i> mouse protocols, such as
+its private mode 1006.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curses</b>(3X),
+<b>curs_inopts</b>(3X), <b>curs_kernel</b>(3X),
+<b>curs_pad</b>(3X), <b>curs_slk</b>(3X),
+<b>curs_variables</b>(3X)</p>
+<hr/>
+</body>
+</html>

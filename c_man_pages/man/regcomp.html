@@ -1,0 +1,408 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:26 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>regex</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">regex</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Compilation">Compilation</a><br/>
+<a href="#Matching">Matching</a><br/>
+<a href="#Match offsets">Match offsets</a><br/>
+<a href="#Error reporting">Error reporting</a><br/>
+<a href="#Freeing">Freeing</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">regcomp,
+regexec, regerror, regfree − POSIX regex functions</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;regex.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+regcomp(regex_t *restrict</b> <i>preg</i><b>, const char
+*restrict</b> <i>regex</i><b>, <br/>
+int</b> <i>cflags</i><b>); <br/>
+int regexec(const regex_t *restrict</b> <i>preg</i><b>,
+const char *restrict</b> <i>string</i><b>, <br/>
+size_t</b> <i>nmatch</i><b>, regmatch_t</b>
+<i>pmatch</i><b>[_Nullable restrict .</b><i>nmatch</i><b>],
+<br/>
+int</b> <i>eflags</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>size_t
+regerror(int</b> <i>errcode</i><b>, const regex_t *_Nullable
+restrict</b> <i>preg</i><b>, <br/>
+char</b> <i>errbuf</i><b>[_Nullable restrict
+.</b><i>errbuf_size</i><b>], <br/>
+size_t</b> <i>errbuf_size</i><b>); <br/>
+void regfree(regex_t *</b><i>preg</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>typedef
+struct { <br/>
+size_t re_nsub; <br/>
+} regex_t;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>typedef
+struct { <br/>
+regoff_t rm_so; <br/>
+regoff_t rm_eo; <br/>
+} regmatch_t;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>typedef</b>
+/* ... */ <b>regoff_t;</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<h3>Compilation
+<a name="Compilation"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>regcomp</b>()
+is used to compile a regular expression into a form that is
+suitable for subsequent <b>regexec</b>() searches.</p>
+<p style="margin-left:9%; margin-top: 1em">On success, the
+pattern buffer at <i>*preg</i> is initialized. <i>regex</i>
+is a null-terminated string. The locale must be the same
+when running <b>regexec</b>().</p>
+<p style="margin-left:9%; margin-top: 1em">After
+<b>regcomp</b>() succeeds, <i>preg-&gt;re_nsub</i> holds the
+number of subexpressions in <i>regex</i>. Thus, a value of
+<i>preg-&gt;re_nsub</i> + 1 passed as <i>nmatch</i> to
+<b>regexec</b>() is sufficient to capture all matches.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>cflags</i> is
+the bitwise OR of zero or more of the following: <b><br/>
+REG_EXTENDED</b></p>
+<p style="margin-left:18%;">Use POSIX Extended Regular
+Expression syntax when interpreting <i>regex</i>. If not
+set, POSIX Basic Regular Expression syntax is used.</p>
+<p style="margin-left:9%;"><b>REG_ICASE</b></p>
+<p style="margin-left:18%;">Do not differentiate case.
+Subsequent <b>regexec</b>() searches using this pattern
+buffer will be case insensitive.</p>
+<p style="margin-left:9%;"><b>REG_NOSUB</b></p>
+<p style="margin-left:18%;">Report only overall success.
+<b>regexec</b>() will use only <i>pmatch</i> for
+<b>REG_STARTEND</b>, ignoring <i>nmatch</i>.</p>
+<p style="margin-left:9%;"><b>REG_NEWLINE</b></p>
+<p style="margin-left:18%;">Match-any-character operators
+don’t match a newline.</p>
+<p style="margin-left:18%; margin-top: 1em">A nonmatching
+list (<b>[^...]</b>) not containing a newline does not match
+a newline.</p>
+<p style="margin-left:18%; margin-top: 1em">Match-beginning-of-line
+operator (<b>^</b>) matches the empty string immediately
+after a newline, regardless of whether <i>eflags</i>, the
+execution flags of <b>regexec</b>(), contains
+<b>REG_NOTBOL</b>.</p>
+<p style="margin-left:18%; margin-top: 1em">Match-end-of-line
+operator (<b>$</b>) matches the empty string immediately
+before a newline, regardless of whether <i>eflags</i>
+contains <b>REG_NOTEOL</b>.</p>
+<h3>Matching
+<a name="Matching"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>regexec</b>()
+is used to match a null-terminated string against the
+compiled pattern buffer in <i>*preg</i>, which must have
+been initialised with <b>regexec</b>(). <i>eflags</i> is the
+bitwise OR of zero or more of the following flags: <b><br/>
+REG_NOTBOL</b></p>
+<p style="margin-left:18%;">The match-beginning-of-line
+operator always fails to match (but see the compilation flag
+<b>REG_NEWLINE</b> above). This flag may be used when
+different portions of a string are passed to
+<b>regexec</b>() and the beginning of the string should not
+be interpreted as the beginning of the line.</p>
+<p style="margin-left:9%;"><b>REG_NOTEOL</b></p>
+<p style="margin-left:18%;">The match-end-of-line operator
+always fails to match (but see the compilation flag
+<b>REG_NEWLINE</b> above).</p>
+<p style="margin-left:9%;"><b>REG_STARTEND</b></p>
+<p style="margin-left:18%;">Match [<i>string +
+pmatch[0].rm_so</i>, <i>string + pmatch[0].rm_eo</i>)
+instead of [<i>string</i>, <i>string + strlen(string)</i>).
+This allows matching embedded NUL bytes and avoids a
+<b>strlen</b>(3) on known-length strings. If any matches are
+returned (<b>REG_NOSUB</b> wasn’t passed to
+<b>regcomp</b>(), the match succeeded, and <i>nmatch</i>
+&gt; 0), they overwrite <i>pmatch</i> as usual, and the
+match offsets remain relative to <i>string</i> (not
+<i>string + pmatch[0].rm_so</i>). This flag is a BSD
+extension, not present in POSIX.</p>
+<h3>Match offsets
+<a name="Match offsets"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Unless
+<b>REG_NOSUB</b> was passed to <b>regcomp</b>(), it is
+possible to obtain the locations of matches within
+<i>string</i>: <b>regexec</b>() fills <i>nmatch</i> elements
+of <i>pmatch</i> with results: <i>pmatch[0]</i> corresponds
+to the entire match, <i>pmatch[1]</i> to the first
+subexpression, etc. If there were more matches than
+<i>nmatch</i>, they are discarded; if fewer, unused elements
+of <i>pmatch</i> are filled with <b>−1</b>s.</p>
+<p style="margin-left:9%; margin-top: 1em">Each returned
+valid (non-<b>−1</b>) match corresponds to the range
+[<i>string + rm_so</i>, <i>string + rm_eo</i>).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>regoff_t</i>
+is a signed integer type capable of storing the largest
+value that can be stored in either an <i>ptrdiff_t</i> type
+or a <i>ssize_t</i> type.</p>
+<h3>Error reporting
+<a name="Error reporting"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>regerror</b>()
+is used to turn the error codes that can be returned by both
+<b>regcomp</b>() and <b>regexec</b>() into error message
+strings.</p>
+<p style="margin-left:9%; margin-top: 1em">If <i>preg</i>
+isn’t a null pointer, <i>errcode</i> must be the
+latest error returned from an operation on <i>preg</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<i>errbuf_size</i> isn’t 0, up to <i>errbuf_size</i>
+bytes are copied to <i>errbuf</i>; the error string is
+always null-terminated, and truncated to fit.</p>
+<h3>Freeing
+<a name="Freeing"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>regfree</b>()
+deinitializes the pattern buffer at <i>*preg</i>, freeing
+any associated memory; <i>*preg</i> must have been
+initialized via <b>regcomp</b>().</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>regcomp</b>()
+returns zero for a successful compilation or an error code
+for failure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>regexec</b>()
+returns zero for a successful match or <b>REG_NOMATCH</b>
+for failure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>regerror</b>()
+returns the size of the buffer required to hold the
+string.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+errors can be returned by <b>regcomp</b>(): <b><br/>
+REG_BADBR</b></p>
+<p style="margin-left:18%;">Invalid use of back reference
+operator.</p>
+<p style="margin-left:9%;"><b>REG_BADPAT</b></p>
+<p style="margin-left:18%;">Invalid use of pattern
+operators such as group or list.</p>
+<p style="margin-left:9%;"><b>REG_BADRPT</b></p>
+<p style="margin-left:18%;">Invalid use of repetition
+operators such as using '*' as the first character.</p>
+<p style="margin-left:9%;"><b>REG_EBRACE</b></p>
+<p style="margin-left:18%;">Un-matched brace interval
+operators.</p>
+<p style="margin-left:9%;"><b>REG_EBRACK</b></p>
+<p style="margin-left:18%;">Un-matched bracket list
+operators.</p>
+<p style="margin-left:9%;"><b>REG_ECOLLATE</b></p>
+<p style="margin-left:18%;">Invalid collating element.</p>
+<p style="margin-left:9%;"><b>REG_ECTYPE</b></p>
+<p style="margin-left:18%;">Unknown character class
+name.</p>
+<p style="margin-left:9%;"><b>REG_EEND</b></p>
+<p style="margin-left:18%;">Nonspecific error. This is not
+defined by POSIX.</p>
+<p style="margin-left:9%;"><b>REG_EESCAPE</b></p>
+<p style="margin-left:18%;">Trailing backslash.</p>
+<p style="margin-left:9%;"><b>REG_EPAREN</b></p>
+<p style="margin-left:18%;">Un-matched parenthesis group
+operators.</p>
+<p style="margin-left:9%;"><b>REG_ERANGE</b></p>
+<p style="margin-left:18%;">Invalid use of the range
+operator; for example, the ending point of the range occurs
+prior to the starting point.</p>
+<p style="margin-left:9%;"><b>REG_ESIZE</b></p>
+<p style="margin-left:18%;">Compiled regular expression
+requires a pattern buffer larger than 64 kB. This is
+not defined by POSIX.</p>
+<p style="margin-left:9%;"><b>REG_ESPACE</b></p>
+<p style="margin-left:18%;">The regex routines ran out of
+memory.</p>
+<p style="margin-left:9%;"><b>REG_ESUBREG</b></p>
+<p style="margin-left:18%;">Invalid back reference to a
+subexpression.</p>
+<h2>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For an
+explanation of the terms used in this section, see
+<b>attributes</b>(7).</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2008.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2001.</p>
+<p style="margin-left:9%; margin-top: 1em">Prior to
+POSIX.1-2008, <i>regoff_t</i> was required to be capable of
+storing the largest value that can be stored in either an
+<i>off_t</i> type or a <i>ssize_t</i> type.</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>re_nsub</i>
+is only required to be initialized if <b>REG_NOSUB</b>
+wasn’t specified, but all known implementations
+initialize it regardless.</p>
+<p style="margin-left:9%; margin-top: 1em">Both
+<i>regex_t</i> and <i>regmatch_t</i> may (and do) have more
+members, in any order. Always reference them by name.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;stdint.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;regex.h&gt; <br/>
+#define ARRAY_SIZE(arr) (sizeof((arr)) / sizeof((arr)[0]))
+<br/>
+static const char *const str = <br/>
+"1) John Driverhacker;\n2) John Doe;\n3) John
+Foo;\n"; <br/>
+static const char *const re = "John.*o"; <br/>
+int main(void) <br/>
+{ <br/>
+static const char *s = str; <br/>
+regex_t regex; <br/>
+regmatch_t pmatch[1]; <br/>
+regoff_t off, len; <br/>
+if (regcomp(&amp;regex, re, REG_NEWLINE)) <br/>
+exit(EXIT_FAILURE); <br/>
+printf("String = \"%s\"\n", str); <br/>
+printf("Matches:\n"); <br/>
+for (unsigned int i = 0; ; i++) { <br/>
+if (regexec(&amp;regex, s, ARRAY_SIZE(pmatch), pmatch, 0))
+<br/>
+break; <br/>
+off = pmatch[0].rm_so + (s − str); <br/>
+len = pmatch[0].rm_eo − pmatch[0].rm_so; <br/>
+printf("#%zu:\n", i); <br/>
+printf("offset = %jd; length = %jd\n", (intmax_t)
+off, <br/>
+(intmax_t) len); <br/>
+printf("substring = \"%.*s\"\n", len, s
++ pmatch[0].rm_so); <br/>
+s += pmatch[0].rm_eo; <br/>
+} <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>grep</b>(1),
+<b>regex</b>(7)</p>
+<p style="margin-left:9%; margin-top: 1em">The glibc manual
+section, <i>Regular Expressions</i></p>
+<hr/>
+</body>
+</html>

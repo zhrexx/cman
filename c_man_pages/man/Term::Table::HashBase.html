@@ -1,0 +1,404 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:03 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Term::Table::HashBase</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Term::Table::HashBase</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#THIS IS A BUNDLED COPY OF HASHBASE">THIS IS A BUNDLED COPY OF HASHBASE</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#PROVIDED BY HASH BASE">PROVIDED BY HASH BASE</a><br/>
+<a href="#HOOKS">HOOKS</a><br/>
+<a href="#ACCESSORS">ACCESSORS</a><br/>
+<a href="#READ/WRITE">READ/WRITE</a><br/>
+<a href="#READ ONLY">READ ONLY</a><br/>
+<a href="#DEPRECATED SETTER">DEPRECATED SETTER</a><br/>
+<a href="#NO SETTER">NO SETTER</a><br/>
+<a href="#NO READER">NO READER</a><br/>
+<a href="#CONSTANT ONLY">CONSTANT ONLY</a><br/>
+<a href="#SUBCLASSING">SUBCLASSING</a><br/>
+<a href="#GETTING A LIST OF ATTRIBUTES FOR A CLASS">GETTING A LIST OF ATTRIBUTES FOR A CLASS</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Term::Table::HashBase
+− Build hash based classes.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A class:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+My::Class; <br/>
+use strict; <br/>
+use warnings; <br/>
+# Generate 3 accessors <br/>
+use Term::Table::HashBase qw/foo −bar ˆbaz
+&lt;bat &gt;ban +boo/; <br/>
+# Chance to initialize defaults <br/>
+sub init { <br/>
+my $self = shift; # No other args <br/>
+$self−&gt;{+FOO} ||= "foo"; <br/>
+$self−&gt;{+BAR} ||= "bar"; <br/>
+$self−&gt;{+BAZ} ||= "baz"; <br/>
+$self−&gt;{+BAT} ||= "bat"; <br/>
+$self−&gt;{+BAN} ||= "ban"; <br/>
+$self−&gt;{+BOO} ||= "boo"; <br/>
+} <br/>
+sub print { <br/>
+print join ", " =&gt; map { $self−&gt;{$_} }
+FOO, BAR, BAZ, BAT, BAN, BOO; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Subclass it</p>
+<p style="margin-left:9%; margin-top: 1em">package
+My::Subclass; <br/>
+use strict; <br/>
+use warnings; <br/>
+# Note, you should subclass before loading HashBase. <br/>
+use base 'My::Class'; <br/>
+use Term::Table::HashBase qw/bub/; <br/>
+sub init { <br/>
+my $self = shift; <br/>
+# We get the constants from the base class for free. <br/>
+$self−&gt;{+FOO} ||= 'SubFoo'; <br/>
+$self−&gt;{+BUB} ||= 'bub'; <br/>
+$self−&gt;SUPER::init(); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">use it:</p>
+<p style="margin-left:9%; margin-top: 1em">package main;
+<br/>
+use strict; <br/>
+use warnings; <br/>
+use My::Class; <br/>
+# These are all functionally identical <br/>
+my $one = My::Class−&gt;new(foo =&gt; 'MyFoo', bar
+=&gt; 'MyBar'); <br/>
+my $two = My::Class−&gt;new({foo =&gt; 'MyFoo', bar
+=&gt; 'MyBar'}); <br/>
+my $three = My::Class−&gt;new(['MyFoo', 'MyBar']);
+<br/>
+# Readers! <br/>
+my $foo = $one−&gt;foo; # 'MyFoo' <br/>
+my $bar = $one−&gt;bar; # 'MyBar' <br/>
+my $baz = $one−&gt;baz; # Defaulted to: 'baz' <br/>
+my $bat = $one−&gt;bat; # Defaulted to: 'bat' <br/>
+# '&gt;ban' means setter only, no reader <br/>
+# '+boo' means no setter or reader, just the BOO constant
+<br/>
+# Setters! <br/>
+$one−&gt;set_foo('A Foo'); <br/>
+#'−bar' means read−only, so the setter will
+throw an exception (but is defined). <br/>
+$one−&gt;set_bar('A bar'); <br/>
+# 'ˆbaz' means deprecated setter, this will warn about
+the setter being <br/>
+# deprecated. <br/>
+$one−&gt;set_baz('A Baz'); <br/>
+# '&lt;bat' means no setter defined at all <br/>
+# '+boo' means no setter or reader, just the BOO constant
+<br/>
+$one−&gt;{+FOO} = 'xxx';</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This package is
+used to generate classes based on hashrefs. Using this class
+will give you a new() method, as well as generating
+accessors you request. Generated accessors will be getters,
+"set_ACCESSOR" setters will also be generated for
+you. You also get constants for each accessor (all caps)
+which return the key into the hash for that accessor. Single
+inheritance is also supported.</p>
+<h2>THIS IS A BUNDLED COPY OF HASHBASE
+<a name="THIS IS A BUNDLED COPY OF HASHBASE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This is a
+bundled copy of Object::HashBase. This file was generated
+using the
+"/home/exodist/perl5/perlbrew/perls/main/bin/hashbase_inc.pl"
+script.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>PROVIDED BY HASH BASE
+<a name="PROVIDED BY HASH BASE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$it =
+$class−&gt;new(%PAIRS) <br/>
+$it = $class−&gt;new(\%PAIRS) <br/>
+$it = $class−&gt;new(\@ORDERED_VALUES)</p>
+<p style="margin-left:14%;">Create a new instance.</p>
+<p style="margin-left:14%; margin-top: 1em">HashBase will
+not export new() if there is already a new() method in your
+packages inheritance chain.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>If you do
+not want this method you can define your own</b> you just
+have to declare it before loading Term::Table::HashBase.</p>
+<p style="margin-left:14%; margin-top: 1em">package
+My::Package; <br/>
+# predeclare new() so that HashBase does not give us one.
+<br/>
+sub new; <br/>
+use Term::Table::HashBase qw/foo bar baz/; <br/>
+# Now we define our own new method. <br/>
+sub new { ... }</p>
+<p style="margin-left:14%; margin-top: 1em">This makes it
+so that HashBase sees that you have your own new() method.
+Alternatively you can define the method before loading
+HashBase instead of just declaring it, but that scatters
+your use statements.</p>
+<p style="margin-left:14%; margin-top: 1em">The most common
+way to create an object is to pass in key/value pairs where
+each key is an attribute and each value is what you want
+assigned to that attribute. No checking is done to verify
+the attributes or values are valid, you may do that in
+init() if desired.</p>
+<p style="margin-left:14%; margin-top: 1em">If you would
+like, you can pass in a hashref instead of pairs. When you
+do so the hashref will be copied, and the copy will be
+returned blessed as an object. There is no way to ask
+HashBase to bless a specific hashref.</p>
+<p style="margin-left:14%; margin-top: 1em">In some cases
+an object may only have 1 or 2 attributes, in which case a
+hashref may be too verbose for your liking. In these cases
+you can pass in an arrayref with only values. The values
+will be assigned to attributes in the order the attributes
+were listed. When there is inheritance involved the
+attributes from parent classes will come before
+subclasses.</p>
+<h3>HOOKS
+<a name="HOOKS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$self−&gt;<b>init()</b></p>
+<p style="margin-left:14%;">This gives you the chance to
+set some default values to your fields. The only argument is
+$self with its indexes already set from the constructor.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+Term::Table::HashBase checks for an init using
+"$class−&gt;can('init')" during
+construction. It DOES NOT call can() on the created object.
+Also note that the result of the check is cached, it is only
+ever checked once, the first time an instance of your class
+is created. This means that adding an init() method AFTER
+the first construction will result in it being ignored.</p>
+<h2>ACCESSORS
+<a name="ACCESSORS"></a>
+</h2>
+<h3>READ/WRITE
+<a name="READ/WRITE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">To generate
+accessors you list them when using the module:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Term::Table::HashBase qw/foo/;</p>
+<p style="margin-left:9%; margin-top: 1em">This will
+generate the following subs in your namespace: <b><br/>
+foo()</b></p>
+<p style="margin-left:14%;">Getter, used to get the value
+of the "foo" field.</p>
+<p style="margin-left:9%;"><b>set_foo()</b></p>
+<p style="margin-left:14%;">Setter, used to set the value
+of the "foo" field.</p>
+<p style="margin-left:9%;"><b>FOO()</b></p>
+<p style="margin-left:14%;">Constant, returns the field
+"foo"'s key into the class hashref. Subclasses
+will also get this function as a constant, not simply a
+method, that means it is copied into the subclass
+namespace.</p>
+<p style="margin-left:14%; margin-top: 1em">The main reason
+for using these constants is to help avoid spelling mistakes
+and similar typos. It will not help you if you forget to
+prefix the '+' though.</p>
+<h3>READ ONLY
+<a name="READ ONLY"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use
+Term::Table::HashBase qw/−foo/; <b><br/>
+set_foo()</b></p>
+<p style="margin-left:14%;">Throws an exception telling you
+the attribute is read−only. This is exported to
+override any active setters for the attribute in a parent
+class.</p>
+<h3>DEPRECATED SETTER
+<a name="DEPRECATED SETTER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use
+Term::Table::HashBase qw/ˆfoo/; <b><br/>
+set_foo()</b></p>
+<p style="margin-left:14%;">This will set the value, but it
+will also warn you that the method is deprecated.</p>
+<h3>NO SETTER
+<a name="NO SETTER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use
+Term::Table::HashBase qw/&lt;foo/;</p>
+<p style="margin-left:9%; margin-top: 1em">Only gives you a
+reader, no "set_foo" method is defined at all.</p>
+<h3>NO READER
+<a name="NO READER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use
+Term::Table::HashBase qw/&gt;foo/;</p>
+<p style="margin-left:9%; margin-top: 1em">Only gives you a
+write ("set_foo"), no "foo" method is
+defined at all.</p>
+<h3>CONSTANT ONLY
+<a name="CONSTANT ONLY"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use
+Term::Table::HashBase qw/+foo/;</p>
+<p style="margin-left:9%; margin-top: 1em">This does not
+create any methods for you, it just adds the "FOO"
+constant.</p>
+<h2>SUBCLASSING
+<a name="SUBCLASSING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You can subclass
+an existing HashBase class.</p>
+<p style="margin-left:9%; margin-top: 1em">use base
+'Another::HashBase::Class'; <br/>
+use Term::Table::HashBase qw/foo bar baz/;</p>
+<p style="margin-left:9%; margin-top: 1em">The base class
+is added to @ISA for you, and all constants from base
+classes are added to subclasses automatically.</p>
+<h2>GETTING A LIST OF ATTRIBUTES FOR A CLASS
+<a name="GETTING A LIST OF ATTRIBUTES FOR A CLASS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Term::Table::HashBase
+provides a function for retrieving a list of attributes for
+an Term::Table::HashBase class. <br/>
+@list = Term::Table::HashBase::attr_list($class) <br/>
+@list =
+$class−&gt;<b>Term::Table::HashBase::attr_list()</b></p>
+<p style="margin-left:14%;">Either form above will work.
+This will return a list of attributes defined on the object.
+This list is returned in the attribute definition order,
+parent class attributes are listed before subclass
+attributes. Duplicate attributes will be removed before the
+list is returned.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+This list is used in the
+"$class−&gt;new(\@ARRAY)" constructor to
+determine the attribute to which each value will be
+paired.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for HashBase can be found at
+<i>http://github.com/Test−More/HashBase/</i>.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright 2017
+Chad Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<i>http://dev.perl.org/licenses/</i></p>
+<hr/>
+</body>
+</html>

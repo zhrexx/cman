@@ -1,0 +1,322 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:04 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Locale::Recode</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Locale::Recode</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CONSTRUCTOR">CONSTRUCTOR</a><br/>
+<a href="#OBJECT METHODS">OBJECT METHODS</a><br/>
+<a href="#CLASS METHODS">CLASS METHODS</a><br/>
+<a href="#SUPPORTED CHARSETS">SUPPORTED CHARSETS</a><br/>
+<a href="#NAMES AND ALIASES">NAMES AND ALIASES</a><br/>
+<a href="#CONVERSION TABLES">CONVERSION TABLES</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Locale::Recode
+− Object−Oriented Portable Charset
+Conversion</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Locale::Recode; <br/>
+$cd = Locale::Recode−&gt;new (from =&gt;
+'UTF−8', <br/>
+to =&gt; 'ISO−8859−1'); <br/>
+die $cd−&gt;getError if $cd−&gt;getError; <br/>
+$cd−&gt;recode ($text) or die $cd−&gt;getError;
+<br/>
+$mime_name = Locale::Recode−&gt;resolveAlias
+('latin−1'); <br/>
+$supported = Locale::Recode−&gt;getSupported; <br/>
+$complete = Locale::Recode−&gt;getCharsets;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides routines that convert textual data from one codeset
+to another in a portable way. The module has been started
+before <b>Encode</b>(3) was written. It's main purpose today
+is to provide charset conversion even when <b>Encode</b>(3)
+is not available on the system. It should also work for
+older Perl versions without Unicode support.</p>
+<p style="margin-left:9%; margin-top: 1em">Internally
+<b>Locale::Recode</b>(3) will use <b>Encode</b>(3) whenever
+possible, to allow for a faster conversion and for a wider
+range of supported charsets, and will only fall back to the
+Perl implementation when <b>Encode</b>(3) is not available
+or does not support a particular charset that
+<b>Locale::Recode</b>(3) does.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Locale::Recode</b>(3)
+is part of libintl−perl, and it's main purpose is
+actually to implement a portable charset conversion
+framework for the message translation facilities described
+in <b>Locale::TextDomain</b>(3).</p>
+<h2>CONSTRUCTOR
+<a name="CONSTRUCTOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The constructor
+new() requires two named arguments: <b><br/>
+from</b></p>
+<p style="margin-left:14%;">The encoding of the original
+data. Case doesn't matter, aliases are resolved.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p><b>to</b></p></td>
+<td width="2%"></td>
+<td width="83%">
+<p>The target encoding. Again, case doesn't matter, and
+aliases are resolved.</p></td>
+<td width="3%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The constructor
+will never fail. In case of an error, the object's internal
+state is set to bad and it will refuse to do any
+conversions. You can inquire the reason for the failure with
+the method <b>getError()</b>.</p>
+<h2>OBJECT METHODS
+<a name="OBJECT METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+object methods are available. <b><br/>
+recode (STRING)</b></p>
+<p style="margin-left:14%;">Converts <b>STRING</b> from the
+source encoding into the destination encoding. In case of
+success, a truth value is returned, false otherwise. You can
+inquire the reason for the failure with the method
+<b>getError()</b>.</p>
+<p style="margin-left:9%;"><b>getError</b></p>
+<p style="margin-left:14%;">Returns either false if the
+object is not in an error state or an error message.</p>
+<h2>CLASS METHODS
+<a name="CLASS METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The object
+provides some additional class methods: <b><br/>
+getSupported</b></p>
+<p style="margin-left:14%;">Returns a reference to a list
+of all supported charsets. This may implicitely load
+additional <b>Encode</b>(3) conversions like
+<b>Encode::HanExtra</b>(3) which may produce considerable
+load on your system.</p>
+<p style="margin-left:14%; margin-top: 1em">The method is
+therefore not intended for regular use but rather for
+getting resp. displaying <i>once</i> a list of available
+encodings.</p>
+<p style="margin-left:14%; margin-top: 1em">The members of
+the list are all converted to uppercase!</p>
+<p style="margin-left:9%;"><b>getCharsets</b></p>
+<p style="margin-left:14%;">Like <b>getSupported()</b> but
+also returns all available aliases.</p>
+<h2>SUPPORTED CHARSETS
+<a name="SUPPORTED CHARSETS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The range of
+supported charsets is system−dependent. The following
+somewhat special charsets are always available: <b><br/>
+UTF−8</b></p>
+<p style="margin-left:14%;">UTF−8 is available
+independently of your Perl version. For Perl 5.6 or better
+or in the presence of <b>Encode</b>(3), conversions are not
+done in Perl but with the interfaces provided by these
+facilities which are written in C, hence much faster.</p>
+<p style="margin-left:14%; margin-top: 1em">Encoding data
+<i>into</i> UTF−8 is fast, even if it is done in Perl.
+Decoding it in Perl may become quite slow. If you frequently
+have to decode UTF−8 with <b>Locale::Recode</b> you
+will probably want to make sure that you do that with Perl
+5.6 or beter, or install <b>Encode</b>(3) to speed up
+things.</p>
+<p style="margin-left:9%;"><b>INTERNAL</b></p>
+<p style="margin-left:14%;">UTF−8 is fast to write
+but hard to read for applications. It is therefore not the
+worst for internal string representation but not far from
+that. <b>Locale::Recode</b>(3) stores strings internally as
+a reference to an array of integer values like most
+programming languages (Perl is an exception) do, trading
+memory for performance.</p>
+<p style="margin-left:14%; margin-top: 1em">The integer
+values are the UCS−4 codes of the characters in host
+byte order.</p>
+<p style="margin-left:14%; margin-top: 1em">The encoding
+<b>INTERNAL</b> is directly availabe via
+<b>Locale::Recode</b>(3) but of course you should not really
+use it for data exchange, unless you know what you are
+doing.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Locale::Recode</b>(3)
+has native support for a plethora of other encodings, most
+of them 8 bit encodings that are fast to decode, including
+most encodings used on popular micros like the
+ISO−8859−* series of encodings, most
+Windows−* encodings (also known as CP*), Macintosh,
+Atari, etc.</p>
+<h2>NAMES AND ALIASES
+<a name="NAMES AND ALIASES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Each charset
+resp. encoding is available internally under a unique name.
+Whenever the information was available, the preferred MIME
+name (see
+&lt;http://www.iana.org/assignments/character−sets/&gt;)
+was chosen as the internal name.</p>
+<p style="margin-left:9%; margin-top: 1em">Alias handling
+is quite strict. The module does not make wild guesses at
+what you mean ("What's the meaning of the acronym
+JIS" is a valid alias for "7bit−jis" in
+<b>Encode</b>(3) ....) but aims at providing common aliases
+only. The same applies to so−called aliases that are
+really mistakes, like "utf8" for UTF−8.</p>
+<p style="margin-left:9%; margin-top: 1em">The module knows
+all aliases that are listed with the IANA character set
+registry
+(&lt;http://www.iana.org/assignments/character−sets/&gt;),
+plus those known to libiconv version 1.8, and a bunch of
+additional ones.</p>
+<h2>CONVERSION TABLES
+<a name="CONVERSION TABLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The conversion
+tables have either been taken from official sources like the
+IANA or the Unicode Consortium, from Bruno Haible's
+libiconv, or from the sources of the GNU libc and the
+regression tests for libintl−perl will check for
+conformance here. For some encodings this data differs from
+<b>Encode</b>(3)'s data which would cause these tests to
+fail. In these cases, the module will not invoke the
+<b>Encode</b>(3) methods, but will fall back to the internal
+implementation for the sake of consistency.</p>
+<p style="margin-left:9%; margin-top: 1em">The few
+encodings that are affected are so simple that you will not
+experience any real performance penalty unless you convert
+large chunks of data. But the package is not really intended
+for such use anyway, and since <b>Encode</b>(3) is
+relatively new, I rather think that the differences are bugs
+in Encode which will be fixed soon.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The module
+should provide fall back conversions for other Unicode
+encoding schemes like UCS−2, UCS−4 (big−
+and little−endian).</p>
+<p style="margin-left:9%; margin-top: 1em">The pure Perl
+UTF−8 decoder will not always handle corrupt
+UTF−8 correctly, especially at the end and at the
+beginning of the string. This is not likely to be fixed,
+since the module's intention is not to be a consistency
+checker for UTF−8 data.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2002−2017 Guido Flohr
+&lt;http://www.guido-flohr.net/&gt;
+(&lt;mailto:guido.flohr@cantanea.com&gt;), all rights
+reserved. See the source code for details!code for
+details!</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Encode</b>(3),
+<b>iconv</b>(3), <b>iconv</b>(1), <b>recode</b>(1),
+<b>perl</b>(1)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:04 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Locale::libintlFAQ</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Locale::libintlFAQ</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#QUESTIONS AND ANSWERS">QUESTIONS AND ANSWERS</a><br/>
+<a href="#Why is libintl−perl so big? Why don't you use Encode(3pm) for characterset conversion instead of rolling your own version?">Why is libintl−perl so big? Why don't you use Encode(3pm) for characterset conversion instead of rolling your own version?</a><br/>
+<a href="#Why do the gettext functions always unset the utf−8 flag on the strings itreturns?">Why do the gettext functions always unset the utf−8 flag on the strings itreturns?</a><br/>
+<a href="#Can I set the utf−8 flag on strings returned by the gettext family offunctions?">Can I set the utf−8 flag on strings returned by the gettext family offunctions?</a><br/>
+<a href="#Why do non−ASCII characters in my Gtk2 application look messed up?">Why do non−ASCII characters in my Gtk2 application look messed up?</a><br/>
+<a href="#How do I interface Glade2 UI definitions with libintl−perl?">How do I interface Glade2 UI definitions with libintl−perl?</a><br/>
+<a href="#Why does Locale::TextDomain use a double underscore? I am used to a singleunderscore from C or other languages.">Why does Locale::TextDomain use a double underscore? I am used to a singleunderscore from C or other languages.</a><br/>
+<a href="#How do I switch languages or force a certain language independently fromuser settings read from the environment?">How do I switch languages or force a certain language independently fromuser settings read from the environment?</a><br/>
+<a href="#What is the advantage of libintl−perl over Locale::Maketext?">What is the advantage of libintl−perl over Locale::Maketext?</a><br/>
+<a href="#Why do single−quoted strings not work?">Why do single−quoted strings not work?</a><br/>
+<a href="#What options should be used with xgettext?">What options should be used with xgettext?</a><br/>
+<a href="#Why Isn't There A Function N__x(), N__nx(), or N__px()?">Why Isn't There A Function N__x(), N__nx(), or N__px()?</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Locale::TextDomain::FAQ
+− Frequently asked questions for
+libintl−perl</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This FAQ</p>
+<h2>QUESTIONS AND ANSWERS
+<a name="QUESTIONS AND ANSWERS"></a>
+</h2>
+<h3>Why is libintl−perl so big? Why don't you use Encode(3pm) for characterset conversion instead of rolling your own version?
+<a name="Why is libintl−perl so big? Why don't you use Encode(3pm) for characterset conversion instead of rolling your own version?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Encode</b>(3pm)
+requires at least Perl 5.7.x, whereas libintl−perl
+needs to be operational on Perl 5.004. Internally,
+libintl−perl uses <b>Encode</b>(3pm) if it is
+available.</p>
+<h3>Why do the gettext functions always unset the utf−8 flag on the strings itreturns?
+<a name="Why do the gettext functions always unset the utf−8 flag on the strings itreturns?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Because the
+gettext functions do not know whether the string is encoded
+in utf−8 or not. Instead of taking guesses, it rather
+unsets the flag.</p>
+<h3>Can I set the utf−8 flag on strings returned by the gettext family offunctions?
+<a name="Can I set the utf−8 flag on strings returned by the gettext family offunctions?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Yes, but it is
+not recommended. If you absolutely want to do it, use the
+function bind_textdomain_filter in Locale::Messages for
+it.</p>
+<p style="margin-left:9%; margin-top: 1em">The strings
+returned by gettext and friends are by default encoded in
+the preferred charset for the user's locale, but there is no
+portable way to find out, whether this is utf−8 or
+not. That means, you either have to enforce utf−8 as
+the output character set (by means of
+<b>bind_textdomain_codeset()</b> and/or the environment
+variable OUTPUT_CHARSET) and override the user preference,
+or you run the risk of marking strings as utf−8 which
+really aren't utf−8.</p>
+<p style="margin-left:9%; margin-top: 1em">The whole
+concept behind that utf−8 flag introduced in Perl 5.6
+is seriously broken, and the above described dilemma is a
+proof for that. The best thing you can do with that flag is
+get rid of it, and turn it off. Your code will benefit from
+it and become less error prone, more portable and
+faster.</p>
+<h3>Why do non−ASCII characters in my Gtk2 application look messed up?
+<a name="Why do non−ASCII characters in my Gtk2 application look messed up?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The Perl binding
+of Gtk2 has a design flaw. It expects all UI messages to be
+in UTF−8 and it also expects messages to be flagged as
+utf−8. The only solution for you is to enforce all
+your po files to be encoded in utf−8 (convert them
+manually, if you need to), and also enforce that charset in
+your application, regardless of the user's locale settings.
+Assumed that your textdomain is "org.bar.foo", you
+have to code the following into your main module or
+script:</p>
+<p style="margin-left:9%; margin-top: 1em">BEGIN { <br/>
+bind_textdomain_filter 'org.bar.foo', \&amp;turn_utf_8_on;
+<br/>
+bind_textdomain_codeset 'org.bar.foo', 'utf−8'; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">See the File
+GTestRunner.pm of <b>Test::Unit::GTestRunner</b>(3pm) for
+details.</p>
+<h3>How do I interface Glade2 UI definitions with libintl−perl?
+<a name="How do I interface Glade2 UI definitions with libintl−perl?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Gtk2::GladeXML</b>(3pm)
+seems to ignore calls to <b>bind_textdomain()</b>. See the
+File GTestRunner.pm of <b>Test::Unit::GTestRunner</b>(3pm)
+for a possible solution.</p>
+<h3>Why does Locale::TextDomain use a double underscore? I am used to a singleunderscore from C or other languages.
+<a name="Why does Locale::TextDomain use a double underscore? I am used to a singleunderscore from C or other languages."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Function names
+that consist of exactly one non−alphanumerical
+character make the function automatically global in Perl.
+Besides, in Perl 6 the concatenation operator will be the
+underscore instead of the dot.</p>
+<h3>How do I switch languages or force a certain language independently fromuser settings read from the environment?
+<a name="How do I switch languages or force a certain language independently fromuser settings read from the environment?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The simple
+answer is:</p>
+<p style="margin-left:9%; margin-top: 1em">use POSIX qw
+(setlocale LC_ALL); <br/>
+my $language = 'fr'; <br/>
+my $country = 'FR'; <br/>
+my $charset = 'iso−8859−1'; <br/>
+setlocale LC_ALL,
+"${language}_$country.$charset";</p>
+<p style="margin-left:9%; margin-top: 1em">Sadly enough,
+this will fail in many cases. The problem is that locale
+identifiers are not standardized and are completely
+system−dependent. Not only their overall format, but
+also other details like case−sensitivity. Some systems
+are very forgiving about the system − for example
+normalizing charset descriptions − others very strict.
+In order to be reasonably platform independent, you should
+try a list of possible locale identifiers for your desired
+settings. This is about what I would try for achieving the
+above:</p>
+<p style="margin-left:9%; margin-top: 1em">my @tries = qw (
+<br/>
+fr_FR.iso−8859−1 fr_FR.iso8859−1
+fr_FR.iso88591 <br/>
+fr_FR.ISO−8859−1 fr_FR.ISO8859−1
+fr_FR.ISO88591 <br/>
+fr.iso−8859−1 fr.iso8859−1 fr.iso88591
+<br/>
+fr.ISO−8859−1 fr.ISO8859−1 fr.ISO88591
+<br/>
+fr_FR <br/>
+French_France.iso−8859−1
+French_France.iso8859−1 French_France.iso88591 <br/>
+French_France.ISO−8859−1
+French_France.ISO8859−1 French_France.ISO88591 <br/>
+French.iso−8859−1 French.iso8859−1
+French.iso88591 <br/>
+French.ISO−8859−1 French.ISO8859−1
+French.ISO88591 <br/>
+); <br/>
+foreach my $try (@tries) { <br/>
+last if setlocale LC_ALL, $try; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Set
+<b>Locale::Util</b>(3pm) for functions that help you with
+this.</p>
+<p style="margin-left:9%; margin-top: 1em">Alternatively,
+you can force a certain language by setting the environment
+variables LANGUAGE, LANG and OUTPUT_CHARSET, but this is
+only guaranteed to work, if you use the pure Perl
+implementation of gettext (see the documentation for
+<b>select_package()</b> in <b>Locale::Messages</b>(3pm)).
+You would do the above like this:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Locale::Messages qw (nl_putenv); <br/>
+# LANGUAGE is a colon separated list of languages. <br/>
+nl_putenv("LANGUAGE=fr_FR"); <br/>
+# If LANGUAGE is set, LANG should be set to the primary
+language. <br/>
+# This is not needed for gettext, but for other parts of the
+system <br/>
+# it is. <br/>
+nl_putenv("LANG=fr_FR"); <br/>
+# Force an output charset like this: <br/>
+
+nl_putenv("OUTPUT_CHARSET=iso−8859−1");
+<br/>
+setlocale (LC_MESSAGES, 'C');</p>
+<p style="margin-left:9%; margin-top: 1em">These
+environment variables are GNU extensions, and they are also
+honored by libintl−perl. Still, you should always try
+to set the locale with setlocale for the catch−all
+category LC_ALL. If you miss to do so, your program's output
+maybe cluttered, mixing languages and charsets, if the
+system runs in a locale that is not compatible with your own
+language settings.</p>
+<p style="margin-left:9%; margin-top: 1em">Remember that
+these environment variables are not guaranteed to work, if
+you use an XS version of gettext. In order to force usage of
+the pure Perl implementation, do the following:</p>
+<p style="margin-left:9%; margin-top: 1em">Locale::Messages−&gt;select_package
+('gettext_pp');</p>
+<p style="margin-left:9%; margin-top: 1em">If you think,
+this is brain−damaged, you are right, but I cannot
+help you. Actually there should be a more flexible API than
+setlocale, but at the time of this writing there isn't.
+Until then, the recommentation goes like this:</p>
+<p style="margin-left:9%; margin-top: 1em">1) Try setting
+LC_ALL with Locale::Util. <br/>
+2) If that does not succeed, either give up or ... <br/>
+3) Reset LC_MESSAGES to C/POSIX. <br/>
+4) Switch to pure Perl for gettext. <br/>
+5) Set the environment variables LANGUAGE, LANG, <br/>
+and OUTPUT_CHARSET to your desired values.</p>
+<h3>What is the advantage of libintl−perl over Locale::Maketext?
+<a name="What is the advantage of libintl−perl over Locale::Maketext?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Of course, I can
+only give my personal opinion as an answer.</p>
+<p style="margin-left:9%; margin-top: 1em">Locale::Maketext
+claims to fix design flaws in gettext. These alleged design
+flaws, however, boil down to one pathological case which
+always has a workaround. But both programmers and
+translators pay this fix with an unnecessarily complicated
+interface.</p>
+<p style="margin-left:9%; margin-top: 1em">The paramount
+advantage of libintl−perl is that it uses an approved
+technology and concept. Except for Java(tm) programs, this
+is the state−of−the−art concept for
+localizing Un*x software. Programmers that have already
+localized software in C, C++, C#, Python, PHP, or a number
+of other languages will feel instantly at home, when
+localizing software written in Perl with libintl−perl.
+The same holds true for the translators, because the files
+they deal with have exactly the same format as those for
+other programming languages. They can use the same set of
+tools, and even the commands they have to execute are the
+same.</p>
+<p style="margin-left:9%; margin-top: 1em">With
+libintl−perl refactoring of the software is painless,
+even if you modify, add or delete translatable strings. The
+gettext tools are powerful enough to reduce the effort of
+the translators to the bare minimum. Maintaining the message
+catalogs of Locale::Maketext in larger scale projects, is
+IMHO unfeasible.</p>
+<p style="margin-left:9%; margin-top: 1em">Editing the
+message catalogs of Locale::Maketext − they are really
+Perl modules − asks too much from most translators,
+unless they are programmers. The portable object (po) files
+used by libintl−perl have a simple syntax, and there
+are a bunch of specialized GUI editors for these files, that
+facilitate the translation process and hide most complexity
+from the user.</p>
+<p style="margin-left:9%; margin-top: 1em">Furthermore,
+libintl−perl makes it possible to mix programming
+languages without a paradigm shift in localization. Without
+any special efforts, you can write a localized software that
+has modules written in C, modules in Perl, and builds a Gtk
+user interface with Glade. All translatable strings end up
+in one single message catalog.</p>
+<p style="margin-left:9%; margin-top: 1em">Last but not
+least, the interface used by libintl−perl is plain
+simple: Prepend translatable strings with a double
+underscore, and you are done in most cases.</p>
+<h3>Why do single−quoted strings not work?
+<a name="Why do single−quoted strings not work?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">You probably
+write something like this:</p>
+<p style="margin-left:9%; margin-top: 1em">print
+__'Hello';</p>
+<p style="margin-left:9%; margin-top: 1em">And you get an
+error message like "Can't find string terminator
+"'" anywhere before EOF at ...", or even
+"Bareword found where operator expected at ... Might be
+a runaway multi−line '' string starting on". The
+above line is (really!) essentially the same as writing:</p>
+<p style="margin-left:9%; margin-top: 1em">print
+__::Hello';</p>
+<p style="margin-left:9%; margin-top: 1em">A lesser know
+feature of Perl is that you can use a single quote
+("'") as the separator in packages instead of the
+double colon (":"). What the Perl parser sees in
+the first example is a valid package name ("__")
+followed by the separator ("'"), then another
+valid package name ("Hello") followed by a lone
+single quote. It is therefore not a problem in
+libintl−perl but simple wrong Perl syntax. You have to
+correct alternatives:</p>
+<p style="margin-left:9%; margin-top: 1em">print __
+'Hello'; # Insert a space to disambiguate.</p>
+<p style="margin-left:9%; margin-top: 1em">Or use
+double−quotes:</p>
+<p style="margin-left:9%; margin-top: 1em">print
+__"Hello";</p>
+<p style="margin-left:9%; margin-top: 1em">Thanks to Slavi
+Agafonkin for pointing me to the solution of this
+mystery.</p>
+<h3>What options should be used with xgettext?
+<a name="What options should be used with xgettext?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">More precise,
+the question should be which '−−keyword' and
+'−−flag' options for xgettext should be used.
+All other options are completely dependent on your
+use−case.</p>
+<p style="margin-left:9%; margin-top: 1em">If you are using
+Locale::Messages or Locale::Gettext for localizing Perl
+code, the default keywords and default flags built into
+xgettext are correct.</p>
+<p style="margin-left:9%; margin-top: 1em">If you are using
+Locale::TextDomain you have to use a long plethora of
+command−line options for xgettext. Beginning with
+libintl−perl 1.28 you can use the library itself to
+produce these options:</p>
+<p style="margin-left:9%; margin-top: 1em">perl
+−MLocale::TextDomain −e 'print
+Locale::TextDomain−&gt;options'</p>
+<p style="margin-left:9%; margin-top: 1em">If you want to
+disable the use of the built−in default keywords,
+precede the output of the above command with
+'−−keyword=""'. That will reset the
+keywords for xgettext.</p>
+<h3>Why Isn't There A Function N__x(), N__nx(), or N__px()?
+<a name="Why Isn't There A Function N__x(), N__nx(), or N__px()?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The sole purpose
+of these functions would be to set proper flags in the
+output of <b>xgettext(1)</b>. You probably thought of
+something like this:</p>
+<p style="margin-left:9%; margin-top: 1em">xgettext
+−−keyword=N__x
+−−flag=N__x:1:perl−brace−format
+filename.pl</p>
+<p style="margin-left:9%; margin-top: 1em">First of all,
+<b>xgettext</b>(1) will <i>always</i> set the flag correctly
+if the argument to N__() <i>looks</i> like a brace format
+string.</p>
+<p style="margin-left:9%; margin-top: 1em">Second, you can
+set any flag you want on the PO entry with a source code
+comment:</p>
+<p style="margin-left:9%; margin-top: 1em"># xgettext:
+no−perl−brace−format <br/>
+my $msg = N__("Placeholders are enclosed in {curly}
+braces.");</p>
+<p style="margin-left:9%; margin-top: 1em">When
+<b>xgettext(1)</b> extracts the string, it will appear like
+this in the <i>.pot</i> file:</p>
+<p style="margin-left:9%; margin-top: 1em">#:
+filename.pl:2304 <br/>
+#, no−perl−brace−format <br/>
+msgid "Placeholders are enclosed in {curly}
+braces." <br/>
+msgstr ""</p>
+<p style="margin-left:9%; margin-top: 1em">No reason to
+pollute the namespace with N__x functions.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:30 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_global_sslset</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_global_sslset</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#OpenSSL">OpenSSL</a><br/>
+<a href="#struct">struct</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_global_sslset
+− select SSL backend to use</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLsslset
+curl_global_sslset(curl_sslbackend id, <br/>
+const char *name, <br/>
+const curl_ssl_backend ***avail);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function
+configures at runtime which SSL backend to use with libcurl.
+This function can only be used to select an SSL backend
+once, and it must be called <b>before</b>
+<i>curl_global_init(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The backend can
+be identified by the <i>id</i> (e.g.
+<b>CURLSSLBACKEND_OPENSSL</b>). The backend can also be
+specified via the <i>name</i> parameter for a case
+insensitive match (passing <b>CURLSSLBACKEND_NONE</b> as
+<i>id</i>). If both <i>id</i> and <i>name</i> are specified,
+the <i>name</i> is ignored.</p>
+<p style="margin-left:9%; margin-top: 1em">If neither
+<i>id</i> nor <i>name</i> are specified, the function fails
+with <b>CURLSSLSET_UNKNOWN_BACKEND</b> and set the
+<i>avail</i> pointer to the NULL−terminated list of
+available backends. The available backends are those that
+this particular build of libcurl supports.</p>
+<p style="margin-left:9%; margin-top: 1em">Since libcurl
+7.60.0, the <i>avail</i> pointer is always set to the list
+of alternatives if non−NULL.</p>
+<p style="margin-left:9%; margin-top: 1em">Upon success,
+the function returns <b>CURLSSLSET_OK</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">If the specified
+SSL backend is not available, the function returns
+<b>CURLSSLSET_UNKNOWN_BACKEND</b> and sets the <i>avail</i>
+pointer to a NULL−terminated list of available SSL
+backends. In this case, you may call the function again to
+try to select a different backend.</p>
+<p style="margin-left:9%; margin-top: 1em">The SSL backend
+can be set only once. If it has already been set, a
+subsequent attempt to change it results in a
+<b>CURLSSLSET_TOO_LATE</b> getting returned.</p>
+<p style="margin-left:9%; margin-top: 1em">This function is
+thread−safe since libcurl 7.84.0 if
+<i>curl_version_info(3)</i> has the CURL_VERSION_THREADSAFE
+feature bit set (most platforms).</p>
+<p style="margin-left:9%; margin-top: 1em">If this is not
+thread−safe, you must not call this function when any
+other thread in the program (i.e. a thread sharing the same
+memory) is running. This does not just mean no other thread
+that is using libcurl.</p>
+<h2>OpenSSL
+<a name="OpenSSL"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The name
+"OpenSSL" is used for all versions of OpenSSL and
+its associated forks/flavors in this function. OpenSSL,
+BoringSSL, LibreSSL, quictls and AmiSSL are all supported by
+libcurl, but in the eyes of <i>curl_global_sslset(3)</i>
+they are all just "OpenSSL". They all mostly
+provide the same API.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>curl_version_info(3)</i>
+can return more specific info about the exact OpenSSL flavor
+and version number is use.</p>
+<h2>struct
+<a name="struct"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">typedef struct {
+<br/>
+curl_sslbackend id; <br/>
+const char *name; <br/>
+} curl_ssl_backend;</p>
+<p style="margin-left:9%; margin-top: 1em">typedef enum {
+<br/>
+CURLSSLBACKEND_NONE = 0, <br/>
+CURLSSLBACKEND_OPENSSL = 1, /* or one of its forks */ <br/>
+CURLSSLBACKEND_GNUTLS = 2, <br/>
+CURLSSLBACKEND_NSS = 3, <br/>
+CURLSSLBACKEND_GSKIT = 5, /* deprecated */ <br/>
+CURLSSLBACKEND_POLARSSL = 6, /* deprecated */ <br/>
+CURLSSLBACKEND_WOLFSSL = 7, <br/>
+CURLSSLBACKEND_SCHANNEL = 8, <br/>
+CURLSSLBACKEND_SECURETRANSPORT = 9, <br/>
+CURLSSLBACKEND_AXTLS = 10, /* deprecated */ <br/>
+CURLSSLBACKEND_MBEDTLS = 11, <br/>
+CURLSSLBACKEND_MESALINK = 12, /* deprecated */ <br/>
+CURLSSLBACKEND_BEARSSL = 13, <br/>
+CURLSSLBACKEND_RUSTLS = 14 <br/>
+} curl_sslbackend;</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+int i; <br/>
+/* choose a specific backend */ <br/>
+curl_global_sslset(CURLSSLBACKEND_WOLFSSL, NULL, NULL);</p>
+<p style="margin-left:9%; margin-top: 1em">/* list the
+available ones */ <br/>
+const curl_ssl_backend **list; <br/>
+curl_global_sslset(CURLSSLBACKEND_NONE, NULL,
+&amp;list);</p>
+<p style="margin-left:9%; margin-top: 1em">for(i = 0;
+list[i]; i++) <br/>
+printf("SSL backend #%d: ’%s’ (ID:
+%d)\n", <br/>
+i, list[i]-&gt;name, list[i]-&gt;id); <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.56.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If this function
+returns <i>CURLSSLSET_OK</i>, the backend was successfully
+selected.</p>
+<p style="margin-left:9%; margin-top: 1em">If the chosen
+backend is unknown (or support for the chosen backend has
+not been compiled into libcurl), the function returns
+<i>CURLSSLSET_UNKNOWN_BACKEND</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">If the backend
+had been configured previously, or if
+<i>curl_global_init(3)</i> has already been called, the
+function returns <i>CURLSSLSET_TOO_LATE</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">If this libcurl
+was built completely without SSL support, with no backends
+at all, this function returns
+<i>CURLSSLSET_NO_BACKENDS</i>.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curl_global_init</b>(3),
+<b>libcurl</b>(3)</p>
+<hr/>
+</body>
+</html>

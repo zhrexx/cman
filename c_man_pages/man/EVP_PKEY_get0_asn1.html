@@ -1,0 +1,619 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:42 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>EVP_PKEY_ASN1_METHOD</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">EVP_PKEY_ASN1_METHOD</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Methods">Methods</a><br/>
+<a href="#Functions">Functions</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">EVP_PKEY_ASN1_METHOD,
+EVP_PKEY_asn1_new, EVP_PKEY_asn1_copy, EVP_PKEY_asn1_free,
+EVP_PKEY_asn1_add0, EVP_PKEY_asn1_add_alias,
+EVP_PKEY_asn1_set_public, EVP_PKEY_asn1_set_private,
+EVP_PKEY_asn1_set_param, EVP_PKEY_asn1_set_free,
+EVP_PKEY_asn1_set_ctrl, EVP_PKEY_asn1_set_item,
+EVP_PKEY_asn1_set_siginf, EVP_PKEY_asn1_set_check,
+EVP_PKEY_asn1_set_public_check,
+EVP_PKEY_asn1_set_param_check,
+EVP_PKEY_asn1_set_security_bits,
+EVP_PKEY_asn1_set_set_priv_key,
+EVP_PKEY_asn1_set_set_pub_key,
+EVP_PKEY_asn1_set_get_priv_key,
+EVP_PKEY_asn1_set_get_pub_key, EVP_PKEY_get0_asn1 −
+manipulating and registering EVP_PKEY_ASN1_METHOD
+structure</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+typedef struct evp_pkey_asn1_method_st EVP_PKEY_ASN1_METHOD;
+<br/>
+EVP_PKEY_ASN1_METHOD *EVP_PKEY_asn1_new(int id, int flags,
+<br/>
+const char *pem_str, <br/>
+const char *info); <br/>
+void EVP_PKEY_asn1_copy(EVP_PKEY_ASN1_METHOD *dst, <br/>
+const EVP_PKEY_ASN1_METHOD *src); <br/>
+void EVP_PKEY_asn1_free(EVP_PKEY_ASN1_METHOD *ameth); <br/>
+int EVP_PKEY_asn1_add0(const EVP_PKEY_ASN1_METHOD *ameth);
+<br/>
+int EVP_PKEY_asn1_add_alias(int to, int from); <br/>
+void EVP_PKEY_asn1_set_public(EVP_PKEY_ASN1_METHOD *ameth,
+<br/>
+int (*pub_decode) (EVP_PKEY *pk, <br/>
+const X509_PUBKEY *pub), <br/>
+int (*pub_encode) (X509_PUBKEY *pub, <br/>
+const EVP_PKEY *pk), <br/>
+int (*pub_cmp) (const EVP_PKEY *a, <br/>
+const EVP_PKEY *b), <br/>
+int (*pub_print) (BIO *out, <br/>
+const EVP_PKEY *pkey, <br/>
+int indent, ASN1_PCTX *pctx), <br/>
+int (*pkey_size) (const EVP_PKEY *pk), <br/>
+int (*pkey_bits) (const EVP_PKEY *pk)); <br/>
+void EVP_PKEY_asn1_set_private(EVP_PKEY_ASN1_METHOD *ameth,
+<br/>
+int (*priv_decode) (EVP_PKEY *pk, <br/>
+const PKCS8_PRIV_KEY_INFO <br/>
+*p8inf), <br/>
+int (*priv_encode) (PKCS8_PRIV_KEY_INFO *p8, <br/>
+const EVP_PKEY *pk), <br/>
+int (*priv_print) (BIO *out, <br/>
+const EVP_PKEY *pkey, <br/>
+int indent, <br/>
+ASN1_PCTX *pctx)); <br/>
+void EVP_PKEY_asn1_set_param(EVP_PKEY_ASN1_METHOD *ameth,
+<br/>
+int (*param_decode) (EVP_PKEY *pkey, <br/>
+const unsigned char **pder, <br/>
+int derlen), <br/>
+int (*param_encode) (const EVP_PKEY *pkey, <br/>
+unsigned char **pder), <br/>
+int (*param_missing) (const EVP_PKEY *pk), <br/>
+int (*param_copy) (EVP_PKEY *to, <br/>
+const EVP_PKEY *from), <br/>
+int (*param_cmp) (const EVP_PKEY *a, <br/>
+const EVP_PKEY *b), <br/>
+int (*param_print) (BIO *out, <br/>
+const EVP_PKEY *pkey, <br/>
+int indent, <br/>
+ASN1_PCTX *pctx)); <br/>
+void EVP_PKEY_asn1_set_free(EVP_PKEY_ASN1_METHOD *ameth,
+<br/>
+void (*pkey_free) (EVP_PKEY *pkey)); <br/>
+void EVP_PKEY_asn1_set_ctrl(EVP_PKEY_ASN1_METHOD *ameth,
+<br/>
+int (*pkey_ctrl) (EVP_PKEY *pkey, int op, <br/>
+long arg1, void *arg2)); <br/>
+void EVP_PKEY_asn1_set_item(EVP_PKEY_ASN1_METHOD *ameth,
+<br/>
+int (*item_verify) (EVP_MD_CTX *ctx, <br/>
+const ASN1_ITEM *it, <br/>
+void *asn, <br/>
+X509_ALGOR *a, <br/>
+ASN1_BIT_STRING *sig, <br/>
+EVP_PKEY *pkey), <br/>
+int (*item_sign) (EVP_MD_CTX *ctx, <br/>
+const ASN1_ITEM *it, <br/>
+void *asn, <br/>
+X509_ALGOR *alg1, <br/>
+X509_ALGOR *alg2, <br/>
+ASN1_BIT_STRING *sig)); <br/>
+void EVP_PKEY_asn1_set_siginf(EVP_PKEY_ASN1_METHOD *ameth,
+<br/>
+int (*siginf_set) (X509_SIG_INFO *siginf, <br/>
+const X509_ALGOR *alg, <br/>
+const ASN1_STRING *sig)); <br/>
+void EVP_PKEY_asn1_set_check(EVP_PKEY_ASN1_METHOD *ameth,
+<br/>
+int (*pkey_check) (const EVP_PKEY *pk)); <br/>
+void EVP_PKEY_asn1_set_public_check(EVP_PKEY_ASN1_METHOD
+*ameth, <br/>
+int (*pkey_pub_check) (const EVP_PKEY *pk)); <br/>
+void EVP_PKEY_asn1_set_param_check(EVP_PKEY_ASN1_METHOD
+*ameth, <br/>
+int (*pkey_param_check) (const EVP_PKEY *pk)); <br/>
+void EVP_PKEY_asn1_set_security_bits(EVP_PKEY_ASN1_METHOD
+*ameth, <br/>
+int (*pkey_security_bits) (const EVP_PKEY <br/>
+*pk)); <br/>
+void EVP_PKEY_asn1_set_set_priv_key(EVP_PKEY_ASN1_METHOD
+*ameth, <br/>
+int (*set_priv_key) (EVP_PKEY *pk, <br/>
+const unsigned char <br/>
+*priv, <br/>
+size_t len)); <br/>
+void EVP_PKEY_asn1_set_set_pub_key(EVP_PKEY_ASN1_METHOD
+*ameth, <br/>
+int (*set_pub_key) (EVP_PKEY *pk, <br/>
+const unsigned char *pub, <br/>
+size_t len)); <br/>
+void EVP_PKEY_asn1_set_get_priv_key(EVP_PKEY_ASN1_METHOD
+*ameth, <br/>
+int (*get_priv_key) (const EVP_PKEY *pk, <br/>
+unsigned char *priv, <br/>
+size_t *len)); <br/>
+void EVP_PKEY_asn1_set_get_pub_key(EVP_PKEY_ASN1_METHOD
+*ameth, <br/>
+int (*get_pub_key) (const EVP_PKEY *pk, <br/>
+unsigned char *pub, <br/>
+size_t *len)); <br/>
+const EVP_PKEY_ASN1_METHOD *EVP_PKEY_get0_asn1(const
+EVP_PKEY *pkey);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_ASN1_METHOD</b>
+is a structure which holds a set of ASN.1 conversion,
+printing and information methods for a specific public key
+algorithm.</p>
+<p style="margin-left:9%; margin-top: 1em">There are two
+places where the <b>EVP_PKEY_ASN1_METHOD</b> objects are
+stored: one is a built−in array representing the
+standard methods for different algorithms, and the other one
+is a stack of user−defined application−specific
+methods, which can be manipulated by using
+<b>EVP_PKEY_asn1_add0</b>(3).</p>
+<h3>Methods
+<a name="Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The methods are
+the underlying implementations of a particular public key
+algorithm present by the <b>EVP_PKEY</b> object.</p>
+<p style="margin-left:9%; margin-top: 1em">int
+(*pub_decode) (EVP_PKEY *pk, const X509_PUBKEY *pub); <br/>
+int (*pub_encode) (X509_PUBKEY *pub, const EVP_PKEY *pk);
+<br/>
+int (*pub_cmp) (const EVP_PKEY *a, const EVP_PKEY *b); <br/>
+int (*pub_print) (BIO *out, const EVP_PKEY *pkey, int
+indent, <br/>
+ASN1_PCTX *pctx);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pub_decode()</b> and <b>pub_encode()</b> methods are
+called to decode / encode <b>X509_PUBKEY</b> ASN.1
+parameters to / from <b>pk</b>. They MUST return 0 on error,
+1 on success. They're called by <b>X509_PUBKEY_get0</b>(3)
+and <b>X509_PUBKEY_set</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pub_cmp()</b> method is called when two public keys are
+to be compared. It MUST return 1 when the keys are equal, 0
+otherwise. It's called by <b>EVP_PKEY_eq</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pub_print()</b> method is called to print a public key in
+humanly readable text to <b>out</b>, indented <b>indent</b>
+spaces. It MUST return 0 on error, 1 on success. It's called
+by <b>EVP_PKEY_print_public</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">int
+(*priv_decode) (EVP_PKEY *pk, const PKCS8_PRIV_KEY_INFO
+*p8inf); <br/>
+int (*priv_encode) (PKCS8_PRIV_KEY_INFO *p8, const EVP_PKEY
+*pk); <br/>
+int (*priv_print) (BIO *out, const EVP_PKEY *pkey, int
+indent, <br/>
+ASN1_PCTX *pctx);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>priv_decode()</b> and <b>priv_encode()</b> methods are
+called to decode / encode <b>PKCS8_PRIV_KEY_INFO</b> form
+private key to / from <b>pk</b>. They MUST return 0 on
+error, 1 on success. They're called by
+<b>EVP_PKCS82PKEY</b>(3) and <b>EVP_PKEY2PKCS8</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>priv_print()</b> method is called to print a private key
+in humanly readable text to <b>out</b>, indented
+<b>indent</b> spaces. It MUST return 0 on error, 1 on
+success. It's called by
+<b>EVP_PKEY_print_private</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">int (*pkey_size)
+(const EVP_PKEY *pk); <br/>
+int (*pkey_bits) (const EVP_PKEY *pk); <br/>
+int (*pkey_security_bits) (const EVP_PKEY *pk);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pkey_size()</b> method returns the key size in bytes.
+It's called by <b>EVP_PKEY_get_size</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pkey_bits()</b> method returns the key size in bits. It's
+called by <b>EVP_PKEY_get_bits</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">int
+(*param_decode) (EVP_PKEY *pkey, <br/>
+const unsigned char **pder, int derlen); <br/>
+int (*param_encode) (const EVP_PKEY *pkey, unsigned char
+**pder); <br/>
+int (*param_missing) (const EVP_PKEY *pk); <br/>
+int (*param_copy) (EVP_PKEY *to, const EVP_PKEY *from); <br/>
+int (*param_cmp) (const EVP_PKEY *a, const EVP_PKEY *b);
+<br/>
+int (*param_print) (BIO *out, const EVP_PKEY *pkey, int
+indent, <br/>
+ASN1_PCTX *pctx);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>param_decode()</b> and <b>param_encode()</b> methods are
+called to decode / encode DER formatted parameters to / from
+<b>pk</b>. They MUST return 0 on error, 1 on success.
+They're called by <b>PEM_read_bio_Parameters</b>(3) and the
+<b>file: OSSL_STORE_LOADER</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>param_missing()</b> method returns 0 if a key parameter
+is missing, otherwise 1. It's called by
+<b>EVP_PKEY_missing_parameters</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>param_copy()</b> method copies key parameters from
+<b>from</b> to <b>to</b>. It MUST return 0 on error, 1 on
+success. It's called by
+<b>EVP_PKEY_copy_parameters</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>param_cmp()</b> method compares the parameters of keys
+<b>a</b> and <b>b</b>. It MUST return 1 when the keys are
+equal, 0 when not equal, or a negative number on error. It's
+called by <b>EVP_PKEY_parameters_eq</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>param_print()</b> method prints the private key
+parameters in humanly readable text to <b>out</b>, indented
+<b>indent</b> spaces. It MUST return 0 on error, 1 on
+success. It's called by <b>EVP_PKEY_print_params</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">int (*sig_print)
+(BIO *out, <br/>
+const X509_ALGOR *sigalg, const ASN1_STRING *sig, <br/>
+int indent, ASN1_PCTX *pctx);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>sig_print()</b> method prints a signature in humanly
+readable text to <b>out</b>, indented <b>indent</b> spaces.
+<b>sigalg</b> contains the exact signature algorithm. If the
+signature in <b>sig</b> doesn't correspond to what this
+method expects, <b>X509_signature_dump()</b> must be used as
+a last resort. It MUST return 0 on error, 1 on success. It's
+called by <b>X509_signature_print</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">void
+(*pkey_free) (EVP_PKEY *pkey);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pkey_free()</b> method helps freeing the internals of
+<b>pkey</b>. It's called by <b>EVP_PKEY_free</b>(3),
+<b>EVP_PKEY_set_type</b>(3),
+<b>EVP_PKEY_set_type_str</b>(3), and
+<b>EVP_PKEY_assign</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">int (*pkey_ctrl)
+(EVP_PKEY *pkey, int op, long arg1, void *arg2);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pkey_ctrl()</b> method adds extra algorithm specific
+control. It's called by
+<b>EVP_PKEY_get_default_digest_nid</b>(3),
+<b>EVP_PKEY_set1_encoded_public_key</b>(3),
+<b>EVP_PKEY_get1_encoded_public_key</b>(3),
+<b>PKCS7_SIGNER_INFO_set</b>(3),
+<b>PKCS7_RECIP_INFO_set</b>(3), ...</p>
+<p style="margin-left:9%; margin-top: 1em">int
+(*old_priv_decode) (EVP_PKEY *pkey, <br/>
+const unsigned char **pder, int derlen); <br/>
+int (*old_priv_encode) (const EVP_PKEY *pkey, unsigned char
+**pder);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>old_priv_decode()</b> and <b>old_priv_encode()</b>
+methods decode / encode they private key <b>pkey</b> from /
+to a DER formatted array. These are exclusively used to help
+decoding / encoding older (pre PKCS#8) PEM formatted
+encrypted private keys. <b>old_priv_decode()</b> MUST return
+0 on error, 1 on success. <b>old_priv_encode()</b> MUST the
+return same kind of values as <b>i2d_PrivateKey()</b>.
+They're called by <b>d2i_PrivateKey</b>(3) and
+<b>i2d_PrivateKey</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">int
+(*item_verify) (EVP_MD_CTX *ctx, const ASN1_ITEM *it, void
+*asn, <br/>
+X509_ALGOR *a, ASN1_BIT_STRING *sig, EVP_PKEY *pkey); <br/>
+int (*item_sign) (EVP_MD_CTX *ctx, const ASN1_ITEM *it, void
+*asn, <br/>
+X509_ALGOR *alg1, X509_ALGOR *alg2, <br/>
+ASN1_BIT_STRING *sig);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>item_sign()</b> and <b>item_verify()</b> methods make it
+possible to have algorithm specific signatures and
+verification of them.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>item_sign()</b>
+MUST return one of:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>&lt;=0</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p>error</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>1</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p><b>item_sign()</b> did everything, OpenSSL internals
+just needs to pass the signature length back.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>2</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p><b>item_sign()</b> did nothing, OpenSSL internal
+standard routines are expected to continue with the default
+signature production.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>3</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p><b>item_sign()</b> set the algorithm identifier
+<b>algor1</b> and <b>algor2</b>, OpenSSL internals should
+just sign using those algorithms.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>item_verify()</b>
+MUST return one of:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p style="margin-top: 1em">&lt;=0</p></td>
+<td width="1%"></td>
+<td width="82%">
+<p style="margin-top: 1em">error</p></td>
+<td width="4%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>1</p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><b>item_sign()</b> did everything, OpenSSL internals
+just needs to pass the signature length back.</p></td>
+<td width="4%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>2</p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><b>item_sign()</b> did nothing, OpenSSL internal
+standard routines are expected to continue with the default
+signature production.</p></td>
+<td width="4%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>item_verify()</b>
+and <b>item_sign()</b> are called by
+<b>ASN1_item_verify</b>(3) and <b>ASN1_item_sign</b>(3), and
+by extension, <b>X509_verify</b>(3),
+<b>X509_REQ_verify</b>(3), <b>X509_sign</b>(3),
+<b>X509_REQ_sign</b>(3), ...</p>
+<p style="margin-left:9%; margin-top: 1em">int
+(*siginf_set) (X509_SIG_INFO *siginf, const X509_ALGOR *alg,
+<br/>
+const ASN1_STRING *sig);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>siginf_set()</b> method is used to set custom
+<b>X509_SIG_INFO</b> parameters. It MUST return 0 on error,
+or 1 on success. It's called as part of
+<b>X509_check_purpose</b>(3), <b>X509_check_ca</b>(3) and
+<b>X509_check_issued</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">int
+(*pkey_check) (const EVP_PKEY *pk); <br/>
+int (*pkey_public_check) (const EVP_PKEY *pk); <br/>
+int (*pkey_param_check) (const EVP_PKEY *pk);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pkey_check()</b>, <b>pkey_public_check()</b> and
+<b>pkey_param_check()</b> methods are used to check the
+validity of <b>pk</b> for key−pair, public component
+and parameters, respectively. They MUST return 0 for an
+invalid key, or 1 for a valid key. They are called by
+<b>EVP_PKEY_check</b>(3), <b>EVP_PKEY_public_check</b>(3)
+and <b>EVP_PKEY_param_check</b>(3) respectively.</p>
+<p style="margin-left:9%; margin-top: 1em">int
+(*set_priv_key) (EVP_PKEY *pk, const unsigned char *priv,
+size_t len); <br/>
+int (*set_pub_key) (EVP_PKEY *pk, const unsigned char *pub,
+size_t len);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>set_priv_key()</b> and <b>set_pub_key()</b> methods are
+used to set the raw private and public key data for an
+EVP_PKEY. They MUST return 0 on error, or 1 on success. They
+are called by <b>EVP_PKEY_new_raw_private_key</b>(3), and
+<b>EVP_PKEY_new_raw_public_key</b>(3) respectively.</p>
+<p style="margin-left:9%; margin-top: 1em">size_t (*dirty)
+(const EVP_PKEY *pk); <br/>
+void *(*export_to) (const EVP_PKEY *pk, EVP_KEYMGMT
+*keymgmt);</p>
+<p style="margin-left:9%; margin-top: 1em"><b>dirty_cnt()</b>
+returns the internal key's dirty count. This can be used to
+synchronise different copies of the same keys.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>export_to()</b> method exports the key material from the
+given key to a provider, through the <b>EVP_KEYMGMT</b>(3)
+interface, if that provider supports importing key
+material.</p>
+<h3>Functions
+<a name="Functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_asn1_new()</b>
+creates and returns a new <b>EVP_PKEY_ASN1_METHOD</b>
+object, and associates the given <b>id</b>, <b>flags</b>,
+<b>pem_str</b> and <b>info</b>. <b>id</b> is a NID,
+<b>pem_str</b> is the PEM type string, <b>info</b> is a
+descriptive string. The following <b>flags</b> are
+supported:</p>
+<p style="margin-left:9%; margin-top: 1em">ASN1_PKEY_SIGPARAM_NULL</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>ASN1_PKEY_SIGPARAM_NULL</b> is set, then the signature
+algorithm parameters are given the type <b>V_ASN1_NULL</b>
+by default, otherwise they will be given the type
+<b>V_ASN1_UNDEF</b> (i.e. the parameter is omitted). See
+<b>X509_ALGOR_set0</b>(3) for more information.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_asn1_copy()</b>
+copies an <b>EVP_PKEY_ASN1_METHOD</b> object from <b>src</b>
+to <b>dst</b>. This function is not thread safe, it's
+recommended to only use this when initializing the
+application.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_asn1_free()</b>
+frees an existing <b>EVP_PKEY_ASN1_METHOD</b> pointed by
+<b>ameth</b>. If the argument is NULL, nothing is done.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_asn1_add0()</b>
+adds <b>ameth</b> to the user defined stack of methods
+unless another <b>EVP_PKEY_ASN1_METHOD</b> with the same NID
+is already there. This function is not thread safe, it's
+recommended to only use this when initializing the
+application.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_asn1_add_alias()</b>
+creates an alias with the NID <b>to</b> for the
+<b>EVP_PKEY_ASN1_METHOD</b> with NID <b>from</b> unless
+another <b>EVP_PKEY_ASN1_METHOD</b> with the same NID is
+already added. This function is not thread safe, it's
+recommended to only use this when initializing the
+application.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_asn1_set_public()</b>,
+<b>EVP_PKEY_asn1_set_private()</b>,
+<b>EVP_PKEY_asn1_set_param()</b>,
+<b>EVP_PKEY_asn1_set_free()</b>,
+<b>EVP_PKEY_asn1_set_ctrl()</b>,
+<b>EVP_PKEY_asn1_set_item()</b>,
+<b>EVP_PKEY_asn1_set_siginf()</b>,
+<b>EVP_PKEY_asn1_set_check()</b>,
+<b>EVP_PKEY_asn1_set_public_check()</b>,
+<b>EVP_PKEY_asn1_set_param_check()</b>,
+<b>EVP_PKEY_asn1_set_security_bits()</b>,
+<b>EVP_PKEY_asn1_set_set_priv_key()</b>,
+<b>EVP_PKEY_asn1_set_set_pub_key()</b>,
+<b>EVP_PKEY_asn1_set_get_priv_key()</b> and
+<b>EVP_PKEY_asn1_set_get_pub_key()</b> set the diverse
+methods of the given <b>EVP_PKEY_ASN1_METHOD</b> object.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_get0_asn1()</b>
+finds the <b>EVP_PKEY_ASN1_METHOD</b> associated with the
+key <b>pkey</b>.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_asn1_new()</b>
+returns NULL on error, or a pointer to an
+<b>EVP_PKEY_ASN1_METHOD</b> object otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_asn1_add0()</b>
+and <b>EVP_PKEY_asn1_add_alias()</b> return 0 on error, or 1
+on success.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_get0_asn1()</b>
+returns NULL on error, or a pointer to a constant
+<b>EVP_PKEY_ASN1_METHOD</b> object otherwise.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The signature of
+the <i>pub_decode</i> functional argument of
+<b>EVP_PKEY_asn1_set_public()</b> has changed in OpenSSL 3.0
+so its <i>pub</i> parameter is now constified.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2017−2024 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

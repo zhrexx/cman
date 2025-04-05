@@ -1,0 +1,358 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:23 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title></title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<hr/>
+<p><i>CRYPT</i>(3) Library Functions Manual
+<i>CRYPT</i>(3)</p>
+<p style="margin-top: 1em"><b>NAME</b></p>
+<p style="margin-left:9%;">crypt, crypt_r, crypt_rn,
+crypt_ra — passphrase hashing</p>
+<p style="margin-top: 1em"><b>LIBRARY</b></p>
+<p style="margin-left:9%;">Crypt Library (libcrypt,
+−lcrypt)</p>
+<p style="margin-top: 1em"><b>SYNOPSIS</b></p>
+<p style="margin-left:9%;"><b>#include
+&lt;crypt.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>char
+*</i></p>
+<p><b>crypt</b>(<i>const char *phrase</i>,
+<i>const char *setting</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>char
+*</i></p>
+<p><b>crypt_r</b>(<i>const char *phrase</i>,
+<i>const char *setting</i>,
+<i>struct crypt_data *data</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>char
+*</i></p>
+<p><b>crypt_rn</b>(<i>const char *phrase</i>,
+<i>const char *setting</i>,
+<i>struct crypt_data *data</i>,
+<i>int size</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>char
+*</i></p>
+<p><b>crypt_ra</b>(<i>const char *phrase</i>,
+<i>const char *setting</i>,
+<i>void **data</i>, <i>int *size</i>);</p>
+<p style="margin-top: 1em"><b>DESCRIPTION</b></p>
+<p style="margin-left:9%;">The <b>crypt</b>,
+<b>crypt_r</b>, <b>crypt_rn</b>, and <b>crypt_ra</b>
+functions irreversibly “hash” <i>phrase</i> for
+storage in the system password database (<i>shadow</i>(5))
+using a cryptographic “hashing method.” The
+result of this operation is called a “hashed
+passphrase” or just a “hash.” Hashing
+methods are described in <i>crypt</i>(5).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>setting</i>
+controls which hashing method to use, and also supplies
+various parameters to the chosen method, most importantly a
+random “salt” which ensures that no two stored
+hashes are the same, even if the <i>phrase</i> strings are
+the same.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>data</i>
+argument to <b>crypt_r</b> is a structure of type <i>struct
+crypt_data</i>. It has at least these fields:</p>
+<p style="margin-left:17%; margin-top: 1em">struct
+crypt_data { <br/>
+char output[CRYPT_OUTPUT_SIZE]; <br/>
+char setting[CRYPT_OUTPUT_SIZE]; <br/>
+char input[CRYPT_MAX_PASSPHRASE_SIZE]; <br/>
+char initialized; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">Upon a
+successful return from <b>crypt_r</b>, the hashed passphrase
+will be stored in <i>output</i>. Applications are
+encouraged, but not required, to use the <i>input</i> and
+<i>setting</i> fields to store the strings that they will
+pass as <i>input phrase</i> and <i>setting</i> to
+<b>crypt_r</b>. This will make it easier to erase all
+sensitive data after it is no longer needed.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>initialized</i> field must be set to zero before the
+first time a <i>struct crypt_data</i> object is first used
+in a call to <b>crypt_r</b>(). We recommend zeroing the
+entire object, not just <i>initialized</i> and not just the
+documented fields, before the first use. (Of course, do this
+before storing anything in <i>setting</i> and
+<i>input</i>.)</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>data</i>
+argument to <b>crypt_rn</b> should also point to a <i>struct
+crypt_data</i> object, and <i>size</i> should be the size of
+that object, cast to <i>int</i>. When used with
+<b>crypt_rn</b>, the entire <i>data</i> object (except for
+the <i>input</i> and <i>setting</i> fields) must be zeroed
+before its first use; this is not just a recommendation, as
+it is for <b>crypt_r</b>. Otherwise, the fields of the
+object have the same uses that they do for
+<b>crypt_r</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">On the first
+call to <b>crypt_ra</b>, <i>data</i> should be the address
+of a <i>void *</i> variable set to NULL, and <i>size</i>
+should be the address of an <i>int</i> variable set to zero.
+<b>crypt_ra</b> will allocate and initialize a <i>struct
+crypt_data</i> object, using <i>malloc</i>(3), and write its
+address and size into the variables pointed to by
+<i>data</i> and <i>size</i>. These can be reused in
+subsequent calls. After the application is done hashing
+passphrases, it should deallocate the <i>struct
+crypt_data</i> object using <i>free</i>(3).</p>
+<p style="margin-top: 1em"><b>RETURN VALUES</b></p>
+<p style="margin-left:9%;">Upon successful completion,
+<b>crypt</b>, <b>crypt_r</b>, <b>crypt_rn</b>, and
+<b>crypt_ra</b> return a pointer to a string which encodes
+both the hashed passphrase, and the settings that were used
+to encode it. This string is directly usable as
+<i>setting</i> in other calls to <b>crypt</b>,
+<b>crypt_r</b>, <b>crypt_rn</b>, and <b>crypt_ra</b>, and as
+<i>prefix</i> in calls to <b>crypt_gensalt</b>,
+<b>crypt_gensalt_rn</b>, and <b>crypt_gensalt_ra</b>. It
+will be entirely printable ASCII, and will not contain
+whitespace or the characters ‘<b>:</b>’,
+‘<b>;</b>’, ‘<b>*</b>’,
+‘<b>!</b>’, or ‘<b>\</b>’. See
+<i>crypt</i>(5) for more detail on the format of hashed
+passphrases.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>crypt</b>
+places its result in a static storage area, which will be
+overwritten by subsequent calls to <b>crypt</b>. It is not
+safe to call <b>crypt</b> from multiple threads
+simultaneously.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>crypt_r</b>,
+<b>crypt_rn</b>, and <b>crypt_ra</b> place their result in
+the <i>output</i> field of their <i>data</i> argument. It is
+safe to call them from multiple threads simultaneously, as
+long as a separate <i>data</i> object is used for each
+thread.</p>
+<p style="margin-left:9%; margin-top: 1em">Upon error,
+<b>crypt_r</b>, <b>crypt_rn</b>, and <b>crypt_ra</b> write
+an <i>invalid</i> hash to the <i>output</i> field of their
+<i>data</i> argument, and <b>crypt</b> writes an invalid
+hash to its static storage area. This string will be shorter
+than 13 characters, will begin with a
+‘<b>*</b>’, and will not compare equal to
+<i>setting</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Upon error,
+<b>crypt_rn</b> and <b>crypt_ra</b> return a null pointer.
+<b>crypt_r</b> and <b>crypt</b> may also return a null
+pointer, or they may return a pointer to the invalid hash,
+depending on how libcrypt was configured. (The option to
+return the invalid hash is for compatibility with old
+applications that assume that <b>crypt</b> cannot return a
+null pointer. See “PORTABILITY NOTES”
+below.)</p>
+<p style="margin-left:9%; margin-top: 1em">All four
+functions set <i>errno</i> when they fail. When the
+functions succeed, the value of <i>errno</i> is unspecified
+and must not be relied upon.</p>
+<p style="margin-top: 1em"><b>ERRORS</b> <br/>
+EINVAL</p>
+<p style="margin-left:33%; margin-top: 1em"><i>setting</i>
+is invalid, or requests a hashing method that is not
+supported.</p>
+<p style="margin-top: 1em">ERANGE</p>
+<p style="margin-left:33%; margin-top: 1em"><i>phrase</i>
+is too long (more than CRYPT_MAX_PASSPHRASE_SIZE characters;
+some hashing methods may have lower limits). <b><br/>
+crypt_rn</b> only: <i>size</i> is too small for the hashing
+method requested by <i>setting</i>.</p>
+<p style="margin-top: 1em">ENOMEM</p>
+<p style="margin-left:33%; margin-top: 1em">Failed to
+allocate internal scratch memory. <b><br/>
+crypt_ra</b> only: failed to allocate memory for
+<i>data</i>.</p>
+<p style="margin-top: 1em">ENOSYS or EOPNOTSUPP</p>
+<p style="margin-left:33%;">Hashing passphrases is not
+supported at all on this installation, or the hashing method
+requested by <i>setting</i> is not supported. These error
+codes are not used by this version of libcrypt, but may be
+encountered on other systems.</p>
+<p style="margin-top: 1em"><b>PORTABILITY NOTES</b></p>
+<p style="margin-left:9%;"><b>crypt</b> is included in
+POSIX, but <b>crypt_r</b>, <b>crypt_rn</b>, and
+<b>crypt_ra</b> are not part of any standard.</p>
+<p style="margin-left:9%; margin-top: 1em">POSIX permits
+<b>crypt</b> to use a single storage area for all callers,
+even in the presence of threads. This library uses
+per-thread storage areas, but portable code should avoid
+calling <b>crypt</b> from multiple threads
+simultaneously.</p>
+<p style="margin-left:9%; margin-top: 1em">POSIX does not
+specify any hashing methods, and does not require hashed
+passphrases to be portable between systems. In practice,
+hashed passphrases are portable as long as both systems
+support the hashing method that was used. However, the set
+of supported hashing methods varies considerably from system
+to system.</p>
+<p style="margin-left:9%; margin-top: 1em">The behavior of
+<b>crypt</b> on errors isn’t well standardized. Some
+implementations simply can’t fail (except by crashing
+the program), others return a null pointer or a fixed
+string. Most implementations don’t set <i>errno</i>,
+but some do. POSIX specifies returning a null pointer and
+setting <i>errno</i>, but it defines only one possible
+error, ENOSYS, in the case where <b>crypt</b> is not
+supported at all. Some older applications are not prepared
+to handle null pointers returned by <b>crypt</b>. The
+behavior described above for this implementation, setting
+<i>errno</i> and returning an invalid hash different from
+<i>setting</i>, is chosen to make these applications fail
+closed when an error occurs.</p>
+<p style="margin-left:9%; margin-top: 1em">Due to
+historical restrictions on the export of cryptographic
+software from the USA, <b>crypt</b> is an optional POSIX
+component. Applications should therefore be prepared for
+<b>crypt</b> not to be available, or to always fail (setting
+<i>errno</i> to ENOSYS) at runtime.</p>
+<p style="margin-left:9%; margin-top: 1em">POSIX specifies
+that <b>crypt</b> is declared in &lt;<i>unistd.h</i>&gt;,
+but only if the macro _XOPEN_CRYPT is defined and has a
+value greater than or equal to zero. Since libcrypt does not
+provide &lt;<i>unistd.h</i>&gt;, it declares <b>crypt</b>,
+<b>crypt_r</b>, <b>crypt_rn</b>, and <b>crypt_ra</b> in
+&lt;<i>crypt.h</i>&gt; instead.</p>
+<p style="margin-left:9%; margin-top: 1em">On a minority of
+systems (notably recent versions of Solaris), <b>crypt</b>
+uses a thread-specific static storage buffer, which makes it
+safe to call from multiple threads simultaneously, but does
+not prevent each call within a thread from overwriting the
+results of the previous one. If an application needs to call
+<b>crypt</b> from parallel threads independently, it is
+strongly advised to allocate thread-specific <i>struct
+crypt_data</i> objects from within that program itself, and
+to use these objects with one of the re-entrant interfaces
+provided through <b>crypt_r</b>, <b>crypt_rn</b>, or
+<b>crypt_ra</b>.</p>
+<p style="margin-top: 1em"><b>BUGS</b></p>
+<p style="margin-left:9%;">Some implementations of
+<b>crypt</b>, upon error, return an invalid hash that is
+stored in a read-only location or only initialized once,
+which means that it is only safe to erase the buffer pointed
+to by the <b>crypt</b> return value if an error did not
+occur.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>struct
+crypt_data</i> may be quite large (32kB in this
+implementation of libcrypt; over 128kB in some other
+implementations). This is large enough that it may be unwise
+to allocate it on the stack.</p>
+<p style="margin-left:9%; margin-top: 1em">Some recently
+designed hashing methods need even more scratch memory, but
+the <b>crypt_r</b> interface makes it impossible to change
+the size of <i>struct crypt_data</i> without breaking binary
+compatibility. The <b>crypt_rn</b> interface could
+accommodate larger allocations for specific hashing methods,
+but the caller of <b>crypt_rn</b> has no way of knowing how
+much memory to allocate. <b>crypt_ra</b> does the allocation
+itself, but can only make a single call to
+<i>malloc</i>(3).</p>
+<p style="margin-top: 1em"><b>ATTRIBUTES</b></p>
+<p style="margin-left:9%;">For an explanation of the terms
+used in this section, see <i>attributes</i>(7). <br/>
+* In this implementation. Do NOT rely on this to be portable
+behavior. See “PORTABILITY NOTES”.</p>
+<p style="margin-top: 1em"><b>HISTORY</b></p>
+<p style="margin-left:9%;">A rotor-based <b>crypt</b>
+function appeared in Version 6 AT&amp;T UNIX. The
+“traditional” DES-based <b>crypt</b> first
+appeared in Version 7 AT&amp;T UNIX.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>crypt_r</b>
+originates with the GNU C Library. There’s also a
+<b>crypt_r</b> function on HP-UX and MKS Toolkit, but the
+prototypes and semantics differ.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>crypt_rn</b>
+and <b>crypt_ra</b> originate with the Openwall project.</p>
+<p style="margin-top: 1em"><b>SEE ALSO</b></p>
+<p style="margin-left:9%;"><i>crypt_gensalt</i>(3),
+<i>getpass</i>(3), <i>getpwent</i>(3), <i>shadow</i>(3),
+<i>login</i>(1), <i>passwd</i>(1), <i>crypt</i>(5),
+<i>passwd</i>(5), <i>shadow</i>(5), <i>pam</i>(8) Openwall
+Project October 11, 2017 <i>CRYPT</i>(3)</p>
+<hr/>
+</body>
+</html>

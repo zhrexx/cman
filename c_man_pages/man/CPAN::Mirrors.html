@@ -1,0 +1,272 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:19 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CPAN::Mirrors</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CPAN::Mirrors</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CPAN::Mirrors
+− Get CPAN mirror information and select a fast
+one</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+CPAN::Mirrors; <br/>
+my $mirrors = CPAN::Mirrors−&gt;new( $mirrored_by_file
+); <br/>
+my $seen = {}; <br/>
+my $best_continent =
+$mirrors−&gt;find_best_continents( { seen =&gt; $seen
+} ); <br/>
+my @mirrors = $mirrors−&gt;get_mirrors_by_continents(
+$best_continent ); <br/>
+my $callback = sub { <br/>
+my( $m ) = @_; <br/>
+printf "%s = %s\n", $m−&gt;hostname,
+$m−&gt;rtt <br/>
+}; <br/>
+$mirrors−&gt;get_mirrors_timings( \@mirrors, $seen,
+$callback, %args ); <br/>
+@mirrors = sort { $a−&gt;rtt &lt;=&gt;
+$b−&gt;rtt } @mirrors; <br/>
+print "Best mirrors are ", map( { $_−&gt;rtt
+} @mirrors[0..3] ), "\n";</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">new(
+LOCAL_FILE_NAME )</p>
+<p style="margin-left:14%;">Create a new CPAN::Mirrors
+object from LOCAL_FILE_NAME. This file should look like that
+in http://www.cpan.org/MIRRORED.BY .</p>
+<p style="margin-left:9%;"><b>continents()</b></p>
+<p style="margin-left:14%;">Return a list of continents
+based on those defined in <i>MIRRORED.BY</i>.</p>
+<p style="margin-left:9%;">countries( [CONTINENTS] )</p>
+<p style="margin-left:14%;">Return a list of countries
+based on those defined in <i>MIRRORED.BY</i>. It only
+returns countries for the continents you specify (as defined
+in "continents"). If you don't specify any
+continents, it returns all of the countries listed in
+<i>MIRRORED.BY</i>.</p>
+<p style="margin-left:9%;">mirrors( [COUNTRIES] )</p>
+<p style="margin-left:14%;">Return a list of mirrors based
+on those defined in <i>MIRRORED.BY</i>. It only returns
+mirrors for the countries you specify (as defined in
+"countries"). If you don't specify any countries,
+it returns all of the mirrors listed in
+<i>MIRRORED.BY</i>.</p>
+<p style="margin-left:9%;">get_mirrors_by_countries(
+[COUNTRIES] )</p>
+<p style="margin-left:14%;">A more sensible synonym for
+mirrors.</p>
+<p style="margin-left:9%;">get_mirrors_by_continents(
+[CONTINENTS] )</p>
+<p style="margin-left:14%;">Return a list of mirrors for
+all of continents you specify. If you don't specify any
+continents, it returns all of the mirrors.</p>
+<p style="margin-left:14%; margin-top: 1em">You can specify
+a single continent or an array reference of continents.</p>
+<p style="margin-left:9%;">get_countries_by_continents(
+[CONTINENTS] )</p>
+<p style="margin-left:14%;">A more sensible synonym for
+countries.</p>
+<p style="margin-left:9%;">default_mirror</p>
+<p style="margin-left:14%;">Returns the default mirror,
+http://www.cpan.org/ . This mirror uses dynamic DNS to give
+a close mirror.</p>
+<p style="margin-left:9%;">best_mirrors</p>
+<p style="margin-left:14%;">"best_mirrors" checks
+for the best mirrors based on the list of continents you
+pass, or, without that, all continents, as defined by
+"CPAN::Mirrored::By". It pings each mirror, up to
+the value of "how_many". In list context, it
+returns up to "how_many" mirrors. In scalar
+context, it returns the single best mirror.</p>
+<p style="margin-left:14%; margin-top: 1em">Arguments</p>
+<p style="margin-left:14%; margin-top: 1em">how_many
+− the number of mirrors to return. Default: 1 <br/>
+callback − a callback for find_best_continents <br/>
+verbose − true or false on all the whining and
+moaning. Default: false <br/>
+continents − an array ref of the continents to check
+<br/>
+external_ping − if true, use external ping via
+Net::Ping::External. Default: false</p>
+<p style="margin-left:14%; margin-top: 1em">If you don't
+specify the continents, "best_mirrors" calls
+"find_best_continents" to get the list of
+continents to check.</p>
+<p style="margin-left:14%; margin-top: 1em">If you don't
+have Net::Ping v2.13 or later, needed for timings, this
+returns the default mirror.</p>
+<p style="margin-left:14%; margin-top: 1em">"external_ping"
+should be set and then "Net::Ping::External" needs
+to be installed, if the local network has a transparent
+proxy.</p>
+<p style="margin-left:9%;">get_n_random_mirrors_by_continents(
+N, [CONTINENTS] )</p>
+<p style="margin-left:14%;">Returns up to N random mirrors
+for the specified continents. Specify the continents as an
+array reference.</p>
+<p style="margin-left:9%;">get_mirrors_timings(
+MIRROR_LIST, SEEN, CALLBACK, %ARGS );</p>
+<p style="margin-left:14%;">Pings the listed mirrors and
+returns a list of mirrors sorted in ascending ping
+times.</p>
+<p style="margin-left:14%; margin-top: 1em">"MIRROR_LIST"
+is an anonymous array of "CPAN::Mirrored::By"
+objects to ping.</p>
+<p style="margin-left:14%; margin-top: 1em">The optional
+argument "SEEN" is a hash reference used to track
+the mirrors you've already pinged.</p>
+<p style="margin-left:14%; margin-top: 1em">The optional
+argument "CALLBACK" is a subroutine reference to
+call after each ping. It gets the
+"CPAN::Mirrored::By" object after each ping.</p>
+<p style="margin-left:9%;">find_best_continents( HASH_REF
+);</p>
+<p style="margin-left:14%;">"find_best_continents"
+goes through each continent and pings "N" random
+mirrors on that continent. It then orders the continents by
+ascending median ping time. In list context, it returns the
+ordered list of continent. In scalar context, it returns the
+same list as an anonymous array.</p>
+<p style="margin-left:14%; margin-top: 1em">Arguments:</p>
+<p style="margin-left:14%; margin-top: 1em">n − the
+number of hosts to ping for each continent. Default: 3 <br/>
+seen − a hashref of cached hostname ping times <br/>
+verbose − true or false for noisy or quiet. Default:
+false <br/>
+callback − a subroutine to run after each ping. <br/>
+ping_cache_limit − how long, in seconds, to reuse
+previous ping times. <br/>
+Default: 1 day</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"seen" hash has hostnames as keys and anonymous
+arrays as values. The anonymous array is a triplet of a
+"CPAN::Mirrored::By" object, a ping time, and the
+epoch time for the measurement.</p>
+<p style="margin-left:14%; margin-top: 1em">The callback
+subroutine gets the "CPAN::Mirrored::By" object,
+the ping time, and measurement time (the same things in the
+"seen" hashref) as arguments.
+"find_best_continents" doesn't care what the
+callback does and ignores the return value.</p>
+<p style="margin-left:14%; margin-top: 1em">With a low
+value for "N", a single mirror might skew the
+results enough to choose a worse continent. If you have that
+problem, try a larger value.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Andreas Koenig
+"&lt;andk@cpan.org&gt;", David Golden
+"&lt;dagolden@cpan.org&gt;", brian d foy
+"&lt;bdfoy@cpan.org&gt;"</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;http://www.perl.com/perl/misc/Artistic.html&gt;</p>
+<hr/>
+</body>
+</html>

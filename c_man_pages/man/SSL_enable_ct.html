@@ -1,0 +1,268 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:23 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SET_CT_VALIDATION_CALLBACK</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SET_CT_VALIDATION_CALLBACK</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RESTRICTIONS">RESTRICTIONS</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">ssl_ct_validation_cb,
+SSL_enable_ct, SSL_CTX_enable_ct, SSL_disable_ct,
+SSL_CTX_disable_ct, SSL_set_ct_validation_callback,
+SSL_CTX_set_ct_validation_callback, SSL_ct_is_enabled,
+SSL_CTX_ct_is_enabled − control Certificate
+Transparency policy</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+typedef int (*ssl_ct_validation_cb)(const CT_POLICY_EVAL_CTX
+*ctx, <br/>
+const STACK_OF(SCT) *scts, void *arg); <br/>
+int SSL_enable_ct(SSL *s, int validation_mode); <br/>
+int SSL_CTX_enable_ct(SSL_CTX *ctx, int validation_mode);
+<br/>
+int SSL_set_ct_validation_callback(SSL *s,
+ssl_ct_validation_cb callback, <br/>
+void *arg); <br/>
+int SSL_CTX_set_ct_validation_callback(SSL_CTX *ctx, <br/>
+ssl_ct_validation_cb callback, <br/>
+void *arg); <br/>
+void SSL_disable_ct(SSL *s); <br/>
+void SSL_CTX_disable_ct(SSL_CTX *ctx); <br/>
+int SSL_ct_is_enabled(const SSL *s); <br/>
+int SSL_CTX_ct_is_enabled(const SSL_CTX *ctx);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_enable_ct()</b>
+and <b>SSL_CTX_enable_ct()</b> enable the processing of
+signed certificate timestamps (SCTs) either for a given SSL
+connection or for all connections that share the given SSL
+context, respectively. This is accomplished by setting a
+built−in CT validation callback. The behaviour of the
+callback is determined by the <b>validation_mode</b>
+argument, which can be either of
+<b>SSL_CT_VALIDATION_PERMISSIVE</b> or
+<b>SSL_CT_VALIDATION_STRICT</b> as described below.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>validation_mode</b> is equal to
+<b>SSL_CT_VALIDATION_STRICT</b>, then in a full TLS
+handshake with the verification mode set to
+<b>SSL_VERIFY_PEER</b>, if the peer presents no valid SCTs
+the handshake will be aborted. If the verification mode is
+<b>SSL_VERIFY_NONE</b>, the handshake will continue despite
+lack of valid SCTs. However, in that case if the
+verification status before the built−in callback was
+<b>X509_V_OK</b> it will be set to
+<b>X509_V_ERR_NO_VALID_SCTS</b> after the callback.
+Applications can call <b>SSL_get_verify_result</b>(3) to
+check the status at handshake completion, even after session
+resumption since the verification status is part of the
+saved session state. See <b>SSL_set_verify</b>(3),
+&lt;<b>SSL_get_verify_result</b>(3)&gt;,
+<b>SSL_session_reused</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>validation_mode</b> is equal to
+<b>SSL_CT_VALIDATION_PERMISSIVE</b>, then the handshake
+continues, and the verification status is not modified,
+regardless of the validation status of any SCTs. The
+application can still inspect the validation status of the
+SCTs at handshake completion. Note that with session
+resumption there will not be any SCTs presented during the
+handshake. Therefore, in applications that delay SCT policy
+enforcement until after handshake completion, such delayed
+SCT checks should only be performed when the session is not
+resumed.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_ct_validation_callback()</b>
+and <b>SSL_CTX_set_ct_validation_callback()</b> register a
+custom callback that may implement a different policy than
+either of the above. This callback can examine the peer's
+SCTs and determine whether they are sufficient to allow the
+connection to continue. The TLS handshake is aborted if the
+verification mode is not <b>SSL_VERIFY_NONE</b> and the
+callback returns a non−positive result.</p>
+<p style="margin-left:9%; margin-top: 1em">An arbitrary
+callback data argument, <b>arg</b>, can be passed in when
+setting the callback. This will be passed to the callback
+whenever it is invoked. Ownership of this context remains
+with the caller.</p>
+<p style="margin-left:9%; margin-top: 1em">If no callback
+is set, SCTs will not be requested and Certificate
+Transparency validation will not occur.</p>
+<p style="margin-left:9%; margin-top: 1em">No callback will
+be invoked when the peer presents no certificate, e.g. by
+employing an anonymous (aNULL) cipher suite. In that case
+the handshake continues as it would had no callback been
+requested. Callbacks are also not invoked when the peer
+certificate chain is invalid or validated via
+<b>DANE−TA</b>(2) or <b>DANE−EE</b>(3) TLSA
+records which use a private X.509 PKI, or no X.509 PKI at
+all, respectively. Clients that require SCTs are expected to
+not have enabled any aNULL ciphers nor to have specified
+server verification via <b>DANE−TA</b>(2) or
+<b>DANE−EE</b>(3) TLSA records.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_disable_ct()</b>
+and <b>SSL_CTX_disable_ct()</b> turn off CT processing,
+whether enabled via the built−in or the custom
+callbacks, by setting a NULL callback. These may be
+implemented as macros.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_ct_is_enabled()</b>
+and <b>SSL_CTX_ct_is_enabled()</b> return 1 if CT processing
+is enabled via either <b>SSL_enable_ct()</b> or a
+non−null custom callback, and 0 otherwise.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">When SCT
+processing is enabled, OCSP stapling will be enabled. This
+is because one possible source of SCTs is the OCSP response
+from a server.</p>
+<p style="margin-left:9%; margin-top: 1em">The time
+returned by <b>SSL_SESSION_get_time()</b> will be used to
+evaluate whether any presented SCTs have timestamps that are
+in the future (and therefore invalid).</p>
+<h2>RESTRICTIONS
+<a name="RESTRICTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Certificate
+Transparency validation cannot be enabled and so a callback
+cannot be set if a custom client extension handler has been
+registered to handle SCT extensions
+(<b>TLSEXT_TYPE_signed_certificate_timestamp</b>).</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_enable_ct()</b>,
+<b>SSL_CTX_enable_ct()</b>,
+<b>SSL_CTX_set_ct_validation_callback()</b> and
+<b>SSL_set_ct_validation_callback()</b> return 1 if the
+<b>callback</b> is successfully set. They return 0 if an
+error occurs, e.g. a custom client extension handler has
+been setup to handle SCTs.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_disable_ct()</b>
+and <b>SSL_CTX_disable_ct()</b> do not return a result.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_ct_is_enabled()</b>
+and <b>SSL_ct_is_enabled()</b> return a 1 if a
+non−null CT validation callback is set, or 0 if no
+callback (or equivalently a NULL callback) is set.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+&lt;<b>SSL_get_verify_result</b>(3)&gt;,
+<b>SSL_session_reused</b>(3), <b>SSL_set_verify</b>(3),
+<b>SSL_CTX_set_verify</b>(3),
+<b>SSL_SESSION_get_time</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2016−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

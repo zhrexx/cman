@@ -1,0 +1,332 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:33 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>backtrace</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">backtrace</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Program source">Program source</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">backtrace,
+backtrace_symbols, backtrace_symbols_fd − support for
+application self-debugging</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;execinfo.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+backtrace(void *</b><i>buffer</i><b>[.</b><i>size</i><b>],
+int</b> <i>size</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>char
+**backtrace_symbols(void *const</b>
+<i>buffer</i><b>[.</b><i>size</i><b>], int</b>
+<i>size</i><b>); <br/>
+void backtrace_symbols_fd(void *const</b>
+<i>buffer</i><b>[.</b><i>size</i><b>], int</b>
+<i>size</i><b>, int</b> <i>fd</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>backtrace</b>()
+returns a backtrace for the calling program, in the array
+pointed to by <i>buffer</i>. A backtrace is the series of
+currently active function calls for the program. Each item
+in the array pointed to by <i>buffer</i> is of type
+<i>void *</i>, and is the return address from the
+corresponding stack frame. The <i>size</i> argument
+specifies the maximum number of addresses that can be stored
+in <i>buffer</i>. If the backtrace is larger than
+<i>size</i>, then the addresses corresponding to the
+<i>size</i> most recent function calls are returned; to
+obtain the complete backtrace, make sure that <i>buffer</i>
+and <i>size</i> are large enough.</p>
+<p style="margin-left:9%; margin-top: 1em">Given the set of
+addresses returned by <b>backtrace</b>() in <i>buffer</i>,
+<b>backtrace_symbols</b>() translates the addresses into an
+array of strings that describe the addresses symbolically.
+The <i>size</i> argument specifies the number of addresses
+in <i>buffer</i>. The symbolic representation of each
+address consists of the function name (if this can be
+determined), a hexadecimal offset into the function, and the
+actual return address (in hexadecimal). The address of the
+array of string pointers is returned as the function result
+of <b>backtrace_symbols</b>(). This array is
+<b>malloc</b>(3)ed by <b>backtrace_symbols</b>(), and must
+be freed by the caller. (The strings pointed to by the array
+of pointers need not and should not be freed.)</p>
+<p style="margin-left:9%; margin-top: 1em"><b>backtrace_symbols_fd</b>()
+takes the same <i>buffer</i> and <i>size</i> arguments as
+<b>backtrace_symbols</b>(), but instead of returning an
+array of strings to the caller, it writes the strings, one
+per line, to the file descriptor <i>fd</i>.
+<b>backtrace_symbols_fd</b>() does not call
+<b>malloc</b>(3), and so can be employed in situations where
+the latter function might fail, but see NOTES.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>backtrace</b>()
+returns the number of addresses returned in <i>buffer</i>,
+which is not greater than <i>size</i>. If the return value
+is less than <i>size</i>, then the full backtrace was
+stored; if it is equal to <i>size</i>, then it may have been
+truncated, in which case the addresses of the oldest stack
+frames are not returned.</p>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>backtrace_symbols</b>() returns a pointer to the array
+<b>malloc</b>(3)ed by the call; on error, NULL is
+returned.</p>
+<h2>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For an
+explanation of the terms used in this section, see
+<b>attributes</b>(7).</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">GNU.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">glibc 2.1.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+make some assumptions about how a function’s return
+address is stored on the stack. Note the following:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p>Omission of the frame pointers (as implied by any of
+<b>gcc</b>(1)’s nonzero optimization levels) may cause
+these assumptions to be violated.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p>Inlined functions do not have stack frames.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p>Tail-call optimization causes one stack frame to replace
+another.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p><b>backtrace</b>() and <b>backtrace_symbols_fd</b>()
+don’t call <b>malloc</b>() explicitly, but they are
+part of <i>libgcc</i>, which gets loaded dynamically when
+first used. Dynamic loading usually triggers a call to
+<b>malloc</b>(3). If you need certain calls to these two
+functions to not allocate memory (in signal handlers, for
+example), you need to make sure <i>libgcc</i> is loaded
+beforehand.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The symbol names
+may be unavailable without the use of special linker
+options. For systems using the GNU linker, it is necessary
+to use the <i>−rdynamic</i> linker option. Note that
+names of "static" functions are not exposed, and
+won’t be available in the backtrace.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The program
+below demonstrates the use of <b>backtrace</b>() and
+<b>backtrace_symbols</b>(). The following shell session
+shows what we might see when running the program:</p>
+<p style="margin-left:14%; margin-top: 1em">$ <b>cc
+−rdynamic prog.c −o prog</b> <br/>
+$ <b>./prog 3</b> <br/>
+backtrace() returned 8 addresses <br/>
+./prog(myfunc3+0x5c) [0x80487f0] <br/>
+./prog [0x8048871] <br/>
+./prog(myfunc+0x21) [0x8048894] <br/>
+./prog(myfunc+0x1a) [0x804888d] <br/>
+./prog(myfunc+0x1a) [0x804888d] <br/>
+./prog(main+0x65) [0x80488fb] <br/>
+/lib/libc.so.6(__libc_start_main+0xdc) [0xb7e38f9c] <br/>
+./prog [0x8048711]</p>
+<h3>Program source
+<a name="Program source"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;execinfo.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;unistd.h&gt; <br/>
+#define BT_BUF_SIZE 100 <br/>
+void <br/>
+myfunc3(void) <br/>
+{ <br/>
+int nptrs; <br/>
+void *buffer[BT_BUF_SIZE]; <br/>
+char **strings; <br/>
+nptrs = backtrace(buffer, BT_BUF_SIZE); <br/>
+printf("backtrace() returned %d addresses\n",
+nptrs); <br/>
+/* The call backtrace_symbols_fd(buffer, nptrs,
+STDOUT_FILENO) <br/>
+would produce similar output to the following: */ <br/>
+strings = backtrace_symbols(buffer, nptrs); <br/>
+if (strings == NULL) { <br/>
+perror("backtrace_symbols"); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+for (size_t j = 0; j &lt; nptrs; j++) <br/>
+printf("%s\n", strings[j]); <br/>
+free(strings); <br/>
+} <br/>
+static void /* "static" means don't export the
+symbol... */ <br/>
+myfunc2(void) <br/>
+{ <br/>
+myfunc3(); <br/>
+} <br/>
+void <br/>
+myfunc(int ncalls) <br/>
+{ <br/>
+if (ncalls &gt; 1) <br/>
+myfunc(ncalls − 1); <br/>
+else <br/>
+myfunc2(); <br/>
+} <br/>
+int <br/>
+main(int argc, char *argv[]) <br/>
+{ <br/>
+if (argc != 2) { <br/>
+fprintf(stderr, "%s num−calls\n", argv[0]);
+<br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+myfunc(atoi(argv[1])); <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>addr2line</b>(1),
+<b>gcc</b>(1), <b>gdb</b>(1), <b>ld</b>(1),
+<b>dlopen</b>(3), <b>malloc</b>(3)</p>
+<hr/>
+</body>
+</html>

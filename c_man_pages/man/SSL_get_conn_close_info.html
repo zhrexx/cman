@@ -1,0 +1,214 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:25 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_GET_CONN_CLOSE_INFO</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_GET_CONN_CLOSE_INFO</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_get_conn_close_info,
+SSL_CONN_CLOSE_FLAG_LOCAL, SSL_CONN_CLOSE_FLAG_TRANSPORT
+− get information about why a QUIC connection was
+closed</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+#define SSL_CONN_CLOSE_FLAG_LOCAL <br/>
+#define SSL_CONN_CLOSE_FLAG_TRANSPORT <br/>
+typedef struct ssl_conn_close_info_st { <br/>
+uint64_t error_code, frame_type; <br/>
+char *reason; <br/>
+size_t reason_len; <br/>
+uint32_t flags; <br/>
+} SSL_CONN_CLOSE_INFO; <br/>
+int SSL_get_conn_close_info(SSL *ssl, SSL_CONN_CLOSE_INFO
+*info, <br/>
+size_t info_len);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_get_conn_close_info()</b> function provides
+information about why and how a QUIC connection was
+closed.</p>
+<p style="margin-left:9%; margin-top: 1em">Connection
+closure information is written to <i>*info</i>, which must
+be non−NULL. <i>info_len</i> must be set to
+sizeof(*info).</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+fields are set: <i><br/>
+error_code</i></p>
+<p style="margin-left:14%;">This is a 62−bit QUIC
+error code. It is either a 62−bit application error
+code (if <b>SSL_CONN_CLOSE_FLAG_TRANSPORT</b> not set in
+<i>flags</i>) or a 62−bit standard QUIC transport
+error code (if <b>SSL_CONN_CLOSE_FLAG_TRANSPORT</b> is set
+in <i>flags</i>).</p>
+<p style="margin-left:9%;"><i>frame_type</i></p>
+<p style="margin-left:14%;">If
+<b>SSL_CONN_CLOSE_FLAG_TRANSPORT</b> is set, this may be set
+to a QUIC frame type number which caused the connection to
+be closed. It may also be set to 0 if no frame type was
+specified as causing the connection to be closed. If
+<b>SSL_CONN_CLOSE_FLAG_TRANSPORT</b> is not set, this is set
+to 0.</p>
+<p style="margin-left:9%;"><i>reason</i></p>
+<p style="margin-left:14%;">If non−NULL, this is
+intended to be a UTF−8 textual string briefly
+describing the reason for connection closure. The length of
+the reason string in bytes is given in <i>reason_len</i>.
+While, if non−NULL, OpenSSL guarantees that this
+string will be zero terminated, consider that this buffer
+may originate from the (untrusted) peer and thus may also
+contain zero bytes elsewhere. Therefore, use of
+<i>reason_len</i> is recommended.</p>
+<p style="margin-left:14%; margin-top: 1em">While it is
+intended as per the QUIC protocol that this be a UTF−8
+string, there is no guarantee that this is the case for
+strings received from the peer.</p>
+<p style="margin-left:9%;"><b>SSL_CONN_CLOSE_FLAG_LOCAL</b></p>
+<p style="margin-left:14%;">If <i>flags</i> has
+<b>SSL_CONN_CLOSE_FLAG_LOCAL</b> set, connection closure was
+locally triggered. This could be due to an application
+request (e.g. if <b>SSL_CONN_CLOSE_FLAG_TRANSPORT</b> is
+unset), or (if <i>SSL_CONN_CLOSE_FLAG_TRANSPORT</i> is set)
+due to logic internal to the QUIC implementation (for
+example, if the peer engages in a protocol violation, or an
+idle timeout occurs).</p>
+<p style="margin-left:14%; margin-top: 1em">If unset,
+connection closure was remotely triggered.</p>
+<p style="margin-left:9%;"><b>SSL_CONN_CLOSE_FLAG_TRANSPORT</b></p>
+<p style="margin-left:14%;">If <i>flags</i> has
+<b>SSL_CONN_CLOSE_FLAG_TRANSPORT</b> set, connection closure
+was triggered for QUIC protocol reasons. Otherwise,
+connection closure was triggered by the local or remote
+application.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_conn_close_info()</b>
+returns 1 on success and 0 on failure. This function fails
+if called on a QUIC connection SSL object which has not yet
+been terminated. It also fails if called on a QUIC stream
+SSL object or a non−QUIC SSL object.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_shutdown_ex</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function
+was added in OpenSSL 3.2.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2002−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

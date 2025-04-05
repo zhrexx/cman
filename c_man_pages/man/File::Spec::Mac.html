@@ -1,0 +1,536 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:15 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>File::Spec::Mac</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">File::Spec::Mac</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::Spec::Mac
+− File::Spec for Mac OS (Classic)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">require
+File::Spec::Mac; # Done internally by File::Spec if
+needed</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Methods for
+manipulating file specifications.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">canonpath</p>
+<p style="margin-left:12%;">On Mac OS, there's nothing to
+be done. Returns what it's given.</p>
+<p style="margin-left:9%;"><b>catdir()</b></p>
+<p style="margin-left:12%;">Concatenate two or more
+directory names to form a path separated by colons
+(":") ending with a directory. Resulting paths are
+<b>relative</b> by default, but can be forced to be absolute
+(but avoid this, see below). Automatically puts a trailing
+":" on the end of the complete path, because
+that's what's done in MacPerl's environment and helps to
+distinguish a file path from a directory path.</p>
+<p style="margin-left:12%; margin-top: 1em"><b>IMPORTANT
+NOTE:</b> Beginning with version 1.3 of this module, the
+resulting path is relative by default and <i>not</i>
+absolute. This decision was made due to portability reasons.
+Since "File::Spec−&gt;catdir()" returns
+relative paths on all other operating systems, it will now
+also follow this convention on Mac OS. Note that this may
+break some existing scripts.</p>
+<p style="margin-left:12%; margin-top: 1em">The intended
+purpose of this routine is to concatenate <i>directory
+names</i>. But because of the nature of Macintosh paths,
+some additional possibilities are allowed to make using this
+routine give reasonable results for some common situations.
+In other words, you are also allowed to concatenate
+<i>paths</i> instead of directory names (strictly speaking,
+a string like ":a" is a path, but not a name,
+since it contains a punctuation character
+":").</p>
+<p style="margin-left:12%; margin-top: 1em">So, beside
+calls like</p>
+<p style="margin-left:12%; margin-top: 1em">catdir("a")
+= ":a:" <br/>
+catdir("a","b") = ":a:b:" <br/>
+catdir() = "" (special case)</p>
+<p style="margin-left:12%; margin-top: 1em">calls like the
+following</p>
+<p style="margin-left:12%; margin-top: 1em">catdir(":a:")
+= ":a:" <br/>
+catdir(":a","b") = ":a:b:"
+<br/>
+catdir(":a:","b") = ":a:b:"
+<br/>
+catdir(":a:",":b:") = ":a:b:"
+<br/>
+catdir(":") = ":"</p>
+<p style="margin-left:12%; margin-top: 1em">are
+allowed.</p>
+<p style="margin-left:12%; margin-top: 1em">Here are the
+rules that are used in catdir(); note that we try to be as
+compatible as possible to Unix: <br/>
+1.</p>
+<p style="margin-left:14%;">The resulting path is relative
+by default, i.e. the resulting path will have a leading
+colon.</p>
+<p style="margin-left:12%;">2.</p>
+<p style="margin-left:14%;">A trailing colon is added
+automatically to the resulting path, to denote a
+directory.</p>
+<p style="margin-left:12%;">3.</p>
+<p style="margin-left:14%;">Generally, each argument has
+one leading ":" and one trailing ":"
+removed (if any). They are then joined together by a
+":". Special treatment applies for arguments
+denoting updir paths like "::lib:", see (4), or
+arguments consisting solely of colons ("colon
+paths"), see (5).</p>
+<p style="margin-left:12%;">4.</p>
+<p style="margin-left:14%;">When an updir path like
+":::lib::" is passed as argument, the number of
+directories to climb up is handled correctly, not removing
+leading or trailing colons when necessary. E.g.</p>
+<p style="margin-left:14%; margin-top: 1em">catdir(":::a","::b","c")
+= ":::a::b:c:" <br/>
+catdir(":::a::","::b","c") =
+":::a:::b:c:"</p>
+<p style="margin-left:12%;">5.</p>
+<p style="margin-left:14%;">Adding a colon ":" or
+empty string "" to a path at <i>any</i> position
+doesn't alter the path, i.e. these arguments are ignored.
+(When a "" is passed as the first argument, it has
+a special meaning, see (6)). This way, a colon ":"
+is handled like a "." (curdir) on Unix, while an
+empty string "" is generally ignored (see
+"<b>canonpath()</b>" in File::Spec::Unix ).
+Likewise, a "::" is handled like a ".."
+(updir), and a ":::" is handled like a
+"../.." etc. E.g.</p>
+<p style="margin-left:14%; margin-top: 1em">catdir("a",":",":","b")
+= ":a:b:" <br/>
+
+catdir("a",":","::",":b")
+= ":a::b:"</p>
+<p style="margin-left:12%;">6.</p>
+<p style="margin-left:14%;">If the first argument is an
+empty string "" or is a volume name, i.e. matches
+the pattern /ˆ[ˆ:]+:/, the resulting path is
+<b>absolute</b>.</p>
+<p style="margin-left:12%;">7.</p>
+<p style="margin-left:14%;">Passing an empty string
+"" as the first argument to catdir() is like
+passing"File::Spec−&gt;rootdir()" as the
+first argument, i.e.</p>
+<p style="margin-left:14%; margin-top: 1em">catdir("","a","b")
+is the same as <br/>
+catdir(rootdir(),"a","b").</p>
+<p style="margin-left:14%; margin-top: 1em">This is true on
+Unix, where
+"catdir("","a","b")"
+yields "/a/b" and rootdir() is "/". Note
+that rootdir() on Mac OS is the startup volume, which is the
+closest in concept to Unix' "/". This should help
+to run existing scripts originally written for Unix.</p>
+<p style="margin-left:12%;">8.</p>
+<p style="margin-left:14%;">For absolute paths, some
+cleanup is done, to ensure that the volume name isn't
+immediately followed by updirs. This is invalid, because
+this would go beyond "root". Generally, these
+cases are handled like their Unix counterparts:</p>
+<p style="margin-left:14%; margin-top: 1em">Unix: <br/>
+Unix−&gt;catdir("","") =
+"/" <br/>
+Unix−&gt;catdir("",".") =
+"/" <br/>
+Unix−&gt;catdir("","..") =
+"/" # can't go <br/>
+# beyond root <br/>
+
+Unix−&gt;catdir("",".","..","..","a")
+= "/a" <br/>
+Mac: <br/>
+Mac−&gt;catdir("","") = rootdir()
+# (e.g. "HD:") <br/>
+Mac−&gt;catdir("",":") = rootdir()
+<br/>
+Mac−&gt;catdir("","::") =
+rootdir() # can't go <br/>
+# beyond root <br/>
+
+Mac−&gt;catdir("",":","::","::","a")
+= rootdir() . "a:" <br/>
+# (e.g. "HD:a:")</p>
+<p style="margin-left:14%; margin-top: 1em">However, this
+approach is limited to the first arguments following
+"root" (again, see "<b>canonpath()</b>"
+in File::Spec::Unix. If there are more arguments that move
+up the directory tree, an invalid path going beyond root can
+be created.</p>
+<p style="margin-left:12%; margin-top: 1em">As you've seen,
+you can force catdir() to create an absolute path by passing
+either an empty string or a path that begins with a volume
+name as the first argument. However, you are strongly
+encouraged not to do so, since this is done only for
+backward compatibility. Newer versions of File::Spec come
+with a method called catpath() (see below), that is designed
+to offer a portable solution for the creation of absolute
+paths. It takes volume, directory and file portions and
+returns an entire path. While catdir() is still suitable for
+the concatenation of <i>directory names</i>, you are
+encouraged to use catpath() to concatenate <i>volume
+names</i> and <i>directory paths</i>. E.g.</p>
+<p style="margin-left:12%; margin-top: 1em">$dir =
+File::Spec−&gt;catdir("tmp","sources");
+<br/>
+$abs_path =
+File::Spec−&gt;catpath("MacintoshHD:",
+$dir,"");</p>
+<p style="margin-left:12%; margin-top: 1em">yields</p>
+<p style="margin-left:12%; margin-top: 1em">"MacintoshHD:tmp:sources:"
+.</p>
+<p style="margin-left:9%;">catfile</p>
+<p style="margin-left:12%;">Concatenate one or more
+directory names and a filename to form a complete path
+ending with a filename. Resulting paths are <b>relative</b>
+by default, but can be forced to be absolute (but avoid
+this).</p>
+<p style="margin-left:12%; margin-top: 1em"><b>IMPORTANT
+NOTE:</b> Beginning with version 1.3 of this module, the
+resulting path is relative by default and <i>not</i>
+absolute. This decision was made due to portability reasons.
+Since "File::Spec−&gt;catfile()" returns
+relative paths on all other operating systems, it will now
+also follow this convention on Mac OS. Note that this may
+break some existing scripts.</p>
+<p style="margin-left:12%; margin-top: 1em">The last
+argument is always considered to be the file portion. Since
+catfile() uses catdir() (see above) for the concatenation of
+the directory portions (if any), the following with regard
+to relative and absolute paths is true:</p>
+<p style="margin-left:12%; margin-top: 1em">catfile("")
+= "" <br/>
+catfile("file") = "file"</p>
+<p style="margin-left:12%; margin-top: 1em">but</p>
+<p style="margin-left:12%; margin-top: 1em">catfile("","")
+= rootdir() # (e.g. "HD:") <br/>
+catfile("","file") = rootdir() . file #
+(e.g. "HD:file") <br/>
+catfile("HD:","file") =
+"HD:file"</p>
+<p style="margin-left:12%; margin-top: 1em">This means that
+catdir() is called only when there are two or more
+arguments, as one might expect.</p>
+<p style="margin-left:12%; margin-top: 1em">Note that the
+leading ":" is removed from the filename, so
+that</p>
+<p style="margin-left:12%; margin-top: 1em">catfile("a","b","file")
+= ":a:b:file" and <br/>
+catfile("a","b",":file") =
+":a:b:file"</p>
+<p style="margin-left:12%; margin-top: 1em">give the same
+answer.</p>
+<p style="margin-left:12%; margin-top: 1em">To concatenate
+<i>volume names</i>, <i>directory paths</i> and
+<i>filenames</i>, you are encouraged to use catpath() (see
+below).</p>
+<p style="margin-left:9%;">curdir</p>
+<p style="margin-left:12%;">Returns a string representing
+the current directory. On Mac OS, this is ":".</p>
+<p style="margin-left:9%;">devnull</p>
+<p style="margin-left:12%;">Returns a string representing
+the null device. On Mac OS, this is
+"Dev:Null".</p>
+<p style="margin-left:9%;">rootdir</p>
+<p style="margin-left:12%;">Returns the empty string. Mac
+OS has no real root directory.</p>
+<p style="margin-left:9%;">tmpdir</p>
+<p style="margin-left:12%;">Returns the contents of
+$ENV{TMPDIR}, if that directory exits or the current working
+directory otherwise. Under MacPerl, $ENV{TMPDIR} will
+contain a path like "MacintoshHD:Temporary
+Items:", which is a hidden directory on your startup
+volume.</p>
+<p style="margin-left:9%;">updir</p>
+<p style="margin-left:12%;">Returns a string representing
+the parent directory. On Mac OS, this is "::".</p>
+<p style="margin-left:9%;">file_name_is_absolute</p>
+<p style="margin-left:12%;">Takes as argument a path and
+returns true, if it is an absolute path. If the path has a
+leading ":", it's a relative path. Otherwise, it's
+an absolute path, unless the path doesn't contain any
+colons, i.e. it's a name like "a". In this
+particular case, the path is considered to be relative (i.e.
+it is considered to be a filename). Use ":" in the
+appropriate place in the path if you want to distinguish
+unambiguously. As a special case, the filename '' is always
+considered to be absolute. Note that with version 1.2 of
+File::Spec::Mac, this does no longer consult the local
+filesystem.</p>
+<p style="margin-left:12%; margin-top: 1em">E.g.</p>
+<p style="margin-left:12%; margin-top: 1em">File::Spec−&gt;file_name_is_absolute("a");
+# false (relative) <br/>
+
+File::Spec−&gt;file_name_is_absolute(":a:b:");
+# false (relative) <br/>
+
+File::Spec−&gt;file_name_is_absolute("MacintoshHD:");
+<br/>
+# true (absolute) <br/>
+File::Spec−&gt;file_name_is_absolute(""); #
+true (absolute)</p>
+<p style="margin-left:9%;">path</p>
+<p style="margin-left:12%;">Returns the null list for the
+MacPerl application, since the concept is usually
+meaningless under Mac OS. But if you're using the MacPerl
+tool under MPW, it gives back $ENV{Commands} suitably split,
+as is done in :lib:ExtUtils:MM_Mac.pm.</p>
+<p style="margin-left:9%;">splitpath</p>
+<p style="margin-left:12%;">($volume,$directories,$file) =
+File::Spec−&gt;splitpath( $path ); <br/>
+($volume,$directories,$file) =
+File::Spec−&gt;splitpath( $path, <br/>
+$no_file );</p>
+<p style="margin-left:12%; margin-top: 1em">Splits a path
+into volume, directory, and filename portions.</p>
+<p style="margin-left:12%; margin-top: 1em">On Mac OS,
+assumes that the last part of the path is a filename unless
+$no_file is true or a trailing separator ":" is
+present.</p>
+<p style="margin-left:12%; margin-top: 1em">The volume
+portion is always returned with a trailing ":".
+The directory portion is always returned with a leading (to
+denote a relative path) and a trailing ":" (to
+denote a directory). The file portion is always returned
+<i>without</i> a leading ":". Empty portions are
+returned as empty string ''.</p>
+<p style="margin-left:12%; margin-top: 1em">The results can
+be passed to catpath() to get back a path equivalent to
+(usually identical to) the original path.</p>
+<p style="margin-left:9%;">splitdir</p>
+<p style="margin-left:12%;">The opposite of catdir().</p>
+<p style="margin-left:12%; margin-top: 1em">@dirs =
+File::Spec−&gt;splitdir( $directories );</p>
+<p style="margin-left:12%; margin-top: 1em">$directories
+should be only the directory portion of the path on systems
+that have the concept of a volume or that have path syntax
+that differentiates files from directories. Consider using
+splitpath() otherwise.</p>
+<p style="margin-left:12%; margin-top: 1em">Unlike just
+splitting the directories on the separator, empty directory
+names ("") can be returned. Since catdir() on Mac
+OS always appends a trailing colon to distinguish a
+directory path from a file path, a single trailing colon
+will be ignored, i.e. there's no empty directory name after
+it.</p>
+<p style="margin-left:12%; margin-top: 1em">Hence, on Mac
+OS, both</p>
+<p style="margin-left:12%; margin-top: 1em">File::Spec−&gt;splitdir(
+":a:b::c:" ); and <br/>
+File::Spec−&gt;splitdir( ":a:b::c" );</p>
+<p style="margin-left:12%; margin-top: 1em">yield:</p>
+<p style="margin-left:12%; margin-top: 1em">(
+"a", "b", "::",
+"c")</p>
+<p style="margin-left:12%; margin-top: 1em">while</p>
+<p style="margin-left:12%; margin-top: 1em">File::Spec−&gt;splitdir(
+":a:b::c::" );</p>
+<p style="margin-left:12%; margin-top: 1em">yields:</p>
+<p style="margin-left:12%; margin-top: 1em">(
+"a", "b", "::", "c",
+"::")</p>
+<p style="margin-left:9%;">catpath</p>
+<p style="margin-left:12%;">$path =
+File::Spec−&gt;catpath($volume,$directory,$file);</p>
+<p style="margin-left:12%; margin-top: 1em">Takes volume,
+directory and file portions and returns an entire path. On
+Mac OS, $volume, $directory and $file are concatenated. A
+':' is inserted if need be. You may pass an empty string for
+each portion. If all portions are empty, the empty string is
+returned. If $volume is empty, the result will be a relative
+path, beginning with a ':'. If $volume and $directory are
+empty, a leading ":" (if any) is removed form
+$file and the remainder is returned. If $file is empty, the
+resulting path will have a trailing ':'.</p>
+<p style="margin-left:9%;">abs2rel</p>
+<p style="margin-left:12%;">Takes a destination path and an
+optional base path and returns a relative path from the base
+path to the destination path:</p>
+<p style="margin-left:12%; margin-top: 1em">$rel_path =
+File::Spec−&gt;abs2rel( $path ) ; <br/>
+$rel_path = File::Spec−&gt;abs2rel( $path, $base )
+;</p>
+<p style="margin-left:12%; margin-top: 1em">Note that both
+paths are assumed to have a notation that distinguishes a
+directory path (with trailing ':') from a file path (without
+trailing ':').</p>
+<p style="margin-left:12%; margin-top: 1em">If $base is not
+present or '', then the current working directory is used.
+If $base is relative, then it is converted to absolute form
+using rel2abs(). This means that it is taken to be relative
+to the current working directory.</p>
+<p style="margin-left:12%; margin-top: 1em">If $path and
+$base appear to be on two different volumes, we will not
+attempt to resolve the two paths, and we will instead simply
+return $path. Note that previous versions of this module
+ignored the volume of $base, which resulted in garbage
+results part of the time.</p>
+<p style="margin-left:12%; margin-top: 1em">If $base
+doesn't have a trailing colon, the last element of $base is
+assumed to be a filename. This filename is ignored.
+Otherwise all path components are assumed to be
+directories.</p>
+<p style="margin-left:12%; margin-top: 1em">If $path is
+relative, it is converted to absolute form using rel2abs().
+This means that it is taken to be relative to the current
+working directory.</p>
+<p style="margin-left:12%; margin-top: 1em">Based on code
+written by Shigio Yamaguchi.</p>
+<p style="margin-left:9%;">rel2abs</p>
+<p style="margin-left:12%;">Converts a relative path to an
+absolute path:</p>
+<p style="margin-left:12%; margin-top: 1em">$abs_path =
+File::Spec−&gt;rel2abs( $path ) ; <br/>
+$abs_path = File::Spec−&gt;rel2abs( $path, $base )
+;</p>
+<p style="margin-left:12%; margin-top: 1em">Note that both
+paths are assumed to have a notation that distinguishes a
+directory path (with trailing ':') from a file path (without
+trailing ':').</p>
+<p style="margin-left:12%; margin-top: 1em">If $base is not
+present or '', then $base is set to the current working
+directory. If $base is relative, then it is converted to
+absolute form using rel2abs(). This means that it is taken
+to be relative to the current working directory.</p>
+<p style="margin-left:12%; margin-top: 1em">If $base
+doesn't have a trailing colon, the last element of $base is
+assumed to be a filename. This filename is ignored.
+Otherwise all path components are assumed to be
+directories.</p>
+<p style="margin-left:12%; margin-top: 1em">If $path is
+already absolute, it is returned and $base is ignored.</p>
+<p style="margin-left:12%; margin-top: 1em">Based on code
+written by Shigio Yamaguchi.</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the authors
+list in <i>File::Spec</i>. Mac OS support by Paul Schinder
+&lt;schinder@pobox.com&gt; and Thomas Wegner
+&lt;wegner_thomas@yahoo.com&gt;.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+2004 by the Perl 5 Porters. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See File::Spec
+and File::Spec::Unix. This package overrides the
+implementation of these methods, not the semantics.</p>
+<hr/>
+</body>
+</html>

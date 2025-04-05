@@ -1,0 +1,225 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:33 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_ws_send</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_ws_send</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FLAGS">FLAGS</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_ws_send
+− send WebSocket data</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_ws_send(CURL *curl, const void *buffer, size_t buflen,
+<br/>
+size_t *sent, curl_off_t fragsize, <br/>
+unsigned int flags);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function
+call is EXPERIMENTAL.</p>
+<p style="margin-left:9%; margin-top: 1em">Send the
+specific message fragment over an established WebSocket
+connection. The <i>buffer</i> holds the data to send and it
+is <i>buflen</i> number of payload bytes in that memory
+area.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>sent</i> is
+returned as the number of payload bytes actually sent.</p>
+<p style="margin-left:9%; margin-top: 1em">To send a (huge)
+fragment using multiple calls with partial content per
+invoke, set the <i>CURLWS_OFFSET</i> bit and the
+<i>fragsize</i> argument as the total expected size for the
+first part, then set the <i>CURLWS_OFFSET</i> with a zero
+<i>fragsize</i> for the following parts.</p>
+<p style="margin-left:9%; margin-top: 1em">If not sending a
+partial fragment or if this is raw mode, <i>fragsize</i>
+should be set to zero.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>CURLWS_RAW_MODE</b> is enabled in
+<i>CURLOPT_WS_OPTIONS(3)</i>, the <b>flags</b> argument
+should be set to 0.</p>
+<p style="margin-left:9%; margin-top: 1em">To send a
+message consisting of multiple frames, set the
+<i>CURLWS_CONT</i> bit in all frames except the final
+one.</p>
+<h2>FLAGS
+<a name="FLAGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLWS_TEXT</p>
+<p style="margin-left:18%;">The buffer contains text data.
+Note that this makes a difference to WebSocket but libcurl
+itself does not make any verification of the content or
+precautions that you actually send valid UTF−8
+content.</p>
+<p style="margin-left:9%;">CURLWS_BINARY</p>
+<p style="margin-left:18%;">This is binary data.</p>
+<p style="margin-left:9%;">CURLWS_CONT</p>
+<p style="margin-left:18%;">This is not the final fragment
+of the message, which implies that there is another fragment
+coming as part of the same message where this bit is not
+set.</p>
+<p style="margin-left:9%;">CURLWS_CLOSE</p>
+<p style="margin-left:18%;">Close this transfer.</p>
+<p style="margin-left:9%;">CURLWS_PING</p>
+<p style="margin-left:18%;">This is a ping.</p>
+<p style="margin-left:9%;">CURLWS_PONG</p>
+<p style="margin-left:18%;">This is a pong.</p>
+<p style="margin-left:9%;">CURLWS_OFFSET</p>
+<p style="margin-left:18%;">The provided data is only a
+partial fragment and there is more coming in a following
+call to <i>curl_ws_send()</i>. When sending only a piece of
+the fragment like this, the <i>fragsize</i> must be provided
+with the total expected fragment size in the first call and
+it needs to be zero in subsequent calls.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects ws only</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;string.h&gt; /* for strlen */</p>
+<p style="margin-left:9%; margin-top: 1em">const char
+*send_payload = "magic";</p>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+size_t sent; <br/>
+CURLcode res; <br/>
+CURL *curl = curl_easy_init(); <br/>
+curl_easy_setopt(curl, CURLOPT_URL,
+"wss://example.com/"); <br/>
+curl_easy_setopt(curl, CURLOPT_CONNECT_ONLY, 2L); <br/>
+curl_easy_perform(curl); <br/>
+res = curl_ws_send(curl, send_payload, strlen(send_payload),
+&amp;sent, 0, <br/>
+CURLWS_PING); <br/>
+curl_easy_cleanup(curl); <br/>
+return (int)res; <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.86.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>CURLE_OK</i>
+(zero) means that the data was sent properly, non−zero
+means an error occurred as <i>&lt;curl/curl.h&gt;</i>
+defines. See the <i>libcurl−errors(3)</i> man page for
+the full list with descriptions.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curl_easy_getinfo</b>(3),
+<b>curl_easy_perform</b>(3), <b>curl_easy_setopt</b>(3),
+<b>curl_ws_recv</b>(3), <b>libcurl-ws</b>(3)</p>
+<hr/>
+</body>
+</html>

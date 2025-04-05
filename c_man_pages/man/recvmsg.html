@@ -1,0 +1,535 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:55 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>recv</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">recv</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#The flags argument">The flags argument</a><br/>
+<a href="#recvfrom()">recvfrom()</a><br/>
+<a href="#recv()">recv()</a><br/>
+<a href="#recvmsg()">recvmsg()</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#VERSIONS">VERSIONS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">recv, recvfrom,
+recvmsg − receive a message from a socket</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;sys/socket.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>ssize_t
+recv(int</b> <i>sockfd</i><b>, void</b>
+<i>buf</i><b>[.</b><i>len</i><b>], size_t</b> <i>len</i><b>,
+<br/>
+int</b> <i>flags</i><b>); <br/>
+ssize_t recvfrom(int</b> <i>sockfd</i><b>, void</b>
+<i>buf</i><b>[restrict .</b><i>len</i><b>], size_t</b>
+<i>len</i><b>, <br/>
+int</b> <i>flags</i><b>, <br/>
+struct sockaddr *_Nullable restrict</b> <i>src_addr</i><b>,
+<br/>
+socklen_t *_Nullable restrict</b> <i>addrlen</i><b>); <br/>
+ssize_t recvmsg(int</b> <i>sockfd</i><b>, struct msghdr
+*</b><i>msg</i><b>, int</b> <i>flags</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>recv</b>(), <b>recvfrom</b>(), and <b>recvmsg</b>() calls
+are used to receive messages from a socket. They may be used
+to receive data on both connectionless and
+connection-oriented sockets. This page first describes
+common features of all three system calls, and then
+describes the differences between the calls.</p>
+<p style="margin-left:9%; margin-top: 1em">The only
+difference between <b>recv</b>() and <b>read</b>(2) is the
+presence of <i>flags</i>. With a zero <i>flags</i> argument,
+<b>recv</b>() is generally equivalent to <b>read</b>(2) (but
+see NOTES). Also, the following call</p>
+<p style="margin-left:14%; margin-top: 1em">recv(sockfd,
+buf, len, flags);</p>
+<p style="margin-left:9%; margin-top: 1em">is equivalent
+to</p>
+<p style="margin-left:14%; margin-top: 1em">recvfrom(sockfd,
+buf, len, flags, NULL, NULL);</p>
+<p style="margin-left:9%; margin-top: 1em">All three calls
+return the length of the message on successful completion.
+If a message is too long to fit in the supplied buffer,
+excess bytes may be discarded depending on the type of
+socket the message is received from.</p>
+<p style="margin-left:9%; margin-top: 1em">If no messages
+are available at the socket, the receive calls wait for a
+message to arrive, unless the socket is nonblocking (see
+<b>fcntl</b>(2)), in which case the value −1 is
+returned and <i>errno</i> is set to <b>EAGAIN</b> or
+<b>EWOULDBLOCK</b>. The receive calls normally return any
+data available, up to the requested amount, rather than
+waiting for receipt of the full amount requested.</p>
+<p style="margin-left:9%; margin-top: 1em">An application
+can use <b>select</b>(2), <b>poll</b>(2), or <b>epoll</b>(7)
+to determine when more data arrives on a socket.</p>
+<h3>The flags argument
+<a name="The flags argument"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The <i>flags</i>
+argument is formed by ORing one or more of the following
+values: <b><br/>
+MSG_CMSG_CLOEXEC</b> (<b>recvmsg</b>() only; since Linux
+2.6.23)</p>
+<p style="margin-left:18%;">Set the close-on-exec flag for
+the file descriptor received via a UNIX domain file
+descriptor using the <b>SCM_RIGHTS</b> operation (described
+in <b>unix</b>(7)). This flag is useful for the same reasons
+as the <b>O_CLOEXEC</b> flag of <b>open</b>(2).</p>
+<p style="margin-left:9%;"><b>MSG_DONTWAIT</b> (since Linux
+2.2)</p>
+<p style="margin-left:18%;">Enables nonblocking operation;
+if the operation would block, the call fails with the error
+<b>EAGAIN</b> or <b>EWOULDBLOCK</b>. This provides similar
+behavior to setting the <b>O_NONBLOCK</b> flag (via the
+<b>fcntl</b>(2) <b>F_SETFL</b> operation), but differs in
+that <b>MSG_DONTWAIT</b> is a per-call option, whereas
+<b>O_NONBLOCK</b> is a setting on the open file description
+(see <b>open</b>(2)), which will affect all threads in the
+calling process as well as other processes that hold file
+descriptors referring to the same open file description.</p>
+<p style="margin-left:9%;"><b>MSG_ERRQUEUE</b> (since Linux
+2.2)</p>
+<p style="margin-left:18%;">This flag specifies that queued
+errors should be received from the socket error queue. The
+error is passed in an ancillary message with a type
+dependent on the protocol (for IPv4 <b>IP_RECVERR</b>). The
+user should supply a buffer of sufficient size. See
+<b>cmsg</b>(3) and <b>ip</b>(7) for more information. The
+payload of the original packet that caused the error is
+passed as normal data via <i>msg_iovec</i>. The original
+destination address of the datagram that caused the error is
+supplied via <i>msg_name</i>.</p>
+<p style="margin-left:18%; margin-top: 1em">The error is
+supplied in a <i>sock_extended_err</i> structure:</p>
+<p style="margin-left:23%; margin-top: 1em">#define
+SO_EE_ORIGIN_NONE 0 <br/>
+#define SO_EE_ORIGIN_LOCAL 1 <br/>
+#define SO_EE_ORIGIN_ICMP 2 <br/>
+#define SO_EE_ORIGIN_ICMP6 3 <br/>
+struct sock_extended_err <br/>
+{ <br/>
+uint32_t ee_errno; /* Error number */ <br/>
+uint8_t ee_origin; /* Where the error originated */ <br/>
+uint8_t ee_type; /* Type */ <br/>
+uint8_t ee_code; /* Code */ <br/>
+uint8_t ee_pad; /* Padding */ <br/>
+uint32_t ee_info; /* Additional information */ <br/>
+uint32_t ee_data; /* Other data */ <br/>
+/* More data may follow */ <br/>
+}; <br/>
+struct sockaddr *SO_EE_OFFENDER(struct sock_extended_err
+*);</p>
+<p style="margin-left:18%; margin-top: 1em"><i>ee_errno</i>
+contains the <i>errno</i> number of the queued error.
+<i>ee_origin</i> is the origin code of where the error
+originated. The other fields are protocol-specific. The
+macro <b>SO_EE_OFFENDER</b> returns a pointer to the address
+of the network object where the error originated from given
+a pointer to the ancillary message. If this address is not
+known, the <i>sa_family</i> member of the <i>sockaddr</i>
+contains <b>AF_UNSPEC</b> and the other fields of the
+<i>sockaddr</i> are undefined. The payload of the packet
+that caused the error is passed as normal data.</p>
+<p style="margin-left:18%; margin-top: 1em">For local
+errors, no address is passed (this can be checked with the
+<i>cmsg_len</i> member of the <i>cmsghdr</i>). For error
+receives, the <b>MSG_ERRQUEUE</b> flag is set in the
+<i>msghdr</i>. After an error has been passed, the pending
+socket error is regenerated based on the next queued error
+and will be passed on the next socket operation.</p>
+<p style="margin-left:9%;"><b>MSG_OOB</b></p>
+<p style="margin-left:18%;">This flag requests receipt of
+out-of-band data that would not be received in the normal
+data stream. Some protocols place expedited data at the head
+of the normal data queue, and thus this flag cannot be used
+with such protocols.</p>
+<p style="margin-left:9%;"><b>MSG_PEEK</b></p>
+<p style="margin-left:18%;">This flag causes the receive
+operation to return data from the beginning of the receive
+queue without removing that data from the queue. Thus, a
+subsequent receive call will return the same data.</p>
+<p style="margin-left:9%;"><b>MSG_TRUNC</b> (since Linux
+2.2)</p>
+<p style="margin-left:18%;">For raw (<b>AF_PACKET</b>),
+Internet datagram (since Linux 2.4.27/2.6.8), netlink (since
+Linux 2.6.22), and UNIX datagram as well as sequenced-packet
+(since Linux 3.4) sockets: return the real length of the
+packet or datagram, even when it was longer than the passed
+buffer.</p>
+<p style="margin-left:18%; margin-top: 1em">For use with
+Internet stream sockets, see <b>tcp</b>(7).</p>
+<p style="margin-left:9%;"><b>MSG_WAITALL</b> (since Linux
+2.2)</p>
+<p style="margin-left:18%;">This flag requests that the
+operation block until the full request is satisfied.
+However, the call may still return less data than requested
+if a signal is caught, an error or disconnect occurs, or the
+next data to be received is of a different type than that
+returned. This flag has no effect for datagram sockets.</p>
+<h3>recvfrom()
+<a name="recvfrom()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>recvfrom</b>()
+places the received message into the buffer <i>buf</i>. The
+caller must specify the size of the buffer in
+<i>len</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<i>src_addr</i> is not NULL, and the underlying protocol
+provides the source address of the message, that source
+address is placed in the buffer pointed to by
+<i>src_addr</i>. In this case, <i>addrlen</i> is a
+value-result argument. Before the call, it should be
+initialized to the size of the buffer associated with
+<i>src_addr</i>. Upon return, <i>addrlen</i> is updated to
+contain the actual size of the source address. The returned
+address is truncated if the buffer provided is too small; in
+this case, <i>addrlen</i> will return a value greater than
+was supplied to the call.</p>
+<p style="margin-left:9%; margin-top: 1em">If the caller is
+not interested in the source address, <i>src_addr</i> and
+<i>addrlen</i> should be specified as NULL.</p>
+<h3>recv()
+<a name="recv()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>recv</b>() call is normally used only on a
+<i>connected</i> socket (see <b>connect</b>(2)). It is
+equivalent to the call:</p>
+<p style="margin-left:14%; margin-top: 1em">recvfrom(fd,
+buf, len, flags, NULL, 0);</p>
+<h3>recvmsg()
+<a name="recvmsg()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>recvmsg</b>() call uses a <i>msghdr</i> structure to
+minimize the number of directly supplied arguments. This
+structure is defined as follows in
+<i>&lt;sys/socket.h&gt;</i>:</p>
+<p style="margin-left:14%; margin-top: 1em">struct msghdr {
+<br/>
+void *msg_name; /* Optional address */ <br/>
+socklen_t msg_namelen; /* Size of address */ <br/>
+struct iovec *msg_iov; /* Scatter/gather array */ <br/>
+size_t msg_iovlen; /* # elements in msg_iov */ <br/>
+void *msg_control; /* Ancillary data, see below */ <br/>
+size_t msg_controllen; /* Ancillary data buffer len */ <br/>
+int msg_flags; /* Flags on received message */ <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>msg_name</i> field points to a caller-allocated buffer
+that is used to return the source address if the socket is
+unconnected. The caller should set <i>msg_namelen</i> to the
+size of this buffer before this call; upon return from a
+successful call, <i>msg_namelen</i> will contain the length
+of the returned address. If the application does not need to
+know the source address, <i>msg_name</i> can be specified as
+NULL.</p>
+<p style="margin-left:9%; margin-top: 1em">The fields
+<i>msg_iov</i> and <i>msg_iovlen</i> describe scatter-gather
+locations, as discussed in <b>readv</b>(2).</p>
+<p style="margin-left:9%; margin-top: 1em">The field
+<i>msg_control</i>, which has length <i>msg_controllen</i>,
+points to a buffer for other protocol control-related
+messages or miscellaneous ancillary data. When
+<b>recvmsg</b>() is called, <i>msg_controllen</i> should
+contain the length of the available buffer in
+<i>msg_control</i>; upon return from a successful call it
+will contain the length of the control message sequence.</p>
+<p style="margin-left:9%; margin-top: 1em">The messages are
+of the form:</p>
+<p style="margin-left:14%; margin-top: 1em">struct cmsghdr
+{ <br/>
+size_t cmsg_len; /* Data byte count, including header <br/>
+(type is socklen_t in POSIX) */ <br/>
+int cmsg_level; /* Originating protocol */ <br/>
+int cmsg_type; /* Protocol−specific type */ <br/>
+/* followed by <br/>
+unsigned char cmsg_data[]; */ <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">Ancillary data
+should be accessed only by the macros defined in
+<b>cmsg</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">As an example,
+Linux uses this ancillary data mechanism to pass extended
+errors, IP options, or file descriptors over UNIX domain
+sockets. For further information on the use of ancillary
+data in various socket domains, see <b>unix</b>(7) and
+<b>ip</b>(7).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>msg_flags</i> field in the <i>msghdr</i> is set on return
+of <b>recvmsg</b>(). It can contain several flags: <b><br/>
+MSG_EOR</b></p>
+<p style="margin-left:18%;">indicates end-of-record; the
+data returned completed a record (generally used with
+sockets of type <b>SOCK_SEQPACKET</b>).</p>
+<p style="margin-left:9%;"><b>MSG_TRUNC</b></p>
+<p style="margin-left:18%;">indicates that the trailing
+portion of a datagram was discarded because the datagram was
+larger than the buffer supplied.</p>
+<p style="margin-left:9%;"><b>MSG_CTRUNC</b></p>
+<p style="margin-left:18%;">indicates that some control
+data was discarded due to lack of space in the buffer for
+ancillary data.</p>
+<p style="margin-left:9%;"><b>MSG_OOB</b></p>
+<p style="margin-left:18%;">is returned to indicate that
+expedited or out-of-band data was received.</p>
+<p style="margin-left:9%;"><b>MSG_ERRQUEUE</b></p>
+<p style="margin-left:18%;">indicates that no data was
+received but an extended error from the socket error
+queue.</p>
+<p style="margin-left:9%;"><b>MSG_CMSG_CLOEXEC</b> (since
+Linux 2.6.23)</p>
+<p style="margin-left:18%;">indicates that
+<b>MSG_CMSG_CLOEXEC</b> was specified in the <i>flags</i>
+argument of <b>recvmsg</b>().</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These calls
+return the number of bytes received, or −1 if an error
+occurred. In the event of an error, <i>errno</i> is set to
+indicate the error.</p>
+<p style="margin-left:9%; margin-top: 1em">When a stream
+socket peer has performed an orderly shutdown, the return
+value will be 0 (the traditional "end-of-file"
+return).</p>
+<p style="margin-left:9%; margin-top: 1em">Datagram sockets
+in various domains (e.g., the UNIX and Internet domains)
+permit zero-length datagrams. When such a datagram is
+received, the return value is 0.</p>
+<p style="margin-left:9%; margin-top: 1em">The value 0 may
+also be returned if the requested number of bytes to receive
+from a stream socket was 0.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These are some
+standard errors generated by the socket layer. Additional
+errors may be generated and returned from the underlying
+protocol modules; see their manual pages. <b><br/>
+EAGAIN</b> or <b>EWOULDBLOCK</b></p>
+<p style="margin-left:18%;">The socket is marked
+nonblocking and the receive operation would block, or a
+receive timeout had been set and the timeout expired before
+data was received. POSIX.1 allows either error to be
+returned for this case, and does not require these constants
+to have the same value, so a portable application should
+check for both possibilities.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p><b>EBADF</b></p></td>
+<td width="3%"></td>
+<td width="64%">
+<p>The argument <i>sockfd</i> is an invalid file
+descriptor.</p> </td>
+<td width="18%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><b>ECONNREFUSED</b></p>
+<p style="margin-left:18%;">A remote host refused to allow
+the network connection (typically because it is not running
+the requested service).</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EFAULT</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The receive buffer pointer(s) point outside the
+process’s address space.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINTR</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The receive was interrupted by delivery of a signal
+before any data was available; see <b>signal</b>(7).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>Invalid argument passed.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOMEM</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>Could not allocate memory for <b>recvmsg</b>().</p></td></tr>
+</table>
+<p style="margin-left:9%;"><b>ENOTCONN</b></p>
+<p style="margin-left:18%;">The socket is associated with a
+connection-oriented protocol and has not been connected (see
+<b>connect</b>(2) and <b>accept</b>(2)).</p>
+<p style="margin-left:9%;"><b>ENOTSOCK</b></p>
+<p style="margin-left:18%;">The file descriptor
+<i>sockfd</i> does not refer to a socket.</p>
+<h2>VERSIONS
+<a name="VERSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">According to
+POSIX.1, the <i>msg_controllen</i> field of the
+<i>msghdr</i> structure should be typed as <i>socklen_t</i>,
+and the <i>msg_iovlen</i> field should be typed as
+<i>int</i>, but glibc currently types both as
+<i>size_t</i>.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2008.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2001,
+4.4BSD (first appeared in 4.2BSD).</p>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1
+describes only the <b>MSG_OOB</b>, <b>MSG_PEEK</b>, and
+<b>MSG_WAITALL</b> flags.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If a zero-length
+datagram is pending, <b>read</b>(2) and <b>recv</b>() with a
+<i>flags</i> argument of zero provide different behavior. In
+this circumstance, <b>read</b>(2) has no effect (the
+datagram remains pending), while <b>recv</b>() consumes the
+pending datagram.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<b>recvmmsg</b>(2) for information about a Linux-specific
+system call that can be used to receive multiple datagrams
+in a single call.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">An example of
+the use of <b>recvfrom</b>() is shown in
+<b>getaddrinfo</b>(3).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>fcntl</b>(2),
+<b>getsockopt</b>(2), <b>read</b>(2), <b>recvmmsg</b>(2),
+<b>select</b>(2), <b>shutdown</b>(2), <b>socket</b>(2),
+<b>cmsg</b>(3), <b>sockatmark</b>(3), <b>ip</b>(7),
+<b>ipv6</b>(7), <b>socket</b>(7), <b>tcp</b>(7),
+<b>udp</b>(7), <b>unix</b>(7)</p>
+<hr/>
+</body>
+</html>

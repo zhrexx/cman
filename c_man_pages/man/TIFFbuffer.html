@@ -1,0 +1,172 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:13 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TIFFBUFFER</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">TIFFBUFFER</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TIFFbuffer
+− I/O buffering control routines</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<pre style="margin-left:13%; margin-top: 1em">#include &lt;tiffio.h&gt;</pre>
+<p style="margin-left:9%;"><b>int TIFFReadBufferSetup(TIFF
+*tif, tdata_t buffer, tsize_t size) <br/>
+int TIFFWriteBufferSetup(TIFF *tif, tdata_t buffer, tsize_t
+size)</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+routines are provided for client−control of the I/O
+buffers used by the library. Applications need never use
+these routines; they are provided only for
+“intelligent clients” that wish to optimize
+memory usage and/or eliminate potential copy operations that
+can occur when working with images that have data stored
+without compression.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFReadBufferSetup()</i>
+sets up the data buffer used to read raw (encoded) data from
+a file. If the specified pointer is <b>NULL</b> (zero), then
+a buffer of the appropriate size is allocated. Otherwise the
+caller must guarantee that the buffer is large enough to
+hold any individual strip of raw data.
+<i>TIFFReadBufferSetup()</i> returns a non−zero value
+if the setup was successful and zero otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFWriteBufferSetup()</i>
+sets up the data buffer used to write raw (encoded) data to
+a file. If the specified <i>size</i> is −1, then the
+buffer size is selected to hold a complete tile or strip, or
+at least 8 kilobytes, whichever is greater. If the specified
+<i>buffer</i> is <b>NULL</b> (zero), then a buffer of the
+appropriate size is dynamically allocated.
+<i>TIFFWriteBufferSetup()</i> returns a non−zero value
+if the setup was successful and zero otherwise.</p>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>%s: No space
+for data buffer at scanline %ld</b>:</p>
+<p style="margin-left:13%;"><i>TIFFReadBufferSetup()</i>
+was unable to dynamically allocate space for a data
+buffer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>%s: No space
+for output buffer</b>:</p>
+<p style="margin-left:13%;"><i>TIFFWriteBufferSetup()</i>
+was unable to dynamically allocate space for a data
+buffer.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>libtiff</i>
+(3tiff)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">LibTIFF
+contributors</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">1988-2022,
+LibTIFF contributors</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:19 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CPAN::Meta::Prereqs</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CPAN::Meta::Prereqs</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#new">new</a><br/>
+<a href="#requirements_for">requirements_for</a><br/>
+<a href="#phases">phases</a><br/>
+<a href="#types_in">types_in</a><br/>
+<a href="#with_merged_prereqs">with_merged_prereqs</a><br/>
+<a href="#merged_requirements">merged_requirements</a><br/>
+<a href="#as_string_hash">as_string_hash</a><br/>
+<a href="#is_finalized">is_finalized</a><br/>
+<a href="#finalize">finalize</a><br/>
+<a href="#clone">clone</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CPAN::Meta::Prereqs
+− a set of distribution prerequisites by phase and
+type</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version
+2.150010</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A
+CPAN::Meta::Prereqs object represents the prerequisites for
+a CPAN distribution or one of its optional features. Each
+set of prereqs is organized by phase and type, as described
+in CPAN::Meta::Prereqs.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>new
+<a name="new"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $prereq =
+CPAN::Meta::Prereqs−&gt;new( \%prereq_spec );</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a new set of Prereqs. The input should look like the
+contents of the "prereqs" field described in
+CPAN::Meta::Spec, meaning something more or less like
+this:</p>
+<p style="margin-left:9%; margin-top: 1em">my $prereq =
+CPAN::Meta::Prereqs−&gt;new({ <br/>
+runtime =&gt; { <br/>
+requires =&gt; { <br/>
+'Some::Module' =&gt; '1.234', <br/>
+..., <br/>
+}, <br/>
+..., <br/>
+}, <br/>
+..., <br/>
+});</p>
+<p style="margin-left:9%; margin-top: 1em">You can also
+construct an empty set of prereqs with:</p>
+<p style="margin-left:9%; margin-top: 1em">my $prereqs =
+CPAN::Meta::Prereqs−&gt;new;</p>
+<p style="margin-left:9%; margin-top: 1em">This empty set
+of prereqs is useful for accumulating new prereqs before
+finally dumping the whole set into a structure or
+string.</p>
+<h3>requirements_for
+<a name="requirements_for"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $requirements
+= $prereqs−&gt;requirements_for( $phase, $type );</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a CPAN::Meta::Requirements object for the given
+phase/type combination. If no prerequisites are registered
+for that combination, a new CPAN::Meta::Requirements object
+will be returned, and it may be added to as needed.</p>
+<p style="margin-left:9%; margin-top: 1em">If $phase or
+$type are undefined or otherwise invalid, an exception will
+be raised.</p>
+<h3>phases
+<a name="phases"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @phases =
+$prereqs−&gt;phases;</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns the list of all phases currently populated in the
+prereqs object, suitable for iterating.</p>
+<h3>types_in
+<a name="types_in"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my
+@runtime_types = $prereqs−&gt;types_in('runtime');</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns the list of all types currently populated in the
+prereqs object for the provided phase, suitable for
+iterating.</p>
+<h3>with_merged_prereqs
+<a name="with_merged_prereqs"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $new_prereqs
+= $prereqs−&gt;with_merged_prereqs( $other_prereqs );
+<br/>
+my $new_prereqs = $prereqs−&gt;with_merged_prereqs(
+\@other_prereqs );</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a new CPAN::Meta::Prereqs objects in which all the
+other prerequisites given are merged into the current set.
+This is primarily provided for combining a distribution's
+core prereqs with the prereqs of one of its optional
+features.</p>
+<p style="margin-left:9%; margin-top: 1em">The new prereqs
+object has no ties to the originals, and altering it further
+will not alter them.</p>
+<h3>merged_requirements
+<a name="merged_requirements"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $new_reqs =
+$prereqs−&gt;merged_requirements( \@phases, \@types );
+<br/>
+my $new_reqs = $prereqs−&gt;merged_requirements(
+\@phases ); <br/>
+my $new_reqs = $prereqs−&gt;merged_requirements();</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+joins together all requirements across a number of phases
+and types into a new CPAN::Meta::Requirements object. If
+arguments are omitted, it defaults to "runtime",
+"build" and "test" for phases and
+"requires" and "recommends" for
+types.</p>
+<h3>as_string_hash
+<a name="as_string_hash"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a hashref containing structures suitable for dumping
+into a distmeta data structure. It is made up of hashes and
+strings, only; there will be no Prereqs,
+CPAN::Meta::Requirements, or "version" objects
+inside it.</p>
+<h3>is_finalized
+<a name="is_finalized"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns true if the set of prereqs has been marked
+"finalized," and cannot be altered.</p>
+<h3>finalize
+<a name="finalize"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Calling
+"finalize" on a Prereqs object will close it for
+further modification. Attempting to make any changes that
+would actually alter the prereqs will result in an exception
+being thrown.</p>
+<h3>clone
+<a name="clone"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my
+$cloned_prereqs = $prereqs−&gt;clone;</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a Prereqs object that is identical to the original
+object, but can be altered without affecting the original
+object. Finalization does not survive cloning, meaning that
+you may clone a finalized set of prereqs and then modify the
+clone.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please report
+any bugs or feature using the CPAN Request Tracker. Bugs can
+be submitted through the web interface at
+&lt;http://rt.cpan.org/Dist/Display.html?Queue=CPAN−Meta&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">When submitting
+a bug or request, please include a test−file or a
+patch to an existing test−file that illustrates the
+bug or desired feature.</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p style="margin-top: 1em">David Golden
+&lt;dagolden@cpan.org&gt;</p> </td>
+<td width="45%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p>Ricardo Signes &lt;rjbs@cpan.org&gt;</p></td>
+<td width="45%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p>Adam Kennedy &lt;adamk@cpan.org&gt;</p></td>
+<td width="45%">
+</td></tr>
+</table>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2010 by David Golden, Ricardo Signes, Adam
+Kennedy and Contributors.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

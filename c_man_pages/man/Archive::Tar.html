@@ -1,0 +1,1185 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:17 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Archive::Tar</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Archive::Tar</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Object Methods">Object Methods</a><br/>
+<a href="#Archive::Tar−&gt;new( [$file, $compressed] )">Archive::Tar−&gt;new( [$file, $compressed] )</a><br/>
+<a href="#$tar−&gt;read ( $filename|$handle, [$compressed, {opt =&gt; 'val'}] )">$tar−&gt;read ( $filename|$handle, [$compressed, {opt =&gt; 'val'}] )</a><br/>
+<a href="#$tar−&gt;contains_file( $filename )">$tar−&gt;contains_file( $filename )</a><br/>
+<a href="#$tar−&gt;extract( [@filenames] )">$tar−&gt;extract( [@filenames] )</a><br/>
+<a href="#$tar−&gt;extract_file( $file, [$extract_path] )">$tar−&gt;extract_file( $file, [$extract_path] )</a><br/>
+<a href="#$tar−&gt;list_files( [\@properties] )">$tar−&gt;list_files( [\@properties] )</a><br/>
+<a href="#$tar−&gt;get_files( [@filenames] )">$tar−&gt;get_files( [@filenames] )</a><br/>
+<a href="#$tar−&gt;get_content( $file )">$tar−&gt;get_content( $file )</a><br/>
+<a href="#$tar−&gt;replace_content( $file, $content )">$tar−&gt;replace_content( $file, $content )</a><br/>
+<a href="#$tar−&gt;rename( $file, $new_name )">$tar−&gt;rename( $file, $new_name )</a><br/>
+<a href="#$tar−&gt;chmod( $file, $mode )">$tar−&gt;chmod( $file, $mode )</a><br/>
+<a href="#$tar−&gt;chown( $file, $uname [, $gname] )">$tar−&gt;chown( $file, $uname [, $gname] )</a><br/>
+<a href="#$tar−&gt;remove (@filenamelist)">$tar−&gt;remove (@filenamelist)</a><br/>
+<a href="#$tar−&gt;clear">$tar−&gt;clear</a><br/>
+<a href="#$tar−&gt;write ( [$file, $compressed, $prefix] )">$tar−&gt;write ( [$file, $compressed, $prefix] )</a><br/>
+<a href="#$tar−&gt;add_files( @filenamelist )">$tar−&gt;add_files( @filenamelist )</a><br/>
+<a href="#$tar−&gt;add_data ( $filename, $data, [$opthashref] )">$tar−&gt;add_data ( $filename, $data, [$opthashref] )</a><br/>
+<a href="#$tar−&gt;error( [$BOOL] )">$tar−&gt;error( [$BOOL] )</a><br/>
+<a href="#$tar−&gt;setcwd( $cwd );">$tar−&gt;setcwd( $cwd );</a><br/>
+<a href="#Class Methods">Class Methods</a><br/>
+<a href="#Archive::Tar−&gt;create_archive($file, $compressed, @filelist)">Archive::Tar−&gt;create_archive($file, $compressed, @filelist)</a><br/>
+<a href="#Archive::Tar−&gt;iter( $filename, [ $compressed, {opt =&gt; $val} ] )">Archive::Tar−&gt;iter( $filename, [ $compressed, {opt =&gt; $val} ] )</a><br/>
+<a href="#Archive::Tar−&gt;list_archive($file, $compressed, [\@properties])">Archive::Tar−&gt;list_archive($file, $compressed, [\@properties])</a><br/>
+<a href="#Archive::Tar−&gt;extract_archive($file, $compressed)">Archive::Tar−&gt;extract_archive($file, $compressed)</a><br/>
+<a href="#$bool = Archive::Tar−&gt;has_io_string">$bool = Archive::Tar−&gt;has_io_string</a><br/>
+<a href="#$bool = Archive::Tar−&gt;has_perlio">$bool = Archive::Tar−&gt;has_perlio</a><br/>
+<a href="#$bool = Archive::Tar−&gt;has_zlib_support">$bool = Archive::Tar−&gt;has_zlib_support</a><br/>
+<a href="#$bool = Archive::Tar−&gt;has_bzip2_support">$bool = Archive::Tar−&gt;has_bzip2_support</a><br/>
+<a href="#$bool = Archive::Tar−&gt;has_xz_support">$bool = Archive::Tar−&gt;has_xz_support</a><br/>
+<a href="#Archive::Tar−&gt;can_handle_compressed_files">Archive::Tar−&gt;can_handle_compressed_files</a><br/>
+<a href="#GLOBAL VARIABLES">GLOBAL VARIABLES</a><br/>
+<a href="#$Archive::Tar::FOLLOW_SYMLINK">$Archive::Tar::FOLLOW_SYMLINK</a><br/>
+<a href="#$Archive::Tar::CHOWN">$Archive::Tar::CHOWN</a><br/>
+<a href="#$Archive::Tar::CHMOD">$Archive::Tar::CHMOD</a><br/>
+<a href="#$Archive::Tar::SAME_PERMISSIONS">$Archive::Tar::SAME_PERMISSIONS</a><br/>
+<a href="#$Archive::Tar::DO_NOT_USE_PREFIX">$Archive::Tar::DO_NOT_USE_PREFIX</a><br/>
+<a href="#$Archive::Tar::DEBUG">$Archive::Tar::DEBUG</a><br/>
+<a href="#$Archive::Tar::WARN">$Archive::Tar::WARN</a><br/>
+<a href="#$Archive::Tar::error">$Archive::Tar::error</a><br/>
+<a href="#$Archive::Tar::INSECURE_EXTRACT_MODE">$Archive::Tar::INSECURE_EXTRACT_MODE</a><br/>
+<a href="#$Archive::Tar::HAS_PERLIO">$Archive::Tar::HAS_PERLIO</a><br/>
+<a href="#$Archive::Tar::HAS_IO_STRING">$Archive::Tar::HAS_IO_STRING</a><br/>
+<a href="#$Archive::Tar::ZERO_PAD_NUMBERS">$Archive::Tar::ZERO_PAD_NUMBERS</a><br/>
+<a href="#Tuning the way RESOLVE_SYMLINK will works">Tuning the way RESOLVE_SYMLINK will works</a><br/>
+<a href="#$Archive::Tar::EXTRACT_BLOCK_SIZE">$Archive::Tar::EXTRACT_BLOCK_SIZE</a><br/>
+<a href="#FAQ">FAQ</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#TODO">TODO</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#ACKNOWLEDGEMENTS">ACKNOWLEDGEMENTS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Archive::Tar
+− module for manipulations of tar archives</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Archive::Tar; <br/>
+my $tar = Archive::Tar−&gt;new; <br/>
+$tar−&gt;read('origin.tgz'); <br/>
+$tar−&gt;extract(); <br/>
+$tar−&gt;add_files('file/foo.pl', 'docs/README'); <br/>
+$tar−&gt;add_data('file/baz.txt', 'This is the
+contents now'); <br/>
+$tar−&gt;rename('oldname', 'new/file/name'); <br/>
+$tar−&gt;chown('/', 'root'); <br/>
+$tar−&gt;chown('/', 'root:root'); <br/>
+$tar−&gt;chmod('/tmp', '1777'); <br/>
+$tar−&gt;write('files.tar'); # plain tar <br/>
+$tar−&gt;write('files.tgz', COMPRESS_GZIP); # gzip
+compressed <br/>
+$tar−&gt;write('files.tbz', COMPRESS_BZIP); # bzip2
+compressed <br/>
+$tar−&gt;write('files.txz', COMPRESS_XZ); # xz
+compressed</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Archive::Tar
+provides an object oriented mechanism for handling tar
+files. It provides class methods for quick and easy files
+handling while also allowing for the creation of tar file
+objects for custom manipulation. If you have the IO::Zlib
+module installed, Archive::Tar will also support compressed
+or gzipped tar files.</p>
+<p style="margin-left:9%; margin-top: 1em">An object of
+class Archive::Tar represents a .tar(.gz) archive full of
+files and things.</p>
+<h2>Object Methods
+<a name="Object Methods"></a>
+</h2>
+<h3>Archive::Tar−&gt;new( [$file, $compressed] )
+<a name="Archive::Tar−&gt;new( [$file, $compressed] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns a new
+Tar object. If given any arguments, new() calls the read()
+method automatically, passing on the arguments provided to
+the read() method.</p>
+<p style="margin-left:9%; margin-top: 1em">If new() is
+invoked with arguments and the read() method fails for any
+reason, new() returns undef.</p>
+<h3>$tar−&gt;read ( $filename|$handle, [$compressed, {opt =&gt; 'val'}] )
+<a name="$tar−&gt;read ( $filename|$handle, [$compressed, {opt =&gt; 'val'}] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Read the given
+tar file into memory. The first argument can either be the
+name of a file or a reference to an already open filehandle
+(or an IO::Zlib object if it's compressed)</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"read" will <i>replace</i> any previous content in
+$tar!</p>
+<p style="margin-left:9%; margin-top: 1em">The second
+argument may be considered optional, but remains for
+backwards compatibility. Archive::Tar now looks at the file
+magic to determine what class should be used to open the
+file and will transparently Do The Right Thing.</p>
+<p style="margin-left:9%; margin-top: 1em">Archive::Tar
+will warn if you try to pass a bzip2 / xz compressed file
+and the IO::Uncompress::Bunzip2 / IO::Uncompress::UnXz are
+not available and simply return.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that you
+can currently <b>not</b> pass a "gzip" compressed
+filehandle, which is not opened with "IO::Zlib", a
+"bzip2" compressed filehandle, which is not opened
+with "IO::Uncompress::Bunzip2", a "xz"
+compressed filehandle, which is not opened with
+"IO::Uncompress::UnXz", nor a string containing
+the full archive information (either compressed or
+uncompressed). These are worth while features, but not
+currently implemented. See the "TODO" section.</p>
+<p style="margin-left:9%; margin-top: 1em">The third
+argument can be a hash reference with options. Note that all
+options are case−sensitive. <br/>
+limit</p>
+<p style="margin-left:14%;">Do not read more than
+"limit" files. This is useful if you have very big
+archives, and are only interested in the first few
+files.</p>
+<p style="margin-left:9%;">filter</p>
+<p style="margin-left:14%;">Can be set to a regular
+expression. Only files with names that match the expression
+will be read.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>md5</p></td>
+<td width="1%"></td>
+<td width="85%">
+<p>Set to 1 and the md5sum of files will be returned
+(instead of file data)</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:14%;">my $iter =
+Archive::Tar−&gt;iter( $file, 1, {md5 =&gt; 1} ); <br/>
+while( my $f = $iter−&gt;() ) { <br/>
+print $f−&gt;data . "\t" .
+$f−&gt;full_path . $/; <br/>
+}</p>
+<p style="margin-left:9%;">extract</p>
+<p style="margin-left:14%;">If set to true, immediately
+extract entries when reading them. This gives you the same
+memory break as the "extract_archive" function.
+Note however that entries will not be read into memory, but
+written straight to disk. This means no
+"Archive::Tar::File" objects are created for you
+to inspect.</p>
+<p style="margin-left:9%; margin-top: 1em">All files are
+stored internally as "Archive::Tar::File" objects.
+Please consult the Archive::Tar::File documentation for
+details.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+number of files read in scalar context, and a list of
+"Archive::Tar::File" objects in list context.</p>
+<h3>$tar−&gt;contains_file( $filename )
+<a name="$tar−&gt;contains_file( $filename )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Check if the
+archive contains a certain file. It will return true if the
+file is in the archive, false otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em">Note however,
+that this function does an exact match using "eq"
+on the full path. So it cannot compensate for
+case−insensitive file− systems or compare 2
+paths to see if they would point to the same underlying
+file.</p>
+<h3>$tar−&gt;extract( [@filenames] )
+<a name="$tar−&gt;extract( [@filenames] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Write files
+whose names are equivalent to any of the names in @filenames
+to disk, creating subdirectories as necessary. This might
+not work too well under VMS. Under MacPerl, the file's
+modification time will be converted to the MacOS zero of
+time, and appropriate conversions will be done to the path.
+However, the length of each element of the path is not
+inspected to see whether it's longer than MacOS currently
+allows (32 characters).</p>
+<p style="margin-left:9%; margin-top: 1em">If
+"extract" is called without a list of file names,
+the entire contents of the archive are extracted.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a list
+of filenames extracted.</p>
+<h3>$tar−&gt;extract_file( $file, [$extract_path] )
+<a name="$tar−&gt;extract_file( $file, [$extract_path] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Write an entry,
+whose name is equivalent to the file name provided to disk.
+Optionally takes a second parameter, which is the full
+native path (including filename) the entry will be written
+to.</p>
+<p style="margin-left:9%; margin-top: 1em">For example:</p>
+<p style="margin-left:9%; margin-top: 1em">$tar−&gt;extract_file(
+'name/in/archive', 'name/i/want/to/give/it' ); <br/>
+$tar−&gt;extract_file( $at_file_object,
+'name/i/want/to/give/it' );</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true on
+success, false on failure.</p>
+<h3>$tar−&gt;list_files( [\@properties] )
+<a name="$tar−&gt;list_files( [\@properties] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns a list
+of the names of all the files in the archive.</p>
+<p style="margin-left:9%; margin-top: 1em">If list_files()
+is passed an array reference as its first argument it
+returns a list of hash references containing the requested
+properties of each file. The following list of properties is
+supported: name, size, mtime (last modified date), mode,
+uid, gid, linkname, uname, gname, devmajor, devminor,
+prefix.</p>
+<p style="margin-left:9%; margin-top: 1em">Passing an array
+reference containing only one element, 'name', is special
+cased to return a list of names rather than a list of hash
+references, making it equivalent to calling
+"list_files" without arguments.</p>
+<h3>$tar−&gt;get_files( [@filenames] )
+<a name="$tar−&gt;get_files( [@filenames] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+"Archive::Tar::File" objects matching the
+filenames provided. If no filename list was passed, all
+"Archive::Tar::File" objects in the current Tar
+object are returned.</p>
+<p style="margin-left:9%; margin-top: 1em">Please refer to
+the "Archive::Tar::File" documentation on how to
+handle these objects.</p>
+<h3>$tar−&gt;get_content( $file )
+<a name="$tar−&gt;get_content( $file )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Return the
+content of the named file.</p>
+<h3>$tar−&gt;replace_content( $file, $content )
+<a name="$tar−&gt;replace_content( $file, $content )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Make the string
+$content be the content for the file named $file.</p>
+<h3>$tar−&gt;rename( $file, $new_name )
+<a name="$tar−&gt;rename( $file, $new_name )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Rename the file
+of the in−memory archive to $new_name.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that you
+must specify a Unix path for $new_name, since per tar
+standard, all files in the archive must be Unix paths.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true on
+success and false on failure.</p>
+<h3>$tar−&gt;chmod( $file, $mode )
+<a name="$tar−&gt;chmod( $file, $mode )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Change mode of
+$file to $mode.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true on
+success and false on failure.</p>
+<h3>$tar−&gt;chown( $file, $uname [, $gname] )
+<a name="$tar−&gt;chown( $file, $uname [, $gname] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Change owner
+$file to $uname and $gname.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true on
+success and false on failure.</p>
+<h3>$tar−&gt;remove (@filenamelist)
+<a name="$tar−&gt;remove (@filenamelist)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Removes any
+entries with names matching any of the given filenames from
+the in−memory archive. Returns a list of
+"Archive::Tar::File" objects that remain.</p>
+<h3>$tar−&gt;clear
+<a name="$tar−&gt;clear"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"clear"
+clears the current in−memory archive. This effectively
+gives you a 'blank' object, ready to be filled again. Note
+that "clear" only has effect on the object, not
+the underlying tarfile.</p>
+<h3>$tar−&gt;write ( [$file, $compressed, $prefix] )
+<a name="$tar−&gt;write ( [$file, $compressed, $prefix] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Write the
+in−memory archive to disk. The first argument can
+either be the name of a file or a reference to an already
+open filehandle (a GLOB reference).</p>
+<p style="margin-left:9%; margin-top: 1em">The second
+argument is used to indicate compression. You can compress
+using "gzip", "bzip2" or "xz".
+If you pass a digit, it's assumed to be the "gzip"
+compression level (between 1 and 9), but the use of
+constants is preferred:</p>
+<p style="margin-left:9%; margin-top: 1em"># write a gzip
+compressed file <br/>
+$tar−&gt;write( 'out.tgz', COMPRESS_GZIP ); <br/>
+# write a bzip compressed file <br/>
+$tar−&gt;write( 'out.tbz', COMPRESS_BZIP ); <br/>
+# write a xz compressed file <br/>
+$tar−&gt;write( 'out.txz', COMPRESS_XZ );</p>
+<p style="margin-left:9%; margin-top: 1em">Note that when
+you pass in a filehandle, the compression argument is
+ignored, as all files are printed verbatim to your
+filehandle. If you wish to enable compression with
+filehandles, use an "IO::Zlib",
+"IO::Compress::Bzip2" or
+"IO::Compress::Xz" filehandle instead.</p>
+<p style="margin-left:9%; margin-top: 1em">The third
+argument is an optional prefix. All files will be tucked
+away in the directory you specify as prefix. So if you have
+files 'a' and 'b' in your archive, and you specify 'foo' as
+prefix, they will be written to the archive as 'foo/a' and
+'foo/b'.</p>
+<p style="margin-left:9%; margin-top: 1em">If no arguments
+are given, "write" returns the entire formatted
+archive as a string, which could be useful if you'd like to
+stuff the archive into a socket or a pipe to gzip or
+something.</p>
+<h3>$tar−&gt;add_files( @filenamelist )
+<a name="$tar−&gt;add_files( @filenamelist )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes a list of
+filenames and adds them to the in−memory archive.</p>
+<p style="margin-left:9%; margin-top: 1em">The path to the
+file is automatically converted to a Unix like equivalent
+for use in the archive, and, if on MacOS, the file's
+modification time is converted from the MacOS epoch to the
+Unix epoch. So tar archives created on MacOS with
+<b>Archive::Tar</b> can be read both with <i>tar</i> on Unix
+and applications like <i>suntar</i> or <i>Stuffit
+Expander</i> on MacOS.</p>
+<p style="margin-left:9%; margin-top: 1em">Be aware that
+the file's type/creator and resource fork will be lost,
+which is usually what you want in cross−platform
+archives.</p>
+<p style="margin-left:9%; margin-top: 1em">Instead of a
+filename, you can also pass it an existing
+"Archive::Tar::File" object from, for example,
+another archive. The object will be clone, and effectively
+be a copy of the original, not an alias.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a list
+of "Archive::Tar::File" objects that were just
+added.</p>
+<h3>$tar−&gt;add_data ( $filename, $data, [$opthashref] )
+<a name="$tar−&gt;add_data ( $filename, $data, [$opthashref] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes a
+filename, a scalar full of data and optionally a reference
+to a hash with specific options.</p>
+<p style="margin-left:9%; margin-top: 1em">Will add a file
+to the in−memory archive, with name $filename and
+content $data. Specific properties can be set using
+$opthashref. The following list of properties is supported:
+name, size, mtime (last modified date), mode, uid, gid,
+linkname, uname, gname, devmajor, devminor, prefix, type.
+(On MacOS, the file's path and modification times are
+converted to Unix equivalents.)</p>
+<p style="margin-left:9%; margin-top: 1em">Valid values for
+the file type are the following constants defined by
+Archive::Tar::Constant: <br/>
+FILE</p>
+<p style="margin-left:14%;">Regular file.</p>
+<p style="margin-left:9%;">HARDLINK <br/>
+SYMLINK</p>
+<p style="margin-left:14%;">Hard and symbolic
+("soft") links; linkname should specify
+target.</p>
+<p style="margin-left:9%;">CHARDEV <br/>
+BLOCKDEV</p>
+<p style="margin-left:14%;">Character and block devices.
+devmajor and devminor should specify the major and minor
+device numbers.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>DIR</p></td>
+<td width="1%"></td>
+<td width="13%">
+<p>Directory.</p></td>
+<td width="73%">
+</td></tr>
+</table>
+<p style="margin-left:9%;">FIFO</p>
+<p style="margin-left:14%;">FIFO (named pipe).</p>
+<p style="margin-left:9%;">SOCKET</p>
+<p style="margin-left:14%;">Socket.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+"Archive::Tar::File" object that was just added,
+or "undef" on failure.</p>
+<h3>$tar−&gt;error( [$BOOL] )
+<a name="$tar−&gt;error( [$BOOL] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+current error string (usually, the last error reported). If
+a true value was specified, it will give the
+"Carp::longmess" equivalent of the error, in
+effect giving you a stacktrace.</p>
+<p style="margin-left:9%; margin-top: 1em">For backwards
+compatibility, this error is also available as
+$Archive::Tar::error although it is much recommended you use
+the method call instead.</p>
+<h3>$tar−&gt;setcwd( $cwd );
+<a name="$tar−&gt;setcwd( $cwd );"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"Archive::Tar"
+needs to know the current directory, and it will run
+Cwd::cwd() <i>every</i> time it extracts a <i>relative</i>
+entry from the tarfile and saves it in the file system. (As
+of version 1.30, however, "Archive::Tar" will use
+the speed optimization described below automatically, so
+it's only relevant if you're using extract_file()).</p>
+<p style="margin-left:9%; margin-top: 1em">Since
+"Archive::Tar" doesn't change the current
+directory internally while it is extracting the items in a
+tarball, all calls to Cwd::cwd() can be avoided if we can
+guarantee that the current directory doesn't get changed
+externally.</p>
+<p style="margin-left:9%; margin-top: 1em">To use this
+performance boost, set the current directory via</p>
+<p style="margin-left:9%; margin-top: 1em">use Cwd; <br/>
+$tar−&gt;setcwd( cwd() );</p>
+<p style="margin-left:9%; margin-top: 1em">once before
+calling a function like "extract_file" and
+"Archive::Tar" will use the current directory
+setting from then on and won't call Cwd::cwd()
+internally.</p>
+<p style="margin-left:9%; margin-top: 1em">To switch back
+to the default behaviour, use</p>
+<p style="margin-left:9%; margin-top: 1em">$tar−&gt;setcwd(
+undef );</p>
+<p style="margin-left:9%; margin-top: 1em">and
+"Archive::Tar" will call Cwd::cwd() internally
+again.</p>
+<p style="margin-left:9%; margin-top: 1em">If you're using
+"Archive::Tar"'s extract() method, setcwd() will
+be called for you.</p>
+<h2>Class Methods
+<a name="Class Methods"></a>
+</h2>
+<h3>Archive::Tar−&gt;create_archive($file, $compressed, @filelist)
+<a name="Archive::Tar−&gt;create_archive($file, $compressed, @filelist)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Creates a tar
+file from the list of files provided. The first argument can
+either be the name of the tar file to create or a reference
+to an open file handle (e.g. a GLOB reference).</p>
+<p style="margin-left:9%; margin-top: 1em">The second
+argument is used to indicate compression. You can compress
+using "gzip", "bzip2" or "xz".
+If you pass a digit, it's assumed to be the "gzip"
+compression level (between 1 and 9), but the use of
+constants is preferred:</p>
+<p style="margin-left:9%; margin-top: 1em"># write a gzip
+compressed file <br/>
+Archive::Tar−&gt;create_archive( 'out.tgz',
+COMPRESS_GZIP, @filelist ); <br/>
+# write a bzip compressed file <br/>
+Archive::Tar−&gt;create_archive( 'out.tbz',
+COMPRESS_BZIP, @filelist ); <br/>
+# write a xz compressed file <br/>
+Archive::Tar−&gt;create_archive( 'out.txz',
+COMPRESS_XZ, @filelist );</p>
+<p style="margin-left:9%; margin-top: 1em">Note that when
+you pass in a filehandle, the compression argument is
+ignored, as all files are printed verbatim to your
+filehandle. If you wish to enable compression with
+filehandles, use an "IO::Zlib",
+"IO::Compress::Bzip2" or
+"IO::Compress::Xz" filehandle instead.</p>
+<p style="margin-left:9%; margin-top: 1em">The remaining
+arguments list the files to be included in the tar file.
+These files must all exist. Any files which don't exist or
+can't be read are silently ignored.</p>
+<p style="margin-left:9%; margin-top: 1em">If the archive
+creation fails for any reason, "create_archive"
+will return false. Please use the "error" method
+to find the cause of the failure.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that this
+method does not write "on the fly" as it were; it
+still reads all the files into memory before writing out the
+archive. Consult the FAQ below if this is a problem.</p>
+<h3>Archive::Tar−&gt;iter( $filename, [ $compressed, {opt =&gt; $val} ] )
+<a name="Archive::Tar−&gt;iter( $filename, [ $compressed, {opt =&gt; $val} ] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns an
+iterator function that reads the tar file without loading it
+all in memory. Each time the function is called it will
+return the next file in the tarball. The files are returned
+as "Archive::Tar::File" objects. The iterator
+function returns the empty list once it has exhausted the
+files contained.</p>
+<p style="margin-left:9%; margin-top: 1em">The second
+argument can be a hash reference with options, which are
+identical to the arguments passed to read().</p>
+<p style="margin-left:9%; margin-top: 1em">Example
+usage:</p>
+<p style="margin-left:9%; margin-top: 1em">my $next =
+Archive::Tar−&gt;iter( "example.tar.gz", 1,
+{filter =&gt; qr/\.pm$/} ); <br/>
+while( my $f = $next−&gt;() ) { <br/>
+print $f−&gt;name, "\n"; <br/>
+$f−&gt;extract or warn "Extraction failed";
+<br/>
+# .... <br/>
+}</p>
+<h3>Archive::Tar−&gt;list_archive($file, $compressed, [\@properties])
+<a name="Archive::Tar−&gt;list_archive($file, $compressed, [\@properties])"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns a list
+of the names of all the files in the archive. The first
+argument can either be the name of the tar file to list or a
+reference to an open file handle (e.g. a GLOB
+reference).</p>
+<p style="margin-left:9%; margin-top: 1em">If
+list_archive() is passed an array reference as its third
+argument it returns a list of hash references containing the
+requested properties of each file. The following list of
+properties is supported: full_path, name, size, mtime (last
+modified date), mode, uid, gid, linkname, uname, gname,
+devmajor, devminor, prefix, type.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+"Archive::Tar::File" for details about supported
+properties.</p>
+<p style="margin-left:9%; margin-top: 1em">Passing an array
+reference containing only one element, 'name', is special
+cased to return a list of names rather than a list of hash
+references.</p>
+<h3>Archive::Tar−&gt;extract_archive($file, $compressed)
+<a name="Archive::Tar−&gt;extract_archive($file, $compressed)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Extracts the
+contents of the tar file. The first argument can either be
+the name of the tar file to create or a reference to an open
+file handle (e.g. a GLOB reference). All relative paths in
+the tar file will be created underneath the current working
+directory.</p>
+<p style="margin-left:9%; margin-top: 1em">"extract_archive"
+will return a list of files it extracted. If the archive
+extraction fails for any reason, "extract_archive"
+will return false. Please use the "error" method
+to find the cause of the failure.</p>
+<h3>$bool = Archive::Tar−&gt;has_io_string
+<a name="$bool = Archive::Tar−&gt;has_io_string"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+we currently have "IO::String" support loaded.</p>
+<p style="margin-left:9%; margin-top: 1em">Either
+"IO::String" or "perlio" support is
+needed to support writing stringified archives. Currently,
+"perlio" is the preferred method, if
+available.</p>
+<p style="margin-left:9%; margin-top: 1em">See the
+"GLOBAL VARIABLES" section to see how to change
+this preference.</p>
+<h3>$bool = Archive::Tar−&gt;has_perlio
+<a name="$bool = Archive::Tar−&gt;has_perlio"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+we currently have "perlio" support loaded.</p>
+<p style="margin-left:9%; margin-top: 1em">This requires
+"perl−5.8" or higher, compiled with
+"perlio"</p>
+<p style="margin-left:9%; margin-top: 1em">Either
+"IO::String" or "perlio" support is
+needed to support writing stringified archives. Currently,
+"perlio" is the preferred method, if
+available.</p>
+<p style="margin-left:9%; margin-top: 1em">See the
+"GLOBAL VARIABLES" section to see how to change
+this preference.</p>
+<h3>$bool = Archive::Tar−&gt;has_zlib_support
+<a name="$bool = Archive::Tar−&gt;has_zlib_support"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+"Archive::Tar" can extract "zlib"
+compressed archives</p>
+<h3>$bool = Archive::Tar−&gt;has_bzip2_support
+<a name="$bool = Archive::Tar−&gt;has_bzip2_support"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+"Archive::Tar" can extract "bzip2"
+compressed archives</p>
+<h3>$bool = Archive::Tar−&gt;has_xz_support
+<a name="$bool = Archive::Tar−&gt;has_xz_support"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+"Archive::Tar" can extract "xz"
+compressed archives</p>
+<h3>Archive::Tar−&gt;can_handle_compressed_files
+<a name="Archive::Tar−&gt;can_handle_compressed_files"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A simple
+checking routine, which will return true if
+"Archive::Tar" is able to uncompress compressed
+archives on the fly with "IO::Zlib",
+"IO::Compress::Bzip2" and
+"IO::Compress::Xz" or false if not both are
+installed.</p>
+<p style="margin-left:9%; margin-top: 1em">You can use this
+as a shortcut to determine whether "Archive::Tar"
+will do what you think before passing compressed archives to
+its "read" method.</p>
+<h2>GLOBAL VARIABLES
+<a name="GLOBAL VARIABLES"></a>
+</h2>
+<h3>$Archive::Tar::FOLLOW_SYMLINK
+<a name="$Archive::Tar::FOLLOW_SYMLINK"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Set this
+variable to 1 to make "Archive::Tar" effectively
+make a copy of the file when extracting. Default is 0, which
+means the symlink stays intact. Of course, you will have to
+pack the file linked to as well.</p>
+<p style="margin-left:9%; margin-top: 1em">This option is
+checked when you write out the tarfile using
+"write" or "create_archive".</p>
+<p style="margin-left:9%; margin-top: 1em">This works just
+like "/bin/tar"'s "−h" option.</p>
+<h3>$Archive::Tar::CHOWN
+<a name="$Archive::Tar::CHOWN"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default,
+"Archive::Tar" will try to "chown" your
+files if it is able to. In some cases, this may not be
+desired. In that case, set this variable to 0 to disable
+"chown"−ing, even if it were possible.</p>
+<p style="margin-left:9%; margin-top: 1em">The default is
+1.</p>
+<h3>$Archive::Tar::CHMOD
+<a name="$Archive::Tar::CHMOD"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default,
+"Archive::Tar" will try to "chmod" your
+files to whatever mode was specified for the particular file
+in the archive. In some cases, this may not be desired. In
+that case, set this variable to 0 to disable
+"chmod"−ing.</p>
+<p style="margin-left:9%; margin-top: 1em">The default is
+1.</p>
+<h3>$Archive::Tar::SAME_PERMISSIONS
+<a name="$Archive::Tar::SAME_PERMISSIONS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">When,
+$Archive::Tar::CHMOD is enabled, this setting controls
+whether the permissions on files from the archive are used
+without modification of if they are filtered by removing any
+setid bits and applying the current umask.</p>
+<p style="margin-left:9%; margin-top: 1em">The default is 1
+for the root user and 0 for normal users.</p>
+<h3>$Archive::Tar::DO_NOT_USE_PREFIX
+<a name="$Archive::Tar::DO_NOT_USE_PREFIX"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default,
+"Archive::Tar" will try to put paths that are over
+100 characters in the "prefix" field of your tar
+header, as defined per POSIX−standard. However, some
+(older) tar programs do not implement this spec. To retain
+compatibility with these older or non−POSIX compliant
+versions, you can set the $DO_NOT_USE_PREFIX variable to a
+true value, and "Archive::Tar" will use an
+alternate way of dealing with paths over 100 characters by
+using the "GNU Extended Header" feature.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+clients who do not support the "GNU Extended
+Header" feature will not be able to read these
+archives. Such clients include tars on "Solaris",
+"Irix" and "AIX".</p>
+<p style="margin-left:9%; margin-top: 1em">The default is
+0.</p>
+<h3>$Archive::Tar::DEBUG
+<a name="$Archive::Tar::DEBUG"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Set this
+variable to 1 to always get the "Carp::longmess"
+output of the warnings, instead of the regular
+"carp". This is the same message you would get by
+doing:</p>
+<p style="margin-left:9%; margin-top: 1em">$tar−&gt;error(1);</p>
+<p style="margin-left:9%; margin-top: 1em">Defaults to
+0.</p>
+<h3>$Archive::Tar::WARN
+<a name="$Archive::Tar::WARN"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Set this
+variable to 0 if you do not want any warnings printed.
+Personally I recommend against doing this, but people asked
+for the option. Also, be advised that this is of course not
+threadsafe.</p>
+<p style="margin-left:9%; margin-top: 1em">Defaults to
+1.</p>
+<h3>$Archive::Tar::error
+<a name="$Archive::Tar::error"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Holds the last
+reported error. Kept for historical reasons, but its use is
+very much discouraged. Use the error() method instead:</p>
+<p style="margin-left:9%; margin-top: 1em">warn
+$tar−&gt;error unless $tar−&gt;extract;</p>
+<p style="margin-left:9%; margin-top: 1em">Note that in
+older versions of this module, the error() method would
+return an effectively global value even when called an
+instance method as above. This has since been fixed, and
+multiple instances of "Archive::Tar" now have
+separate error strings.</p>
+<h3>$Archive::Tar::INSECURE_EXTRACT_MODE
+<a name="$Archive::Tar::INSECURE_EXTRACT_MODE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This variable
+indicates whether "Archive::Tar" should allow
+files to be extracted outside their current working
+directory.</p>
+<p style="margin-left:9%; margin-top: 1em">Allowing this
+could have security implications, as a malicious tar archive
+could alter or replace any file the extracting user has
+permissions to. Therefor, the default is to not allow
+insecure extractions.</p>
+<p style="margin-left:9%; margin-top: 1em">If you trust the
+archive, or have other reasons to allow the archive to write
+files outside your current working directory, set this
+variable to "true".</p>
+<p style="margin-left:9%; margin-top: 1em">Note that this
+is a backwards incompatible change from version 1.36 and
+before.</p>
+<h3>$Archive::Tar::HAS_PERLIO
+<a name="$Archive::Tar::HAS_PERLIO"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This variable
+holds a boolean indicating if we currently have
+"perlio" support loaded. This will be enabled for
+any perl greater than 5.8 compiled with
+"perlio".</p>
+<p style="margin-left:9%; margin-top: 1em">If you feel
+strongly about disabling it, set this variable to
+"false". Note that you will then need
+"IO::String" installed to support writing
+stringified archives.</p>
+<p style="margin-left:9%; margin-top: 1em">Don't change
+this variable unless you <b>really</b> know what you're
+doing.</p>
+<h3>$Archive::Tar::HAS_IO_STRING
+<a name="$Archive::Tar::HAS_IO_STRING"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This variable
+holds a boolean indicating if we currently have
+"IO::String" support loaded. This will be enabled
+for any perl that has a loadable "IO::String"
+module.</p>
+<p style="margin-left:9%; margin-top: 1em">If you feel
+strongly about disabling it, set this variable to
+"false". Note that you will then need
+"perlio" support from your perl to be able to
+write stringified archives.</p>
+<p style="margin-left:9%; margin-top: 1em">Don't change
+this variable unless you <b>really</b> know what you're
+doing.</p>
+<h3>$Archive::Tar::ZERO_PAD_NUMBERS
+<a name="$Archive::Tar::ZERO_PAD_NUMBERS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This variable
+holds a boolean indicating if we will create zero padded
+numbers for "size", "mtime" and
+"checksum". The default is 0, indicating that we
+will create space padded numbers. Added for compatibility
+with "busybox" implementations.</p>
+<h3>Tuning the way RESOLVE_SYMLINK will works
+<a name="Tuning the way RESOLVE_SYMLINK will works"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">You can tune the
+behaviour by setting the $Archive::Tar::RESOLVE_SYMLINK
+variable, or $ENV{PERL5_AT_RESOLVE_SYMLINK} before loading
+the module Archive::Tar.</p>
+<p style="margin-left:9%; margin-top: 1em">Values can be
+one of the following: <br/>
+none</p>
+<p style="margin-left:14%;">Disable this mechanism and
+failed as it was in previous version (&lt;1.88)</p>
+<p style="margin-left:9%;">speed (default)</p>
+<p style="margin-left:14%;">If you prefer speed this will
+read again the whole archive using <b>read()</b> so all
+entries will be available</p>
+<p style="margin-left:9%;">memory</p>
+<p style="margin-left:14%;">If you prefer memory</p>
+<p style="margin-left:9%; margin-top: 1em">Limitation: It
+won't work for terminal, pipe or sockets or every non
+seekable source.</p>
+<h3>$Archive::Tar::EXTRACT_BLOCK_SIZE
+<a name="$Archive::Tar::EXTRACT_BLOCK_SIZE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This variable
+holds an integer with the block size that should be used
+when writing files during extraction. It defaults to 1 GiB.
+Please note that this cannot be arbitrarily large since some
+operating systems limit the number of bytes that can be
+written in one call to write(2), so if this is too large,
+extraction may fail with an error.</p>
+<h2>FAQ
+<a name="FAQ"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">What's the
+minimum perl version required to run Archive::Tar?</p>
+<p style="margin-left:14%;">You will need perl version
+5.005_03 or newer.</p>
+<p style="margin-left:9%;">Isn't Archive::Tar slow?</p>
+<p style="margin-left:14%;">Yes it is. It's pure perl, so
+it's a lot slower then your "/bin/tar" However,
+it's very portable. If speed is an issue, consider using
+"/bin/tar" instead.</p>
+<p style="margin-left:9%;">Isn't Archive::Tar heavier on
+memory than /bin/tar?</p>
+<p style="margin-left:14%;">Yes it is, see previous answer.
+Since "Compress::Zlib" and therefore
+"IO::Zlib" doesn't support "seek" on
+their filehandles, there is little choice but to read the
+archive into memory. This is ok if you want to do
+in−memory manipulation of the archive.</p>
+<p style="margin-left:14%; margin-top: 1em">If you just
+want to extract, use the "extract_archive" class
+method instead. It will optimize and write to disk
+immediately.</p>
+<p style="margin-left:14%; margin-top: 1em">Another option
+is to use the "iter" class method to iterate over
+the files in the tarball without reading them all in memory
+at once.</p>
+<p style="margin-left:9%;">Can you lazy−load data
+instead?</p>
+<p style="margin-left:14%;">In some cases, yes. You can use
+the "iter" class method to iterate over the files
+in the tarball without reading them all in memory at
+once.</p>
+<p style="margin-left:9%;">How much memory will an X kb tar
+file need?</p>
+<p style="margin-left:14%;">Probably more than X kb, since
+it will all be read into memory. If this is a problem, and
+you don't need to do in memory manipulation of the archive,
+consider using the "iter" class method, or
+"/bin/tar" instead.</p>
+<p style="margin-left:9%;">What do you do with unsupported
+filetypes in an archive?</p>
+<p style="margin-left:14%;">"Unix" has a few
+filetypes that aren't supported on other platforms, like
+"Win32". If we encounter a "hardlink" or
+"symlink" we'll just try to make a copy of the
+original file, rather than throwing an error.</p>
+<p style="margin-left:14%; margin-top: 1em">This does
+require you to read the entire archive in to memory first,
+since otherwise we wouldn't know what data to fill the copy
+with. (This means that you cannot use the class methods,
+including "iter" on archives that have
+incompatible filetypes and still expect things to work).</p>
+<p style="margin-left:14%; margin-top: 1em">For other
+filetypes, like "chardevs" and
+"blockdevs" we'll warn that the extraction of this
+particular item didn't work.</p>
+<p style="margin-left:9%;">I'm using WinZip, or some other
+non−POSIX client, and files are not <br/>
+being extracted properly!</p>
+<p style="margin-left:14%;">By default,
+"Archive::Tar" is in a completely
+POSIX−compatible mode, which uses the
+POSIX−specification of "tar" to store files.
+For paths greater than 100 characters, this is done using
+the "POSIX header prefix".
+Non−POSIX−compatible clients may not support
+this part of the specification, and may only support the
+"GNU Extended Header" functionality. To facilitate
+those clients, you can set the
+$Archive::Tar::DO_NOT_USE_PREFIX variable to
+"true". See the "GLOBAL VARIABLES"
+section for details on this variable.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that GNU
+tar earlier than version 1.14 does not cope well with the
+"POSIX header prefix". If you use such a version,
+consider setting the $Archive::Tar::DO_NOT_USE_PREFIX
+variable to "true".</p>
+<p style="margin-left:9%;">How do I extract only files that
+have property X from an archive?</p>
+<p style="margin-left:14%;">Sometimes, you might not wish
+to extract a complete archive, just the files that are
+relevant to you, based on some criteria.</p>
+<p style="margin-left:14%; margin-top: 1em">You can do this
+by filtering a list of "Archive::Tar::File"
+objects based on your criteria. For example, to extract only
+files that have the string "foo" in their title,
+you would use:</p>
+<p style="margin-left:14%; margin-top: 1em">$tar−&gt;extract(
+<br/>
+grep { $_−&gt;full_path =˜ /foo/ }
+$tar−&gt;get_files <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">This way, you
+can filter on any attribute of the files in the archive.
+Consult the "Archive::Tar::File" documentation on
+how to use these objects.</p>
+<p style="margin-left:9%;">How do I access .tar.Z
+files?</p>
+<p style="margin-left:14%;">The "Archive::Tar"
+module can optionally use "Compress::Zlib" (via
+the "IO::Zlib" module) to access tar files that
+have been compressed with "gzip". Unfortunately
+tar files compressed with the Unix "compress"
+utility cannot be read by "Compress::Zlib" and so
+cannot be directly accesses by "Archive::Tar".</p>
+<p style="margin-left:14%; margin-top: 1em">If the
+"uncompress" or "gunzip" programs are
+available, you can use one of these workarounds to read
+".tar.Z" files from "Archive::Tar"</p>
+<p style="margin-left:14%; margin-top: 1em">Firstly with
+"uncompress"</p>
+<p style="margin-left:14%; margin-top: 1em">use
+Archive::Tar; <br/>
+open F, "uncompress −c $filename |"; <br/>
+my $tar = Archive::Tar−&gt;new(*F); <br/>
+...</p>
+<p style="margin-left:14%; margin-top: 1em">and this with
+"gunzip"</p>
+<p style="margin-left:14%; margin-top: 1em">use
+Archive::Tar; <br/>
+open F, "gunzip −c $filename |"; <br/>
+my $tar = Archive::Tar−&gt;new(*F); <br/>
+...</p>
+<p style="margin-left:14%; margin-top: 1em">Similarly, if
+the "compress" program is available, you can use
+this to write a ".tar.Z" file</p>
+<p style="margin-left:14%; margin-top: 1em">use
+Archive::Tar; <br/>
+use IO::File; <br/>
+my $fh = IO::File−&gt;new( "| compress −c
+&gt;$filename" ); <br/>
+my $tar = Archive::Tar−&gt;new(); <br/>
+... <br/>
+$tar−&gt;write($fh); <br/>
+$fh−&gt;close ;</p>
+<p style="margin-left:9%;">How do I handle Unicode
+strings?</p>
+<p style="margin-left:14%;">"Archive::Tar" uses
+byte semantics for any files it reads from or writes to
+disk. This is not a problem if you only deal with files and
+never look at their content or work solely with byte
+strings. But if you use Unicode strings with character
+semantics, some additional steps need to be taken.</p>
+<p style="margin-left:14%; margin-top: 1em">For example, if
+you add a Unicode string like</p>
+<p style="margin-left:14%; margin-top: 1em"># Problem <br/>
+$tar−&gt;add_data('file.txt', "Euro:
+\x{20AC}");</p>
+<p style="margin-left:14%; margin-top: 1em">then there will
+be a problem later when the tarfile gets written out to disk
+via "$tar−&gt;write()":</p>
+<p style="margin-left:14%; margin-top: 1em">Wide character
+in print at .../Archive/Tar.pm line 1014.</p>
+<p style="margin-left:14%; margin-top: 1em">The data was
+added as a Unicode string and when writing it out to disk,
+the ":utf8" line discipline wasn't set by
+"Archive::Tar", so Perl tried to convert the
+string to ISO−8859 and failed. The written file now
+contains garbage.</p>
+<p style="margin-left:14%; margin-top: 1em">For this
+reason, Unicode strings need to be converted to
+UTF−8−encoded bytestrings before they are handed
+off to add_data():</p>
+<p style="margin-left:14%; margin-top: 1em">use Encode;
+<br/>
+my $data = "Accented character: \x{20AC}"; <br/>
+$data = encode('utf8', $data); <br/>
+$tar−&gt;add_data('file.txt', $data);</p>
+<p style="margin-left:14%; margin-top: 1em">A opposite
+problem occurs if you extract a UTF8−encoded file from
+a tarball. Using get_content() on the
+"Archive::Tar::File" object will return its
+content as a bytestring, not as a Unicode string.</p>
+<p style="margin-left:14%; margin-top: 1em">If you want it
+to be a Unicode string (because you want character semantics
+with operations like regular expression matching), you need
+to decode the UTF8−encoded content and have Perl
+convert it into a Unicode string:</p>
+<p style="margin-left:14%; margin-top: 1em">use Encode;
+<br/>
+my $data = $tar−&gt;get_content(); <br/>
+# Make it a Unicode string <br/>
+$data = decode('utf8', $data);</p>
+<p style="margin-left:14%; margin-top: 1em">There is no
+easy way to provide this functionality in
+"Archive::Tar", because a tarball can contain many
+files, and each of which could be encoded in a different
+way.</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The AIX tar does
+not fill all unused space in the tar archive with 0x00. This
+sometimes leads to warning messages from
+"Archive::Tar".</p>
+<p style="margin-left:9%; margin-top: 1em">Invalid header
+block at offset nnn</p>
+<p style="margin-left:9%; margin-top: 1em">A fix for that
+problem is scheduled to be released in the following levels
+of AIX, all of which should be coming out in the 4th quarter
+of 2009:</p>
+<p style="margin-left:9%; margin-top: 1em">AIX 5.3 TL7 SP10
+<br/>
+AIX 5.3 TL8 SP8 <br/>
+AIX 5.3 TL9 SP5 <br/>
+AIX 5.3 TL10 SP2 <br/>
+AIX 6.1 TL0 SP11 <br/>
+AIX 6.1 TL1 SP7 <br/>
+AIX 6.1 TL2 SP6 <br/>
+AIX 6.1 TL3 SP3</p>
+<p style="margin-left:9%; margin-top: 1em">The IBM APAR
+number for this problem is IZ50240 (Reported component ID:
+5765G0300 / AIX 5.3). It is possible to get an ifix for that
+problem. If you need an ifix please contact your local IBM
+AIX support.</p>
+<h2>TODO
+<a name="TODO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Check if passed
+in handles are open for read/write</p>
+<p style="margin-left:14%;">Currently I don't know of any
+portable pure perl way to do this. Suggestions welcome.</p>
+<p style="margin-left:9%;">Allow archives to be passed in
+as string</p>
+<p style="margin-left:14%;">Currently, we only allow opened
+filehandles or filenames, but not strings. The internals
+would need some reworking to facilitate stringified
+archives.</p>
+<p style="margin-left:9%;">Facilitate processing an opened
+filehandle of a compressed archive</p>
+<p style="margin-left:14%;">Currently, we only support this
+if the filehandle is an IO::Zlib object. Environments, like
+apache, will present you with an opened filehandle to an
+uploaded file, which might be a compressed archive.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The GNU tar
+specification</p>
+<p style="margin-left:14%;">&lt;https://www.gnu.org/software/tar/manual/tar.html&gt;</p>
+<p style="margin-left:9%;">The PAX format specification</p>
+<p style="margin-left:14%;">The specification which tar
+derives from;
+&lt;https://pubs.opengroup.org/onlinepubs/007904975/utilities/pax.html&gt;</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module by
+Jos Boumans &lt;kane@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">Please reports
+bugs to &lt;bug−archive−tar@rt.cpan.org&gt;.</p>
+<h2>ACKNOWLEDGEMENTS
+<a name="ACKNOWLEDGEMENTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Thanks to Sean
+Burke, Chris Nandor, Chip Salzenberg, Tim Heaney, Gisle Aas,
+Rainer Tammer and especially Andrew Savige for their help
+and suggestions.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+copyright (c) 2002 − 2009 Jos Boumans
+&lt;kane@cpan.org&gt;. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you may redistribute and/or modify it under
+the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

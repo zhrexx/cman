@@ -1,0 +1,203 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:32 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_multi_timeout</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_multi_timeout</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#TYPICAL USAGE">TYPICAL USAGE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_multi_timeout
+− how long to wait for action before proceeding</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLMcode
+curl_multi_timeout(CURLM *multi_handle, long *timeout);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">An application
+using the libcurl multi interface should call
+<i>curl_multi_timeout(3)</i> to figure out how long it
+should wait for socket actions − at most −
+before proceeding.</p>
+<p style="margin-left:9%; margin-top: 1em">Proceeding means
+either doing the socket−style timeout action: call the
+<i>curl_multi_socket_action(3)</i> function with the
+<b>sockfd</b> argument set to CURL_SOCKET_TIMEOUT, or call
+<i>curl_multi_perform(3)</i> if you are using the simpler
+and older multi interface approach.</p>
+<p style="margin-left:9%; margin-top: 1em">The timeout
+value returned in the long <b>timeout</b> points to, is in
+number of milliseconds at this moment. If 0, it means you
+should proceed immediately without waiting for anything. If
+it returns −1, there is no timeout at all set.</p>
+<p style="margin-left:9%; margin-top: 1em">An application
+that uses the <i>multi_socket</i> API should not use this
+function. It should instead use the
+<i>CURLMOPT_TIMERFUNCTION(3)</i> option for proper and
+desired behavior.</p>
+<p style="margin-left:9%; margin-top: 1em">Note: if libcurl
+returns a −1 timeout here, it just means that libcurl
+currently has no stored timeout value. You must not wait too
+long (more than a few seconds perhaps) before you call
+<i>curl_multi_perform(3)</i> again.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+struct timeval timeout; <br/>
+long timeo; <br/>
+fd_set fdread; <br/>
+fd_set fdwrite; <br/>
+fd_set fdexcep; <br/>
+int maxfd; <br/>
+CURLM *multi = curl_multi_init();</p>
+<p style="margin-left:9%; margin-top: 1em">curl_multi_timeout(multi,
+&amp;timeo); <br/>
+if(timeo &lt; 0) <br/>
+/* no set timeout, use a default */ <br/>
+timeo = 980;</p>
+<p style="margin-left:9%; margin-top: 1em">timeout.tv_sec =
+timeo / 1000; <br/>
+timeout.tv_usec = (timeo % 1000) * 1000;</p>
+<p style="margin-left:9%; margin-top: 1em">/* wait for
+activities no longer than the set timeout */ <br/>
+select(maxfd + 1, &amp;fdread, &amp;fdwrite, &amp;fdexcep,
+&amp;timeout); <br/>
+}</p>
+<h2>TYPICAL USAGE
+<a name="TYPICAL USAGE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Call
+<i>curl_multi_timeout(3)</i>, then wait for action on the
+sockets. Figure out which sockets to wait for by calling
+<i>curl_multi_fdset(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">When there is
+activity or timeout, call <i>curl_multi_perform(3)</i> and
+then loop − until all transfers are complete.</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.15.4</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The standard
+CURLMcode for multi interface error codes.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curl_multi_fdset</b>(3),
+<b>curl_multi_info_read</b>(3), <b>curl_multi_setopt</b>(3),
+<b>curl_multi_socket</b>(3)</p>
+<hr/>
+</body>
+</html>

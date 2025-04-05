@@ -1,0 +1,196 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:03 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LIBUNWIND−SETJMP</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LIBUNWIND−SETJMP</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#FILES">FILES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind−setjmp
+−− libunwind−based non−local
+gotos</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;setjmp.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">int
+setjmp(jmp_buf env); <br/>
+void longjmp(jmp_buf env, int val); <br/>
+int _setjmp(jmp_buf env); <br/>
+void _longjmp(jmp_buf env, int val); <br/>
+int sigsetjmp(sigjmp_buf env, int savemask); <br/>
+void siglongjmp(sigjmp_buf env, int val);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+unwind−setjmp library offers a libunwind−based
+implementation of non−local gotos. This implementation
+is intended to be a drop−in replacement for the
+normal, system−provided routines of the same name. The
+main advantage of using the unwind−setjmp library is
+that setting up a non−local goto via one of the
+setjmp() routines is very fast. Typically, just 2 or 3 words
+need to be saved in the jump−buffer (plus one call to
+sigprocmask(2), in the case of sigsetjmp). On the other
+hand, executing a non−local goto by calling one of the
+longjmp() routines tends to be much slower than with the
+system−provided routines. In fact, the time spent on a
+longjmp() will be proportional to the number of call frames
+that exist between the points where setjmp() and longjmp()
+were called. For this reason, the unwind−setjmp
+library is beneficial primarily in applications that
+frequently call setjmp() but only rarely call longjmp().</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em"><b>*</b></p></td>
+<td width="8%"></td>
+<td width="82%">
+<p style="margin-top: 1em">The correct operation of this
+library depends on the presence of correct unwind
+information. On newer platforms, this is rarely an issue. On
+older platforms, care needs to be taken to ensure that each
+of the functions whose stack frames may have to be unwound
+during a longjmp() have correct unwind information (on those
+platforms, there is usually a compiler−switch, such as
+<b>−funwind−tables</b>, to request the
+generation of unwind information).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p><b>*</b></p></td>
+<td width="8%"></td>
+<td width="82%">
+<p>The contents of jmp_buf and sigjmp_buf as setup and used
+by these routines is completely different from the ones used
+by the system−provided routines. Thus, a
+jump−buffer created by the libunwind−based
+setjmp()/_setjmp may only be used in a call to the
+libunwind−based longjmp()/_longjmp(). The analogous
+applies for sigjmp_buf with sigsetjmp() and
+siglongjmp().</p> </td></tr>
+</table>
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>−l</b>unwind−setjmp</p>
+<p style="margin-left:18%;">The library an application
+should be linked against to ensure it uses the
+libunwind−based non−local goto routines.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind(3libunwind),
+setjmp(3), longjmp(3), _setjmp(3), _longjmp(3),
+sigsetjmp(3), siglongjmp(3)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">David
+Mosberger−Tang <br/>
+Email: <b>dmosberger@gmail.com</b> <br/>
+WWW: <b>http://www.nongnu.org/libunwind/</b>.</p>
+<hr/>
+</body>
+</html>

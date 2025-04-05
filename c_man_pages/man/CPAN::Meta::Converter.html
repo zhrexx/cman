@@ -1,0 +1,305 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:18 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CPAN::Meta::Converter</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CPAN::Meta::Converter</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#new">new</a><br/>
+<a href="#convert">convert</a><br/>
+<a href="#upgrade_fragment">upgrade_fragment</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CPAN::Meta::Converter
+− Convert CPAN distribution metadata structures</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version
+2.150010</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">my $struct =
+decode_json_file('META.json'); <br/>
+my $cmc = CPAN::Meta::Converter−&gt;new( $struct );
+<br/>
+my $new_struct = $cmc−&gt;convert( version =&gt;
+"2" );</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+converts CPAN Meta structures from one form to another. The
+primary use is to convert older structures to the most
+modern version of the specification, but other
+transformations may be implemented in the future as needed.
+(E.g. stripping all custom fields or stripping all optional
+fields.)</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>new
+<a name="new"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $cmc =
+CPAN::Meta::Converter−&gt;new( $struct );</p>
+<p style="margin-left:9%; margin-top: 1em">The constructor
+should be passed a valid metadata structure but invalid
+structures are accepted. If no meta−spec version is
+provided, version 1.0 will be assumed.</p>
+<p style="margin-left:9%; margin-top: 1em">Optionally, you
+can provide a "default_version" argument after
+$struct:</p>
+<p style="margin-left:9%; margin-top: 1em">my $cmc =
+CPAN::Meta::Converter−&gt;new( $struct,
+default_version =&gt; "1.4" );</p>
+<p style="margin-left:9%; margin-top: 1em">This is only
+needed when converting a metadata fragment that does not
+include a "meta−spec" field.</p>
+<h3>convert
+<a name="convert"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $new_struct =
+$cmc−&gt;convert( version =&gt; "2" );</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a new
+hash reference with the metadata converted to a different
+form. "convert" will die if any
+conversion/standardization still results in an invalid
+structure.</p>
+<p style="margin-left:9%; margin-top: 1em">Valid parameters
+include:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="82%">
+<p>"version" −− Indicates the desired
+specification version (e.g. "1.0", "1.1"
+... "1.4", "2"). Defaults to the latest
+version of the CPAN Meta Spec.</p></td>
+<td width="4%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Conversion
+proceeds through each version in turn. For example, a
+version 1.2 structure might be converted to 1.3 then 1.4
+then finally to version 2. The conversion process attempts
+to clean−up simple errors and standardize data. For
+example, if "author" is given as a scalar, it will
+converted to an array reference containing the item.
+(Converting a structure to its own version will also
+clean−up and standardize.)</p>
+<p style="margin-left:9%; margin-top: 1em">When data are
+cleaned and standardized, missing or invalid fields will be
+replaced with sensible defaults when possible. This may be
+lossy or imprecise. For example, some badly structured
+META.yml files on CPAN have prerequisite modules listed as
+both keys and values:</p>
+<p style="margin-left:9%; margin-top: 1em">requires =&gt; {
+'Foo::Bar' =&gt; 'Bam::Baz' }</p>
+<p style="margin-left:9%; margin-top: 1em">These would be
+split and each converted to a prerequisite with a minimum
+version of zero.</p>
+<p style="margin-left:9%; margin-top: 1em">When some
+mandatory fields are missing or invalid, the conversion will
+attempt to provide a sensible default or will fill them with
+a value of 'unknown'. For example a missing or unrecognized
+"license" field will result in a
+"license" field of 'unknown'. Fields that may get
+an 'unknown' include:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p style="margin-top: 1em">abstract</p></td>
+<td width="76%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p>author</p></td>
+<td width="76%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p>license</p></td>
+<td width="76%">
+</td></tr>
+</table>
+<h3>upgrade_fragment
+<a name="upgrade_fragment"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $new_struct =
+$cmc−&gt;upgrade_fragment;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a new
+hash reference with the metadata converted to the latest
+version of the CPAN Meta Spec. No validation is done on the
+result −− you must validate after merging
+fragments into a complete metadata document.</p>
+<p style="margin-left:9%; margin-top: 1em">Available since
+version 2.141170.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please report
+any bugs or feature using the CPAN Request Tracker. Bugs can
+be submitted through the web interface at
+&lt;http://rt.cpan.org/Dist/Display.html?Queue=CPAN−Meta&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">When submitting
+a bug or request, please include a test−file or a
+patch to an existing test−file that illustrates the
+bug or desired feature.</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p style="margin-top: 1em">David Golden
+&lt;dagolden@cpan.org&gt;</p> </td>
+<td width="45%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p>Ricardo Signes &lt;rjbs@cpan.org&gt;</p></td>
+<td width="45%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p>Adam Kennedy &lt;adamk@cpan.org&gt;</p></td>
+<td width="45%">
+</td></tr>
+</table>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2010 by David Golden, Ricardo Signes, Adam
+Kennedy and Contributors.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

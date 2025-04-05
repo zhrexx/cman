@@ -1,0 +1,269 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:54 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TAP::Parser::SourceHandler</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">TAP::Parser::SourceHandler</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#Class Methods">Class Methods</a><br/>
+<a href="#SUBCLASSING">SUBCLASSING</a><br/>
+<a href="#Example">Example</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TAP::Parser::SourceHandler
+− Base class for different TAP source handlers</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Version 3.50</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"># abstract class
+− don't use directly! <br/>
+# see TAP::Parser::IteratorFactory for general usage <br/>
+# must be sub−classed for use <br/>
+package MySourceHandler; <br/>
+use base 'TAP::Parser::SourceHandler'; <br/>
+sub can_handle { return $confidence_level } <br/>
+sub make_iterator { return $iterator } <br/>
+# see example below for more details</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This is an
+abstract base class for TAP::Parser::Source handlers /
+handlers.</p>
+<p style="margin-left:9%; margin-top: 1em">A
+"TAP::Parser::SourceHandler" does whatever is
+necessary to produce &amp; capture a stream of TAP from the
+<i>raw</i> source, and package it up in a
+TAP::Parser::Iterator for the parser to consume.</p>
+<p style="margin-left:9%; margin-top: 1em">"SourceHandlers"
+must implement the <i>source detection &amp; handling</i>
+interface used by TAP::Parser::IteratorFactory. At 2
+methods, the interface is pretty simple:
+"can_handle" and "make_source".</p>
+<p style="margin-left:9%; margin-top: 1em">Unless you're
+writing a new TAP::Parser::SourceHandler, a plugin, or
+subclassing TAP::Parser, you probably won't need to use this
+module directly.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>Class Methods
+<a name="Class Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>"can_handle"</i></p>
+<p style="margin-left:9%; margin-top: 1em"><i>Abstract
+method</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">my $vote =
+$class−&gt;can_handle( $source );</p>
+<p style="margin-left:9%; margin-top: 1em">$source is a
+TAP::Parser::Source.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a number
+between 0 &amp; 1 reflecting how confidently the raw source
+can be handled. For example, 0 means the source cannot
+handle it, 0.5 means it may be able to, and 1 means it
+definitely can. See "detect_source" in
+TAP::Parser::IteratorFactory for details on how this is
+used.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"make_iterator"</i></p>
+<p style="margin-left:9%; margin-top: 1em"><i>Abstract
+method</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">my $iterator =
+$class−&gt;make_iterator( $source );</p>
+<p style="margin-left:9%; margin-top: 1em">$source is a
+TAP::Parser::Source.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a new
+TAP::Parser::Iterator object for use by the TAP::Parser.
+"croak"s on error.</p>
+<h2>SUBCLASSING
+<a name="SUBCLASSING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please see
+"SUBCLASSING" in TAP::Parser for a subclassing
+overview, and any of the subclasses that ship with this
+module as an example. What follows is a quick overview.</p>
+<p style="margin-left:9%; margin-top: 1em">Start by
+familiarizing yourself with TAP::Parser::Source and
+TAP::Parser::IteratorFactory.
+TAP::Parser::SourceHandler::RawTAP is the easiest
+sub−class to use as an example.</p>
+<p style="margin-left:9%; margin-top: 1em">It's important
+to point out that if you want your subclass to be
+automatically used by TAP::Parser you'll have to and make
+sure it gets loaded somehow. If you're using prove you can
+write an App::Prove plugin. If you're using TAP::Parser or
+TAP::Harness directly (e.g. through a custom script,
+ExtUtils::MakeMaker, or Module::Build) you can use the
+"config" option which will cause
+"load_sources" in TAP::Parser::IteratorFactory to
+load your subclass).</p>
+<p style="margin-left:9%; margin-top: 1em">Don't forget to
+register your class with "register_handler" in
+TAP::Parser::IteratorFactory.</p>
+<h3>Example
+<a name="Example"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">package
+MySourceHandler; <br/>
+use strict; <br/>
+use MySourceHandler; # see TAP::Parser::SourceHandler <br/>
+use TAP::Parser::IteratorFactory; <br/>
+use base 'TAP::Parser::SourceHandler'; <br/>
+TAP::Parser::IteratorFactory−&gt;register_handler(
+__PACKAGE__ ); <br/>
+sub can_handle { <br/>
+my ( $class, $src ) = @_; <br/>
+my $meta = $src−&gt;meta; <br/>
+my $config = $src−&gt;config_for( $class ); <br/>
+if ($config−&gt;{accept_all}) { <br/>
+return 1.0; <br/>
+} elsif (my $file = $meta−&gt;{file}) { <br/>
+return 0.0 unless $file−&gt;{exists}; <br/>
+return 1.0 if $file−&gt;{lc_ext} eq '.tap'; <br/>
+return 0.9 if $file−&gt;{shebang} &amp;&amp;
+$file−&gt;{shebang} =˜ /ˆ#!.+tap/; <br/>
+return 0.5 if $file−&gt;{text}; <br/>
+return 0.1 if $file−&gt;{binary}; <br/>
+} elsif ($meta−&gt;{scalar}) { <br/>
+return 0.8 if $$raw_source_ref =˜ /\d\.\.\d/; <br/>
+return 0.6 if $meta−&gt;{has_newlines}; <br/>
+} elsif ($meta−&gt;{array}) { <br/>
+return 0.8 if $meta−&gt;{size} &lt; 5; <br/>
+return 0.6 if $raw_source_ref−&gt;[0] =˜ /foo/;
+<br/>
+return 0.5; <br/>
+} elsif ($meta−&gt;{hash}) { <br/>
+return 0.6 if $raw_source_ref−&gt;{foo}; <br/>
+return 0.2; <br/>
+} <br/>
+return 0; <br/>
+} <br/>
+sub make_iterator { <br/>
+my ($class, $source) = @_; <br/>
+# this is where you manipulate the source and <br/>
+# capture the stream of TAP in an iterator <br/>
+# either pick a TAP::Parser::Iterator::* or write your
+own... <br/>
+my $iterator = TAP::Parser::Iterator::Array−&gt;new([
+'foo', 'bar' ]); <br/>
+return $iterator; <br/>
+} <br/>
+1;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TAPx
+Developers.</p>
+<p style="margin-left:9%; margin-top: 1em">Source detection
+stuff added by Steve Purkis</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TAP::Object,
+TAP::Parser, TAP::Parser::Source, TAP::Parser::Iterator,
+TAP::Parser::IteratorFactory,
+TAP::Parser::SourceHandler::Executable,
+TAP::Parser::SourceHandler::Perl,
+TAP::Parser::SourceHandler::File,
+TAP::Parser::SourceHandler::Handle,
+TAP::Parser::SourceHandler::RawTAP</p>
+<hr/>
+</body>
+</html>

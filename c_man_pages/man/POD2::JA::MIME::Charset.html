@@ -1,0 +1,1098 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:24 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>POD2::JA::MIME::Charset</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">POD2::JA::MIME::Charset</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#定 義">定 義</a><br/>
+<a href="#コ ン ス ト ラ ク タ">コ ン ス ト ラ ク タ</a><br/>
+<a href="#キ ャ ラ ク タ セ ッ ト 情 報 の 取 得">キ ャ ラ ク タ セ ッ ト 情 報 の 取 得</a><br/>
+<a href="#テ キ ス ト デ ー タ の 変 換">テ キ ス ト デ ー タ の 変 換</a><br/>
+<a href="#モ ジ ュ ー ル 既 定 値 の 操 作">モ ジ ュ ー ル 既 定 値 の 操 作</a><br/>
+<a href="#定 数">定 数</a><br/>
+<a href="#エ ラ ー 処 理">エ ラ ー 処 理</a><br/>
+<a href="#設 定 フ ァ イ ル">設 定 フ ァ イ ル</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#非 互 換 な 変 更">非 互 換 な 変 更</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">MIME::Charset˜[ja]
+− MIME の た め の キ
+ャ ラ ク タ セ ッ
+ト 情 報</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+MIME::Charset: <br/>
+$charset =
+MIME::Charset−&gt;new("euc−jp");</p>
+<p style="margin-left:9%; margin-top: 1em">キ
+ャ ラ ク タ セ ッ
+ト 情 報 の 取 得 :</p>
+<p style="margin-left:9%; margin-top: 1em">$benc =
+$charset−&gt;body_encoding; # 例 "Q"
+<br/>
+$cset = $charset−&gt;as_string; # 例
+"US−ASCII" <br/>
+$henc = $charset−&gt;header_encoding; # 例
+"S" <br/>
+$cset = $charset−&gt;output_charset; # 例
+"ISO−2022−JP"</p>
+<p style="margin-left:9%; margin-top: 1em">テ
+キ ス ト デ ー タ
+の 変 換 :</p>
+<p style="margin-left:9%; margin-top: 1em">($text,
+$charset, $encoding) = <br/>
+$charset−&gt;header_encode( <br/>
+"\xc9\xc2\xc5\xaa\xc0\xde\xc3\xef\xc5\xaa". <br/>
+"\xc7\xd1\xca\xaa\xbd\xd0\xce\xcf\xb4\xef", <br/>
+Charset =&gt; 'euc−jp'); <br/>
+# ...例 え ば (&lt;変 換
+ず み 文 字 列 &gt;,
+"ISO−2022−JP", "B") を
+返 す 。 <br/>
+($text, $charset, $encoding) = <br/>
+$charset−&gt;body_encode( <br/>
+"Collectioneur path\xe9tiquement ", <br/>
+Charset =&gt; 'latin1'); <br/>
+# ...例 え ば (&lt;元 の
+文 字 列 &gt;,
+"ISO−8859−1",
+"QUOTED−PRINTABLE") を 返
+す 。 <br/>
+$len = $charset−&gt;encoded_header_len( <br/>
+"Perl\xe8\xa8\x80\xe8\xaa\x9e", <br/>
+Charset =&gt; "utf−8", <br/>
+Encoding =&gt; "b"); <br/>
+# ...例 え ば 28 を 返
+す 。</p>
+<p style="margin-left:9%; margin-top: 1em">モ
+ジ ュ ー ル 既 定
+値 の 操 作 :</p>
+<p style="margin-left:9%; margin-top: 1em">MIME::Charset::alias("csEUCKR",
+"euc−kr"); <br/>
+MIME::Charset::default("iso−8859−1");
+<br/>
+MIME::Charset::fallback("us−ascii");</p>
+<p style="margin-left:9%; margin-top: 1em">非
+OO関 数 (近 い 将 来
+に 廃 止 ):</p>
+<p style="margin-left:9%; margin-top: 1em">use
+MIME::Charset qw(:info); <br/>
+$benc = body_encoding("iso−8859−2"); #
+"Q" <br/>
+$cset = canonical_charset("ANSI X3.4−1968");
+# "US−ASCII" <br/>
+$henc = header_encoding("utf−8"); #
+"S" <br/>
+$cset = output_charset("shift_jis"); #
+"ISO−2022−JP" <br/>
+use MIME::Charset qw(:trans); <br/>
+($text, $charset, $encoding) = <br/>
+header_encode( <br/>
+"\xc9\xc2\xc5\xaa\xc0\xde\xc3\xef\xc5\xaa". <br/>
+"\xc7\xd1\xca\xaa\xbd\xd0\xce\xcf\xb4\xef", <br/>
+"euc−jp"); <br/>
+# ...(&lt;変 換 さ れ た
+テ キ ス ト &gt;,
+"ISO−2022−JP", "B") を
+返 す 。 <br/>
+($text, $charset, $encoding) = <br/>
+body_encode( <br/>
+"Collectioneur path\xe9tiquement ". <br/>
+"\xe9clectique de d\xe9chets", <br/>
+"latin1"); <br/>
+# ...(&lt;元 の テ キ ス
+ト &gt;, "ISO−8859−1",
+"QUOTED−PRINTABLE") を 返
+す 。 <br/>
+$len = encoded_header_len( <br/>
+"Perl\xe8\xa8\x80\xe8\xaa\x9e", "b",
+"utf−8"); # 28</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">MIME::Charset
+は 、 イ ン タ ー
+ネ ッ ト 上 で の MIME
+メ ッ セ ー ジ に
+用 い る キ ャ ラ
+ク タ セ ッ ト の
+情 報 を 提 供 す
+る 。</p>
+<h3>定 義
+<a name="定 義"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>キ
+ャ ラ ク タ セ ッ
+ト</b> と は 、 MIME で
+の ``character set'' の こ と
+で 、 オ ク テ ッ
+ト の 列 を 文 字
+の 列 に 変 換 す
+る 方 法 を 指 す
+。 こ れ は 、 ISO/IEC
+に お け る ``符 号
+化 文 字 集 合 '' (CCS)
+と ``文 字 符 号 化
+法 '' (CES) の 両 方 の
+概 念 を 包 含 す
+る 。</p>
+<p style="margin-left:9%; margin-top: 1em"><b>エ
+ン コ ー デ ィ ン
+グ</b> と は 、 MIME で
+の そ れ の こ と
+で 、 メ ッ セ ー
+ジ 本 体 や メ ッ
+セ ー ジ ヘ ッ ダ
+本 体 を 印 字 可
+能 な US−ASCII 文 字 の
+列 と し て 表 現
+す る 方 法 を 指
+す 。</p>
+<h3>コ ン ス ト ラ ク タ
+<a name="コ ン ス ト ラ ク タ"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$charset =
+MIME::Charset−&gt;new([CHARSET [, OPTS]])</p>
+<p style="margin-left:14%;">キ ャ ラ
+ク タ セ ッ ト オ
+ブ ジ ェ ク ト を
+作 成 し て 返 す
+。</p>
+<p style="margin-left:14%; margin-top: 1em">OPTS に
+は 次 の 対 を 指
+定 で き る 。 <b>NOTE</b>:
+Unicode/マ ル チ バ イ
+ト 対 応 が 有 効
+に な っ て い な
+い と き ("USE_ENCODE" 参
+照 ) は 、 変 換 を
+行 わ な い の で
+、 次 の オ プ シ
+ョ ン は 効 果 を
+持 た な い 。 <br/>
+Mapping =&gt; MAPTYPE</p>
+<p style="margin-left:19%;">キ ャ ラ
+ク タ セ ッ ト 名
+に 対 し て 実 際
+に 使 う マ ッ ピ
+ン グ の 拡 張 を
+す る か ど う か
+。 "EXTENDED" は 拡 張
+マ ッ ピ ン グ を
+使 う 。 "STANDARD" は
+標 準 化 さ れ て
+い る 厳 密 な マ
+ッ ピ ン グ を 使
+う 。 既 定 は
+"EXTENDED"。</p>
+<h3>キ ャ ラ ク タ セ ッ ト 情 報 の 取 得
+<a name="キ ャ ラ ク タ セ ッ ト 情 報 の 取 得"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$charset−&gt;body_encoding
+<br/>
+body_encoding CHARSET</p>
+<p style="margin-left:14%;">CHARSET の メ
+ッ セ ー ジ 本 体
+で 推 奨 さ れ る
+伝 送 エ ン コ ー
+デ ィ ン グ を 取
+得 す る 。</p>
+<p style="margin-left:14%; margin-top: 1em">返
+値 は "B" (BASE64)、
+"Q" (QUOTED−PRINTABLE)、 "S"
+(ど ち ら か 短 い
+ほ う )、 "undef" (伝
+送 エ ン コ ー ド
+し な く て よ い
+−−− 7BIT か 8BIT) の い
+ず れ か 。 こ れ
+は メ ッ セ ー ジ
+ヘ ッ ダ の エ ン
+コ ー デ ィ ン グ
+と は 違 う こ と
+も あ る 。</p>
+<p style="margin-left:9%;">$charset−&gt;as_string
+<br/>
+canonical_charset CHARSET</p>
+<p style="margin-left:14%;">キ ャ ラ
+ク タ セ ッ ト の
+正 規 の 名 前 を
+取 得 す る 。</p>
+<p style="margin-left:9%;">$charset−&gt;decoder</p>
+<p style="margin-left:14%;">キ ャ ラ
+ク タ セ ッ ト を
+Unicode に 復 号 す る
+の に 使 う
+"Encode::Encoding" オ ブ ジ
+ェ ク ト を 返 す
+。 キ ャ ラ ク タ
+セ ッ ト が 指 定
+さ れ て い な か
+っ た か 、 当 モ
+ジ ュ ー ル の 知
+ら な い キ ャ ラ
+ク タ セ ッ ト で
+あ っ た 場 合 は
+、 undef 値 を 返 す
+。</p>
+<p style="margin-left:9%;">$charset−&gt;dup</p>
+<p style="margin-left:14%;">キ ャ ラ
+ク タ セ ッ ト オ
+ブ ジ ェ ク ト を
+複 写 す る 。</p>
+<p style="margin-left:9%;">$charset−&gt;encoder([CHARSET])</p>
+<p style="margin-left:14%;">イ ン タ
+ー ネ ッ ト 上 の MIME
+メ ッ セ ー ジ で
+使 う こ と を 推
+奨 さ れ る 互 換
+キ ャ ラ ク タ セ
+ッ ト で 符 号 化
+す る の に 使 う
+"Encode::Encoding" オ ブ ジ
+ェ ク ト を 返 す
+。</p>
+<p style="margin-left:14%; margin-top: 1em">CHARSET
+引 数 を 指 定 し
+た 場 合 、 $charset オ
+ブ ジ ェ ク ト の
+符 号 化 器 (お よ
+び 出 力 キ ャ ラ
+ク タ セ ッ ト 名 )
+を 、 CHARSET の そ れ
+に 置 き 換 え る
+。 つ ま り 、 $charset
+オ ブ ジ ェ ク ト
+は 元 の キ ャ ラ
+ク タ セ ッ ト か
+ら 新 た な CHARSET へ
+の 変 換 器 と な
+る 。</p>
+<p style="margin-left:9%;">$charset−&gt;header_encoding
+<br/>
+header_encoding CHARSET</p>
+<p style="margin-left:14%;">CHARSET の メ
+ッ セ ー ジ ヘ ッ
+ダ で 推 奨 さ れ
+る エ ン コ ー デ
+ィ ン グ 法 を 取
+得 す る 。</p>
+<p style="margin-left:14%; margin-top: 1em">返
+値 は "B"、
+"Q"、 "S" (ど ち
+ら か 短 く な る
+ほ う )、 "undef" (エ
+ン コ ー ド し な
+く て よ い ) の い
+ず れ か 。 こ れ
+は メ ッ セ ー ジ
+本 体 の エ ン コ
+ー デ ィ ン グ と
+は 違 う こ と も
+あ る 。</p>
+<p style="margin-left:9%;">$charset−&gt;output_charset
+<br/>
+output_charset CHARSET</p>
+<p style="margin-left:14%;">指 定 し
+た CHARSET と 互 換 で
+、 イ ン タ ー ネ
+ッ ト 上 の MIME メ ッ
+セ ー ジ で 使 う
+こ と を 推 奨 さ
+れ る キ ャ ラ ク
+タ セ ッ ト 名 を
+(当 モ ジ ュ ー ル
+が 知 っ て い れ
+ば ) 取 得 す る 。</p>
+<p style="margin-left:14%; margin-top: 1em">Unicode/マ
+ル チ バ イ ト 対
+応 が 有 効 に な
+っ て い な い と
+き ("USE_ENCODE" 参 照 )
+は 、 こ の 関 数
+は 単 に "canonical_charset"
+の 結 果 を 返 す
+。</p>
+<h3>テ キ ス ト デ ー タ の 変 換
+<a name="テ キ ス ト デ ー タ の 変 換"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$charset−&gt;body_encode(STRING
+[, OPTS]) <br/>
+body_encode STRING, CHARSET [, OPTS]</p>
+<p style="margin-left:14%;">STRING を (必
+要 な ら ) 変 換 し
+た デ ー タ と 、
+メ ッ セ ー ジ 本
+体 で 推 奨 さ れ
+る 伝 送 エ ン コ
+ー デ ィ ン グ を
+取 得 す る 。 CHARSET
+は STRING を 符 号 化 し
+て い る キ ャ ラ
+ク タ セ ッ ト 。</p>
+<p style="margin-left:14%; margin-top: 1em">OPTS に
+は 以 下 の 対 を
+指 定 で き る 。
+<b>NOTE</b>: Unicode/マ ル チ バ
+イ ト 対 応 が 有
+効 に な っ て い
+な い と き ("USE_ENCODE"
+参 照 ) は 、 変 換
+を 行 わ な い の
+で 、 以 下 の オ
+プ シ ョ ン は 効
+果 を 持 た な い
+。 <br/>
+Detect7bit =&gt; YESNO</p>
+<p style="margin-left:19%;">CHARSET が な
+い と き 、 7ビ ッ
+ト の キ ャ ラ ク
+タ セ ッ ト を 自
+動 認 識 し よ う
+と す る 。 既 定
+は "YES"。</p>
+<p style="margin-left:14%;">Replacement =&gt;
+REPLACEMENT</p>
+<p style="margin-left:19%;">エ ラ ー
+処 理 法 の 指 定
+。 "エ ラ ー 処 理
+" 参 照 。</p>
+<p style="margin-left:14%; margin-top: 1em">3要
+素 の リ ス ト (<i>変
+換 ず み の 文 字
+列</i> , <i>出 力 の キ
+ャ ラ ク タ セ ッ
+ト</i> , <i>伝 送 エ ン
+コ ー デ ィ ン グ</i> )
+が 返 る 。 <i>伝 送
+エ ン コ ー デ ィ
+ン グ</i> は "BASE64"、
+"QUOTED−PRINTABLE"、
+"7BIT"、 "8BIT" の い
+ず れ か 。 <i>出 力
+の キ ャ ラ ク タ
+セ ッ ト</i> が 決 定
+で き ず 、 <i>変 換
+ず み の 文 字 列</i>
+が ASCII以 外 の バ イ
+ト を 含 む と き
+は 、 <i>出 力 の キ
+ャ ラ ク タ セ ッ
+ト</i> は "undef"、 <i>伝
+送 エ ン コ ー デ
+ィ ン グ</i> は "BASE64"
+と な る 。 <i>出 力
+の キ ャ ラ ク タ
+セ ッ ト</i> が
+"US−ASCII" と な る
+の は 、 文 字 列
+が ASCII以 外 の バ イ
+ト を 含 ま な い
+と き に 限 る 。</p>
+<p style="margin-left:9%;">$charset−&gt;decode(STRING
+[,CHECK])</p>
+<p style="margin-left:14%;">STRING を Unicode
+文 字 列 に 復 号
+す る 。</p>
+<p style="margin-left:14%; margin-top: 1em"><b>NOTE</b>:
+Unicode/マ ル チ バ イ
+ト 対 応 が 有 効
+に な っ て い な
+い と き ("USE_ENCODE" 参
+照 ) は 、 こ の 機
+能 を 実 行 す る
+と 死 ぬ 。</p>
+<p style="margin-left:9%;">detect_7bit_charset STRING</p>
+<p style="margin-left:14%;">文 字 列
+STRING を 符 号 化 し て
+い る 7 ビ ッ ト キ
+ャ ラ ク タ セ ッ
+ト を 推 測 す る
+。 STRING が 8ビ ッ ト
+の バ イ ト を 含
+む と き は "undef"
+を 返 す 。 そ う
+で な い と き 、
+キ ャ ラ ク タ セ
+ッ ト が 不 明 な
+ら 初 期 キ ャ ラ
+ク タ セ ッ ト を
+返 す 。</p>
+<p style="margin-left:9%;">$charset−&gt;encode(STRING
+[, CHECK])</p>
+<p style="margin-left:14%;">STRING (Unicode 文
+字 列 ま た は 普
+通 の 文 字 列 ) を
+、 元 の キ ャ ラ
+ク タ セ ッ ト と
+互 換 で イ ン タ
+ー ネ ッ ト 上 の MIME
+メ ッ セ ー ジ で
+使 う こ と を 推
+奨 さ れ る キ ャ
+ラ ク タ セ ッ ト
+を (当 モ ジ ュ ー
+ル が 知 っ て い
+れ ば ) 使 っ て 、
+符 号 化 す る 。
+元 の キ ャ ラ ク
+タ セ ッ ト と 互
+換 キ ャ ラ ク タ
+セ ッ ト が 同 じ
+で も 、 文 字 列
+を Unicode に 復 号 し
+て か ら 符 号 化
+す る こ と に 注
+意 。</p>
+<p style="margin-left:14%; margin-top: 1em"><b>NOTE</b>:
+Unicode/マ ル チ バ イ
+ト 対 応 が 有 効
+に な っ て い な
+い と き ("USE_ENCODE" 参
+照 ) は 、 こ の 機
+能 を 実 行 す る
+と 死 ぬ 。</p>
+<p style="margin-left:9%;">$charset−&gt;encoded_header_len(STRING
+[, ENCODING]) <br/>
+encoded_header_len STRING, ENCODING, CHARSET</p>
+<p style="margin-left:14%;">STRING を メ
+ッ セ ー ジ ヘ ッ
+ダ と し て エ ン
+コ ー ド し た と
+き の 長 さ (行 折
+り は し な い と
+し て ) を 取 得 す
+る 。</p>
+<p style="margin-left:14%; margin-top: 1em">ENCODING
+は "B"、 "Q"、
+"S" ("B" と "Q" の
+う ち 短 く な る
+ほ う ) の い ず れ
+か 。</p>
+<p style="margin-left:9%;">$charset−&gt;header_encode(STRING
+[, OPTS]) <br/>
+header_encode STRING, CHARSET [, OPTS]</p>
+<p style="margin-left:14%;">STRING を (必
+要 な ら ) 変 換 し
+た デ ー タ と 、
+メ ッ セ ー ジ ヘ
+ッ ダ で 推 奨 さ
+れ る エ ン コ ー
+デ ィ ン グ 法 を
+取 得 す る 。 CHARSET
+は STRING を 符 号 化 し
+て い る キ ャ ラ
+ク タ セ ッ ト 。</p>
+<p style="margin-left:14%; margin-top: 1em">OPTS に
+は 以 下 の 対 を
+指 定 で き る 。
+<b>NOTE</b>: Unicode/マ ル チ バ
+イ ト 対 応 が 有
+効 に な っ て い
+な い と き ("USE_ENCODE"
+参 照 ) は 、 変 換
+を 行 わ な い の
+で 、 以 下 の オ
+プ シ ョ ン は 効
+果 を 持 た な い
+。 <br/>
+Detect7bit =&gt; YESNO</p>
+<p style="margin-left:19%;">CHARSET が な
+い と き 、 7ビ ッ
+ト の キ ャ ラ ク
+タ セ ッ ト を 自
+動 認 識 し よ う
+と す る 。 既 定
+は "YES"。</p>
+<p style="margin-left:14%;">Replacement =&gt;
+REPLACEMENT</p>
+<p style="margin-left:19%;">エ ラ ー
+処 理 法 の 指 定
+。 "エ ラ ー 処 理
+" 参 照 。</p>
+<p style="margin-left:14%; margin-top: 1em">3要
+素 の リ ス ト (<i>変
+換 ず み の 文 字
+列</i> , <i>出 力 の キ
+ャ ラ ク タ セ ッ
+ト</i> , <i>エ ン コ ー
+デ ィ ン グ 法</i> ) が
+返 る 。 <i>エ ン コ
+ー デ ィ ン グ 法</i>
+は "B"、 "Q"、
+"undef" (エ ン コ ー
+ド し な く て よ
+い ) の い ず れ か
+。 <i>出 力 の キ ャ
+ラ ク タ セ ッ ト</i>
+が 決 定 で き ず
+、 <i>変 換 ず み の
+文 字 列</i> が ASCII以
+外 の バ イ ト を
+含 む と き は 、
+<i>出 力 の キ ャ ラ
+ク タ セ ッ ト</i> は
+"8BIT" (こ れ は キ
+ャ ラ ク タ セ ッ
+ト の 名 前 で は
+<i>な く</i> 、 符 号 化
+が 不 可 能 な デ
+ー タ を 表 す 特
+殊 値 ) で <i>エ ン コ
+ー デ ィ ン グ 法</i>
+は "undef" (エ ン コ
+ー ド す る べ き
+で は な い ) と な
+る 。 <i>出 力 の キ
+ャ ラ ク タ セ ッ
+ト</i> が "US−ASCII" と
+な る の は 、 文
+字 列 が ASCII以 外 の
+バ イ ト を 含 ま
+な い と き に 限
+る 。</p>
+<p style="margin-left:9%;">$charset−&gt;undecode(STRING
+[,CHECK])</p>
+<p style="margin-left:14%;">Unicode 文 字
+列 string を 、 $charset の 入
+力 キ ャ ラ ク タ
+セ ッ ト を 使 っ
+て 文 字 列 に 変
+換 す る 。 こ れ
+は
+"$charset−&gt;decoder−&gt;encode()"
+と 同 等 で あ る
+。</p>
+<p style="margin-left:14%; margin-top: 1em"><b>NOTE</b>:
+Unicode/マ ル チ バ イ
+ト 対 応 が 有 効
+に な っ て い な
+い と き ("USE_ENCODE" 参
+照 ) は 、 こ の 機
+能 を 実 行 す る
+と 死 ぬ 。</p>
+<h3>モ ジ ュ ー ル 既 定 値 の 操 作
+<a name="モ ジ ュ ー ル 既 定 値 の 操 作"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">alias ALIAS [,
+CHARSET]</p>
+<p style="margin-left:14%;">"canonical_charset"
+で 正 規 名 を 決
+定 す る た め の
+キ ャ ラ ク タ セ
+ッ ト の 別 名 を
+取 得 /設 定 す る
+。</p>
+<p style="margin-left:14%; margin-top: 1em">CHARSET
+が あ っ て 偽 で
+な い と き 、 ALIAS が
+CHARSET の 別 名 に 登
+録 さ れ る 。 さ
+も な け れ ば 、
+別 名 に 変 更 は
+な い 。 い ず れ
+の 場 合 で も 、
+現 在 ALIAS が 登 録 さ
+れ て い る キ ャ
+ラ ク タ セ ッ ト
+を 返 す 。</p>
+<p style="margin-left:9%;">default [CHARSET]</p>
+<p style="margin-left:14%;">既 定 キ
+ャ ラ ク タ セ ッ
+ト を 取 得 /設 定
+す る 。</p>
+<p style="margin-left:14%; margin-top: 1em"><b>既
+定 キ ャ ラ ク タ
+セ ッ ト</b> と は 、
+当 モ ジ ュ ー ル
+で 、 処 理 の た
+め の キ ャ ラ ク
+タ セ ッ ト が 不
+明 な と き に 用
+い る キ ャ ラ ク
+タ セ ッ ト 。 当
+モ ジ ュ ー ル を
+利 用 す る モ ジ
+ュ ー ル で は 、
+処 理 の た め の
+キ ャ ラ ク タ セ
+ッ ト が 不 明 な
+と き や 暗 黙 の
+既 定 値 が 必 要
+な と き 、 こ の
+キ ャ ラ ク タ セ
+ッ ト を 使 う こ
+と を 推 奨 す る
+。 こ れ は 既 定
+で は "US−ASCII"。</p>
+<p style="margin-left:14%; margin-top: 1em">CHARSET
+が あ っ て 偽 で
+な け れ ば 、 そ
+れ を 既 定 キ ャ
+ラ ク タ セ ッ ト
+に 設 定 す る 。
+さ も な け れ ば
+、 既 定 キ ャ ラ
+ク タ セ ッ ト は
+変 わ ら な い 。
+い ず れ の 場 合
+で も 、 現 在 の
+既 定 キ ャ ラ ク
+タ セ ッ ト を 返
+す 。</p>
+<p style="margin-left:14%; margin-top: 1em"><b>NOTE</b>:
+既 定 キ ャ ラ ク
+タ セ ッ ト は 変
+更 す る <i>べ き で
+は な い</i> 。</p>
+<p style="margin-left:9%;">fallback [CHARSET]</p>
+<p style="margin-left:14%;">予 備 キ
+ャ ラ ク タ セ ッ
+ト を 取 得 /設 定
+す る 。</p>
+<p style="margin-left:14%; margin-top: 1em"><b>予
+備 キ ャ ラ ク タ
+セ ッ ト</b> と は 、
+当 モ ジ ュ ー ル
+で 、 指 定 さ れ
+た キ ャ ラ ク タ
+セ ッ ト で の 変
+換 が 失 敗 し 、
+エ ラ ー 処 理 法
+に "FALLBACK" が 指 定
+さ れ て い た と
+き に 用 い る キ
+ャ ラ ク タ セ ッ
+ト 。 当 モ ジ ュ
+ー ル を 利 用 す
+る モ ジ ュ ー ル
+で は 、 キ ャ ラ
+ク タ セ ッ ト 変
+換 が 失 敗 す る
+と き に 最 終 手
+段 と し て こ の
+キ ャ ラ ク タ セ
+ッ ト を 使 っ て
+も よ い 。 こ れ
+は 既 定 で は
+"UTF−8"。</p>
+<p style="margin-left:14%; margin-top: 1em">CHARSET
+が あ っ て 偽 で
+な け れ ば 、 そ
+れ を 予 備 キ ャ
+ラ ク タ セ ッ ト
+に 設 定 す る 。
+CHARSET が "NONE" で あ れ
+ば 、 予 備 キ ャ
+ラ ク タ セ ッ ト
+を 未 定 に す る
+。 さ も な け れ
+ば 、 予 備 キ ャ
+ラ ク タ セ ッ ト
+は 変 わ ら な い
+。 い ず れ の 場
+合 で も 、 現 在
+の 予 備 キ ャ ラ
+ク タ セ ッ ト を
+返 す 。</p>
+<p style="margin-left:14%; margin-top: 1em"><b>NOTE</b>:
+予 備 キ ャ ラ ク
+タ セ ッ ト に
+"US−ASCII" を 指 定
+す る 価 値 は <i>あ
+る</i> 。 変 換 の 結
+果 は 、 キ ャ ラ
+ク タ セ ッ ト 情
+報 が な い と き
+も 可 読 と な る
+。</p>
+<p style="margin-left:9%;">recommended CHARSET [,
+HEADERENC, BODYENC [, ENCCHARSET]]</p>
+<p style="margin-left:14%;">キ ャ ラ
+ク タ セ ッ ト の
+特 性 を 取 得 /設
+定 す る 。</p>
+<p style="margin-left:14%; margin-top: 1em">必
+須 で な い 引 数
+が あ っ て そ の
+ど れ か が 偽 で
+な け れ ば 、 そ
+の 引 数 で CHARSET の
+特 性 を 設 定 す
+る 。 さ も な け
+れ ば 、 特 性 は
+変 わ ら な い 。
+い ず れ の 場 合
+で も 、 CHARSET の 現
+在 の 特 性 を 3 要
+素 の リ ス ト (HEADERENC,
+BODYENC, ENCCHARSET) と し て 返
+す 。</p>
+<p style="margin-left:14%; margin-top: 1em">HEADERENC
+は メ ッ セ ー ジ
+ヘ ッ ダ で 推 奨
+さ れ る エ ン コ
+ー デ ィ ン グ 法
+。 "B"、 "Q"、
+"S" (ど ち ら か 短
+く な る ほ う )、
+"undef" (エ ン コ ー
+ド し な く て よ
+い ) を 指 定 で き
+る 。</p>
+<p style="margin-left:14%; margin-top: 1em">BODYENC
+は メ ッ セ ー ジ
+本 体 で 推 奨 さ
+れ る 伝 送 エ ン
+コ ー デ ィ ン グ
+。 "B"、 "Q"、
+"S" (ど ち ら か 短
+く な る ほ う )、
+"undef" (伝 送 エ ン
+コ ー ド し な く
+て よ い ) を 指 定
+で き る 。</p>
+<p style="margin-left:14%; margin-top: 1em">ENCCHARSET
+は 、 指 定 し た
+CHARSET と 互 換 で 、
+イ ン タ ー ネ ッ
+ト 上 の MIME メ ッ セ
+ー ジ で 使 う こ
+と を 推 奨 さ れ
+る キ ャ ラ ク タ
+セ ッ ト 名 。 変
+換 が 必 要 な い
+(ま た は 当 モ ジ
+ュ ー ル が 適 当
+な キ ャ ラ ク タ
+セ ッ ト を 知 ら
+な い ) と き は 、
+ENCCHARSET は "undef"。</p>
+<p style="margin-left:14%; margin-top: 1em"><b>NOTE</b>:
+こ の 関 数 の 今
+後 の 版 で は 、
+ほ か に も 必 須
+で な い 引 数 を
+と れ る よ う に
+な る か も し れ
+な い (た と え ば
+、 文 字 幅 、 行
+分 割 の 挙 動 な
+ど に つ い て の
+属 性 )。 そ の た
+め 、 返 値 の 形
+式 も 変 わ る か
+も し れ な い 。
+個 々 の 特 性 を
+取 得 す る に は
+"header_encoding"、
+"body_encoding"、 "output_charset"
+を 使 っ て ほ し
+い 。</p>
+<h3>定 数
+<a name="定 数"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">USE_ENCODE</p>
+<p style="margin-left:14%;">Unicode/マ ル
+チ バ イ ト 対 応
+フ ラ グ 。 Unicode と
+マ ル チ バ イ ト
+へ の 対 応 が 有
+効 に な っ て い
+る と き は 、 空
+で な い 文 字 列
+が 設 定 さ れ て
+い る 。 現 在 、
+こ の フ ラ グ は Perl
+5.7.3 以 降 で 空 で な
+く 、 そ れ よ り
+以 前 の Perl で は 空
+の 文 字 列 。</p>
+<h3>エ ラ ー 処 理
+<a name="エ ラ ー 処 理"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"body_encode"
+と "header_encode" の
+"Replacement" オ プ シ ョ
+ン に は 以 下 の
+も の を 指 定 で
+き る : <br/>
+"DEFAULT"</p>
+<p style="margin-left:14%;">不 正 な
+文 字 を 置 き 換
+え 文 字 で 置 き
+換 え る 。 UCM に 基
+づ く 符 号 化 器
+を 持 つ キ ャ ラ
+ク タ セ ッ ト で
+は &lt;subchar&gt; を 使 う こ
+と が あ る 。</p>
+<p style="margin-left:9%;">"FALLBACK"</p>
+<p style="margin-left:14%;"><i>予 備 キ
+ャ ラ ク タ セ ッ
+ト</i> を 使 っ て
+"DEFAULT" 方 式 を や
+っ て み る ("fallback"
+参 照 )。 予 備 キ
+ャ ラ ク タ セ ッ
+ト が 未 定 で 変
+換 が エ ラ ー を
+起 こ し た と き
+は 、 コ ー ド は
+エ ラ ー メ ッ セ
+ー ジ を 出 力 し
+て 死 ぬ 。</p>
+<p style="margin-left:9%;">"CROAK"</p>
+<p style="margin-left:14%;">コ ー ド
+は エ ラ ー メ ッ
+セ ー ジ を 出 力
+し て す ぐ 死 ぬ
+。 し た が っ て
+、 本 当 に エ ラ
+ー で 死 な せ た
+く な け れ ば eval{} で
+致 命 的 エ ラ ー
+を 受 け 止 め な
+け れ ば い け な
+い 。 "STRICT" で も
+同 じ 。</p>
+<p style="margin-left:9%;">"PERLQQ" <br/>
+"HTMLCREF" <br/>
+"XMLCREF"</p>
+<p style="margin-left:14%;">Encode モ ジ
+ュ ー ル で 定 義
+し て い る
+"FB_PERLQQ"、
+"FB_HTMLCREF"、 "FB_XMLCREF"
+の 方 式 を 使 う
+。</p>
+<p style="margin-left:9%;">数 値</p>
+<p style="margin-left:14%;">数 値 を
+指 定 す る こ と
+も で き る 。 詳
+細 は "Handling Malformed Data" in
+Encode を 見 て ほ し い
+。</p>
+<p style="margin-left:9%; margin-top: 1em">エ
+ラ ー 処 理 法 が
+指 定 さ れ な い
+か 、 上 記 以 外
+の エ ラ ー 処 理
+法 が 指 定 さ れ
+た と き は 、
+"DEFAULT" と み な す
+。</p>
+<h3>設 定 フ ァ イ ル
+<a name="設 定 フ ァ イ ル"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">オ
+プ シ ョ ン の パ
+ラ メ タ の 組 み
+込 み 既 定 値 は
+、 設 定 フ ァ イ
+ル <i>MIME/Charset/Defaults.pm</i> で 変
+更 す る こ と が
+で き る 。 詳 し
+く は <i>MIME/Charset/Defaults.pm.sample</i>
+を 読 ん で ほ し
+い 。</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">$VERSION
+変 数 を 見 て ほ
+し い 。</p>
+<p style="margin-left:9%; margin-top: 1em">こ
+の モ ジ ュ ー ル
+の 開 発 版 が
+&lt;http://hatuka.nezumi.nu/repos/MIME−Charset/&gt;
+に あ る 。</p>
+<h3>非 互 換 な 変 更
+<a name="非 互 換 な 変 更"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">1.001</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="66%">
+<p><b>new()</b> メ ソ ッ ド
+は CHARSET 引 数 を 指
+定 し な く て も
+オ ブ ジ ェ ク ト
+を 返 す よ う に
+な っ た 。</p></td>
+<td width="15%">
+</td></tr>
+</table>
+<p style="margin-left:9%;">1.005</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>encoded−word に 含 ま れ
+る 文 字 種 を RFC 2047
+の 5 (3) 節 の と お り
+に し た 。
+<b>encoded_header_len()</b> メ ソ ッ
+ド の 返 値 も 変
+わ る 。</p></td>
+<td width="18%">
+</td></tr>
+</table>
+<p style="margin-left:9%;">1.008.2</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="78%">
+<p><b>body_encoding()</b> メ ソ ッ
+ド も "S" を 返 せ
+る よ う に な っ
+た 。</p></td>
+<td width="3%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="78%">
+<p><b>body_encode()</b> メ ソ ッ ド
+の UTF−8 に 対 す る
+返 値 の エ ン コ
+ー デ ィ ン グ 要
+素 は 、 こ れ ま
+で の リ リ ー ス
+で は "BASE64" に 固
+定 だ っ た が 、
+"QUOTED−PRINTABLE" に な
+る こ と が あ る
+。</p> </td>
+<td width="3%">
+</td></tr>
+</table>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Multipurpose
+Internet Mail Extensions (MIME).</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Hatuka*nezumi
+− IKEDA Soji &lt;hatuka(at)nezumi.nu&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2006−2017 Hatuka*nezumi − IKEDA Soji. This
+program is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

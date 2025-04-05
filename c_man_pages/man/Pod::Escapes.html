@@ -1,0 +1,271 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:57 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Pod::Escapes</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Pod::Escapes</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#GOODIES">GOODIES</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#REPOSITORY">REPOSITORY</a><br/>
+<a href="#COPYRIGHT AND DISCLAIMERS">COPYRIGHT AND DISCLAIMERS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pod::Escapes
+− for resolving Pod E&lt;...&gt; sequences</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Pod::Escapes
+qw(e2char); <br/>
+...la la la, parsing POD, la la la... <br/>
+$text = e2char($e_node−&gt;label); <br/>
+unless(defined $text) { <br/>
+print "Unknown E sequence \"",
+$e_node−&gt;label, "\"!"; <br/>
+} <br/>
+...else print/interpolate $text...</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides things that are useful in decoding Pod E&lt;...&gt;
+sequences. Presumably, it should be used only by Pod parsers
+and/or formatters.</p>
+<p style="margin-left:9%; margin-top: 1em">By default,
+Pod::Escapes exports none of its symbols. But you can
+request any of them to be exported. Either request them
+individually, as with "use Pod::Escapes qw(symbolname
+symbolname2...);", or you can do "use Pod::Escapes
+qw(:ALL);" to get all exportable symbols.</p>
+<h2>GOODIES
+<a name="GOODIES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">e2char($e_content)</p>
+<p style="margin-left:14%;">Given a name or number that
+could appear in a "E&lt;name_or_num&gt;" sequence,
+this returns the string that it stands for. For example,
+e2char('sol'), e2char('47'), e2char('0x2F'), and
+e2char('057') all return "/", because
+"E&lt;sol&gt;", "E&lt;47&gt;",
+"E&lt;0x2f&gt;", and "E&lt;057&gt;", all
+mean "/". If the name has no known value (as with
+a name of "qacute") or is syntactically invalid
+(as with a name of "1/4"), this returns undef.</p>
+<p style="margin-left:9%;">e2charnum($e_content)</p>
+<p style="margin-left:14%;">Given a name or number that
+could appear in a "E&lt;name_or_num&gt;" sequence,
+this returns the number of the Unicode character that this
+stands for. For example, e2char('sol'), e2char('47'),
+e2char('0x2F'), and e2char('057') all return 47, because
+"E&lt;sol&gt;", "E&lt;47&gt;",
+"E&lt;0x2f&gt;", and "E&lt;057&gt;", all
+mean "/", whose Unicode number is 47. If the name
+has no known value (as with a name of "qacute") or
+is syntactically invalid (as with a name of
+"1/4"), this returns undef.</p>
+<p style="margin-left:9%;">$Name2character{<i>name</i>}</p>
+<p style="margin-left:14%;">Maps from names (as in
+"E&lt;<i>name</i>&gt;") like "eacute" or
+"sol" to the string that each stands for. Note
+that this does not include numerics (like "64" or
+"x981c"). Under old Perl versions (before 5.7) you
+get a "?" in place of characters whose Unicode
+value is over 255.</p>
+<p style="margin-left:9%;">$Name2character_number{<i>name</i>}</p>
+<p style="margin-left:14%;">Maps from names (as in
+"E&lt;<i>name</i>&gt;") like "eacute" or
+"sol" to the Unicode value that each stands for.
+For example, $Name2character_number{'eacute'} is 201, and
+$Name2character_number{'eacute'} is 8364. You get the
+correct Unicode value, regardless of the version of Perl
+you're using −− which differs from
+%Name2character's behavior under pre−5.7 Perls.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that this
+hash does not include numerics (like "64" or
+"x981c").</p>
+<p style="margin-left:9%;">$Latin1Code_to_fallback{<i>integer</i>}</p>
+<p style="margin-left:14%;">For numbers in the range 160
+(0x00A0) to 255 (0x00FF), this maps from the character code
+for a Latin−1 character (like 233 for lowercase
+e−acute) to the US−ASCII character that best
+aproximates it (like "e"). You may find this
+useful if you are rendering POD in a format that you think
+deals well only with US−ASCII characters.</p>
+<p style="margin-left:9%;">$Latin1Char_to_fallback{<i>character</i>}</p>
+<p style="margin-left:14%;">Just as above, but maps from
+characters (like "\xE9", lowercase e−acute)
+to characters (like "e").</p>
+<p style="margin-left:9%;">$Code2USASCII{<i>integer</i>}</p>
+<p style="margin-left:14%;">This maps from US−ASCII
+codes (like 32) to the corresponding character (like space,
+for 32). Only characters 32 to 126 are defined. This is
+meant for use by e2char($x) when it senses that it's running
+on a non−ASCII platform (where chr(32) doesn't get you
+a space −− but $Code2USASCII{32} will). It's
+documented here just in case you might find it useful.</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On Perl versions
+before 5.7, Unicode characters with a value over 255 (like
+lambda or emdash) can't be conveyed. This module does work
+under such early Perl versions, but in the place of each
+such character, you get a "?". Latin−1
+characters (characters 160−255) are unaffected.</p>
+<p style="margin-left:9%; margin-top: 1em">Under EBCDIC
+platforms, e2char($n) may not always be the same as
+"chr(e2charnum($n))", and ditto for
+$Name2character{$name} and
+chr($Name2character_number{$name}), because the strings are
+returned as native, and the numbers are returned as Unicode.
+However, for Perls starting with v5.8, e2char($n) is the
+same as
+"chr(utf8::unicode_to_native(e2charnum($n)))", and
+ditto for $Name2character{$name} and
+"chr(utf8::unicode_to_native($Name2character_number{$name}))".</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pod::Browser
+− a pod web server based on Catalyst.</p>
+<p style="margin-left:9%; margin-top: 1em">Pod::Checker
+− check pod documents for syntax errors.</p>
+<p style="margin-left:9%; margin-top: 1em">Pod::Coverage
+− check if the documentation for a module is
+comprehensive.</p>
+<p style="margin-left:9%; margin-top: 1em">perlpod −
+description of pod format (for people documenting with
+pod).</p>
+<p style="margin-left:9%; margin-top: 1em">perlpodspec
+− specification of pod format (for people processing
+it).</p>
+<p style="margin-left:9%; margin-top: 1em">Text::Unidecode
+− ASCII transliteration of Unicode text.</p>
+<h2>REPOSITORY
+<a name="REPOSITORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">&lt;https://github.com/neilbowers/Pod−Escapes&gt;</p>
+<h2>COPYRIGHT AND DISCLAIMERS
+<a name="COPYRIGHT AND DISCLAIMERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+2001−2004 Sean M. Burke. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+distributed in the hope that it will be useful, but without
+any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.</p>
+<p style="margin-left:9%; margin-top: 1em">Portions of the
+data tables in this module are derived from the entity
+declarations in the W3C XHTML specification.</p>
+<p style="margin-left:9%; margin-top: 1em">Currently
+(October 2001), that's these three:</p>
+<p style="margin-left:9%; margin-top: 1em">http://www.w3.org/TR/xhtml1/DTD/xhtml−lat1.ent
+<br/>
+http://www.w3.org/TR/xhtml1/DTD/xhtml−special.ent <br/>
+http://www.w3.org/TR/xhtml1/DTD/xhtml−symbol.ent</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Sean M. Burke
+"sburke@cpan.org"</p>
+<p style="margin-left:9%; margin-top: 1em">Now being
+maintained by Neil Bowers &lt;neilb@cpan.org&gt;</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:39 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_DOH_URL</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_DOH_URL</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#INHERIT OPTIONS">INHERIT OPTIONS</a><br/>
+<a href="#KNOWN BUGS">KNOWN BUGS</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_DOH_URL
+− provide the DNS−over−HTTPS URL</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_DOH_URL, char
+*URL);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass in a
+pointer to a <i>URL</i> for the DoH server to use for name
+resolving. The parameter should be a char pointer to a
+null−terminated string which must be a valid and
+correct HTTPS URL.</p>
+<p style="margin-left:9%; margin-top: 1em">libcurl does not
+validate the syntax or use this variable until the transfer
+is issued. Even if you set a crazy value here,
+<i>curl_easy_setopt(3)</i> still returns
+<i>CURLE_OK</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">curl sends POST
+requests to the given DNS−over−HTTPS URL.</p>
+<p style="margin-left:9%; margin-top: 1em">To find the DoH
+server itself, which might be specified using a name,
+libcurl uses the default name lookup function. You can
+bootstrap that by providing the address for the DoH server
+with <i>CURLOPT_RESOLVE(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Disable DoH use
+again by setting this option to NULL.</p>
+<h2>INHERIT OPTIONS
+<a name="INHERIT OPTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">DoH lookups use
+SSL and some SSL settings from your transfer are inherited,
+like <i>CURLOPT_SSL_CTX_FUNCTION(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The hostname and
+peer certificate verification settings are not inherited but
+can be controlled separately via
+<i>CURLOPT_DOH_SSL_VERIFYHOST(3)</i> and
+<i>CURLOPT_DOH_SSL_VERIFYPEER(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">A set
+<i>CURLOPT_OPENSOCKETFUNCTION(3)</i> callback is not
+inherited.</p>
+<h2>KNOWN BUGS
+<a name="KNOWN BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Even when DoH is
+set to be used with this option, there are still some name
+resolves that are performed without it, using the default
+name resolver mechanism. This includes name resolves done
+for <i>CURLOPT_INTERFACE(3)</i>, <i>CURLOPT_FTPPORT(3)</i>,
+a proxy type set to <b>CURLPROXY_SOCKS4</b> or
+<b>CURLPROXY_SOCKS5</b> and probably some more.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+curl_easy_setopt(curl, CURLOPT_URL,
+"https://example.com"); <br/>
+curl_easy_setopt(curl, CURLOPT_DOH_URL,
+"https://dns.example.com"); <br/>
+curl_easy_perform(curl); <br/>
+} <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.62.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLE_OK
+on success or CURLE_OUT_OF_MEMORY if there was insufficient
+heap space.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+<i>curl_easy_setopt(3)</i> does immediately parse the given
+string so when given a bad DoH URL, libcurl might not detect
+the problem until it later tries to resolve a name with
+it.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_DNS_CACHE_TIMEOUT</b>(3),
+<b>CURLOPT_RESOLVE</b>(3), <b>CURLOPT_VERBOSE</b>(3)</p>
+<hr/>
+</body>
+</html>

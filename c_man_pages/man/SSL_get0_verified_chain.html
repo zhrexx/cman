@@ -1,0 +1,186 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:24 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_GET_PEER_CERT_CHAIN</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_GET_PEER_CERT_CHAIN</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_get_peer_cert_chain,
+SSL_get0_verified_chain − get the X509 certificate
+chain of the peer</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+STACK_OF(X509) *SSL_get_peer_cert_chain(const SSL *ssl);
+<br/>
+STACK_OF(X509) *SSL_get0_verified_chain(const SSL *ssl);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_peer_cert_chain()</b>
+returns a pointer to STACK_OF(X509) certificates forming the
+certificate chain sent by the peer. If called on the client
+side, the stack also contains the peer's certificate; if
+called on the server side, the peer's certificate must be
+obtained separately using
+<b>SSL_get_peer_certificate</b>(3). If the peer did not
+present a certificate, NULL is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">NB:
+<b>SSL_get_peer_cert_chain()</b> returns the peer chain as
+sent by the peer: it only consists of certificates the peer
+has sent (in the order the peer has sent them) it is
+<b>not</b> a verified chain.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get0_verified_chain()</b>
+returns the <b>verified</b> certificate chain of the peer
+including the peer's end entity certificate. It must be
+called after a session has been successfully established. If
+peer verification was not successful (as indicated by
+<b>SSL_get_verify_result()</b> not returning X509_V_OK) the
+chain may be incomplete or invalid.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If the session
+is resumed peers do not send certificates so a NULL pointer
+is returned by these functions. Applications can call
+<b>SSL_session_reused()</b> to determine whether a session
+is resumed.</p>
+<p style="margin-left:9%; margin-top: 1em">The reference
+count of each certificate in the returned STACK_OF(X509)
+object is not incremented and the returned stack may be
+invalidated by renegotiation. If applications wish to use
+any certificates in the returned chain indefinitely they
+must increase the reference counts using
+<b>X509_up_ref()</b> or obtain a copy of the whole chain
+with <b>X509_chain_up_ref()</b>.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+return values can occur: <br/>
+NULL</p>
+<p style="margin-left:14%;">No certificate was presented by
+the peer or no connection was established or the certificate
+chain is no longer available when a session is reused.</p>
+<p style="margin-left:9%;">Pointer to a STACK_OF(X509)</p>
+<p style="margin-left:14%;">The return value points to the
+certificate chain presented by the peer.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_get_peer_certificate</b>(3), <b>X509_up_ref</b>(3),
+<b>X509_chain_up_ref</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2000−2016 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

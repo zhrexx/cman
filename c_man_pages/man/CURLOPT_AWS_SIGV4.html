@@ -1,0 +1,242 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:37 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_AWS_SIGV4</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_AWS_SIGV4</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_AWS_SIGV4
+− V4 signature</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_AWS_SIGV4, char
+*param);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Provides AWS V4
+signature authentication on HTTP(S) header.</p>
+<p style="margin-left:9%; margin-top: 1em">Pass a char
+pointer that is the collection of specific arguments are
+used for creating outgoing authentication headers. The
+format of the <i>param</i> option is: <br/>
+provider1[:provider2[:region[:service]]] <br/>
+provider1, provider2</p>
+<p style="margin-left:18%;">The providers arguments are
+used for generating some authentication parameters such as
+"Algorithm", "date", "request
+type" and "signed headers".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>region</p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The argument is a geographic area of a resources
+collection. It is extracted from the hostname specified in
+the URL if omitted.</p></td></tr>
+</table>
+<p style="margin-left:9%;">service</p>
+<p style="margin-left:18%;">The argument is a function
+provided by a cloud. It is extracted from the hostname
+specified in the URL if omitted.</p>
+<p style="margin-left:9%; margin-top: 1em">NOTE: This call
+set <i>CURLOPT_HTTPAUTH(3)</i> to CURLAUTH_AWS_SIGV4.
+Calling <i>CURLOPT_HTTPAUTH(3)</i> with CURLAUTH_AWS_SIGV4
+is the same as calling this with <b>"aws:amz"</b>
+in parameter.</p>
+<p style="margin-left:9%; margin-top: 1em">Example with
+"Test:Try", when curl uses the algorithm, it
+generates <b>"TEST−HMAC−SHA256"</b>
+for "Algorithm",
+<b>"x−try−date"</b> and
+<b>"X−Try−Date"</b> for
+"date", <b>"test4_request"</b> for
+"request type",
+<b>"SignedHeaders=content−type;host;x−try−date"</b>
+for "signed headers"</p>
+<p style="margin-left:9%; margin-top: 1em">If you use just
+"test", instead of "test:try", test is
+used for every generated string.</p>
+<p style="margin-left:9%; margin-top: 1em">Setting
+<i>CURLOPT_HTTPAUTH(3)</i> with the CURLAUTH_AWS_SIGV4 bit
+set is the same as setting this option with a
+<b>"aws:amz"</b> parameter.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects http only</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl = curl_easy_init();</p>
+<p style="margin-left:9%; margin-top: 1em">if(curl) { <br/>
+curl_easy_setopt(curl, CURLOPT_URL, <br/>
+"https://service.region.example.com/uri"); <br/>
+curl_easy_setopt(curl, CURLOPT_AWS_SIGV4,
+"provider1:provider2");</p>
+<p style="margin-left:9%; margin-top: 1em">/* service and
+region can also be set in CURLOPT_AWS_SIGV4 */ <br/>
+curl_easy_setopt(curl, CURLOPT_URL,
+"https://example.com/uri"); <br/>
+curl_easy_setopt(curl, CURLOPT_AWS_SIGV4, <br/>
+"provider1:provider2:region:service");</p>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_setopt(curl,
+CURLOPT_USERPWD, "MY_ACCESS_KEY:MY_SECRET_KEY");
+<br/>
+curl_easy_perform(curl); <br/>
+} <br/>
+}</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This option
+overrides the other auth types you might have set in
+<i>CURLOPT_HTTPAUTH(3)</i> which should be highlighted as
+this makes this auth method special. This method cannot be
+combined with other auth types.</p>
+<p style="margin-left:9%; margin-top: 1em">A sha256
+checksum of the request payload is used as input to the
+signature calculation. For POST requests, this is a checksum
+of the provided <i>CURLOPT_POSTFIELDS(3)</i>. Otherwise, it
+is the checksum of an empty buffer. For requests like PUT,
+you can provide your own checksum in an HTTP header named
+<b>x−provider2−content−sha256</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">For
+<b>aws:s3</b>, a
+<b>x−amz−content−sha256</b> header is
+added to every request if not already present. For s3
+requests with unknown payload, this header takes the special
+value "UNSIGNED−PAYLOAD".</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.75.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLE_OK
+if the option is supported, and CURLE_UNKNOWN_OPTION if
+not.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_HEADEROPT</b>(3),
+<b>CURLOPT_HTTPAUTH</b>(3), <b>CURLOPT_HTTPHEADER</b>(3),
+<b>CURLOPT_PROXYAUTH</b>(3)</p>
+<hr/>
+</body>
+</html>

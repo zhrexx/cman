@@ -1,0 +1,252 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:47 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Encode::MIME::Header</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Encode::MIME::Header</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#ABSTRACT">ABSTRACT</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode::MIME::Header
+−− MIME encoding for an unstructured email
+header</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Encode
+qw(encode decode); <br/>
+my $mime_str = encode("MIME−Header",
+"Sample:Text \N{U+263A}"); <br/>
+# $mime_str is
+"=?UTF−8?B?U2FtcGxlOlRleHQg4pi6?=" <br/>
+my $mime_q_str = encode("MIME−Q",
+"Sample:Text \N{U+263A}"); <br/>
+# $mime_q_str is
+"=?UTF−8?Q?Sample=3AText_=E2=98=BA?=" <br/>
+my $str = decode("MIME−Header", <br/>
+
+"=?ISO−8859−1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?=\r\n
+" . <br/>
+
+"=?ISO−8859−2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?="
+<br/>
+); <br/>
+# $str is "If you can read this you understand the
+example." <br/>
+use Encode qw(decode :fallbacks); <br/>
+use Encode::MIME::Header; <br/>
+local $Encode::MIME::Header::STRICT_DECODE = 1; <br/>
+my $strict_string = decode("MIME−Header",
+$mime_string, FB_CROAK); <br/>
+# use strict decoding and croak on errors</p>
+<h2>ABSTRACT
+<a name="ABSTRACT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+implements RFC 2047
+&lt;https://tools.ietf.org/html/rfc2047&gt; MIME encoding
+for an unstructured field body of the email header. It can
+also be used for RFC 822
+&lt;https://tools.ietf.org/html/rfc822&gt; 'text' token.
+However, it cannot be used directly for the whole header
+with the field name or for the structured header fields like
+From, To, Cc, Message−Id, etc... There are 3 encoding
+names supported by this module:
+"MIME−Header", "MIME−B" and
+"MIME−Q".</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Decode method
+takes an unstructured field body of the email header (or RFC
+822 &lt;https://tools.ietf.org/html/rfc822&gt; 'text' token)
+as its input and decodes each MIME encoded−word from
+input string to a sequence of bytes according to RFC 2047
+&lt;https://tools.ietf.org/html/rfc2047&gt; and RFC 2231
+&lt;https://tools.ietf.org/html/rfc2231&gt;. Subsequently,
+each sequence of bytes with the corresponding MIME charset
+is decoded with the Encode module and finally, one output
+string is returned. Text parts of the input string which do
+not contain MIME encoded−word stay unmodified in the
+output string. Folded newlines between two consecutive MIME
+encoded−words are discarded, others are preserved in
+the output string. "MIME−B" can decode
+Base64 variant, "MIME−Q" can decode
+Quoted−Printable variant and
+"MIME−Header" can decode both of them. If
+Encode module does not support particular MIME charset or
+chosen variant then an action based on CHECK flags is
+performed (by default, the MIME encoded−word is not
+decoded).</p>
+<p style="margin-left:9%; margin-top: 1em">Encode method
+takes a scalar string as its input and uses strict
+UTF−8 encoder for encoding it to UTF−8 bytes.
+Then a sequence of UTF−8 bytes is encoded into MIME
+encoded−words ("MIME−Header" and
+"MIME−B" use a Base64 variant while
+"MIME−Q" uses a Quoted−Printable
+variant) where each MIME encoded−word is limited to 75
+characters. MIME encoded−words are separated by
+"CRLF SPACE" and joined to one output string.
+Output string is suitable for unstructured field body of the
+email header.</p>
+<p style="margin-left:9%; margin-top: 1em">Both encode and
+decode methods propagate CHECK flags when encoding and
+decoding the MIME charset.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Versions prior
+to 2.22 (part of Encode 2.83) have a malfunctioning decoder
+and encoder. The MIME encoder infamously inserted additional
+spaces or discarded white spaces between consecutive MIME
+encoded−words, which led to invalid MIME headers
+produced by this module. The MIME decoder had a tendency to
+discard white spaces, incorrectly interpret data or attempt
+to decode Base64 MIME encoded−words as
+Quoted−Printable. These problems were fixed in version
+2.22. It is highly recommended not to use any version prior
+2.22!</p>
+<p style="margin-left:9%; margin-top: 1em">Versions prior
+to 2.24 (part of Encode 2.87) ignored CHECK flags. The MIME
+encoder used not strict utf8 encoder for input Unicode
+strings which could lead to invalid UTF−8 sequences.
+MIME decoder used also not strict utf8 decoder and
+additionally called the decode method with a
+"Encode::FB_PERLQQ" flag (thus
+user−specified CHECK flags were ignored). Moreover, it
+automatically croaked when a MIME encoded−word
+contained unknown encoding. Since version 2.24, this module
+uses strict UTF−8 encoder and decoder. And CHECK flags
+are correctly propagated.</p>
+<p style="margin-left:9%; margin-top: 1em">Since version
+2.22 (part of Encode 2.83), the MIME encoder should be fully
+compliant to RFC 2047
+&lt;https://tools.ietf.org/html/rfc2047&gt; and RFC 2231
+&lt;https://tools.ietf.org/html/rfc2231&gt;. Due to the
+aforementioned bugs in previous versions of the MIME
+encoder, there is a <i>less strict</i> compatible mode for
+the MIME decoder which is used by default. It should be able
+to decode MIME encoded−words encoded by pre 2.22
+versions of this module. However, note that this is not
+correct according to RFC 2047
+&lt;https://tools.ietf.org/html/rfc2047&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">In default
+<i>not strict</i> mode the MIME decoder attempts to decode
+every substring which looks like a MIME encoded−word.
+Therefore, the MIME encoded−words do not need to be
+separated by white space. To enforce a correct <i>strict</i>
+mode, set variable $Encode::MIME::Header::STRICT_DECODE to 1
+e.g. by localizing:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Encode::MIME::Header; <br/>
+local $Encode::MIME::Header::STRICT_DECODE = 1;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pali
+&lt;pali@cpan.org&gt;</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode, RFC 822
+&lt;https://tools.ietf.org/html/rfc822&gt;, RFC 2047
+&lt;https://tools.ietf.org/html/rfc2047&gt;, RFC 2231
+&lt;https://tools.ietf.org/html/rfc2231&gt;</p>
+<hr/>
+</body>
+</html>

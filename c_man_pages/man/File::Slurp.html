@@ -1,0 +1,836 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:14 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>File::Slurp</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">File::Slurp</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#WARNING − PENDING DOOM">WARNING − PENDING DOOM</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#append_file">append_file</a><br/>
+<a href="#edit_file">edit_file</a><br/>
+<a href="#edit_file_lines">edit_file_lines</a><br/>
+<a href="#ef">ef</a><br/>
+<a href="#efl">efl</a><br/>
+<a href="#overwrite_file">overwrite_file</a><br/>
+<a href="#prepend_file">prepend_file</a><br/>
+<a href="#read_dir">read_dir</a><br/>
+<a href="#read_file">read_file</a><br/>
+<a href="#rf">rf</a><br/>
+<a href="#slurp">slurp</a><br/>
+<a href="#wf">wf</a><br/>
+<a href="#write_file">write_file</a><br/>
+<a href="#EXPORT">EXPORT</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT &amp; LICENSE">COPYRIGHT &amp; LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::Slurp
+− Simple and Efficient Reading/Writing/Modifying of
+Complete Files</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp;
+<br/>
+# read in a whole file into a scalar <br/>
+my $text = read_file('/path/file'); <br/>
+# read in a whole file into an array of lines <br/>
+my @lines = read_file('/path/file'); <br/>
+# write out a whole file from a scalar <br/>
+write_file('/path/file', $text); <br/>
+# write out a whole file from an array of lines <br/>
+write_file('/path/file', @lines); <br/>
+# Here is a simple and fast way to load and save a simple
+config file <br/>
+# made of key=value lines. <br/>
+my %conf = read_file('/path/file') =˜
+/ˆ(\w+)=(.*)$/mg; <br/>
+write_file('/path/file', {atomic =&gt; 1}, map
+"$_=$conf{$_}\n", keys %conf); <br/>
+# insert text at the beginning of a file <br/>
+prepend_file('/path/file', $text); <br/>
+# in−place edit to replace all 'foo' with 'bar' in
+file <br/>
+edit_file { s/foo/bar/g } '/path/file'; <br/>
+# in−place edit to delete all lines with 'foo' from
+file <br/>
+edit_file_lines sub { $_ = '' if /foo/ }, '/path/file'; <br/>
+# read in a whole directory of file names (skipping . and
+..) <br/>
+my @files = read_dir('/path/to/dir');</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides subs that allow you to read or write entire files
+with one simple call. They are designed to be simple to use,
+have flexible ways to pass in or get the file contents and
+to be very efficient. There is also a sub to read in all the
+files in a directory.</p>
+<h3>WARNING − PENDING DOOM
+<a name="WARNING − PENDING DOOM"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Although you
+technically <i>can</i>, do NOT use this module to work on
+file handles, pipes, sockets, standard IO, or the
+"DATA" handle. These are features implemented long
+ago that just really shouldn't be abused here.</p>
+<p style="margin-left:9%; margin-top: 1em">Be warned: this
+activity will lead to inaccurate encoding/decoding of
+data.</p>
+<p style="margin-left:9%; margin-top: 1em">All further
+mentions of actions on the above have been removed from this
+documentation and that feature set will likely be deprecated
+in the future.</p>
+<p style="margin-left:9%; margin-top: 1em">In other words,
+if you don't have a filename to pass, consider using the
+standard "do { local $/; &lt;$fh&gt; }", or
+Data::Section/Data::Section::Simple for working with
+"__DATA__".</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::Slurp
+implements the following functions.</p>
+<h3>append_file
+<a name="append_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(append_file write_file); <br/>
+my $res = append_file('/path/file', "Some text");
+<br/>
+# same as <br/>
+my $res = write_file('/path/file', {append =&gt; 1},
+"Some text");</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"append_file" function is simply a synonym for the
+"write_file" in File::Slurp function, but ensures
+that the "append" option is set.</p>
+<h3>edit_file
+<a name="edit_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(edit_file); <br/>
+# perl −0777 −pi −e 's/foo/bar/g'
+/path/file <br/>
+edit_file { s/foo/bar/g } '/path/file'; <br/>
+edit_file sub { s/foo/bar/g }, '/path/file'; <br/>
+sub replace_foo { s/foo/bar/g } <br/>
+edit_file \&amp;replace_foo, '/path/file';</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"edit_file" function reads in a file into $_,
+executes a code block that should modify $_, and then writes
+$_ back to the file. The "edit_file" function
+reads in the entire file and calls the code block one time.
+It is equivalent to the "−pi" command line
+options of Perl but you can call it from inside your program
+and not have to fork out a process.</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+argument to "edit_file" is a code block or a code
+reference. The code block is not followed by a comma (as
+with "grep" and "map") but a code
+reference is followed by a comma.</p>
+<p style="margin-left:9%; margin-top: 1em">The next
+argument is the filename.</p>
+<p style="margin-left:9%; margin-top: 1em">The next
+argument(s) is either a hash reference or a flattened hash,
+"key =&gt; value" pairs. The options are passed
+through to the "write_file" in File::Slurp
+function. All options are described there. Only the
+"binmode" and "err_mode" options are
+supported. The call to "write_file" in File::Slurp
+has the "atomic" option set so you will always
+have a consistent file.</p>
+<h3>edit_file_lines
+<a name="edit_file_lines"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(edit_file_lines); <br/>
+# perl −pi −e '$_ = "" if /foo/'
+/path/file <br/>
+edit_file_lines { $_ = '' if /foo/ } '/path/file'; <br/>
+edit_file_lines sub { $_ = '' if /foo/ }, '/path/file'; <br/>
+sub delete_foo { $_ = '' if /foo/ } <br/>
+edit_file \&amp;delete_foo, '/path/file';</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"edit_file_lines" function reads each line of a
+file into $_, and executes a code block that should modify
+$_. It will then write $_ back to the file. It is equivalent
+to the "−pi" command line options of Perl
+but you can call it from inside your program and not have to
+fork out a process.</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+argument to "edit_file_lines" is a code block or a
+code reference. The code block is not followed by a comma
+(as with "grep" and "map") but a code
+reference is followed by a comma.</p>
+<p style="margin-left:9%; margin-top: 1em">The next
+argument is the filename.</p>
+<p style="margin-left:9%; margin-top: 1em">The next
+argument(s) is either a hash reference or a flattened hash,
+"key =&gt; value" pairs. The options are passed
+through to the "write_file" in File::Slurp
+function. All options are described there. Only the
+"binmode" and "err_mode" options are
+supported. The call to "write_file" in File::Slurp
+has the "atomic" option set so you will always
+have a consistent file.</p>
+<h3>ef
+<a name="ef"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(ef); <br/>
+# perl −0777 −pi −e 's/foo/bar/g'
+/path/file <br/>
+ef { s/foo/bar/g } '/path/file'; <br/>
+ef sub { s/foo/bar/g }, '/path/file'; <br/>
+sub replace_foo { s/foo/bar/g } <br/>
+ef \&amp;replace_foo, '/path/file';</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"ef" function is simply a synonym for the
+"edit_file" in File::Slurp function.</p>
+<h3>efl
+<a name="efl"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(efl); <br/>
+# perl −pi −e '$_ = "" if /foo/'
+/path/file <br/>
+efl { $_ = '' if /foo/ } '/path/file'; <br/>
+efl sub { $_ = '' if /foo/ }, '/path/file'; <br/>
+sub delete_foo { $_ = '' if /foo/ } <br/>
+efl \&amp;delete_foo, '/path/file';</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"efl" function is simply a synonym for the
+"edit_file_lines" in File::Slurp function.</p>
+<h3>overwrite_file
+<a name="overwrite_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(overwrite_file); <br/>
+my $res = overwrite_file('/path/file', "Some
+text");</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"overwrite_file" function is simply a synonym for
+the "write_file" in File::Slurp function.</p>
+<h3>prepend_file
+<a name="prepend_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(prepend_file); <br/>
+prepend_file('/path/file', $header); <br/>
+prepend_file('/path/file', \@lines); <br/>
+prepend_file('/path/file', { binmode =&gt; ':raw'},
+$bin_data); <br/>
+# equivalent to: <br/>
+use File::Slurp qw(read_file write_file); <br/>
+my $content = read_file('/path/file'); <br/>
+my $new_content = "hahahaha"; <br/>
+write_file('/path/file', $new_content . $content);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"prepend_file" function is the opposite of
+"append_file" in File::Slurp as it writes new
+contents to the beginning of the file instead of the end. It
+is a combination of "read_file" in File::Slurp and
+"write_file" in File::Slurp. It works by first
+using "read_file" to slurp in the file and then
+calling "write_file" with the new data and the
+existing file data.</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+argument to "prepend_file" is the filename.</p>
+<p style="margin-left:9%; margin-top: 1em">The next
+argument(s) is either a hash reference or a flattened hash,
+"key =&gt; value" pairs. The options are passed
+through to the "write_file" in File::Slurp
+function. All options are described there.</p>
+<p style="margin-left:9%; margin-top: 1em">Only the
+"binmode" and "err_mode" options are
+supported. The "write_file" call has the
+"atomic" option set so you will always have a
+consistent file.</p>
+<h3>read_dir
+<a name="read_dir"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(read_dir); <br/>
+my @files = read_dir('/path/to/dir'); <br/>
+# all files, even the dots <br/>
+my @files = read_dir('/path/to/dir', keep_dot_dot =&gt; 1);
+<br/>
+# keep the full file path <br/>
+my @paths = read_dir('/path/to/dir', prefix =&gt; 1); <br/>
+# scalar context <br/>
+my $files_ref = read_dir('/path/to/dir');</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+returns a list of the filenames in the supplied directory.
+In list context, an array is returned, in scalar context, an
+array reference is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+argument is the path to the directory to read.</p>
+<p style="margin-left:9%; margin-top: 1em">The next
+argument(s) is either a hash reference or a flattened hash,
+"key =&gt; value" pairs. The following options are
+available:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p>err_mode</p></td>
+<td width="76%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"err_mode" option has three possible values:
+"quiet", "carp", or the default,
+"croak". In "quiet" mode, all errors
+will be silent. In "carp" mode, all errors will be
+emitted as warnings. And, in "croak" mode, all
+errors will be emitted as exceptions. Take a look at
+Try::Tiny or Syntax::Keyword::Try to see how to catch
+exceptions.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="15%">
+<p style="margin-top: 1em">keep_dot_dot</p></td>
+<td width="71%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"keep_dot_dot" option is a boolean option,
+defaulted to false (0). Setting this option to true (1) will
+also return the "." and ".." files that
+are removed from the file list by default.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="8%">
+<p style="margin-top: 1em">prefix</p></td>
+<td width="78%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"prefix" option is a boolean option, defaulted to
+false (0). Setting this option to true (1) add the directory
+as a prefix to the file. The directory and the filename are
+joined using "File::Spec−&gt;catfile()" to
+ensure the proper directory separator is used for your OS.
+See File::Spec.</p>
+<h3>read_file
+<a name="read_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(read_file); <br/>
+my $text = read_file('/path/file'); <br/>
+my $bin = read_file('/path/file', { binmode =&gt; ':raw' });
+<br/>
+my @lines = read_file('/path/file'); <br/>
+my $lines_ref = read_file('/path/file', array_ref =&gt; 1);
+<br/>
+my $lines_ref = [ read_file('/path/file') ]; <br/>
+# or we can read into a buffer: <br/>
+my $buffer; <br/>
+read_file('/path/file', buf_ref =&gt; \$buffer); <br/>
+# or we can set the block size for the read <br/>
+my $text_ref = read_file('/path/file', blk_size =&gt;
+10_000_000, array_ref =&gt; 1); <br/>
+# or we can get a scalar reference <br/>
+my $text_ref = read_file('/path/file', scalar_ref =&gt;
+1);</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+reads in an entire file and returns its contents to the
+caller. In scalar context it returns the entire file as a
+single scalar. In list context it will return a list of
+lines (using the current value of $/ as the separator,
+including support for paragraph mode when it is set to
+'').</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+argument is the path to the file to be slurped in.</p>
+<p style="margin-left:9%; margin-top: 1em">The next
+argument(s) is either a hash reference or a flattened hash,
+"key =&gt; value" pairs. The following options are
+available:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="12%">
+<p style="margin-top: 1em">array_ref</p></td>
+<td width="74%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"array_ref" option is a boolean option, defaulted
+to false (0). Setting this option to true (1) will only have
+relevance if the "read_file" function is called in
+scalar context. When true, the "read_file"
+function will return a reference to an array of the lines in
+the file.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="9%">
+<p style="margin-top: 1em">binmode</p></td>
+<td width="77%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"binmode" option is a string option, defaulted to
+empty (''). If you set the "binmode" option, then
+its value is passed to a call to "binmode" on the
+opened handle. You can use this to set the file to be read
+in binary mode, utf8, etc. See "perldoc −f
+binmode" for more.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p style="margin-top: 1em">blk_size</p></td>
+<td width="76%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">You can use
+this option to set the block size used when slurping from an
+already open handle (like "\*STDIN"). It defaults
+to 1MB.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="9%">
+<p style="margin-top: 1em">buf_ref</p></td>
+<td width="77%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"buf_ref" option can be used in conjunction with
+any of the other options. You can use this option to pass in
+a scalar reference and the slurped file contents will be
+stored in the scalar. This saves an extra copy of the
+slurped file and can lower RAM usage vs returning the file.
+It is usually the fastest way to read a file into a
+scalar.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="7%">
+<p style="margin-top: 1em">chomp</p></td>
+<td width="79%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"chomp" option is a boolean option, defaulted to
+false (0). Setting this option to true (1) will cause each
+line to have its contents "chomp"ed. This option
+works in list context or in scalar context with the
+"array_ref" option.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p style="margin-top: 1em">err_mode</p></td>
+<td width="76%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"err_mode" option has three possible values:
+"quiet", "carp", or the default,
+"croak". In "quiet" mode, all errors
+will be silent. In "carp" mode, all errors will be
+emitted as warnings. And, in "croak" mode, all
+errors will be emitted as exceptions. Take a look at
+Try::Tiny or Syntax::Keyword::Try to see how to catch
+exceptions.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p style="margin-top: 1em">scalar_ref</p></td>
+<td width="73%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"scalar_ref" option is a boolean option, defaulted
+to false (0). It only has meaning in scalar context. The
+return value will be a scalar reference to a string which is
+the contents of the slurped file. This will usually be
+faster than returning the plain scalar. It will also save
+memory as it will not make a copy of the file to return.</p>
+<h3>rf
+<a name="rf"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(rf); <br/>
+my $text = rf('/path/file');</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"rf" function is simply a synonym for the
+"read_file" in File::Slurp function.</p>
+<h3>slurp
+<a name="slurp"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(slurp); <br/>
+my $text = slurp('/path/file');</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"slurp" function is simply a synonym for the
+"read_file" in File::Slurp function.</p>
+<h3>wf
+<a name="wf"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(wf); <br/>
+my $res = wf('/path/file', "Some text");</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"wf" function is simply a synonym for the
+"write_file" in File::Slurp function.</p>
+<h3>write_file
+<a name="write_file"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(write_file); <br/>
+write_file('/path/file', @data); <br/>
+write_file('/path/file', {append =&gt; 1}, @data); <br/>
+write_file('/path/file', {binmode =&gt; ':raw'}, $buffer);
+<br/>
+write_file('/path/file', \$buffer); <br/>
+write_file('/path/file', $buffer); <br/>
+write_file('/path/file', \@lines); <br/>
+write_file('/path/file', @lines); <br/>
+# binmode <br/>
+write_file('/path/file', {binmode =&gt; ':raw'}, @data);
+<br/>
+write_file('/path/file', {binmode =&gt; ':utf8'},
+$utf_text); <br/>
+# buffered <br/>
+write_file('/path/file', {buf_ref =&gt; \$buffer}); <br/>
+write_file('/path/file', \$buffer); <br/>
+write_file('/path/file', $buffer); <br/>
+# append <br/>
+write_file('/path/file', {append =&gt; 1}, @data); <br/>
+# no clobbering <br/>
+write_file('/path/file', {no_clobber =&gt; 1}, @data);</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+writes out an entire file in one call. By default
+"write_file" returns 1 upon successfully writing
+the file or "undef" if it encountered an error.
+You can change how errors are handled with the
+"err_mode" option.</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+argument to "write_file" is the filename.</p>
+<p style="margin-left:9%; margin-top: 1em">The next
+argument(s) is either a hash reference or a flattened hash,
+"key =&gt; value" pairs. The following options are
+available:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="8%">
+<p style="margin-top: 1em">append</p></td>
+<td width="78%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"append" option is a boolean option, defaulted to
+false (0). Setting this option to true (1) will cause the
+data to be be written at the end of the current file.
+Internally this sets the "sysopen" mode flag
+"O_APPEND".</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"append_file" in File::Slurp function sets this
+option by default.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="8%">
+<p style="margin-top: 1em">atomic</p></td>
+<td width="78%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"atomic" option is a boolean option, defaulted to
+false (0). Setting this option to true (1) will cause the
+file to be be written to in an atomic fashion. A temporary
+file name is created using "tempfile" in
+File::Temp. After the file is closed it is renamed to the
+original file name (and "rename" is an atomic
+operation on most OSes). If the program using this were to
+crash in the middle of this, then the temporary file could
+be left behind.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="9%">
+<p style="margin-top: 1em">binmode</p></td>
+<td width="77%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"binmode" option is a string option, defaulted to
+empty (''). If you set the "binmode" option, then
+its value is passed to a call to "binmode" on the
+opened handle. You can use this to set the file to be read
+in binary mode, utf8, etc. See "perldoc −f
+binmode" for more.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="9%">
+<p style="margin-top: 1em">buf_ref</p></td>
+<td width="77%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"buf_ref" option is used to pass in a scalar
+reference which has the data to be written. If this is set
+then any data arguments (including the scalar reference
+shortcut) in @_ will be ignored.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p style="margin-top: 1em">err_mode</p></td>
+<td width="76%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"err_mode" option has three possible values:
+"quiet", "carp", or the default,
+"croak". In "quiet" mode, all errors
+will be silent. In "carp" mode, all errors will be
+emitted as warnings. And, in "croak" mode, all
+errors will be emitted as exceptions. Take a look at
+Try::Tiny or Syntax::Keyword::Try to see how to catch
+exceptions.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p style="margin-top: 1em">no_clobber</p></td>
+<td width="73%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"no_clobber" option is a boolean option, defaulted
+to false (0). Setting this option to true (1) will ensure an
+that existing file will not be overwritten.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="7%">
+<p style="margin-top: 1em">perms</p></td>
+<td width="79%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+"perms" option sets the permissions of
+newly−created files. This value is modified by your
+process's "umask" and defaults to 0666 (same as
+"sysopen").</p>
+<p style="margin-left:14%; margin-top: 1em">NOTE: this
+option is new as of File::Slurp version 9999.14.</p>
+<h2>EXPORT
+<a name="EXPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These are
+exported by default or with</p>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(:std); <br/>
+# read_file write_file overwrite_file append_file
+read_dir</p>
+<p style="margin-left:9%; margin-top: 1em">These are
+exported with</p>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(:edit); <br/>
+# edit_file edit_file_lines</p>
+<p style="margin-left:9%; margin-top: 1em">You can get all
+subs in the module exported with</p>
+<p style="margin-left:9%; margin-top: 1em">use File::Slurp
+qw(:all);</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">File::Slurper − Provides a
+straightforward set of functions for the most common tasks
+of reading/writing text and binary files.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Path::Tiny − Lightweight and comprehensive file
+handling, including simple methods for reading, writing, and
+editing text and binary files.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Mojo::File − Similar to Path::Tiny for the Mojo
+toolkit, always works in bytes.</p></td></tr>
+</table>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Uri Guttman,
+&lt;<i>uri@stemsystems.com</i>&gt;</p>
+<h2>COPYRIGHT &amp; LICENSE
+<a name="COPYRIGHT &amp; LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+2003 Uri Guttman. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

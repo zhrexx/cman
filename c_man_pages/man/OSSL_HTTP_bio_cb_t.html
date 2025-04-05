@@ -1,0 +1,469 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:17 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OSSL_HTTP_TRANSFER</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OSSL_HTTP_TRANSFER</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OSSL_HTTP_open,
+OSSL_HTTP_bio_cb_t, OSSL_HTTP_proxy_connect,
+OSSL_HTTP_set1_request, OSSL_HTTP_exchange, OSSL_HTTP_get,
+OSSL_HTTP_transfer, OSSL_HTTP_close − HTTP client
+high−level functions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/http.h&gt; <br/>
+typedef BIO *(*OSSL_HTTP_bio_cb_t)(BIO *bio, void *arg, <br/>
+int connect, int detail); <br/>
+OSSL_HTTP_REQ_CTX *OSSL_HTTP_open(const char *server, const
+char *port, <br/>
+const char *proxy, const char *no_proxy, <br/>
+int use_ssl, BIO *bio, BIO *rbio, <br/>
+OSSL_HTTP_bio_cb_t bio_update_fn, void *arg, <br/>
+int buf_size, int overall_timeout); <br/>
+int OSSL_HTTP_proxy_connect(BIO *bio, const char *server,
+const char *port, <br/>
+const char *proxyuser, const char *proxypass, <br/>
+int timeout, BIO *bio_err, const char *prog); <br/>
+int OSSL_HTTP_set1_request(OSSL_HTTP_REQ_CTX *rctx, const
+char *path, <br/>
+const STACK_OF(CONF_VALUE) *headers, <br/>
+const char *content_type, BIO *req, <br/>
+const char *expected_content_type, int expect_asn1, <br/>
+size_t max_resp_len, int timeout, int keep_alive); <br/>
+BIO *OSSL_HTTP_exchange(OSSL_HTTP_REQ_CTX *rctx, char
+**redirection_url); <br/>
+BIO *OSSL_HTTP_get(const char *url, const char *proxy, const
+char *no_proxy, <br/>
+BIO *bio, BIO *rbio, <br/>
+OSSL_HTTP_bio_cb_t bio_update_fn, void *arg, <br/>
+int buf_size, const STACK_OF(CONF_VALUE) *headers, <br/>
+const char *expected_content_type, int expect_asn1, <br/>
+size_t max_resp_len, int timeout); <br/>
+BIO *OSSL_HTTP_transfer(OSSL_HTTP_REQ_CTX **prctx, <br/>
+const char *server, const char *port, <br/>
+const char *path, int use_ssl, <br/>
+const char *proxy, const char *no_proxy, <br/>
+BIO *bio, BIO *rbio, <br/>
+OSSL_HTTP_bio_cb_t bio_update_fn, void *arg, <br/>
+int buf_size, const STACK_OF(CONF_VALUE) *headers, <br/>
+const char *content_type, BIO *req, <br/>
+const char *expected_content_type, int expect_asn1, <br/>
+size_t max_resp_len, int timeout, int keep_alive); <br/>
+int OSSL_HTTP_close(OSSL_HTTP_REQ_CTX *rctx, int ok);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_HTTP_open()</b>
+initiates an HTTP session using the <i>bio</i> argument if
+not NULL, else by connecting to a given <i>server</i>
+optionally via a <i>proxy</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Typically the
+OpenSSL build supports sockets and the <i>bio</i> parameter
+is NULL. In this case <i>rbio</i> must be NULL as well and
+the <i>server</i> must be non−NULL. The function
+creates a network BIO internally using
+<b>BIO_new_connect</b>(3) for connecting to the given server
+and the optionally given <i>port</i>, defaulting to 80 for
+HTTP or 443 for HTTPS. Then this internal BIO is used for
+setting up a connection and for exchanging one or more
+request and response. If <i>bio</i> is given and <i>rbio</i>
+is NULL then this <i>bio</i> is used instead. If both
+<i>bio</i> and <i>rbio</i> are given (which may be memory
+BIOs for instance) then no explicit connection is set up,
+but <i>bio</i> is used for writing requests and <i>rbio</i>
+for reading responses. As soon as the client has flushed
+<i>bio</i> the server must be ready to provide a response or
+indicate a waiting condition via <i>rbio</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">If <i>bio</i> is
+given, it is an error to provide <i>proxy</i> or
+<i>no_proxy</i> arguments, while <i>server</i> and
+<i>port</i> arguments may be given to support diagnostic
+output. If <i>bio</i> is NULL the optional <i>proxy</i>
+parameter can be used to set an HTTP(S) proxy to use (unless
+overridden by "no_proxy" settings). If TLS is not
+used this defaults to the environment variable
+"http_proxy" if set, else "HTTP_PROXY".
+If <i>use_ssl</i> != 0 it defaults to
+"https_proxy" if set, else
+"HTTPS_PROXY". An empty proxy string ""
+forbids using a proxy. Otherwise, the format is
+"[http[s]://][userinfo@]host[:port][/path][?query][#fragment]",
+where any userinfo, path, query, and fragment given is
+ignored. If the host string is an IPv6 address, it must be
+enclosed in "[" and "]". The default
+proxy port number is 80, or 443 in case "https:"
+is given. The HTTP client functions connect via the given
+proxy unless the <i>server</i> is found in the optional list
+<i>no_proxy</i> of proxy hostnames or IP addresses separated
+by "," and/or whitespace (if not NULL; default is
+the environment variable "no_proxy" if set, else
+"NO_PROXY"). Proxying plain HTTP is supported
+directly, while using a proxy for HTTPS connections requires
+a suitable callback function such as
+<b>OSSL_HTTP_proxy_connect()</b>, described below.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<i>use_ssl</i> is nonzero a TLS connection is requested and
+the <i>bio_update_fn</i> parameter must be provided.</p>
+<p style="margin-left:9%; margin-top: 1em">The parameter
+<i>bio_update_fn</i>, which is optional if <i>use_ssl</i> is
+0, may be used to modify the connection BIO used by the HTTP
+client, but cannot be used when both <i>bio</i> and
+<i>rbio</i> are given. <i>bio_update_fn</i> is a BIO
+connect/disconnect callback function with prototype</p>
+<p style="margin-left:9%; margin-top: 1em">BIO
+*(*OSSL_HTTP_bio_cb_t)(BIO *bio, void *arg, int connect, int
+detail)</p>
+<p style="margin-left:9%; margin-top: 1em">The callback
+function may modify the BIO provided in the <i>bio</i>
+argument, whereby it may use an optional custom defined
+argument <i>arg</i>, which can for instance point to an
+<b>SSL_CTX</b> structure. During connection establishment,
+just after calling <b>BIO_do_connect_retry()</b>, the
+callback function is invoked with the <i>connect</i>
+argument being 1 and <i>detail</i> being 1 if <i>use_ssl</i>
+is nonzero (i.e., HTTPS is requested), else 0. On disconnect
+<i>connect</i> is 0 and <i>detail</i> is 1 if no error
+occurred, else 0. For instance, on connect the callback may
+push an SSL BIO to implement HTTPS; after disconnect it may
+do some diagnostic output and pop and free the SSL BIO.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback
+function must return either the potentially modified BIO
+<i>bio</i> or NULL to indicate failure, in which case it
+should not modify the BIO.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a simple
+example that supports TLS connections (but not via a
+proxy):</p>
+<p style="margin-left:9%; margin-top: 1em">BIO
+*http_tls_cb(BIO *bio, void *arg, int connect, int detail)
+<br/>
+{ <br/>
+if (connect &amp;&amp; detail) { /* connecting with TLS */
+<br/>
+SSL_CTX *ctx = (SSL_CTX *)arg; <br/>
+BIO *sbio = BIO_new_ssl(ctx, 1); <br/>
+bio = sbio != NULL ? BIO_push(sbio, bio) : NULL; <br/>
+} else if (!connect) { /* disconnecting */ <br/>
+BIO *hbio; <br/>
+if (!detail) { /* an error has occurred */ <br/>
+/* optionally add diagnostics here */ <br/>
+} <br/>
+BIO_ssl_shutdown(bio); <br/>
+hbio = BIO_pop(bio); <br/>
+BIO_free(bio); /* SSL BIO */ <br/>
+bio = hbio; <br/>
+} <br/>
+return bio; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">After disconnect
+the modified BIO will be deallocated using
+<b>BIO_free_all()</b>. The optional callback function
+argument <i>arg</i> is not consumed, so must be freed by the
+caller when not needed any more.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>buf_size</i> parameter specifies the response header
+maximum line length. A value &lt;= 0 means that the
+<b>OSSL_HTTP_DEFAULT_MAX_LINE_LEN</b> (4KiB) is used.
+<i>buf_size</i> is also used as the number of content bytes
+that are read at a time.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+<i>overall_timeout</i> parameter is &gt; 0 this indicates
+the maximum number of seconds the overall HTTP transfer
+(i.e., connection setup if needed, sending requests, and
+receiving responses) is allowed to take until completion. A
+value &lt;= 0 enables waiting indefinitely, i.e., no
+timeout.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_HTTP_proxy_connect()</b>
+may be used by an above BIO connect callback function to set
+up an SSL/TLS connection via an HTTPS proxy. It promotes the
+given BIO <i>bio</i> representing a connection
+pre−established with a TLS proxy using the HTTP
+CONNECT method, optionally using proxy client credentials
+<i>proxyuser</i> and <i>proxypass</i>, to connect with TLS
+protection ultimately to <i>server</i> and <i>port</i>. If
+the <i>port</i> argument is NULL or the empty string it
+defaults to "443". If the <i>timeout</i> parameter
+is &gt; 0 this indicates the maximum number of seconds the
+connection setup is allowed to take. A value &lt;= 0 enables
+waiting indefinitely, i.e., no timeout. Since this function
+is typically called by applications such as
+<b>openssl−s_client</b>(1) it uses the <i>bio_err</i>
+and <i>prog</i> parameters (unless NULL) to print additional
+diagnostic information in a user−oriented way.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_HTTP_set1_request()</b>
+sets up in <i>rctx</i> the request header and content data
+and expectations on the response using the following
+parameters. If &lt;rctx&gt; indicates using a proxy for HTTP
+(but not HTTPS), the server host (and optionally port) needs
+to be placed in the header; thus it must be present in
+<i>rctx</i>. For backward compatibility, the server (and
+optional port) may also be given in the <i>path</i> argument
+beginning with "http://" (thus giving an
+absoluteURI). If <i>path</i> is NULL it defaults to
+"/". If <i>req</i> is NULL the HTTP GET method
+will be used to send the request else HTTP POST with the
+contents of <i>req</i> and optional <i>content_type</i>,
+where the length of the data in <i>req</i> does not need to
+be determined in advance: the BIO will be read
+on−the−fly while sending the request, which
+supports streaming. The optional list <i>headers</i> may
+contain additional custom HTTP header lines.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+<i>expected_content_type</i> argument is not NULL, the
+client will check that the specified content−type
+string is included in the HTTP header of the response and
+return an error if not. In the content−type header
+line the specified string should be present either as a
+whole, or in case the specified string does not include a
+";" character, it is sufficient that the specified
+string appears as a prefix in the header line, followed by a
+";" character and any further text. For instance,
+if <i>expected_content_type</i> specifies
+"text/html", this is matched by
+"text/html", "text/html;
+charset=UTF−8", etc.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+<i>expect_asn1</i> parameter is nonzero, a structure in
+ASN.1 encoding will be expected as response content. The
+<i>max_resp_len</i> parameter specifies the maximum allowed
+response content length, where the value 0 indicates no
+limit. If the <i>timeout</i> parameter is &gt; 0 this
+indicates the maximum number of seconds the subsequent HTTP
+transfer (sending the request and receiving a response) is
+allowed to take. A value of 0 enables waiting indefinitely,
+i.e., no timeout. A value &lt; 0 indicates that the
+<i>overall_timeout</i> parameter value given when opening
+the HTTP transfer will be used instead. If <i>keep_alive</i>
+is 0 the connection is not kept open after receiving a
+response, which is the default behavior for HTTP 1.0. If the
+value is 1 or 2 then a persistent connection is requested.
+If the value is 2 then a persistent connection is required,
+i.e., an error occurs in case the server does not grant
+it.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_HTTP_exchange()</b>
+exchanges any form of HTTP request and response as specified
+by <i>rctx</i>, which must include both connection and
+request data, typically set up using <b>OSSL_HTTP_open()</b>
+and <b>OSSL_HTTP_set1_request()</b>. It implements the core
+of the functions described below. If the HTTP method is GET
+and <i>redirection_url</i> is not NULL the latter pointer is
+used to provide any new location that the server may return
+with HTTP code 301 (MOVED_PERMANENTLY) or 302 (FOUND). In
+this case the function returns NULL and the caller is
+responsible for deallocating the URL with
+<b>OPENSSL_free</b>(3). If the response header contains one
+or more "Content−Length" header lines and/or
+an ASN.1−encoded response is expected, which should
+include a total length, the length indications received are
+checked for consistency and for not exceeding any given
+maximum response length. If an ASN.1−encoded response
+is expected, the function returns on success the contents
+buffered in a memory BIO, which does not support streaming.
+Otherwise it returns directly the read BIO that holds the
+response contents, which allows a response of indefinite
+length and may support streaming. The caller is responsible
+for freeing the BIO pointer obtained.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_HTTP_get()</b>
+uses HTTP GET to obtain data from <i>bio</i> if
+non−NULL, else from the server contained in the
+<i>url</i>, and returns it as a BIO. It supports redirection
+via HTTP status code 301 or 302. It is meant for transfers
+with a single round trip, so does not support persistent
+connections. If <i>bio</i> is non−NULL, any host and
+port components in the <i>url</i> are not used for
+connecting but the hostname is used, as usual, for the
+"Host" header. Any userinfo and fragment
+components in the <i>url</i> are ignored. Any query
+component is handled as part of the path component. If the
+scheme component of the <i>url</i> is "https" a
+TLS connection is requested and the <i>bio_update_fn</i>, as
+described for <b>OSSL_HTTP_open()</b>, must be provided.
+Also the remaining parameters are interpreted as described
+for <b>OSSL_HTTP_open()</b> and
+<b>OSSL_HTTP_set1_request()</b>, respectively. The caller is
+responsible for freeing the BIO pointer obtained.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_HTTP_transfer()</b>
+exchanges an HTTP request and response over a connection
+managed via <i>prctx</i> without supporting redirection. It
+combines <b>OSSL_HTTP_open()</b>,
+<b>OSSL_HTTP_set1_request()</b>,
+<b>OSSL_HTTP_exchange()</b>, and <b>OSSL_HTTP_close()</b>.
+If <i>prctx</i> is not NULL it reuses any open connection
+represented by a non−NULL <i>*prctx</i>. It keeps the
+connection open if a persistent connection is requested or
+required and this was granted by the server, else it closes
+the connection and assigns NULL to <i>*prctx</i>. The
+remaining parameters are interpreted as described for
+<b>OSSL_HTTP_open()</b> and <b>OSSL_HTTP_set1_request()</b>,
+respectively. The caller is responsible for freeing the BIO
+pointer obtained.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_HTTP_close()</b>
+closes the connection and releases <i>rctx</i>. The
+<i>ok</i> parameter is passed to any BIO update function
+given during setup as described above for
+<b>OSSL_HTTP_open()</b>. It must be 1 if no error occurred
+during the HTTP transfer and 0 otherwise.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The names of the
+environment variables used by this implementation:
+"http_proxy", "HTTP_PROXY",
+"https_proxy", "HTTPS_PROXY",
+"no_proxy", and "NO_PROXY", have been
+chosen for maximal compatibility with other HTTP client
+implementations such as wget, curl, and git.</p>
+<p style="margin-left:9%; margin-top: 1em">When built with
+tracing enabled, <b>OSSL_HTTP_transfer()</b> and all
+functions using it may be traced using
+<b>OSSL_TRACE_CATEGORY_HTTP</b>. See also
+<b>OSSL_trace_enabled</b>(3) and
+<b>openssl−env</b>(7).</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_HTTP_open()</b>
+returns on success a <b>OSSL_HTTP_REQ_CTX</b>, else
+NULL.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_HTTP_proxy_connect()</b>
+and <b>OSSL_HTTP_set1_request()</b> return 1 on success, 0
+on error.</p>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>OSSL_HTTP_exchange()</b>, <b>OSSL_HTTP_get()</b>, and
+<b>OSSL_HTTP_transfer()</b> return a memory BIO that buffers
+all the data received if an ASN.1−encoded response is
+expected, otherwise a BIO that may support streaming. The
+BIO must be freed by the caller. On failure, they return
+NULL. Failure conditions include connection/transfer
+timeout, parse errors, etc. The caller is responsible for
+freeing the BIO pointer obtained.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_HTTP_close()</b>
+returns 0 if anything went wrong while disconnecting, else
+1.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_HTTP_parse_url</b>(3),
+<b>BIO_new_connect</b>(3), <b>ASN1_item_i2d_mem_bio</b>(3),
+<b>ASN1_item_d2i_bio</b>(3), <b>OSSL_HTTP_is_alive</b>(3),
+<b>OSSL_trace_enabled</b>(3), and
+<b>openssl−env</b>(7).</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All the
+functions described here were added in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2019−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

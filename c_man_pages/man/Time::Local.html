@@ -1,0 +1,476 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:15 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Time::Local</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Time::Local</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#timelocal_posix() and timegm_posix()">timelocal_posix() and timegm_posix()</a><br/>
+<a href="#timelocal_modern() and timegm_modern()">timelocal_modern() and timegm_modern()</a><br/>
+<a href="#timelocal() and timegm()">timelocal() and timegm()</a><br/>
+<a href="#timelocal_nocheck() and timegm_nocheck()">timelocal_nocheck() and timegm_nocheck()</a><br/>
+<a href="#Year Value Interpretation">Year Value Interpretation</a><br/>
+<a href="#Limits of time_t">Limits of time_t</a><br/>
+<a href="#Ambiguous Local Times (DST)">Ambiguous Local Times (DST)</a><br/>
+<a href="#Non−Existent Local Times (DST)">Non−Existent Local Times (DST)</a><br/>
+<a href="#Negative Epoch Values">Negative Epoch Values</a><br/>
+<a href="#IMPLEMENTATION">IMPLEMENTATION</a><br/>
+<a href="#AUTHORS EMERITUS">AUTHORS EMERITUS</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#CONTRIBUTORS">CONTRIBUTORS</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Time::Local
+− Efficiently compute time from local and GMT time</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version 1.35</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Time::Local
+qw( timelocal_posix timegm_posix ); <br/>
+my $time = timelocal_posix( $sec, $min, $hour, $mday, $mon,
+$year ); <br/>
+my $time = timegm_posix( $sec, $min, $hour, $mday, $mon,
+$year );</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides functions that are the inverse of built−in
+perl functions localtime() and gmtime(). They accept a date
+as a six−element array, and return the corresponding
+time(2) value in seconds since the system epoch (Midnight,
+January 1, 1970 GMT on Unix, for example). This value can be
+positive or negative, though POSIX only requires support for
+positive values, so dates before the system's epoch may not
+work on all operating systems.</p>
+<p style="margin-left:9%; margin-top: 1em">It is worth
+drawing particular attention to the expected ranges for the
+values provided. The value for the day of the month is the
+actual day (i.e. 1..31), while the month is the number of
+months since January (0..11). This is consistent with the
+values returned from localtime() and gmtime().</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<h3>timelocal_posix() and timegm_posix()
+<a name="timelocal_posix() and timegm_posix()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.30.</i></p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+are the exact inverse of Perl's built−in
+"localtime" and "gmtime" functions. That
+means that calling "timelocal_posix( localtime($value)
+)" will always give you the same $value you started
+with. The same applies to "timegm_posix( gmtime($value)
+)".</p>
+<p style="margin-left:9%; margin-top: 1em">The one
+exception is when the value returned from localtime()
+represents an ambiguous local time because of a DST change.
+See the documentation below for more details.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+expect the year value to be the number of years since 1900,
+which is what the localtime() and gmtime() built−ins
+returns.</p>
+<p style="margin-left:9%; margin-top: 1em">They perform
+range checking by default on the input $sec, $min, $hour,
+$mday, and $mon values and will croak (using Carp::croak())
+if given a value outside the allowed ranges.</p>
+<p style="margin-left:9%; margin-top: 1em">While it would
+be nice to make this the default behavior, that would almost
+certainly break a lot of code, so you must explicitly import
+these functions and use them instead of the default
+timelocal() and timegm().</p>
+<p style="margin-left:9%; margin-top: 1em">You are
+<b>strongly</b> encouraged to use these functions in any new
+code which uses this module. It will almost certainly make
+your code's behavior less surprising.</p>
+<h3>timelocal_modern() and timegm_modern()
+<a name="timelocal_modern() and timegm_modern()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.27.</i></p>
+<p style="margin-left:9%; margin-top: 1em">When
+"Time::Local" was first written, it was a common
+practice to represent years as a two−digit value like
+99 for 1999 or 1 for 2001. This caused all sorts of problems
+(google "Y2K problem" if you're very young) and
+developers eventually realized that this was a terrible
+idea.</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+exports of timelocal() and timegm() do a complicated
+calculation when given a year value less than 1000. This
+leads to surprising results in many cases. See "Year
+Value Interpretation" for details.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"time*_modern()" functions do not do this year
+munging and simply take the year value as provided.</p>
+<p style="margin-left:9%; margin-top: 1em">They perform
+range checking by default on the input $sec, $min, $hour,
+$mday, and $mon values and will croak (using Carp::croak())
+if given a value outside the allowed ranges.</p>
+<h3>timelocal() and timegm()
+<a name="timelocal() and timegm()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This module
+exports two functions by default, timelocal() and
+timegm().</p>
+<p style="margin-left:9%; margin-top: 1em">They perform
+range checking by default on the input $sec, $min, $hour,
+$mday, and $mon values and will croak (using Carp::croak())
+if given a value outside the allowed ranges.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Warning: The
+year value interpretation that these functions and their
+nocheck variants use will almost certainly lead to bugs in
+your code, if not now, then in the future. You are strongly
+discouraged from using these in new code, and you should
+convert old code to using either the *_posix or *_modern
+functions if possible.</b></p>
+<h3>timelocal_nocheck() and timegm_nocheck()
+<a name="timelocal_nocheck() and timegm_nocheck()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If you are
+working with data you know to be valid, you can use the
+"nocheck" variants, timelocal_nocheck() and
+timegm_nocheck(). These variants must be explicitly
+imported.</p>
+<p style="margin-left:9%; margin-top: 1em">If you supply
+data which is not valid (month 27, second 1,000) the results
+will be unpredictable (so don't do that).</p>
+<p style="margin-left:9%; margin-top: 1em">Note that my
+benchmarks show that this is just a 3% speed increase over
+the checked versions, so unless calling
+"Time::Local" is the hottest spot in your
+application, using these nocheck variants is unlikely to
+have much impact on your application.</p>
+<h3>Year Value Interpretation
+<a name="Year Value Interpretation"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>This does not
+apply to the *_posix or *_modern functions. Use those
+exports if you want to ensure consistent behavior as your
+code ages.</b></p>
+<p style="margin-left:9%; margin-top: 1em">Strictly
+speaking, the year should be specified in a form consistent
+with localtime(), i.e. the offset from 1900. In order to
+make the interpretation of the year easier for humans,
+however, who are more accustomed to seeing years as
+two−digit or four−digit values, the following
+conventions are followed:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Years greater than 999 are interpreted as being the
+actual year, rather than the offset from 1900. Thus, 1964
+would indicate the year Martin Luther King won the Nobel
+prize, not the year 3864.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Years in the range 100..999 are interpreted as offset
+from 1900, so that 112 indicates 2012. This rule also
+applies to years less than zero (but see note below
+regarding date range).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Years in the range 0..99 are interpreted as shorthand
+for years in the rolling "current century,"
+defined as 50 years on either side of the current year.
+Thus, today, in 1999, 0 would refer to 2000, and 45 to 2045,
+but 55 would refer to 1955. Twenty years from now, 55 would
+instead refer to 2055. This is messy, but matches the way
+people currently think about two digit dates. Whenever
+possible, use an absolute four digit year instead.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The scheme above
+allows interpretation of a wide range of dates, particularly
+if 4−digit years are used. But it also means that the
+behavior of your code changes as time passes, because the
+rolling "current century" changes each year.</p>
+<h3>Limits of time_t
+<a name="Limits of time_t"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">On perl versions
+older than 5.12.0, the range of dates that can be actually
+be handled depends on the size of "time_t"
+(usually a signed integer) on the given platform. Currently,
+this is 32 bits for most systems, yielding an approximate
+range from Dec 1901 to Jan 2038.</p>
+<p style="margin-left:9%; margin-top: 1em">Both timelocal()
+and timegm() croak if given dates outside the supported
+range.</p>
+<p style="margin-left:9%; margin-top: 1em">As of version
+5.12.0, perl has stopped using the time implementation of
+the operating system it's running on. Instead, it has its
+own implementation of those routines with a safe range of at
+least +/− 2**52 (about 142 million years)</p>
+<h3>Ambiguous Local Times (DST)
+<a name="Ambiguous Local Times (DST)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Because of DST
+changes, there are many time zones where the same local time
+occurs for two different GMT times on the same day. For
+example, in the "Europe/Paris" time zone, the
+local time of 2001−10−28 02:30:00 can represent
+either 2001−10−28 00:30:00 GMT, <b>or</b>
+2001−10−28 01:30:00 GMT.</p>
+<p style="margin-left:9%; margin-top: 1em">When given an
+ambiguous local time, the <b>timelocal()</b> function will
+always return the epoch for the <i>earlier</i> of the two
+possible GMT times.</p>
+<h3>Non−Existent Local Times (DST)
+<a name="Non−Existent Local Times (DST)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">When a DST
+change causes a locale clock to skip one hour forward, there
+will be an hour's worth of local times that don't exist.
+Again, for the "Europe/Paris" time zone, the local
+clock jumped from 2001−03−25 01:59:59 to
+2001−03−25 03:00:00.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+timelocal() function is given a non−existent local
+time, it will simply return an epoch value for the time one
+hour later.</p>
+<h3>Negative Epoch Values
+<a name="Negative Epoch Values"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">On perl version
+5.12.0 and newer, negative epoch values are fully
+supported.</p>
+<p style="margin-left:9%; margin-top: 1em">On older
+versions of perl, negative epoch ("time_t")
+values, which are not officially supported by the POSIX
+standards, are known not to work on some systems. These
+include MacOS (pre−OSX) and Win32.</p>
+<p style="margin-left:9%; margin-top: 1em">On systems which
+do support negative epoch values, this module should be able
+to cope with dates before the start of the epoch, down the
+minimum value of time_t for the system.</p>
+<h2>IMPLEMENTATION
+<a name="IMPLEMENTATION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These routines
+are quite efficient and yet are always guaranteed to agree
+with localtime() and gmtime(). We manage this by caching the
+start times of any months we've seen before. If we know the
+start time of the month, we can always calculate any time
+within the month. The start times are calculated using a
+mathematical formula. Unlike other algorithms that do
+multiple calls to gmtime().</p>
+<p style="margin-left:9%; margin-top: 1em">The timelocal()
+function is implemented using the same cache. We just assume
+that we're translating a GMT time, and then fudge it when
+we're done for the timezone and daylight savings arguments.
+Note that the timezone is evaluated for each date because
+countries occasionally change their official timezones.
+Assuming that localtime() corrects for these changes, this
+routine will also be correct.</p>
+<h2>AUTHORS EMERITUS
+<a name="AUTHORS EMERITUS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+based on a Perl 4 library, timelocal.pl, that was included
+with Perl 4.036, and was most likely written by Tom
+Christiansen.</p>
+<p style="margin-left:9%; margin-top: 1em">The current
+version was written by Graham Barr.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The whole scheme
+for interpreting two−digit years can be considered a
+bug.</p>
+<p style="margin-left:9%; margin-top: 1em">Bugs may be
+submitted at
+&lt;https://github.com/houseabsolute/Time−Local/issues&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">There is a
+mailing list available for users of this distribution,
+&lt;mailto:datetime@perl.org&gt;.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Time−Local can be found at
+&lt;https://github.com/houseabsolute/Time−Local&gt;.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Dave Rolsky
+&lt;autarch@urth.org&gt;</p>
+<h2>CONTRIBUTORS
+<a name="CONTRIBUTORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="48%">
+<p style="margin-top: 1em">Florian Ragwitz
+&lt;rafl@debian.org&gt;</p> </td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="48%">
+<p>Gregory Oschwald &lt;oschwald@gmail.com&gt;</p></td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="48%">
+<p>J. Nick Koston &lt;nick@cpanel.net&gt;</p></td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="48%">
+<p>Tom Wyant &lt;wyant@cpan.org&gt;</p></td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="48%">
+<p>Unknown &lt;unknown@example.com&gt;</p></td>
+<td width="38%">
+</td></tr>
+</table>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 1997 − 2023 by Graham Barr &amp; Dave
+Rolsky.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<p style="margin-left:9%; margin-top: 1em">The full text of
+the license can be found in the <i>LICENSE</i> file included
+with this distribution.</p>
+<hr/>
+</body>
+</html>

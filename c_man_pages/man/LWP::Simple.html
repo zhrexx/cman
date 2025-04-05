@@ -1,0 +1,304 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:16 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LWP::Simple</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LWP::Simple</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#get">get</a><br/>
+<a href="#head">head</a><br/>
+<a href="#getprint">getprint</a><br/>
+<a href="#getstore">getstore</a><br/>
+<a href="#mirror">mirror</a><br/>
+<a href="#STATUS CONSTANTS">STATUS CONSTANTS</a><br/>
+<a href="#CLASSIFICATION FUNCTIONS">CLASSIFICATION FUNCTIONS</a><br/>
+<a href="#is_success">is_success</a><br/>
+<a href="#is_error">is_error</a><br/>
+<a href="#CAVEAT">CAVEAT</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">LWP::Simple
+− simple procedural interface to LWP</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">perl
+−MLWP::Simple −e 'getprint
+"http://www.sn.no"' <br/>
+use LWP::Simple; <br/>
+$content = get("http://www.sn.no/"); <br/>
+die "Couldn't get it!" unless defined $content;
+<br/>
+if (mirror("http://www.sn.no/", "foo")
+== RC_NOT_MODIFIED) { <br/>
+... <br/>
+} <br/>
+if (is_success(getprint("http://www.sn.no/"))) {
+<br/>
+... <br/>
+}</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+meant for people who want a simplified view of the
+libwww−perl library. It should also be suitable for
+one−liners. If you need more control or access to the
+header fields in the requests sent and responses received,
+then you should use the full object−oriented interface
+provided by the LWP::UserAgent module.</p>
+<p style="margin-left:9%; margin-top: 1em">The module will
+also export the LWP::UserAgent object as $ua if you ask for
+it explicitly.</p>
+<p style="margin-left:9%; margin-top: 1em">The user agent
+created by this module will identify itself as
+"LWP::Simple/#.##" and will initialize its proxy
+defaults from the environment (by calling
+"$ua−&gt;env_proxy").</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions are provided (and exported) by this module:</p>
+<h3>get
+<a name="get"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $res =
+get($url);</p>
+<p style="margin-left:9%; margin-top: 1em">The <b>get()</b>
+function will fetch the document identified by the given URL
+and return it. It returns "undef" if it fails. The
+$url argument can be either a string or a reference to a URI
+object.</p>
+<p style="margin-left:9%; margin-top: 1em">You will not be
+able to examine the response code or response headers (like
+"Content−Type") when you are accessing the
+web using this function. If you need that information you
+should use the full OO interface (see LWP::UserAgent).</p>
+<h3>head
+<a name="head"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $res =
+head($url);</p>
+<p style="margin-left:9%; margin-top: 1em">Get document
+headers. Returns the following 5 values if successful:
+($content_type, $document_length, $modified_time, $expires,
+$server)</p>
+<p style="margin-left:9%; margin-top: 1em">Returns an empty
+list if it fails. In scalar context returns TRUE if
+successful.</p>
+<h3>getprint
+<a name="getprint"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $code =
+getprint($url);</p>
+<p style="margin-left:9%; margin-top: 1em">Get and print a
+document identified by a URL. The document is printed to the
+selected default filehandle for output (normally STDOUT) as
+data is received from the network. If the request fails,
+then the status code and message are printed on STDERR. The
+return value is the HTTP response code.</p>
+<h3>getstore
+<a name="getstore"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $code =
+getstore($url, $file) <br/>
+my $code = getstore($url, $filehandle)</p>
+<p style="margin-left:9%; margin-top: 1em">Gets a document
+identified by a URL and stores it in the file. The return
+value is the HTTP response code. You may also pass a
+writeable filehandle or similar, such as a File::Temp
+object.</p>
+<h3>mirror
+<a name="mirror"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $code =
+mirror($url, $file);</p>
+<p style="margin-left:9%; margin-top: 1em">Get and store a
+document identified by a URL, using
+<i>If−modified−since</i>, and checking the
+<i>Content−Length</i>. Returns the HTTP response
+code.</p>
+<h2>STATUS CONSTANTS
+<a name="STATUS CONSTANTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module also
+exports the HTTP::Status constants and procedures. You can
+use them when you check the response code from
+"getprint" in LWP::Simple, "getstore" in
+LWP::Simple or "mirror" in LWP::Simple. The
+constants are:</p>
+<p style="margin-left:9%; margin-top: 1em">RC_CONTINUE <br/>
+RC_SWITCHING_PROTOCOLS <br/>
+RC_OK <br/>
+RC_CREATED <br/>
+RC_ACCEPTED <br/>
+RC_NON_AUTHORITATIVE_INFORMATION <br/>
+RC_NO_CONTENT <br/>
+RC_RESET_CONTENT <br/>
+RC_PARTIAL_CONTENT <br/>
+RC_MULTIPLE_CHOICES <br/>
+RC_MOVED_PERMANENTLY <br/>
+RC_MOVED_TEMPORARILY <br/>
+RC_SEE_OTHER <br/>
+RC_NOT_MODIFIED <br/>
+RC_USE_PROXY <br/>
+RC_BAD_REQUEST <br/>
+RC_UNAUTHORIZED <br/>
+RC_PAYMENT_REQUIRED <br/>
+RC_FORBIDDEN <br/>
+RC_NOT_FOUND <br/>
+RC_METHOD_NOT_ALLOWED <br/>
+RC_NOT_ACCEPTABLE <br/>
+RC_PROXY_AUTHENTICATION_REQUIRED <br/>
+RC_REQUEST_TIMEOUT <br/>
+RC_CONFLICT <br/>
+RC_GONE <br/>
+RC_LENGTH_REQUIRED <br/>
+RC_PRECONDITION_FAILED <br/>
+RC_REQUEST_ENTITY_TOO_LARGE <br/>
+RC_REQUEST_URI_TOO_LARGE <br/>
+RC_UNSUPPORTED_MEDIA_TYPE <br/>
+RC_INTERNAL_SERVER_ERROR <br/>
+RC_NOT_IMPLEMENTED <br/>
+RC_BAD_GATEWAY <br/>
+RC_SERVICE_UNAVAILABLE <br/>
+RC_GATEWAY_TIMEOUT <br/>
+RC_HTTP_VERSION_NOT_SUPPORTED</p>
+<h2>CLASSIFICATION FUNCTIONS
+<a name="CLASSIFICATION FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The HTTP::Status
+classification functions are:</p>
+<h3>is_success
+<a name="is_success"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $bool =
+is_success($rc);</p>
+<p style="margin-left:9%; margin-top: 1em">True if response
+code indicated a successful request.</p>
+<h3>is_error
+<a name="is_error"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $bool =
+is_error($rc)</p>
+<p style="margin-left:9%; margin-top: 1em">True if response
+code indicated that an error occurred.</p>
+<h2>CAVEAT
+<a name="CAVEAT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Note that if you
+are using both LWP::Simple and the very popular CGI module,
+you may be importing a "head" function from each
+module, producing a warning like "Prototype mismatch:
+sub main::head ($) vs none". Get around this problem by
+just not importing LWP::Simple's "head" function,
+like so:</p>
+<p style="margin-left:9%; margin-top: 1em">use LWP::Simple
+qw(!head); <br/>
+use CGI qw(:standard); # then only CGI.pm defines a
+head()</p>
+<p style="margin-left:9%; margin-top: 1em">Then if you do
+need LWP::Simple's "head" function, you can just
+call it as LWP::Simple::head($url).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">LWP, lwpcook,
+LWP::UserAgent, HTTP::Status, lwp−request,
+lwp−mirror</p>
+<hr/>
+</body>
+</html>

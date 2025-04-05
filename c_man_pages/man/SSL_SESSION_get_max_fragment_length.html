@@ -1,0 +1,332 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:32 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SET_SPLIT_SEND_FRAGMENT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SET_SPLIT_SEND_FRAGMENT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_set_max_send_fragment,
+SSL_set_max_send_fragment, SSL_CTX_set_split_send_fragment,
+SSL_set_split_send_fragment, SSL_CTX_set_max_pipelines,
+SSL_set_max_pipelines, SSL_CTX_set_default_read_buffer_len,
+SSL_set_default_read_buffer_len,
+SSL_CTX_set_tlsext_max_fragment_length,
+SSL_set_tlsext_max_fragment_length,
+SSL_SESSION_get_max_fragment_length − Control fragment
+size settings and pipelining operations</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+long SSL_CTX_set_max_send_fragment(SSL_CTX *ctx, long); <br/>
+long SSL_set_max_send_fragment(SSL *ssl, long m); <br/>
+long SSL_CTX_set_max_pipelines(SSL_CTX *ctx, long m); <br/>
+long SSL_set_max_pipelines(SSL_CTX *ssl, long m); <br/>
+long SSL_CTX_set_split_send_fragment(SSL_CTX *ctx, long m);
+<br/>
+long SSL_set_split_send_fragment(SSL *ssl, long m); <br/>
+void SSL_CTX_set_default_read_buffer_len(SSL_CTX *ctx,
+size_t len); <br/>
+void SSL_set_default_read_buffer_len(SSL *s, size_t len);
+<br/>
+int SSL_CTX_set_tlsext_max_fragment_length(SSL_CTX *ctx,
+uint8_t mode); <br/>
+int SSL_set_tlsext_max_fragment_length(SSL *ssl, uint8_t
+mode); <br/>
+uint8_t SSL_SESSION_get_max_fragment_length(const
+SSL_SESSION *session);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Some engines are
+able to process multiple simultaneous crypto operations.
+This capability could be utilised to parallelise the
+processing of a single connection. For example a single
+write can be split into multiple records and each one
+encrypted independently and in parallel. Note: this will
+only work in TLS1.1+. There is no support in SSLv3, TLSv1.0
+or DTLS (any version). This capability is known as
+"pipelining" within OpenSSL.</p>
+<p style="margin-left:9%; margin-top: 1em">In order to
+benefit from the pipelining capability. You need to have an
+engine that provides ciphers that support this. The OpenSSL
+"dasync" engine provides AES128−SHA based
+ciphers that have this capability. However, these are for
+development and test purposes only.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_max_send_fragment()</b>
+and <b>SSL_set_max_send_fragment()</b> set the
+<b>max_send_fragment</b> parameter for SSL_CTX and SSL
+objects respectively. This value restricts the amount of
+plaintext bytes that will be sent in any one SSL/TLS record.
+By default its value is SSL3_RT_MAX_PLAIN_LENGTH (16384).
+These functions will only accept a value in the range 512
+− SSL3_RT_MAX_PLAIN_LENGTH.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_max_pipelines()</b>
+and <b>SSL_set_max_pipelines()</b> set the maximum number of
+pipelines that will be used at any one time. This value
+applies to both "read" pipelining and
+"write" pipelining. By default only one pipeline
+will be used (i.e. normal non−parallel operation). The
+number of pipelines set must be in the range 1 −
+SSL_MAX_PIPELINES (32). Setting this to a value &gt; 1 will
+also automatically turn on "read_ahead" (see
+<b>SSL_CTX_set_read_ahead</b>(3)). This is explained further
+below. OpenSSL will only ever use more than one pipeline if
+a cipher suite is negotiated that uses a pipeline capable
+cipher provided by an engine.</p>
+<p style="margin-left:9%; margin-top: 1em">Pipelining
+operates slightly differently for reading encrypted data
+compared to writing encrypted data.
+<b>SSL_CTX_set_split_send_fragment()</b> and
+<b>SSL_set_split_send_fragment()</b> define how data is
+split up into pipelines when writing encrypted data. The
+number of pipelines used will be determined by the amount of
+data provided to the <b>SSL_write_ex()</b> or
+<b>SSL_write()</b> call divided by
+<b>split_send_fragment</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">For example if
+<b>split_send_fragment</b> is set to 2000 and
+<b>max_pipelines</b> is 4 then:</p>
+<p style="margin-left:9%; margin-top: 1em">SSL_write/SSL_write_ex
+called with 0−2000 bytes == 1 pipeline used</p>
+<p style="margin-left:9%; margin-top: 1em">SSL_write/SSL_write_ex
+called with 2001−4000 bytes == 2 pipelines used</p>
+<p style="margin-left:9%; margin-top: 1em">SSL_write/SSL_write_ex
+called with 4001−6000 bytes == 3 pipelines used</p>
+<p style="margin-left:9%; margin-top: 1em">SSL_write/SSL_write_ex
+called with 6001+ bytes == 4 pipelines used</p>
+<p style="margin-left:9%; margin-top: 1em"><b>split_send_fragment</b>
+must always be less than or equal to
+<b>max_send_fragment</b>. By default it is set to be equal
+to <b>max_send_fragment</b>. This will mean that the same
+number of records will always be created as would have been
+created in the non−parallel case, although the data
+will be apportioned differently. In the parallel case data
+will be spread equally between the pipelines.</p>
+<p style="margin-left:9%; margin-top: 1em">Read pipelining
+is controlled in a slightly different way than with write
+pipelining. While reading we are constrained by the number
+of records that the peer (and the network) can provide to us
+in one go. The more records we can get in one go the more
+opportunity we have to parallelise the processing. As noted
+above when setting <b>max_pipelines</b> to a value greater
+than one, <b>read_ahead</b> is automatically set. The
+<b>read_ahead</b> parameter causes OpenSSL to attempt to
+read as much data into the read buffer as the network can
+provide and will fit into the buffer. Without this set data
+is read into the read buffer one record at a time. The more
+data that can be read, the more opportunity there is for
+parallelising the processing at the cost of increased memory
+overhead per connection. Setting <b>read_ahead</b> can
+impact the behaviour of the <b>SSL_pending()</b> function
+(see <b>SSL_pending</b>(3)). In addition the default size of
+the internal read buffer is multiplied by the number of
+pipelines available to ensure that we can read multiple
+records in one go. This can therefore have a significant
+impact on memory usage.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_CTX_set_default_read_buffer_len()</b> and
+<b>SSL_set_default_read_buffer_len()</b> functions control
+the size of the read buffer that will be used. The
+<b>len</b> parameter sets the size of the buffer. The value
+will only be used if it is greater than the default that
+would have been used anyway. The normal default value
+depends on a number of factors but it will be at least
+SSL3_RT_MAX_PLAIN_LENGTH + SSL3_RT_MAX_ENCRYPTED_OVERHEAD
+(16704) bytes.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_tlsext_max_fragment_length()</b>
+sets the default maximum fragment length negotiation mode
+via value <b>mode</b> to <b>ctx</b>. This setting affects
+only SSL instances created after this function is called. It
+affects the client−side as only its side may initiate
+this extension use.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_tlsext_max_fragment_length()</b>
+sets the maximum fragment length negotiation mode via value
+<b>mode</b> to <b>ssl</b>. This setting will be used during
+a handshake when extensions are exchanged between client and
+server. So it only affects SSL sessions created after this
+function is called. It affects the client−side as only
+its side may initiate this extension use.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_SESSION_get_max_fragment_length()</b>
+gets the maximum fragment length negotiated in
+<b>session</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+cannot be used with QUIC SSL objects.
+<b>SSL_set_max_send_fragment()</b>,
+<b>SSL_set_max_pipelines()</b>,
+<b>SSL_set_split_send_fragment()</b>,
+<b>SSL_set_default_read_buffer_len()</b> and
+<b>SSL_set_tlsext_max_fragment_length()</b> fail if called
+on a QUIC SSL object.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All
+non−void functions return 1 on success and 0 on
+failure.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The Maximum
+Fragment Length extension support is optional on the server
+side. If the server does not support this extension then
+<b>SSL_SESSION_get_max_fragment_length()</b> will return:
+TLSEXT_max_fragment_length_DISABLED.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+modes are available: <br/>
+TLSEXT_max_fragment_length_DISABLED</p>
+<p style="margin-left:14%;">Disables Maximum Fragment
+Length Negotiation (default).</p>
+<p style="margin-left:9%;">TLSEXT_max_fragment_length_512</p>
+<p style="margin-left:14%;">Sets Maximum Fragment Length to
+512 bytes.</p>
+<p style="margin-left:9%;">TLSEXT_max_fragment_length_1024</p>
+<p style="margin-left:14%;">Sets Maximum Fragment Length to
+1024.</p>
+<p style="margin-left:9%;">TLSEXT_max_fragment_length_2048</p>
+<p style="margin-left:14%;">Sets Maximum Fragment Length to
+2048.</p>
+<p style="margin-left:9%;">TLSEXT_max_fragment_length_4096</p>
+<p style="margin-left:14%;">Sets Maximum Fragment Length to
+4096.</p>
+<p style="margin-left:9%; margin-top: 1em">With the
+exception of <b>SSL_CTX_set_default_read_buffer_len()
+SSL_set_default_read_buffer_len()</b>,
+<b>SSL_CTX_set_tlsext_max_fragment_length()</b>,
+<b>SSL_set_tlsext_max_fragment_length()</b> and
+<b>SSL_SESSION_get_max_fragment_length()</b> all these
+functions are implemented using macros.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_CTX_set_read_ahead</b>(3), <b>SSL_pending</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_CTX_set_max_pipelines()</b>,
+<b>SSL_set_max_pipelines()</b>,
+<b>SSL_CTX_set_split_send_fragment()</b>,
+<b>SSL_set_split_send_fragment()</b>,
+<b>SSL_CTX_set_default_read_buffer_len()</b> and
+<b>SSL_set_default_read_buffer_len()</b> functions were
+added in OpenSSL 1.1.0.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_CTX_set_tlsext_max_fragment_length()</b>,
+<b>SSL_set_tlsext_max_fragment_length()</b> and
+<b>SSL_SESSION_get_max_fragment_length()</b> functions were
+added in OpenSSL 1.1.1.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2016−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

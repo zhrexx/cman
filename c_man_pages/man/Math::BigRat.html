@@ -1,0 +1,826 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:19 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Math::BigRat</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Math::BigRat</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#MATH LIBRARY">MATH LIBRARY</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#NUMERIC LITERALS">NUMERIC LITERALS</a><br/>
+<a href="#Hexadecimal, octal, and binary floating point literals">Hexadecimal, octal, and binary floating point literals</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SUPPORT">SUPPORT</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Math::BigRat
+− arbitrary size rational number math package</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigRat; <br/>
+my $x = Math::BigRat−&gt;new('3/7'); $x += '5/9'; <br/>
+print $x−&gt;bstr(), "\n"; <br/>
+print $x ** 2, "\n"; <br/>
+my $y = Math::BigRat−&gt;new('inf'); <br/>
+print "$y ", ($y−&gt;is_inf ? 'is' : 'is
+not'), " infinity\n"; <br/>
+my $z = Math::BigRat−&gt;new(144);
+$z−&gt;bsqrt();</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Math::BigRat
+complements Math::BigInt and Math::BigFloat by providing
+support for arbitrary big rational numbers.</p>
+<h3>MATH LIBRARY
+<a name="MATH LIBRARY"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">You can change
+the underlying module that does the low−level math
+operations by using:</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::BigRat
+try =&gt; 'GMP';</p>
+<p style="margin-left:9%; margin-top: 1em">Note: This needs
+Math::BigInt::GMP installed.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+would first try to find Math::BigInt::Foo, then
+Math::BigInt::Bar, and when this also fails, revert to
+Math::BigInt::Calc:</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::BigRat
+try =&gt; 'Foo,Math::BigInt::Bar';</p>
+<p style="margin-left:9%; margin-top: 1em">If you want to
+get warned when the fallback occurs, replace "try"
+with "lib":</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::BigRat
+lib =&gt; 'Foo,Math::BigInt::Bar';</p>
+<p style="margin-left:9%; margin-top: 1em">If you want the
+code to die instead, replace "try" with
+"only":</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::BigRat
+only =&gt; 'Foo,Math::BigInt::Bar';</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Any methods not
+listed here are derived from Math::BigFloat (or
+Math::BigInt), so make sure you check these two modules for
+further information. <b><br/>
+new()</b></p>
+<p style="margin-left:14%;">$x =
+Math::BigRat−&gt;new('1/3');</p>
+<p style="margin-left:14%; margin-top: 1em">Create a new
+Math::BigRat object. Input can come in various forms:</p>
+<p style="margin-left:14%; margin-top: 1em">$x =
+Math::BigRat−&gt;new(123); # scalars <br/>
+$x = Math::BigRat−&gt;new('inf'); # infinity <br/>
+$x = Math::BigRat−&gt;new('123.3'); # float <br/>
+$x = Math::BigRat−&gt;new('1/3'); # simple string <br/>
+$x = Math::BigRat−&gt;new('1 / 3'); # spaced <br/>
+$x = Math::BigRat−&gt;new('1 / 0.1'); # w/ floats <br/>
+$x =
+Math::BigRat−&gt;new(Math::BigInt−&gt;new(3)); #
+BigInt <br/>
+$x =
+Math::BigRat−&gt;new(Math::BigFloat−&gt;new('3.1'));
+# BigFloat <br/>
+$x =
+Math::BigRat−&gt;new(Math::BigInt::Lite−&gt;new('2'));
+# BigLite <br/>
+# You can also give D and N as different objects: <br/>
+$x = Math::BigRat−&gt;new( <br/>
+Math::BigInt−&gt;new(−123), <br/>
+Math::BigInt−&gt;new(7), <br/>
+); # =&gt; −123/7</p>
+<p style="margin-left:9%;"><b>numerator()</b></p>
+<p style="margin-left:14%;">$n =
+$x−&gt;numerator();</p>
+<p style="margin-left:14%; margin-top: 1em">Returns a copy
+of the numerator (the part above the line) as signed
+BigInt.</p>
+<p style="margin-left:9%;"><b>denominator()</b></p>
+<p style="margin-left:14%;">$d =
+$x−&gt;denominator();</p>
+<p style="margin-left:14%; margin-top: 1em">Returns a copy
+of the denominator (the part under the line) as positive
+BigInt.</p>
+<p style="margin-left:9%;"><b>parts()</b></p>
+<p style="margin-left:14%;">($n, $d) =
+$x−&gt;parts();</p>
+<p style="margin-left:14%; margin-top: 1em">Return a list
+consisting of (signed) numerator and (unsigned) denominator
+as BigInts.</p>
+<p style="margin-left:9%;"><b>dparts()</b></p>
+<p style="margin-left:14%;">Returns the integer part and
+the fraction part.</p>
+<p style="margin-left:9%;"><b>fparts()</b></p>
+<p style="margin-left:14%;">Returns the smallest possible
+numerator and denominator so that the numerator divided by
+the denominator gives back the original value. For finite
+numbers, both values are integers. Mnemonic: fraction.</p>
+<p style="margin-left:9%;"><b>numify()</b></p>
+<p style="margin-left:14%;">my $y =
+$x−&gt;numify();</p>
+<p style="margin-left:14%; margin-top: 1em">Returns the
+object as a scalar. This will lose some data if the object
+cannot be represented by a normal Perl scalar (integer or
+float), so use "<b>as_int()</b>" or
+"<b>as_float()</b>" instead.</p>
+<p style="margin-left:14%; margin-top: 1em">This routine is
+automatically used whenever a scalar is required:</p>
+<p style="margin-left:14%; margin-top: 1em">my $x =
+Math::BigRat−&gt;new('3/1'); <br/>
+@array = (0, 1, 2, 3); <br/>
+$y = $array[$x]; # set $y to 3</p>
+<p style="margin-left:9%;"><b>as_int() <br/>
+as_number()</b></p>
+<p style="margin-left:14%;">$x =
+Math::BigRat−&gt;new('13/7'); <br/>
+print $x−&gt;as_int(), "\n"; # '1'</p>
+<p style="margin-left:14%; margin-top: 1em">Returns a copy
+of the object as BigInt, truncated to an integer.</p>
+<p style="margin-left:14%; margin-top: 1em">as_number() is
+an alias for as_int().</p>
+<p style="margin-left:9%;"><b>as_float()</b></p>
+<p style="margin-left:14%;">$x =
+Math::BigRat−&gt;new('13/7'); <br/>
+print $x−&gt;as_float(), "\n"; # '1' <br/>
+$x = Math::BigRat−&gt;new('2/3'); <br/>
+print $x−&gt;as_float(5), "\n"; #
+'0.66667'</p>
+<p style="margin-left:14%; margin-top: 1em">Returns a copy
+of the object as BigFloat, preserving the accuracy as
+wanted, or the default of 40 digits.</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in v0.22 of Math::BigRat (April 2008).</p>
+<p style="margin-left:9%;"><b>as_hex()</b></p>
+<p style="margin-left:14%;">$x =
+Math::BigRat−&gt;new('13'); <br/>
+print $x−&gt;as_hex(), "\n"; # '0xd'</p>
+<p style="margin-left:14%; margin-top: 1em">Returns the
+BigRat as hexadecimal string. Works only for integers.</p>
+<p style="margin-left:9%;"><b>as_bin()</b></p>
+<p style="margin-left:14%;">$x =
+Math::BigRat−&gt;new('13'); <br/>
+print $x−&gt;as_bin(), "\n"; # '0x1101'</p>
+<p style="margin-left:14%; margin-top: 1em">Returns the
+BigRat as binary string. Works only for integers.</p>
+<p style="margin-left:9%;"><b>as_oct()</b></p>
+<p style="margin-left:14%;">$x =
+Math::BigRat−&gt;new('13'); <br/>
+print $x−&gt;as_oct(), "\n"; # '015'</p>
+<p style="margin-left:14%; margin-top: 1em">Returns the
+BigRat as octal string. Works only for integers.</p>
+<p style="margin-left:9%;"><b>from_hex()</b></p>
+<p style="margin-left:14%;">my $h =
+Math::BigRat−&gt;from_hex('0x10');</p>
+<p style="margin-left:14%; margin-top: 1em">Create a BigRat
+from a hexadecimal number in string form.</p>
+<p style="margin-left:9%;"><b>from_oct()</b></p>
+<p style="margin-left:14%;">my $o =
+Math::BigRat−&gt;from_oct('020');</p>
+<p style="margin-left:14%; margin-top: 1em">Create a BigRat
+from an octal number in string form.</p>
+<p style="margin-left:9%;"><b>from_bin()</b></p>
+<p style="margin-left:14%;">my $b =
+Math::BigRat−&gt;from_bin('0b10000000');</p>
+<p style="margin-left:14%; margin-top: 1em">Create a BigRat
+from an binary number in string form.</p>
+<p style="margin-left:9%;"><b>bnan()</b></p>
+<p style="margin-left:14%;">$x =
+Math::BigRat−&gt;bnan();</p>
+<p style="margin-left:14%; margin-top: 1em">Creates a new
+BigRat object representing NaN (Not A Number). If used on an
+object, it will set it to NaN:</p>
+<p style="margin-left:14%; margin-top: 1em">$x−&gt;bnan();</p>
+<p style="margin-left:9%;"><b>bzero()</b></p>
+<p style="margin-left:14%;">$x =
+Math::BigRat−&gt;bzero();</p>
+<p style="margin-left:14%; margin-top: 1em">Creates a new
+BigRat object representing zero. If used on an object, it
+will set it to zero:</p>
+<p style="margin-left:14%; margin-top: 1em">$x−&gt;bzero();</p>
+<p style="margin-left:9%;"><b>binf()</b></p>
+<p style="margin-left:14%;">$x =
+Math::BigRat−&gt;binf($sign);</p>
+<p style="margin-left:14%; margin-top: 1em">Creates a new
+BigRat object representing infinity. The optional argument
+is either '−' or '+', indicating whether you want
+infinity or minus infinity. If used on an object, it will
+set it to infinity:</p>
+<p style="margin-left:14%; margin-top: 1em">$x−&gt;binf();
+<br/>
+$x−&gt;binf('−');</p>
+<p style="margin-left:9%;"><b>bone()</b></p>
+<p style="margin-left:14%;">$x =
+Math::BigRat−&gt;bone($sign);</p>
+<p style="margin-left:14%; margin-top: 1em">Creates a new
+BigRat object representing one. The optional argument is
+either '−' or '+', indicating whether you want one or
+minus one. If used on an object, it will set it to one:</p>
+<p style="margin-left:14%; margin-top: 1em">$x−&gt;bone();
+# +1 <br/>
+$x−&gt;bone('−'); # −1</p>
+<p style="margin-left:9%;"><b>length()</b></p>
+<p style="margin-left:14%;">$len =
+$x−&gt;length();</p>
+<p style="margin-left:14%; margin-top: 1em">Return the
+length of $x in digits for integer values.</p>
+<p style="margin-left:9%;"><b>digit()</b></p>
+<p style="margin-left:14%;">print
+Math::BigRat−&gt;new('123/1')−&gt;digit(1); # 1
+<br/>
+print
+Math::BigRat−&gt;new('123/1')−&gt;digit(−1);
+# 3</p>
+<p style="margin-left:14%; margin-top: 1em">Return the
+N'ths digit from X when X is an integer value.</p>
+<p style="margin-left:9%;"><b>bnorm()</b></p>
+<p style="margin-left:14%;">$x−&gt;bnorm();</p>
+<p style="margin-left:14%; margin-top: 1em">Reduce the
+number to the shortest form. This routine is called
+automatically whenever it is needed.</p>
+<p style="margin-left:9%;"><b>bfac()</b></p>
+<p style="margin-left:14%;">$x−&gt;bfac();</p>
+<p style="margin-left:14%; margin-top: 1em">Calculates the
+factorial of $x. For instance:</p>
+<p style="margin-left:14%; margin-top: 1em">print
+Math::BigRat−&gt;new('3/1')−&gt;bfac(),
+"\n"; # 1*2*3 <br/>
+print Math::BigRat−&gt;new('5/1')−&gt;bfac(),
+"\n"; # 1*2*3*4*5</p>
+<p style="margin-left:14%; margin-top: 1em">Works currently
+only for integers.</p>
+<p style="margin-left:9%;"><b>bround()</b>/<b>round()</b>/<b>bfround()</b></p>
+<p style="margin-left:14%;">Are not yet implemented.</p>
+<p style="margin-left:9%;"><b>bmod()</b></p>
+<p style="margin-left:14%;">$x−&gt;bmod($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Returns $x
+modulo $y. When $x is finite, and $y is finite and
+non−zero, the result is identical to the remainder
+after floored division (F−division). If, in addition,
+both $x and $y are integers, the result is identical to the
+result from Perl's % operator.</p>
+<p style="margin-left:9%;"><b>bmodinv()</b></p>
+<p style="margin-left:14%;">$x−&gt;bmodinv($mod); #
+modular multiplicative inverse</p>
+<p style="margin-left:14%; margin-top: 1em">Returns the
+multiplicative inverse of $x modulo $mod. If</p>
+<p style="margin-left:14%; margin-top: 1em">$y = $x
+−&gt; copy() −&gt; bmodinv($mod)</p>
+<p style="margin-left:14%; margin-top: 1em">then $y is the
+number closest to zero, and with the same sign as $mod,
+satisfying</p>
+<p style="margin-left:14%; margin-top: 1em">($x * $y) %
+$mod = 1 % $mod</p>
+<p style="margin-left:14%; margin-top: 1em">If $x and $y
+are non−zero, they must be relative primes, i.e.,
+"bgcd($y, $mod)==1". '"NaN"' is returned
+when no modular multiplicative inverse exists.</p>
+<p style="margin-left:9%;"><b>bmodpow()</b></p>
+<p style="margin-left:14%;">$num−&gt;bmodpow($exp,$mod);
+# modular exponentiation <br/>
+# ($num**$exp % $mod)</p>
+<p style="margin-left:14%; margin-top: 1em">Returns the
+value of $num taken to the power $exp in the modulus $mod
+using binary exponentiation. "bmodpow" is far
+superior to writing</p>
+<p style="margin-left:14%; margin-top: 1em">$num ** $exp %
+$mod</p>
+<p style="margin-left:14%; margin-top: 1em">because it is
+much faster − it reduces internal variables into the
+modulus whenever possible, so it operates on smaller
+numbers.</p>
+<p style="margin-left:14%; margin-top: 1em">"bmodpow"
+also supports negative exponents.</p>
+<p style="margin-left:14%; margin-top: 1em">bmodpow($num,
+−1, $mod)</p>
+<p style="margin-left:14%; margin-top: 1em">is exactly
+equivalent to</p>
+<p style="margin-left:14%; margin-top: 1em">bmodinv($num,
+$mod)</p>
+<p style="margin-left:9%;"><b>bneg()</b></p>
+<p style="margin-left:14%;">$x−&gt;bneg();</p>
+<p style="margin-left:14%; margin-top: 1em">Used to negate
+the object in−place.</p>
+<p style="margin-left:9%;"><b>is_one()</b></p>
+<p style="margin-left:14%;">print "$x is 1\n" if
+$x−&gt;is_one();</p>
+<p style="margin-left:14%; margin-top: 1em">Return true if
+$x is exactly one, otherwise false.</p>
+<p style="margin-left:9%;"><b>is_zero()</b></p>
+<p style="margin-left:14%;">print "$x is 0\n" if
+$x−&gt;is_zero();</p>
+<p style="margin-left:14%; margin-top: 1em">Return true if
+$x is exactly zero, otherwise false.</p>
+<p style="margin-left:9%;"><b>is_pos()</b>/<b>is_positive()</b></p>
+<p style="margin-left:14%;">print "$x is &gt;=
+0\n" if $x−&gt;is_positive();</p>
+<p style="margin-left:14%; margin-top: 1em">Return true if
+$x is positive (greater than or equal to zero), otherwise
+false. Please note that '+inf' is also positive, while 'NaN'
+and '−inf' aren't.</p>
+<p style="margin-left:14%; margin-top: 1em">is_positive()
+is an alias for is_pos().</p>
+<p style="margin-left:9%;"><b>is_neg()</b>/<b>is_negative()</b></p>
+<p style="margin-left:14%;">print "$x is &lt;
+0\n" if $x−&gt;is_negative();</p>
+<p style="margin-left:14%; margin-top: 1em">Return true if
+$x is negative (smaller than zero), otherwise false. Please
+note that '−inf' is also negative, while 'NaN' and
+'+inf' aren't.</p>
+<p style="margin-left:14%; margin-top: 1em">is_negative()
+is an alias for is_neg().</p>
+<p style="margin-left:9%;"><b>is_int()</b></p>
+<p style="margin-left:14%;">print "$x is an
+integer\n" if $x−&gt;is_int();</p>
+<p style="margin-left:14%; margin-top: 1em">Return true if
+$x has a denominator of 1 (e.g. no fraction parts),
+otherwise false. Please note that '−inf', 'inf' and
+'NaN' aren't integer.</p>
+<p style="margin-left:9%;"><b>is_odd()</b></p>
+<p style="margin-left:14%;">print "$x is odd\n"
+if $x−&gt;is_odd();</p>
+<p style="margin-left:14%; margin-top: 1em">Return true if
+$x is odd, otherwise false.</p>
+<p style="margin-left:9%;"><b>is_even()</b></p>
+<p style="margin-left:14%;">print "$x is even\n"
+if $x−&gt;is_even();</p>
+<p style="margin-left:14%; margin-top: 1em">Return true if
+$x is even, otherwise false.</p>
+<p style="margin-left:9%;"><b>bceil()</b></p>
+<p style="margin-left:14%;">$x−&gt;bceil();</p>
+<p style="margin-left:14%; margin-top: 1em">Set $x to the
+next bigger integer value (e.g. truncate the number to
+integer and then increment it by one).</p>
+<p style="margin-left:9%;"><b>bfloor()</b></p>
+<p style="margin-left:14%;">$x−&gt;bfloor();</p>
+<p style="margin-left:14%; margin-top: 1em">Truncate $x to
+an integer value.</p>
+<p style="margin-left:9%;"><b>bint()</b></p>
+<p style="margin-left:14%;">$x−&gt;bint();</p>
+<p style="margin-left:14%; margin-top: 1em">Round $x
+towards zero.</p>
+<p style="margin-left:9%;"><b>bsqrt()</b></p>
+<p style="margin-left:14%;">$x−&gt;bsqrt();</p>
+<p style="margin-left:14%; margin-top: 1em">Calculate the
+square root of $x.</p>
+<p style="margin-left:9%;"><b>broot()</b></p>
+<p style="margin-left:14%;">$x−&gt;broot($n);</p>
+<p style="margin-left:14%; margin-top: 1em">Calculate the
+N'th root of $x.</p>
+<p style="margin-left:9%;"><b>badd()</b></p>
+<p style="margin-left:14%;">$x−&gt;badd($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Adds $y to $x
+and returns the result.</p>
+<p style="margin-left:9%;"><b>bmul()</b></p>
+<p style="margin-left:14%;">$x−&gt;bmul($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Multiplies $y
+to $x and returns the result.</p>
+<p style="margin-left:9%;"><b>bsub()</b></p>
+<p style="margin-left:14%;">$x−&gt;bsub($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Subtracts $y
+from $x and returns the result.</p>
+<p style="margin-left:9%;"><b>bdiv()</b></p>
+<p style="margin-left:14%;">$q = $x−&gt;bdiv($y);
+<br/>
+($q, $r) = $x−&gt;bdiv($y);</p>
+<p style="margin-left:14%; margin-top: 1em">In scalar
+context, divides $x by $y and returns the result. In list
+context, does floored division (F−division), returning
+an integer $q and a remainder $r so that $x = $q * $y + $r.
+The remainer (modulo) is equal to what is returned by
+"$x−&gt;bmod($y)".</p>
+<p style="margin-left:9%;"><b>binv()</b></p>
+<p style="margin-left:14%;">$x−&gt;binv();</p>
+<p style="margin-left:14%; margin-top: 1em">Inverse of
+$x.</p>
+<p style="margin-left:9%;"><b>bdec()</b></p>
+<p style="margin-left:14%;">$x−&gt;bdec();</p>
+<p style="margin-left:14%; margin-top: 1em">Decrements $x
+by 1 and returns the result.</p>
+<p style="margin-left:9%;"><b>binc()</b></p>
+<p style="margin-left:14%;">$x−&gt;binc();</p>
+<p style="margin-left:14%; margin-top: 1em">Increments $x
+by 1 and returns the result.</p>
+<p style="margin-left:9%;"><b>copy()</b></p>
+<p style="margin-left:14%;">my $z =
+$x−&gt;copy();</p>
+<p style="margin-left:14%; margin-top: 1em">Makes a deep
+copy of the object.</p>
+<p style="margin-left:14%; margin-top: 1em">Please see the
+documentation in Math::BigInt for further details.</p>
+<p style="margin-left:9%;"><b>bstr()</b>/<b>bsstr()</b></p>
+<p style="margin-left:14%;">my $x =
+Math::BigRat−&gt;new('8/4'); <br/>
+print $x−&gt;bstr(), "\n"; # prints 1/2 <br/>
+print $x−&gt;bsstr(), "\n"; # prints 1/2</p>
+<p style="margin-left:14%; margin-top: 1em">Return a string
+representing this object.</p>
+<p style="margin-left:9%;"><b>bcmp()</b></p>
+<p style="margin-left:14%;">$x−&gt;bcmp($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Compares $x
+with $y and takes the sign into account. Returns −1,
+0, 1 or undef.</p>
+<p style="margin-left:9%;"><b>bacmp()</b></p>
+<p style="margin-left:14%;">$x−&gt;bacmp($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Compares $x
+with $y while ignoring their sign. Returns −1, 0, 1 or
+undef.</p>
+<p style="margin-left:9%;"><b>beq()</b></p>
+<p style="margin-left:14%;">$x −&gt; beq($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Returns true if
+and only if $x is equal to $y, and false otherwise.</p>
+<p style="margin-left:9%;"><b>bne()</b></p>
+<p style="margin-left:14%;">$x −&gt; bne($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Returns true if
+and only if $x is not equal to $y, and false otherwise.</p>
+<p style="margin-left:9%;"><b>blt()</b></p>
+<p style="margin-left:14%;">$x −&gt; blt($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Returns true if
+and only if $x is equal to $y, and false otherwise.</p>
+<p style="margin-left:9%;"><b>ble()</b></p>
+<p style="margin-left:14%;">$x −&gt; ble($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Returns true if
+and only if $x is less than or equal to $y, and false
+otherwise.</p>
+<p style="margin-left:9%;"><b>bgt()</b></p>
+<p style="margin-left:14%;">$x −&gt; bgt($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Returns true if
+and only if $x is greater than $y, and false otherwise.</p>
+<p style="margin-left:9%;"><b>bge()</b></p>
+<p style="margin-left:14%;">$x −&gt; bge($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Returns true if
+and only if $x is greater than or equal to $y, and false
+otherwise.</p>
+<p style="margin-left:9%;"><b>blsft()</b>/<b>brsft()</b></p>
+<p style="margin-left:14%;">Used to shift numbers
+left/right.</p>
+<p style="margin-left:14%; margin-top: 1em">Please see the
+documentation in Math::BigInt for further details.</p>
+<p style="margin-left:9%;"><b>band()</b></p>
+<p style="margin-left:14%;">$x−&gt;band($y); #
+bitwise and</p>
+<p style="margin-left:9%;"><b>bior()</b></p>
+<p style="margin-left:14%;">$x−&gt;bior($y); #
+bitwise inclusive or</p>
+<p style="margin-left:9%;"><b>bxor()</b></p>
+<p style="margin-left:14%;">$x−&gt;bxor($y); #
+bitwise exclusive or</p>
+<p style="margin-left:9%;"><b>bnot()</b></p>
+<p style="margin-left:14%;">$x−&gt;bnot(); # bitwise
+not (two's complement)</p>
+<p style="margin-left:9%;"><b>bpow()</b></p>
+<p style="margin-left:14%;">$x−&gt;bpow($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Compute $x **
+$y.</p>
+<p style="margin-left:14%; margin-top: 1em">Please see the
+documentation in Math::BigInt for further details.</p>
+<p style="margin-left:9%;"><b>blog()</b></p>
+<p style="margin-left:14%;">$x−&gt;blog($base,
+$accuracy); # logarithm of x to the base $base</p>
+<p style="margin-left:14%; margin-top: 1em">If $base is not
+defined, Euler's number (e) is used:</p>
+<p style="margin-left:14%; margin-top: 1em">print
+$x−&gt;blog(undef, 100); # log(x) to 100 digits</p>
+<p style="margin-left:9%;"><b>bexp()</b></p>
+<p style="margin-left:14%;">$x−&gt;bexp($accuracy); #
+calculate e ** X</p>
+<p style="margin-left:14%; margin-top: 1em">Calculates two
+integers A and B so that A/B is equal to "e **
+$x", where "e" is Euler's number.</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in v0.20 of Math::BigRat (May 2007).</p>
+<p style="margin-left:14%; margin-top: 1em">See also
+blog().</p>
+<p style="margin-left:9%;"><b>bnok()</b></p>
+<p style="margin-left:14%;">$x−&gt;bnok($y); # x over
+y (binomial coefficient n over k)</p>
+<p style="margin-left:14%; margin-top: 1em">Calculates the
+binomial coefficient n over k, also called the
+"choose" function. The result is equivalent
+to:</p>
+<p style="margin-left:14%; margin-top: 1em">( n ) n! <br/>
+| − | =
+−−−−−−− <br/>
+( k ) k!(n−k)!</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in v0.20 of Math::BigRat (May 2007).</p>
+<p style="margin-left:9%;"><b>config()</b></p>
+<p style="margin-left:14%;">Math::BigRat−&gt;config("trap_nan"
+=&gt; 1); # set <br/>
+$accu = Math::BigRat−&gt;config("accuracy");
+# get</p>
+<p style="margin-left:14%; margin-top: 1em">Set or get
+configuration parameter values. Read−only parameters
+are marked as RO. Read−write parameters are marked as
+RW. The following parameters are supported.</p>
+<p style="margin-left:14%; margin-top: 1em">Parameter RO/RW
+Description <br/>
+Example <br/>
+
+============================================================
+<br/>
+lib RO Name of the math backend library <br/>
+Math::BigInt::Calc <br/>
+lib_version RO Version of the math backend library <br/>
+0.30 <br/>
+class RO The class of config you just called <br/>
+Math::BigRat <br/>
+version RO version number of the class you used <br/>
+0.10 <br/>
+upgrade RW To which class numbers are upgraded <br/>
+undef <br/>
+downgrade RW To which class numbers are downgraded <br/>
+undef <br/>
+precision RW Global precision <br/>
+undef <br/>
+accuracy RW Global accuracy <br/>
+undef <br/>
+round_mode RW Global round mode <br/>
+even <br/>
+div_scale RW Fallback accuracy for div, sqrt etc. <br/>
+40 <br/>
+trap_nan RW Trap NaNs <br/>
+undef <br/>
+trap_inf RW Trap +inf/−inf <br/>
+undef</p>
+<h2>NUMERIC LITERALS
+<a name="NUMERIC LITERALS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">After "use
+Math::BigRat ':constant'" all numeric literals in the
+given scope are converted to "Math::BigRat"
+objects. This conversion happens at compile time. Every
+non−integer is convert to a NaN.</p>
+<p style="margin-left:9%; margin-top: 1em">For example,</p>
+<p style="margin-left:9%; margin-top: 1em">perl
+−MMath::BigRat=:constant −le 'print 2**150'</p>
+<p style="margin-left:9%; margin-top: 1em">prints the exact
+value of "2**150". Note that without conversion of
+constants to objects the expression "2**150" is
+calculated using Perl scalars, which leads to an inaccurate
+result.</p>
+<p style="margin-left:9%; margin-top: 1em">Please note that
+strings are not affected, so that</p>
+<p style="margin-left:9%; margin-top: 1em">use Math::BigRat
+qw/:constant/; <br/>
+$x = "1234567890123456789012345678901234567890"
+<br/>
++ "123456789123456789";</p>
+<p style="margin-left:9%; margin-top: 1em">does give you
+what you expect. You need an explicit
+Math::BigRat−&gt;<b>new()</b> around at least one of
+the operands. You should also quote large constants to
+prevent loss of precision:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigRat; <br/>
+$x =
+Math::BigRat−&gt;new("1234567889123456789123456789123456789");</p>
+<p style="margin-left:9%; margin-top: 1em">Without the
+quotes Perl first converts the large number to a floating
+point constant at compile time, and then converts the result
+to a Math::BigRat object at run time, which results in an
+inaccurate result.</p>
+<h3>Hexadecimal, octal, and binary floating point literals
+<a name="Hexadecimal, octal, and binary floating point literals"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Perl (and this
+module) accepts hexadecimal, octal, and binary floating
+point literals, but use them with care with Perl versions
+before v5.32.0, because some versions of Perl silently give
+the wrong result. Below are some examples of different ways
+to write the number decimal 314.</p>
+<p style="margin-left:9%; margin-top: 1em">Hexadecimal
+floating point literals:</p>
+<p style="margin-left:9%; margin-top: 1em">0x1.3ap+8
+0X1.3AP+8 <br/>
+0x1.3ap8 0X1.3AP8 <br/>
+0x13a0p−4 0X13A0P−4</p>
+<p style="margin-left:9%; margin-top: 1em">Octal floating
+point literals (with "0" prefix):</p>
+<p style="margin-left:9%; margin-top: 1em">01.164p+8
+01.164P+8 <br/>
+01.164p8 01.164P8 <br/>
+011640p−4 011640P−4</p>
+<p style="margin-left:9%; margin-top: 1em">Octal floating
+point literals (with "0o" prefix) (requires
+v5.34.0):</p>
+<p style="margin-left:9%; margin-top: 1em">0o1.164p+8
+0O1.164P+8 <br/>
+0o1.164p8 0O1.164P8 <br/>
+0o11640p−4 0O11640P−4</p>
+<p style="margin-left:9%; margin-top: 1em">Binary floating
+point literals:</p>
+<p style="margin-left:9%; margin-top: 1em">0b1.0011101p+8
+0B1.0011101P+8 <br/>
+0b1.0011101p8 0B1.0011101P8 <br/>
+0b10011101000p−2 0B10011101000P−2</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please report
+any bugs or feature requests to
+"bug−math−bigint at rt.cpan.org", or
+through the web interface at
+&lt;https://rt.cpan.org/Ticket/Create.html?Queue=Math−BigInt&gt;
+(requires login). We will be notified, and then you'll
+automatically be notified of progress on your bug as I make
+changes.</p>
+<h2>SUPPORT
+<a name="SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You can find
+documentation for this module with the perldoc command.</p>
+<p style="margin-left:9%; margin-top: 1em">perldoc
+Math::BigInt</p>
+<p style="margin-left:9%; margin-top: 1em">You can also
+look for information at:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="8%">
+<p>GitHub</p></td>
+<td width="78%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;https://github.com/pjacklam/p5−Math−BigInt&gt;</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="33%">
+<p style="margin-top: 1em">RT: CPAN's request tracker</p></td>
+<td width="53%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;https://rt.cpan.org/Dist/Display.html?Name=Math−BigInt&gt;</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p style="margin-top: 1em">MetaCPAN</p></td>
+<td width="76%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;https://metacpan.org/release/Math−BigInt&gt;</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="24%">
+<p style="margin-top: 1em">CPAN Testers Matrix</p></td>
+<td width="62%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;http://matrix.cpantesters.org/?dist=Math−BigInt&gt;</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you may redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Math::BigInt and
+Math::BigFloat as well as the backend libraries
+Math::BigInt::FastCalc, Math::BigInt::GMP, and
+Math::BigInt::Pari, Math::BigInt::GMPz, and
+Math::BigInt::BitVect.</p>
+<p style="margin-left:9%; margin-top: 1em">The pragmas
+bigint, bigfloat, and bigrat might also be of interest. In
+addition there is the bignum pragma which does upgrading and
+downgrading.</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="74%">
+<p style="margin-top: 1em">Tels
+&lt;http://bloodgate.com/&gt; 2001−2009.</p></td>
+<td width="12%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="74%">
+<p>Maintained by Peter John Acklam
+&lt;pjacklam@gmail.com&gt; 2011−</p></td>
+<td width="12%">
+</td></tr>
+</table>
+<hr/>
+</body>
+</html>

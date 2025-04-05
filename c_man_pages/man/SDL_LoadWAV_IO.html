@@ -1,0 +1,249 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:52:09 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SDL_LoadWAV_IO</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SDL_LoadWAV_IO</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#HEADER FILE">HEADER FILE</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTION PARAMETERS">FUNCTION PARAMETERS</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#THREAD SAFETY">THREAD SAFETY</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SDL_LoadWAV_IO
+− Load the audio data of a WAVE file into memory.</p>
+<h2>HEADER FILE
+<a name="HEADER FILE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Defined in
+SDL3/SDL_audio.h</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+"SDL3/SDL.h"</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>bool
+SDL_LoadWAV_IO(SDL_IOStream *src, bool closeio,
+SDL_AudioSpec *spec, Uint8 **audio_buf, Uint32
+*audio_len);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Loading a WAVE
+file requires <b>src</b> , <b>spec</b> , <b>audio_buf</b>
+and <b>audio_len</b> to be valid pointers. The entire data
+portion of the file is then loaded into memory and decoded
+if necessary.</p>
+<p style="margin-left:9%; margin-top: 1em">Supported
+formats are RIFF WAVE files with the formats PCM (8, 16, 24,
+and 32 bits), IEEE Float (32 bits), Microsoft ADPCM and IMA
+ADPCM (4 bits), and A-law and mu-law (8 bits). Other formats
+are currently unsupported and cause an error.</p>
+<p style="margin-left:9%; margin-top: 1em">If this function
+succeeds, the return value is zero and the pointer to the
+audio data allocated by the function is written to
+<b>audio_buf</b> and its length in bytes to <b>audio_len</b>
+. The <b>SDL_AudioSpec</b> <br/>
+members <b>freq</b> , <b>channels</b> , and <b>format</b>
+are set to the values of the audio data in the buffer.</p>
+<p style="margin-left:9%; margin-top: 1em">It’s
+necessary to use <b>SDL_free</b> () to free the audio data
+returned in <b>audio_buf</b> when it is no longer used.</p>
+<p style="margin-left:9%; margin-top: 1em">Because of the
+underspecification of the .WAV format, there are many
+problematic files in the wild that cause issues with strict
+decoders. To provide compatibility with these files, this
+decoder is lenient in regards to the truncation of the file,
+the fact chunk, and the size of the RIFF chunk. The
+hints</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_HINT_WAVE_RIFF_CHUNK_SIZE</b>
+,</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_HINT_WAVE_TRUNCATION</b>
+, and</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_HINT_WAVE_FACT_CHUNK</b>
+can be used to tune the behavior of the loading process.</p>
+<p style="margin-left:9%; margin-top: 1em">Any file that is
+invalid (due to truncation, corruption, or wrong values in
+the headers), too big, or unsupported causes an error.
+Additionally, any critical I/O error from the data source
+will terminate the loading process with an error. The
+function returns NULL on error and in all cases (with the
+exception of <b>src</b> being NULL), an appropriate error
+message will be set.</p>
+<p style="margin-left:9%; margin-top: 1em">It is required
+that the data source supports seeking.</p>
+<p style="margin-left:9%; margin-top: 1em">Example:</p>
+<p style="margin-left:18%; margin-top: 1em">SDL_LoadWAV_IO(SDL_IOFromFile("sample.wav",
+"rb"), true, &amp;spec, &amp;buf, &amp;len);</p>
+<p style="margin-left:9%; margin-top: 1em">Note that the
+<b>SDL_LoadWAV</b> <br/>
+function does this same thing for you, but in a less messy
+way:</p>
+<p style="margin-left:18%; margin-top: 1em">SDL_LoadWAV("sample.wav",
+&amp;spec, &amp;buf, &amp;len);</p>
+<h2>FUNCTION PARAMETERS
+<a name="FUNCTION PARAMETERS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p style="margin-top: 1em"><i>src</i></p></td>
+<td width="5%"></td>
+<td width="44%">
+<p style="margin-top: 1em">the data source for the WAVE
+data.</p> </td>
+<td width="38%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><i>closeio</i></p>
+<p style="margin-left:18%;">if true, calls
+<b>SDL_CloseIO</b> () on <b>src</b> before returning, even
+in the case of an error.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><i>spec</i></p></td>
+<td width="4%"></td>
+<td width="37%">
+<p>a pointer to an <b>SDL_AudioSpec</b></p></td>
+<td width="45%">
+</td></tr>
+</table>
+<p style="margin-left:18%;">that will be set to the WAVE
+data’s format details on successful return.</p>
+<p style="margin-left:9%;"><i>audio_buf</i></p>
+<p style="margin-left:18%;">a pointer filled with the audio
+data, allocated by the function.</p>
+<p style="margin-left:9%;"><i>audio_len</i></p>
+<p style="margin-left:18%;">a pointer filled with the
+length of the audio data buffer in bytes.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns true on
+success. <b>audio_buf</b> will be filled with a pointer to
+an allocated buffer containing the audio data, and
+<b>audio_len</b> is filled with the length of that audio
+buffer in bytes.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+returns false if the .WAV file cannot be opened, uses an
+unknown data format, or is corrupt; call <b>SDL_GetError</b>
+() for more information.</p>
+<p style="margin-left:9%; margin-top: 1em">When the
+application is done with the data returned in
+<b>audio_buf</b> , it should call <b>SDL_free</b> () to
+dispose of it.</p>
+<h2>THREAD SAFETY
+<a name="THREAD SAFETY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">It is safe to
+call this function from any thread.</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function is
+available since SDL 3.2.0.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>•</b>(3),
+<b>SDL_free</b>(3), <b>•</b>(3),
+<b>SDL_LoadWAV</b>(3)</p>
+<hr/>
+</body>
+</html>

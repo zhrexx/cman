@@ -1,0 +1,558 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:04 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::API::InterceptResult</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::API::InterceptResult</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#CONSTRUCTION">CONSTRUCTION</a><br/>
+<a href="#NORMALIZATION">NORMALIZATION</a><br/>
+<a href="#FILTERING">FILTERING</a><br/>
+<a href="#MAPPING">MAPPING</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::API::InterceptResult
+− Representation of a list of events.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This class
+represents a list of events, normally obtained using
+intercept() from Test2::API.</p>
+<p style="margin-left:9%; margin-top: 1em">This class is
+intended for people who with to verify the results of test
+tools they write.</p>
+<p style="margin-left:9%; margin-top: 1em">This class
+provides methods to normalize, summarize, or map the list of
+events. The output of these operations makes verifying your
+testing tools and the events they generate significantly
+easier. In most cases this spares you from needing a deep
+understanding of the event/facet model.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Usually you get
+an instance of this class when you use intercept() from
+Test2::API.</p>
+<p style="margin-left:9%; margin-top: 1em">use Test2::V0;
+<br/>
+use Test2::API qw/intercept/; <br/>
+my $events = intercept { <br/>
+ok(1, "pass"); <br/>
+ok(0, "fail"); <br/>
+todo "broken" =&gt; sub { ok(0, "fixme")
+}; <br/>
+plan 3; <br/>
+}; <br/>
+# This is typically the most useful construct <br/>
+# squash_info() merges assertions and diagnostics that are
+associated <br/>
+# (and returns a new instance with the modifications) <br/>
+# flatten() condenses the facet data into the key details
+for each event <br/>
+# (and returns those structures in an arrayref) <br/>
+is( <br/>
+$events−&gt;squash_info−&gt;flatten(), <br/>
+[ <br/>
+{ <br/>
+causes_failure =&gt; 0, <br/>
+name =&gt; 'pass', <br/>
+pass =&gt; 1, <br/>
+trace_file =&gt; 'xxx.t', <br/>
+trace_line =&gt; 5, <br/>
+}, <br/>
+{ <br/>
+causes_failure =&gt; 1, <br/>
+name =&gt; 'fail', <br/>
+pass =&gt; 0, <br/>
+trace_file =&gt; 'xxx.t', <br/>
+trace_line =&gt; 6, <br/>
+# There can be more than one diagnostics message so this is
+<br/>
+# always an array when present. <br/>
+diag =&gt; ["Failed test 'fail'\nat xxx.t line
+6."], <br/>
+}, <br/>
+{ <br/>
+causes_failure =&gt; 0, <br/>
+name =&gt; 'fixme', <br/>
+pass =&gt; 0, <br/>
+trace_file =&gt; 'xxx.t', <br/>
+trace_line =&gt; 7, <br/>
+# There can be more than one diagnostics message or todo
+<br/>
+# reason, so these are always an array when present. <br/>
+todo =&gt; ['broken'], <br/>
+# Diag message was turned into a note since the assertion
+was <br/>
+# TODO <br/>
+note =&gt; ["Failed test 'fixme'\nat xxx.t line
+7."], <br/>
+}, <br/>
+{ <br/>
+causes_failure =&gt; 0, <br/>
+plan =&gt; 3, <br/>
+trace_file =&gt; 'xxx.t', <br/>
+trace_line =&gt; 8, <br/>
+}, <br/>
+], <br/>
+"Flattened events look like we expect" <br/>
+);</p>
+<p style="margin-left:9%; margin-top: 1em">See
+Test2::API::InterceptResult::Event for a full description of
+what flatten() provides for each event.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please note that
+no methods modify the original instance unless asked to do
+so.</p>
+<h3>CONSTRUCTION
+<a name="CONSTRUCTION"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$events =
+Test2::API::InterceptResult−&gt;new(@EVENTS) <br/>
+$events =
+Test2::API::InterceptResult−&gt;new_from_ref(\@EVENTS)</p>
+<p style="margin-left:14%;">These create a new instance of
+Test2::API::InterceptResult from the given events.</p>
+<p style="margin-left:14%; margin-top: 1em">In the first
+form a new blessed arrayref is returned. In the
+'new_from_ref' form the reference you pass in is directly
+blessed.</p>
+<p style="margin-left:14%; margin-top: 1em">Both of these
+will throw an exception if called in void context. This is
+mainly important for the 'filtering' methods listed below
+which normally return a new instance, they throw an
+exception in such cases as it probably means someone meant
+to filter the original in place.</p>
+<p style="margin-left:9%;">$clone =
+$events−&gt;<b>clone()</b></p>
+<p style="margin-left:14%;">Make a clone of the original
+events. Note that this is a deep copy, the entire structure
+is duplicated. This uses "dclone" from Storable to
+achieve the deep clone.</p>
+<h3>NORMALIZATION
+<a name="NORMALIZATION"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">@events =
+$events−&gt;event_list</p>
+<p style="margin-left:14%;">This returns all the events in
+list−form.</p>
+<p style="margin-left:9%;">$hub = $events−&gt;hub</p>
+<p style="margin-left:14%;">This returns a new Test2::Hub
+instance that has processed all the events contained in the
+instance. This gives you a simple way to inspect the state
+changes your events cause.</p>
+<p style="margin-left:9%;">$state =
+$events−&gt;state</p>
+<p style="margin-left:14%;">This returns a summary of the
+state of a hub after processing all the events.</p>
+<p style="margin-left:14%; margin-top: 1em">{ <br/>
+count =&gt; 2, # Number of assertions made <br/>
+failed =&gt; 1, # Number of test failures seen <br/>
+is_passing =&gt; 0, # Boolean, true if the test would be
+passing <br/>
+# after the events are processed. <br/>
+plan =&gt; 2, # Plan, either a number, undef, 'SKIP', or 'NO
+PLAN' <br/>
+follows_plan =&gt; 1, # True if there is a plan and it was
+followed. <br/>
+# False if the plan and assertions did not <br/>
+# match, undef if no plan was present in the <br/>
+# event list. <br/>
+bailed_out =&gt; undef, # undef unless there was a
+bail−out in the <br/>
+# events in which case this will be a string <br/>
+# explaining why there was a bailout, if no <br/>
+# reason was given this will simply be set to <br/>
+# true (1). <br/>
+skip_reason =&gt; undef, # If there was a skip_all this will
+give the <br/>
+# reason. <br/>
+}</p>
+<p style="margin-left:9%;">$new = $events−&gt;upgrade
+<br/>
+$events−&gt;upgrade(in_place =&gt; $BOOL)</p>
+<p style="margin-left:14%;"><b>Note:</b> This normally
+returns a new instance, leaving the original unchanged. If
+you call it in void context it will throw an exception. If
+you want to modify the original you must pass in the
+"in_place =&gt; 1" option. You may call this in
+void context when you ask to modify it in place. The
+in−place form returns the instance that was modified
+so you can chain methods.</p>
+<p style="margin-left:14%; margin-top: 1em">This will
+create a clone of the list where all events have been
+converted into Test2::API::InterceptResult::Event instances.
+This is extremely helpful as
+Test2::API::InterceptResult::Event provide a much better
+interface for working with events. This allows you to avoid
+thinking about legacy event types.</p>
+<p style="margin-left:14%; margin-top: 1em">This also means
+your tests against the list are not fragile if the tool you
+are testing randomly changes what type of events it
+generates (IE Changing from Test2::Event::Ok to
+Test2::Event::Pass, both make assertions and both will
+normalize to identical (or close enough)
+Test2::API::InterceptResult::Event instances.</p>
+<p style="margin-left:14%; margin-top: 1em">Really you
+almost always want this, the only reason it is not done
+automatically is to make sure the intercept() tool is
+backwards compatible.</p>
+<p style="margin-left:9%;">$new =
+$events−&gt;squash_info <br/>
+$events−&gt;squash_info(in_place =&gt; $BOOL)</p>
+<p style="margin-left:14%;"><b>Note:</b> This normally
+returns a new instance, leaving the original unchanged. If
+you call it in void context it will throw an exception. If
+you want to modify the original you must pass in the
+"in_place =&gt; 1" option. You may call this in
+void context when you ask to modify it in place. The
+in−place form returns the instance that was modified
+so you can chain methods.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+All events in the new or modified instance will be converted
+to Test2::API::InterceptResult::Event instances. There is no
+way to avoid this, the squash operation requires the
+upgraded event class.</p>
+<p style="margin-left:14%; margin-top: 1em">Test::More and
+many other legacy tools would send notes, diags, and
+assertions as separate events. A subtest in Test::More would
+send a note with the subtest name, the subtest assertion,
+and finally a diagnostics event if the subtest failed. This
+method will normalize things by squashing the note and diag
+into the same event as the subtest (This is different from
+putting them into the subtest, which is not what
+happens).</p>
+<h3>FILTERING
+<a name="FILTERING"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Note:</b>
+These normally return new instances, leaving the originals
+unchanged. If you call them in void context they will throw
+exceptions. If you want to modify the originals you must
+pass in the "in_place =&gt; 1" option. You may
+call these in void context when you ask to modify them in
+place. The in−place forms return the instance that was
+modified so you can chain methods.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>%PARAMS</i></p>
+<p style="margin-left:9%; margin-top: 1em">These all accept
+the same 2 optional parameters: <br/>
+in_place =&gt; $BOOL</p>
+<p style="margin-left:14%;">When true the method will
+modify the instance in place instead of returning a new
+instance.</p>
+<p style="margin-left:9%;">args =&gt; \@ARGS</p>
+<p style="margin-left:14%;">If you wish to pass parameters
+into the event method being used for filtering, you may do
+so here.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>METHODS</i>
+<br/>
+$events−&gt;grep($CALL, %PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">Test2::API::InterceptResult−&gt;new(
+<br/>
+grep { $_−&gt;$CALL( @{$PARAMS{args}} ) }
+$self−&gt;event_list, <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+that $CALL is called on an upgraded version of the event,
+though the events returned will be the original ones, not
+the upgraded ones.</p>
+<p style="margin-left:14%; margin-top: 1em">$CALL may be
+either the name of a method on
+Test2::API::InterceptResult::Event, or a coderef.</p>
+<p style="margin-left:9%;">$events−&gt;asserts(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">$events−&gt;grep(has_assert
+=&gt; @{$PARAMS{args}})</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new instance containing only the events that made
+assertions.</p>
+<p style="margin-left:9%;">$events−&gt;subtests(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">$events−&gt;grep(has_subtest
+=&gt; @{$PARAMS{args}})</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new instance containing only the events that have
+subtests.</p>
+<p style="margin-left:9%;">$events−&gt;diags(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">$events−&gt;grep(has_diags
+=&gt; @{$PARAMS{args}})</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new instance containing only the events that have diags.</p>
+<p style="margin-left:9%;">$events−&gt;notes(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">$events−&gt;grep(has_notes
+=&gt; @{$PARAMS{args}})</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new instance containing only the events that have notes.</p>
+<p style="margin-left:9%;">$events−&gt;errors(%PARAMS)</p>
+<p style="margin-left:14%;"><b>Note:</b> Errors are NOT
+failing assertions. Failing assertions are a different
+thing.</p>
+<p style="margin-left:14%; margin-top: 1em">This is
+essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">$events−&gt;grep(has_errors
+=&gt; @{$PARAMS{args}})</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new instance containing only the events that have
+errors.</p>
+<p style="margin-left:9%;">$events−&gt;plans(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">$events−&gt;grep(has_plan
+=&gt; @{$PARAMS{args}})</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new instance containing only the events that set the
+plan.</p>
+<p style="margin-left:9%;">$events−&gt;causes_fail(%PARAMS)
+<br/>
+$events−&gt;causes_failure(%PARAMS)</p>
+<p style="margin-left:14%;">These are essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">$events−&gt;grep(causes_fail
+=&gt; @{$PARAMS{args}}) <br/>
+$events−&gt;grep(causes_failure =&gt;
+@{$PARAMS{args}})</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+causes_fail() and causes_failure() are both aliases for
+eachother in events, so these methods are effectively
+aliases here as well.</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new instance containing only the events that cause
+failure.</p>
+<h3>MAPPING
+<a name="MAPPING"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These methods
+<b>ALWAYS</b> return an arrayref.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note:</b> No
+methods on Test2::API::InterceptResult::Event alter the
+event in any way.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Important
+Notes about Events</b>:</p>
+<p style="margin-left:9%; margin-top: 1em">Test2::API::InterceptResult::Event
+was tailor−made to be used in event−lists. Most
+methods that are not applicable to a given event will return
+an empty list, so you normally do not need to worry about
+unwanted "undef" values or exceptions being
+thrown. Mapping over event methods is an intended use, so it
+works well to produce lists.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Exceptions to
+the rule:</b></p>
+<p style="margin-left:9%; margin-top: 1em">Some methods
+such as "causes_fail" always return a boolean true
+or false for all events. Any method prefixed with
+"the_" conveys the intent that the event should
+have exactly 1 of something, so those will throw an
+exception when that condition is not true. <br/>
+$arrayref = $events−&gt;map($CALL, %PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">[ map {
+$_−&gt;$CALL(@{ $PARAMS{args} }) }
+$events−&gt;upgrade−&gt;event_list ];</p>
+<p style="margin-left:14%; margin-top: 1em">$CALL may be
+either the name of a method on
+Test2::API::InterceptResult::Event, or a coderef.</p>
+<p style="margin-left:9%;">$arrayref =
+$events−&gt;flatten(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">[ map {
+$_−&gt;flatten(@{ $PARAMS{args} }) }
+$events−&gt;upgrade−&gt;event_list ];</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new list of flattened structures.</p>
+<p style="margin-left:14%; margin-top: 1em">See
+Test2::API::InterceptResult::Event for details on what
+flatten() returns.</p>
+<p style="margin-left:9%;">$arrayref =
+$events−&gt;briefs(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">[ map {
+$_−&gt;briefs(@{ $PARAMS{args} }) }
+$events−&gt;upgrade−&gt;event_list ];</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new list of event briefs.</p>
+<p style="margin-left:14%; margin-top: 1em">See
+Test2::API::InterceptResult::Event for details on what
+brief() returns.</p>
+<p style="margin-left:9%;">$arrayref =
+$events−&gt;summaries(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">[ map {
+$_−&gt;summaries(@{ $PARAMS{args} }) }
+$events−&gt;upgrade−&gt;event_list ];</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new list of event summaries.</p>
+<p style="margin-left:14%; margin-top: 1em">See
+Test2::API::InterceptResult::Event for details on what
+summary() returns.</p>
+<p style="margin-left:9%;">$arrayref =
+$events−&gt;subtest_results(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">[ map {
+$_−&gt;subtest_result(@{ $PARAMS{args} }) }
+$events−&gt;upgrade−&gt;event_list ];</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new list of event summaries.</p>
+<p style="margin-left:14%; margin-top: 1em">See
+Test2::API::InterceptResult::Event for details on what
+subtest_result() returns.</p>
+<p style="margin-left:9%;">$arrayref =
+$events−&gt;diag_messages(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">[ map {
+$_−&gt;diag_messages(@{ $PARAMS{args} }) }
+$events−&gt;upgrade−&gt;event_list ];</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new list of diagnostic messages (strings).</p>
+<p style="margin-left:14%; margin-top: 1em">See
+Test2::API::InterceptResult::Event for details on what
+diag_messages() returns.</p>
+<p style="margin-left:9%;">$arrayref =
+$events−&gt;note_messages(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">[ map {
+$_−&gt;note_messages(@{ $PARAMS{args} }) }
+$events−&gt;upgrade−&gt;event_list ];</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new list of notification messages (strings).</p>
+<p style="margin-left:14%; margin-top: 1em">See
+Test2::API::InterceptResult::Event for details on what
+note_messages() returns.</p>
+<p style="margin-left:9%;">$arrayref =
+$events−&gt;error_messages(%PARAMS)</p>
+<p style="margin-left:14%;">This is essentially:</p>
+<p style="margin-left:14%; margin-top: 1em">[ map {
+$_−&gt;error_messages(@{ $PARAMS{args} }) }
+$events−&gt;upgrade−&gt;event_list ];</p>
+<p style="margin-left:14%; margin-top: 1em">It returns a
+new list of error messages (strings).</p>
+<p style="margin-left:14%; margin-top: 1em">See
+Test2::API::InterceptResult::Event for details on what
+error_messages() returns.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2 can be found at
+&lt;https://github.com/Test−More/test−more/&gt;.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;https://dev.perl.org/licenses/&gt;</p>
+<hr/>
+</body>
+</html>

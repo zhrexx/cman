@@ -1,0 +1,347 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:22 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Memoize::Expire</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Memoize::Expire</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#INTERFACE">INTERFACE</a><br/>
+<a href="#ALTERNATIVES">ALTERNATIVES</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Memoize::Expire
+− Plug−in module for automatic expiration of
+memoized values</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Memoize;
+<br/>
+use Memoize::Expire; <br/>
+tie my %cache =&gt; 'Memoize::Expire', <br/>
+LIFETIME =&gt; $lifetime, # In seconds <br/>
+NUM_USES =&gt; $n_uses; <br/>
+memoize 'function', SCALAR_CACHE =&gt; [HASH =&gt; \%cache
+];</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Memoize::Expire
+is a plug-in module for Memoize. It allows the cached values
+for memoized functions to expire automatically. This manual
+assumes you are already familiar with the Memoize module. If
+not, you should study that manual carefully first, paying
+particular attention to the HASH feature.</p>
+<p style="margin-left:9%; margin-top: 1em">Memoize::Expire
+is a layer of software that you can insert in between
+Memoize itself and whatever underlying package implements
+the cache. The layer presents a hash variable whose values
+expire whenever they get too old, have been used too often,
+or both. You tell "Memoize" to use this forgetful
+hash as its cache instead of the default, which is an
+ordinary hash.</p>
+<p style="margin-left:9%; margin-top: 1em">To specify a
+real-time timeout, supply the "LIFETIME" option
+with a numeric value. Cached data will expire after this
+many seconds, and will be looked up afresh when it expires.
+When a data item is looked up afresh, its lifetime is
+reset.</p>
+<p style="margin-left:9%; margin-top: 1em">If you specify
+"NUM_USES" with an argument of <i>n</i>, then each
+cached data item will be discarded and looked up afresh
+after the <i>n</i>th time you access it. When a data item is
+looked up afresh, its number of uses is reset.</p>
+<p style="margin-left:9%; margin-top: 1em">If you specify
+both arguments, data will be discarded from the cache when
+either expiration condition holds.</p>
+<p style="margin-left:9%; margin-top: 1em">Memoize::Expire
+uses a real hash internally to store the cached data. You
+can use the "HASH" option to Memoize::Expire to
+supply a tied hash in place of the ordinary hash that
+Memoize::Expire will normally use. You can use this feature
+to add Memoize::Expire as a layer in between a persistent
+disk hash and Memoize. If you do this, you get a persistent
+disk cache whose entries expire automatically. For
+example:</p>
+<p style="margin-left:9%; margin-top: 1em"># Memoize <br/>
+# | <br/>
+# Memoize::Expire enforces data expiration policy <br/>
+# | <br/>
+# DB_File implements persistence of data in a disk file <br/>
+# | <br/>
+# Disk file <br/>
+use Memoize; <br/>
+use Memoize::Expire; <br/>
+use DB_File; <br/>
+# Set up persistence <br/>
+tie my %disk_cache =&gt; 'DB_File', $filename,
+O_CREAT|O_RDWR, 0666]; <br/>
+# Set up expiration policy, supplying persistent hash as a
+target <br/>
+tie my %cache =&gt; 'Memoize::Expire', <br/>
+LIFETIME =&gt; $lifetime, # In seconds <br/>
+NUM_USES =&gt; $n_uses, <br/>
+HASH =&gt; \%disk_cache; <br/>
+# Set up memoization, supplying expiring persistent hash for
+cache <br/>
+memoize 'function', SCALAR_CACHE =&gt; [ HASH =&gt; \%cache
+];</p>
+<h2>INTERFACE
+<a name="INTERFACE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">There is nothing
+special about Memoize::Expire. It is just an example. If you
+don’t like the policy that it implements, you are free
+to write your own expiration policy module that implements
+whatever policy you desire. Here is how to do that. Let us
+suppose that your module will be named MyExpirePolicy.</p>
+<p style="margin-left:9%; margin-top: 1em">Short summary:
+You need to create a package that defines four methods: <br/>
+TIEHASH</p>
+<p style="margin-left:14%;">Construct and return cache
+object.</p>
+<p style="margin-left:9%;">EXISTS</p>
+<p style="margin-left:14%;">Given a function argument, is
+the corresponding function value in the cache, and if so, is
+it fresh enough to use?</p>
+<p style="margin-left:9%;">FETCH</p>
+<p style="margin-left:14%;">Given a function argument, look
+up the corresponding function value in the cache and return
+it.</p>
+<p style="margin-left:9%;">STORE</p>
+<p style="margin-left:14%;">Given a function argument and
+the corresponding function value, store them into the
+cache.</p>
+<p style="margin-left:9%;">CLEAR</p>
+<p style="margin-left:14%;">(Optional.) Flush the cache
+completely.</p>
+<p style="margin-left:9%; margin-top: 1em">The user who
+wants the memoization cache to be expired according to your
+policy will say so by writing</p>
+<p style="margin-left:9%; margin-top: 1em">tie my %cache
+=&gt; 'MyExpirePolicy', args...; <br/>
+memoize 'function', SCALAR_CACHE =&gt; [HASH =&gt;
+\%cache];</p>
+<p style="margin-left:9%; margin-top: 1em">This will invoke
+"MyExpirePolicy−&gt;TIEHASH(args)".
+MyExpirePolicy::TIEHASH should do whatever is appropriate to
+set up the cache, and it should return the cache object to
+the caller.</p>
+<p style="margin-left:9%; margin-top: 1em">For example,
+MyExpirePolicy::TIEHASH might create an object that contains
+a regular Perl hash (which it will to store the cached
+values) and some extra information about the arguments and
+how old the data is and things like that. Let us call this
+object <i>"C"</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">When Memoize
+needs to check to see if an entry is in the cache already,
+it will invoke "C−&gt;EXISTS(key)".
+"key" is the normalized function argument.
+MyExpirePolicy::EXISTS should return 0 if the key is not in
+the cache, or if it has expired, and 1 if an unexpired value
+is in the cache. It should <i>not</i> return
+"undef", because there is a bug in some versions
+of Perl that will cause a spurious FETCH if the EXISTS
+method returns "undef".</p>
+<p style="margin-left:9%; margin-top: 1em">If your EXISTS
+function returns true, Memoize will try to fetch the cached
+value by invoking "C−&gt;FETCH(key)".
+MyExpirePolicy::FETCH should return the cached value.
+Otherwise, Memoize will call the memoized function to
+compute the appropriate value, and will store it into the
+cache by calling "C−&gt;STORE(key,
+value)".</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a very
+brief example of a policy module that expires each cache
+item after ten seconds.</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Memoize::TenSecondExpire; <br/>
+sub TIEHASH { <br/>
+my ($package, %args) = @_; <br/>
+my $cache = $args{HASH} || {}; <br/>
+bless $cache =&gt; $package; <br/>
+} <br/>
+sub EXISTS { <br/>
+my ($cache, $key) = @_; <br/>
+if (exists $cache−&gt;{$key} &amp;&amp; <br/>
+$cache−&gt;{$key}{EXPIRE_TIME} &gt; time) { <br/>
+return 1 <br/>
+} else { <br/>
+return 0; # Do NOT return undef here <br/>
+} <br/>
+} <br/>
+sub FETCH { <br/>
+my ($cache, $key) = @_; <br/>
+return $cache−&gt;{$key}{VALUE}; <br/>
+} <br/>
+sub STORE { <br/>
+my ($cache, $key, $newvalue) = @_; <br/>
+$cache−&gt;{$key}{VALUE} = $newvalue; <br/>
+$cache−&gt;{$key}{EXPIRE_TIME} = time + 10; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">To use this
+expiration policy, the user would say</p>
+<p style="margin-left:9%; margin-top: 1em">use Memoize;
+<br/>
+tie my %cache10sec =&gt; 'Memoize::TenSecondExpire'; <br/>
+memoize 'function', SCALAR_CACHE =&gt; [HASH =&gt;
+\%cache10sec];</p>
+<p style="margin-left:9%; margin-top: 1em">Memoize would
+then call "function" whenever a cached value was
+entirely absent or was older than ten seconds.</p>
+<p style="margin-left:9%; margin-top: 1em">You should
+always support a "HASH" argument to
+"TIEHASH" that ties the underlying cache so that
+the user can specify that the cache is also persistent or
+that it has some other interesting semantics. The example
+above demonstrates how to do this, as does
+"Memoize::Expire".</p>
+<p style="margin-left:9%; margin-top: 1em">Another sample
+module, Memoize::Saves, is available in a separate
+distribution on CPAN. It implements a policy that allows you
+to specify that certain function values would always be
+looked up afresh. See the documentation for details.</p>
+<h2>ALTERNATIVES
+<a name="ALTERNATIVES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Brent Powers has
+a Memoize::ExpireLRU module that was designed to work with
+Memoize and provides expiration of least-recently-used data.
+The cache is held at a fixed number of entries, and when new
+data comes in, the least-recently used data is expired.</p>
+<p style="margin-left:9%; margin-top: 1em">Joshua
+Chamas’s Tie::Cache module may be useful as an
+expiration manager. (If you try this, let me know how it
+works out.)</p>
+<p style="margin-left:9%; margin-top: 1em">If you develop
+any useful expiration managers that you think should be
+distributed with Memoize, please let me know.</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+experimental, and may contain bugs. Please report bugs to
+the address below.</p>
+<p style="margin-left:9%; margin-top: 1em">Number-of-uses
+is stored as a 16−bit unsigned integer, so can’t
+exceed 65535.</p>
+<p style="margin-left:9%; margin-top: 1em">Because of clock
+granularity, expiration times may occur up to one second
+sooner than you expect. For example, suppose you store a
+value with a lifetime of ten seconds, and you store it at
+12:00:00.998 on a certain day. Memoize will look at the
+clock and see 12:00:00. Then 9.01 seconds later, at
+12:00:10.008 you try to read it back. Memoize will look at
+the clock and see 12:00:10 and conclude that the value has
+expired. This will probably not occur if you have
+"Time::HiRes" installed.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Mark-Jason
+Dominus</p>
+<p style="margin-left:9%; margin-top: 1em">Mike Cariaso
+provided valuable insight into the best way to solve this
+problem.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>perl</b>(1)</p>
+<p style="margin-left:9%; margin-top: 1em">The Memoize man
+page.</p>
+<hr/>
+</body>
+</html>

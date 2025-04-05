@@ -1,0 +1,3809 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:59 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>POSIX</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">POSIX</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#CLASSES">CLASSES</a><br/>
+<a href='#"POSIX::SigAction"'>"POSIX::SigAction"</a><br/>
+<a href='#"POSIX::SigRt"'>"POSIX::SigRt"</a><br/>
+<a href='#"POSIX::SigSet"'>"POSIX::SigSet"</a><br/>
+<a href='#"POSIX::Termios"'>"POSIX::Termios"</a><br/>
+<a href="#PATHNAME CONSTANTS">PATHNAME CONSTANTS</a><br/>
+<a href="#POSIX CONSTANTS">POSIX CONSTANTS</a><br/>
+<a href="#RESOURCE CONSTANTS">RESOURCE CONSTANTS</a><br/>
+<a href="#SYSTEM CONFIGURATION">SYSTEM CONFIGURATION</a><br/>
+<a href="#ERRNO">ERRNO</a><br/>
+<a href="#FCNTL">FCNTL</a><br/>
+<a href="#FLOAT">FLOAT</a><br/>
+<a href="#FLOATING-POINT ENVIRONMENT">FLOATING-POINT ENVIRONMENT</a><br/>
+<a href="#LIMITS">LIMITS</a><br/>
+<a href="#LOCALE">LOCALE</a><br/>
+<a href="#MATH">MATH</a><br/>
+<a href="#SIGNAL">SIGNAL</a><br/>
+<a href="#STAT">STAT</a><br/>
+<a href="#STDLIB">STDLIB</a><br/>
+<a href="#STDIO">STDIO</a><br/>
+<a href="#TIME">TIME</a><br/>
+<a href="#UNISTD">UNISTD</a><br/>
+<a href="#WAIT">WAIT</a><br/>
+<a href="#WINSOCK">WINSOCK</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX −
+Perl interface to IEEE Std 1003.1</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use POSIX ();
+<br/>
+use POSIX qw(setsid); <br/>
+use POSIX qw(:errno_h :fcntl_h); <br/>
+printf "EINTR is %d\n", EINTR; <br/>
+my $sess_id = POSIX::setsid(); <br/>
+my $fd = POSIX::open($path, O_CREAT|O_EXCL|O_WRONLY, 0644);
+<br/>
+# note: that's a filedescriptor, *NOT* a filehandle</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The POSIX module
+permits you to access all (or nearly all) the standard POSIX
+1003.1 identifiers. Many of these identifiers have been
+given Perl-ish interfaces.</p>
+<p style="margin-left:9%; margin-top: 1em">This document
+gives a condensed list of the features available in the
+POSIX module. Consult your operating system’s manpages
+for general information on most features. Consult perlfunc
+for functions which are noted as being identical or almost
+identical to Perl’s builtin functions.</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+section describes POSIX functions from the 1003.1
+specification. The second section describes some classes for
+signal objects, TTY objects, and other miscellaneous
+objects. The remaining sections list various constants and
+macros in an organization which roughly follows IEEE Std
+1003.1b−1993.</p>
+<p style="margin-left:9%; margin-top: 1em">The notation
+"[C99]" indicates functions that were added in the
+ISO/IEC 9899:1999 version of the C language standard. Some
+may not be available on your system if it adheres to an
+earlier standard. Attempts to use any missing one will
+result in a fatal runtime error message.</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>Everything is
+exported by default</i> (with a handful of exceptions). This
+is an unfortunate backwards compatibility feature and its
+use is <b>strongly discouraged</b>. You should either
+prevent the exporting (by saying
+"use POSIX ();", as usual) and then use
+fully qualified names (e.g. "POSIX::SEEK_END"), or
+give an explicit import list. If you do neither and opt for
+the default (as in "use POSIX;"), you will
+import <i>hundreds and hundreds</i> of symbols into your
+namespace.</p>
+<p style="margin-left:9%; margin-top: 1em">A few functions
+are not implemented because they are C specific. If you
+attempt to call these, they will print a message telling you
+that they aren’t implemented, and suggest using the
+Perl equivalent, should one exist. For example, trying to
+access the setjmp() call will elicit the message
+""setjmp() is C−specific: use eval {}
+instead"".</p>
+<p style="margin-left:9%; margin-top: 1em">Furthermore,
+some evil vendors will claim 1003.1 compliance, but in fact
+are not so: they will not pass the PCTS (POSIX Compliance
+Test Suites). For example, one vendor may not define
+"EDEADLK", or the semantics of the errno values
+set by open(2) might not be quite right. Perl does not
+attempt to verify POSIX compliance. That means you can
+currently successfully say "use POSIX", and then
+later in your program you find that your vendor has been lax
+and there’s no usable "ICANON" macro after
+all. This could be construed to be a bug.</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"_exit"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">This is identical to the C
+function _exit(). It exits the program immediately which
+means among other things buffered I/O is <b>not</b>
+flushed.</p> </td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">Note that when
+using threads and in Linux this is <b>not</b> a good way to
+exit a thread because in Linux processes and threads are
+kind of the same thing (Note: while this is the situation in
+early 2003 there are projects under way to have threads with
+more POSIXly semantics in Linux). If you want not to return
+from a thread, detach the thread.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"abort"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">This is identical to the C
+function abort(). It terminates the process with a
+"SIGABRT" signal unless caught by a signal handler
+or if the handler does not return normally (it e.g. does a
+"longjmp").</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"abs"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin abs()
+function, returning the absolute value of its numerical
+argument (except that POSIX::abs() must be provided an
+explicit value (rather than relying on an implicit $_):</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$absolute_value
+= POSIX::abs(42); # good <br/>
+$absolute_value = POSIX::abs(); # throws exception</p>
+<p style="margin-left:9%;">"access"</p>
+<p style="margin-left:19%;">Determines the accessibility of
+a file.</p>
+<p style="margin-left:19%; margin-top: 1em">if(
+POSIX::access( "/", &amp;POSIX::R_OK ) ){ <br/>
+print "have read permission\n"; <br/>
+}</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure. Note: do not use access() for
+security purposes. Between the access() call and the
+operation you are preparing for the permissions might
+change: a classic <i>race condition</i>.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"acos"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function acos(), returning
+the arcus cosine of its numerical argument. See also
+Math::Trig.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"acosh"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function acosh(), returning
+the hyperbolic arcus cosine of its numerical argument [C99].
+See also Math::Trig. Added in Perl v5.22.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"alarm"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin alarm()
+function, either for arming or disarming the
+"SIGARLM" timer, except that POSIX::alarm() must
+be provided an explicit value (rather than relying on an
+implicit $_):</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">POSIX::alarm(3)
+# good <br/>
+POSIX::alarm() # throws exception</p>
+<p style="margin-left:9%;">"asctime"</p>
+<p style="margin-left:19%;">This is identical to the C
+function asctime(). It returns a string of the form</p>
+<p style="margin-left:19%; margin-top: 1em">"Fri Jun 2
+18:22:13 2000\n\0"</p>
+<p style="margin-left:19%; margin-top: 1em">and it is
+called thusly</p>
+<p style="margin-left:19%; margin-top: 1em">$asctime =
+asctime($sec, $min, $hour, $mday, $mon, <br/>
+$year, $wday, $yday, $isdst);</p>
+<p style="margin-left:19%; margin-top: 1em">The $mon is
+zero-based: January equals 0. The $year is 1900−based:
+2001 equals 101. $wday and $yday default to zero (and are
+usually ignored anyway), and $isdst defaults to
+−1.</p>
+<p style="margin-left:19%; margin-top: 1em">Note the result
+is always in English. Use "strftime" instead to
+get a result suitable for the current locale. That
+function’s %c format yields the locale’s
+preferred representation.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"asin"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function asin(), returning
+the arcus sine of its numerical argument. See also
+Math::Trig.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"asinh"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function asinh(), returning
+the hyperbolic arcus sine of its numerical argument [C99].
+See also Math::Trig. Added in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"assert"</p>
+<p style="margin-left:19%;">Unimplemented, but you can use
+"die" in perlfunc and the Carp module to achieve
+similar things.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"atan"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function atan(), returning
+the arcus tangent of its numerical argument. See also
+Math::Trig.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"atanh"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function atanh(), returning
+the hyperbolic arcus tangent of its numerical argument
+[C99]. See also Math::Trig. Added in Perl v5.22.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"atan2"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin atan2()
+function, returning the arcus tangent defined by its two
+numerical arguments, the <i>y</i> coordinate and the
+<i>x</i> coordinate. See also Math::Trig.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"atexit"</p>
+<p style="margin-left:19%;">Not implemented. atexit() is
+C−specific: use "END {}" instead, see
+perlmod.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"atof"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>Not implemented. atof() is C−specific. Perl
+converts strings to numbers transparently. If you need to
+force a scalar to a number, add a zero to it.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"atoi"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>Not implemented. atoi() is C−specific. Perl
+converts strings to numbers transparently. If you need to
+force a scalar to a number, add a zero to it. If you need to
+have just the integer part, see "int" in
+perlfunc.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"atol"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>Not implemented. atol() is C−specific. Perl
+converts strings to numbers transparently. If you need to
+force a scalar to a number, add a zero to it. If you need to
+have just the integer part, see "int" in
+perlfunc.</p> </td></tr>
+</table>
+<p style="margin-left:9%;">"bsearch"</p>
+<p style="margin-left:19%;">bsearch() not supplied. For
+doing binary search on wordlists, see Search::Dict.</p>
+<p style="margin-left:9%;">"calloc"</p>
+<p style="margin-left:19%;">Not implemented. calloc() is
+C−specific. Perl does memory management
+transparently.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"cbrt"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>The cube root [C99]. Added in Perl v5.22.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"ceil"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function ceil(), returning
+the smallest integer value greater than or equal to the
+given numerical argument.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"chdir"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin chdir()
+function, allowing one to change the working (default)
+directory −− see "chdir" in perlfunc
+−− with the exception that POSIX::chdir() must
+be provided an explicit value (rather than relying on an
+implicit $_):</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$rv =
+POSIX::chdir('path/to/dir'); # good <br/>
+$rv = POSIX::chdir(); # throws exception</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"chmod"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">This is identical to
+Perl’s builtin chmod() function, allowing one to
+change file and directory permissions −− see
+"chmod" in perlfunc −− with the
+exception that POSIX::chmod() can only change one file at a
+time (rather than a list of files):</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$c = chmod
+0664, $file1, $file2; # good <br/>
+$c = POSIX::chmod 0664, $file1; # throws exception <br/>
+$c = POSIX::chmod 0664, $file1, $file2; # throws
+exception</p>
+<p style="margin-left:19%; margin-top: 1em">As with the
+built-in chmod(), $file may be a filename or a file
+handle.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"chown"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">This is identical to
+Perl’s builtin chown() function, allowing one to
+change file and directory owners and groups, see
+"chown" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"clearerr"</p>
+<p style="margin-left:19%;">Not implemented. Use the method
+IO::Handle::clearerr() instead, to reset the error state (if
+any) and EOF state (if any) of the given stream.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"clock"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function clock(), returning
+the amount of spent processor time in microseconds.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"close"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Close the file. This uses file descriptors such as those
+obtained by calling "POSIX::open".</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$fd =
+POSIX::open( "foo", &amp;POSIX::O_RDONLY ); <br/>
+POSIX::close( $fd );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"close" in perlfunc.</p>
+<p style="margin-left:9%;">"closedir"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin closedir() function for closing a
+directory handle, see "closedir" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p>"cos"</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin cos() function
+for returning the cosine of its numerical argument
+−− except that POSIX::cos() must be provided
+with an explicit value (rather than relying on an implicit
+$_):</p> </td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$cosine =
+POSIX::cos(3); # good <br/>
+$cosine = POSIX::cos(); # throws exception</p>
+<p style="margin-left:19%; margin-top: 1em">See
+"cos" in perlfunc; see also Math::Trig.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"cosh"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p style="margin-top: 1em">This is identical to the C
+function cosh(), for returning the hyperbolic cosine of its
+numeric argument. See also Math::Trig.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"copysign"</p>
+<p style="margin-left:19%;">Returns "x" but with
+the sign of "y" [C99]. Added in Perl v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">$x_with_sign_of_y
+= POSIX::copysign($x, $y);</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"signbit".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"creat"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Create a new file. This returns a file descriptor like
+the ones returned by "POSIX::open". Use
+"POSIX::close" to close the file.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$fd =
+POSIX::creat( "foo", 0611 ); <br/>
+POSIX::close( $fd );</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"sysopen" in perlfunc and its "O_CREAT"
+flag.</p>
+<p style="margin-left:9%;">"ctermid"</p>
+<p style="margin-left:19%;">Generates the path name for the
+controlling terminal.</p>
+<p style="margin-left:19%; margin-top: 1em">$path =
+POSIX::ctermid();</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"ctime"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function ctime() and
+equivalent to "asctime(localtime(...))", see
+"asctime" and "localtime".</p></td></tr>
+</table>
+<p style="margin-left:9%;">"cuserid"
+[POSIX.1−1988]</p>
+<p style="margin-left:19%;">Get the login name of the owner
+of the current process.</p>
+<p style="margin-left:19%; margin-top: 1em">$name =
+POSIX::cuserid();</p>
+<p style="margin-left:19%; margin-top: 1em">Note: this
+function has not been specified by POSIX since 1990 and is
+included only for backwards compatibility. New code should
+use getlogin() instead.</p>
+<p style="margin-left:9%;">"difftime"</p>
+<p style="margin-left:19%;">This is identical to the C
+function difftime(), for returning the time difference (in
+seconds) between two times (as returned by time()), see
+"time".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p>"div"</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>Not implemented. div() is C−specific, use
+"int" in perlfunc on the usual "/"
+division and the modulus "%".</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p>"dup"</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>This is similar to the C function dup(), for duplicating
+a file descriptor.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">This uses file
+descriptors such as those obtained by calling
+"POSIX::open".</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"dup2"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p style="margin-top: 1em">This is similar to the C
+function dup2(), for duplicating a file descriptor to an
+another known file descriptor.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">This uses file
+descriptors such as those obtained by calling
+"POSIX::open".</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"erf"</p></td>
+<td width="1%"></td>
+<td width="78%">
+<p style="margin-top: 1em">The error function [C99]. Added
+in Perl v5.22.</p></td>
+<td width="3%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"erfc"</p></td>
+<td width="1%"></td>
+<td width="78%">
+<p>The complementary error function [C99]. Added in Perl
+v5.22.</p> </td>
+<td width="3%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"errno"</p></td>
+<td width="1%"></td>
+<td width="78%">
+<p>Returns the value of errno.</p></td>
+<td width="3%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$errno =
+POSIX::errno();</p>
+<p style="margin-left:19%; margin-top: 1em">This identical
+to the numerical values of the $!, see "$ERRNO" in
+perlvar.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"execl"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Not implemented. execl() is
+C−specific, see "exec" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"execle"</p>
+<p style="margin-left:19%;">Not implemented. execle() is
+C−specific, see "exec" in perlfunc.</p>
+<p style="margin-left:9%;">"execlp"</p>
+<p style="margin-left:19%;">Not implemented. execlp() is
+C−specific, see "exec" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"execv"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. execv() is C−specific, see
+"exec" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"execve"</p>
+<p style="margin-left:19%;">Not implemented. execve() is
+C−specific, see "exec" in perlfunc.</p>
+<p style="margin-left:9%;">"execvp"</p>
+<p style="margin-left:19%;">Not implemented. execvp() is
+C−specific, see "exec" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"exit"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin exit()
+function for exiting the program, see "exit" in
+perlfunc.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"exp"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin exp() function
+for returning the exponent (<i>e</i>−based) of the
+numerical argument −− except that POSIX::exp()
+must be provided with an explicit value (rather than relying
+on an implicit $_):</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$exp =
+POSIX::exp(3); # good <br/>
+$exp = POSIX::exp(); # throws exception</p>
+<p style="margin-left:19%; margin-top: 1em">See
+"exp" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"expm1"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Equivalent to "exp(x)
+− 1", but more precise for small argument values
+[C99]. Added in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">See also
+"log1p".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"fabs"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p style="margin-top: 1em">This is identical to
+Perl’s builtin abs() function for returning the
+absolute value of the numerical argument −−
+except that POSIX::fabs() must be provided with an explicit
+value (rather than relying on an implicit $_):</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$absolute_value
+= POSIX::fabs(3); # good <br/>
+$absolute_value = POSIX::fabs(); # throws exception</p>
+<p style="margin-left:19%; margin-top: 1em">See
+"abs" in perlfunc.</p>
+<p style="margin-left:19%; margin-top: 1em">This is
+identical to Perl’s builtin cos() function for
+returning the cosine =item "fclose"</p>
+<p style="margin-left:19%; margin-top: 1em">Not
+implemented. Use method IO::Handle::close() instead, or see
+"close" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"fcntl"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">This is identical to
+Perl’s builtin fcntl() function, see "fcntl"
+in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"fdopen"</p>
+<p style="margin-left:19%;">Not implemented. Use method
+IO::Handle::new_from_fd() instead, or see "open"
+in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"feof"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>Not implemented. Use method IO::Handle::eof() instead,
+or see "eof" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"ferror"</p>
+<p style="margin-left:19%;">Not implemented. Use method
+IO::Handle::error() instead.</p>
+<p style="margin-left:9%;">"fflush"</p>
+<p style="margin-left:19%;">Not implemented. Use method
+IO::Handle::flush() instead. See also
+""$OUTPUT_AUTOFLUSH" in perlvar".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"fgetc"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. Use method IO::Handle::getc() instead,
+or see "read" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"fgetpos"</p>
+<p style="margin-left:19%;">Not implemented. Use method
+IO::Seekable::getpos() instead, or see "seek" in
+perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"fgets"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. Use method IO::Handle::gets() instead.
+Similar to &lt;&gt;, also known as "readline" in
+perlfunc.</p> </td></tr>
+</table>
+<p style="margin-left:9%;">"fileno"</p>
+<p style="margin-left:19%;">Not implemented. Use method
+IO::Handle::fileno() instead, or see "fileno" in
+perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"floor"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function floor(), returning
+the largest integer value less than or equal to the
+numerical argument.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"fdim"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>"Positive difference",
+"x − y" if
+"x &gt; y", zero otherwise [C99]. Added
+in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"fegetround"</p>
+<p style="margin-left:19%;">Returns the current floating
+point rounding mode, one of</p>
+<p style="margin-left:19%; margin-top: 1em">FE_TONEAREST
+FE_TOWARDZERO FE_UPWARD FE_DOWNWARD</p>
+<p style="margin-left:19%; margin-top: 1em">"FE_TONEAREST"
+is like "round", "FE_TOWARDZERO" is like
+"trunc" [C99]. Added in Perl v5.22.</p>
+<p style="margin-left:9%;">"fesetround"</p>
+<p style="margin-left:19%;">Sets the floating point
+rounding mode, see "fegetround" [C99]. Added in
+Perl v5.22.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p>"fma"</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>"Fused multiply-add",
+"x * y + z", possibly faster
+(and less lossy) than the explicit two operations [C99].
+Added in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">my $fused =
+POSIX::fma($x, $y, $z);</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"fmax"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Maximum of "x" and
+"y", except when either is "NaN",
+returns the other [C99]. Added in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">my $max =
+POSIX::fmax($x, $y);</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"fmin"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Minimum of "x" and
+"y", except when either is "NaN",
+returns the other [C99]. Added in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">my $min =
+POSIX::fmin($x, $y);</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"fmod"</p></td>
+<td width="2%"></td>
+<td width="55%">
+<p style="margin-top: 1em">This is identical to the C
+function fmod().</p></td>
+<td width="26%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$r = fmod($x,
+$y);</p>
+<p style="margin-left:19%; margin-top: 1em">It returns the
+remainder
+"$r = $x − $n*$y", where
+"$n = trunc($x/$y)". The $r has the same
+sign as $x and magnitude (absolute value) less than the
+magnitude of $y.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"fopen"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Not implemented. Use method
+IO::File::open() instead, or see "open" in
+perlfunc.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"fork"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin fork()
+function for duplicating the current process, see
+"fork" in perlfunc and perlfork if you are in
+Windows.</p> </td></tr>
+</table>
+<p style="margin-left:9%;">"fpathconf"</p>
+<p style="margin-left:19%;">Retrieves the value of a
+configurable limit on a file or directory. This uses file
+descriptors such as those obtained by calling
+"POSIX::open".</p>
+<p style="margin-left:19%; margin-top: 1em">The following
+will determine the maximum length of the longest allowable
+pathname on the filesystem which holds <i>/var/foo</i>.</p>
+<p style="margin-left:19%; margin-top: 1em">$fd =
+POSIX::open( "/var/foo", &amp;POSIX::O_RDONLY );
+<br/>
+$path_max = POSIX::fpathconf($fd,
+&amp;POSIX::_PC_PATH_MAX);</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"fpclassify"</p>
+<p style="margin-left:19%;">Returns one of</p>
+<p style="margin-left:19%; margin-top: 1em">FP_NORMAL
+FP_ZERO FP_SUBNORMAL FP_INFINITE FP_NAN</p>
+<p style="margin-left:19%; margin-top: 1em">telling the
+class of the argument [C99]. "FP_INFINITE" is
+positive or negative infinity, "FP_NAN" is
+not-a-number. "FP_SUBNORMAL" means subnormal
+numbers (also known as denormals), very small numbers with
+low precision. "FP_ZERO" is zero.
+"FP_NORMAL" is all the rest. Added in Perl
+v5.22.</p>
+<p style="margin-left:9%;">"fprintf"</p>
+<p style="margin-left:19%;">Not implemented. fprintf() is
+C−specific, see "printf" in perlfunc
+instead.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"fputc"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. fputc() is C−specific, see
+"print" in perlfunc instead.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"fputs"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. fputs() is C−specific, see
+"print" in perlfunc instead.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"fread"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. fread() is C−specific, see
+"read" in perlfunc instead.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"free"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. free() is C−specific. Perl does
+memory management transparently.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"freopen"</p>
+<p style="margin-left:19%;">Not implemented. freopen() is
+C−specific, see "open" in perlfunc
+instead.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"frexp"</p></td>
+<td width="1%"></td>
+<td width="77%">
+<p>Return the mantissa and exponent of a floating-point
+number.</p> </td>
+<td width="4%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">($mantissa,
+$exponent) = POSIX::frexp( 1.234e56 );</p>
+<p style="margin-left:9%;">"fscanf"</p>
+<p style="margin-left:19%;">Not implemented. fscanf() is
+C−specific, use &lt;&gt; and regular expressions
+instead.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"fseek"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. Use method IO::Seekable::seek()
+instead, or see "seek" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"fsetpos"</p>
+<p style="margin-left:19%;">Not implemented. Use method
+IO::Seekable::setpos() instead, or seek "seek" in
+perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"fstat"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Get file status. This uses file descriptors such as
+those obtained by calling "POSIX::open". The data
+returned is identical to the data from Perl’s builtin
+"stat" function.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$fd =
+POSIX::open( "foo", &amp;POSIX::O_RDONLY ); <br/>
+@stats = POSIX::fstat( $fd );</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"fsync"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Not implemented. Use method
+IO::Handle::sync() instead.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"ftell"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. Use method IO::Seekable::tell()
+instead, or see "tell" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"fwrite"</p>
+<p style="margin-left:19%;">Not implemented. fwrite() is
+C−specific, see "print" in perlfunc
+instead.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"getc"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin getc()
+function, see "getc" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"getchar"</p>
+<p style="margin-left:19%;">Returns one character from
+STDIN. Identical to Perl’s getc(), see
+"getc" in perlfunc.</p>
+<p style="margin-left:9%;">"getcwd"</p>
+<p style="margin-left:19%;">Returns the name of the current
+working directory. See also Cwd.</p>
+<p style="margin-left:9%;">"getegid"</p>
+<p style="margin-left:19%;">Returns the effective group
+identifier. Similar to Perl’ s builtin variable $(,
+see "$EGID" in perlvar.</p>
+<p style="margin-left:9%;">"getenv"</p>
+<p style="margin-left:19%;">Returns the value of the
+specified environment variable. The same information is
+available through the %ENV array.</p>
+<p style="margin-left:9%;">"geteuid"</p>
+<p style="margin-left:19%;">Returns the effective user
+identifier. Identical to Perl’s builtin $&gt;
+variable, see "$EUID" in perlvar.</p>
+<p style="margin-left:9%;">"getgid"</p>
+<p style="margin-left:19%;">Returns the user’s real
+group identifier. Similar to Perl’s builtin variable
+$), see "$GID" in perlvar.</p>
+<p style="margin-left:9%;">"getgrgid"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin getgrgid() function for returning group
+entries by group identifiers, see "getgrgid" in
+perlfunc.</p>
+<p style="margin-left:9%;">"getgrnam"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin getgrnam() function for returning group
+entries by group names, see "getgrnam" in
+perlfunc.</p>
+<p style="margin-left:9%;">"getgroups"</p>
+<p style="margin-left:19%;">Returns the ids of the
+user’s supplementary groups. Similar to Perl’s
+builtin variable $), see "$GID" in perlvar.</p>
+<p style="margin-left:9%;">"getlogin"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin getlogin() function for returning the
+user name associated with the current session, see
+"getlogin" in perlfunc.</p>
+<p style="margin-left:9%;">"getpayload"</p>
+<p style="margin-left:19%;">use POSIX ':nan_payload'; <br/>
+getpayload($var)</p>
+<p style="margin-left:19%; margin-top: 1em">Returns the
+"NaN" payload. Added in Perl v5.24.</p>
+<p style="margin-left:19%; margin-top: 1em">Note the API
+instability warning in "setpayload".</p>
+<p style="margin-left:19%; margin-top: 1em">See
+"nan" for more discussion about
+"NaN".</p>
+<p style="margin-left:9%;">"getpgrp"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin getpgrp() function for returning the
+process group identifier of the current process, see
+"getpgrp" in perlfunc.</p>
+<p style="margin-left:9%;">"getpid"</p>
+<p style="margin-left:19%;">Returns the process identifier.
+Identical to Perl’s builtin variable $$, see
+"$PID" in perlvar.</p>
+<p style="margin-left:9%;">"getppid"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin getppid() function for returning the
+process identifier of the parent process of the current
+process , see "getppid" in perlfunc.</p>
+<p style="margin-left:9%;">"getpwnam"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin getpwnam() function for returning user
+entries by user names, see "getpwnam" in
+perlfunc.</p>
+<p style="margin-left:9%;">"getpwuid"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin getpwuid() function for returning user
+entries by user identifiers, see "getpwuid" in
+perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"gets"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>Returns one line from "STDIN", similar to
+&lt;&gt;, also known as the readline() function, see
+"readline" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em"><b>NOTE</b>: if
+you have C programs that still use gets(), be very afraid.
+The gets() function is a source of endless grief because it
+has no buffer overrun checks. It should <b>never</b> be
+used. The fgets() function should be preferred instead.</p>
+<p style="margin-left:9%;">"getuid"</p>
+<p style="margin-left:19%;">Returns the user’s
+identifier. Identical to Perl’s builtin $&lt;
+variable, see "$UID" in perlvar.</p>
+<p style="margin-left:9%;">"gmtime"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin gmtime() function for converting
+seconds since the epoch to a date in Greenwich Mean Time,
+see "gmtime" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"hypot"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Equivalent to
+sqrt(x * x + y * y) except
+more stable on very large or very small arguments [C99].
+Added in Perl v5.22.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"ilogb"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Integer binary logarithm [C99]. Added in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">For example
+ilogb(20) is 4, as an integer.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"logb".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">"Inf"</p></td>
+<td width="4%"></td>
+<td width="35%">
+<p style="margin-top: 1em">The infinity as a constant:</p></td>
+<td width="46%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">use POSIX
+qw(Inf); <br/>
+my $pos_inf = +Inf; # Or just Inf. <br/>
+my $neg_inf = −Inf;</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"isinf", and "fpclassify".</p>
+<p style="margin-left:9%;">"isalnum"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.24. It was very similar to matching against
+"qr/ ˆ [[:alnum:]]+ $ /x",
+which you should convert to use instead. See "POSIX
+Character Classes" in perlrecharclass.</p>
+<p style="margin-left:9%;">"isalpha"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.24. It was very similar to matching against
+"qr/ ˆ [[:alpha:]]+ $ /x",
+which you should convert to use instead. See "POSIX
+Character Classes" in perlrecharclass.</p>
+<p style="margin-left:9%;">"isatty"</p>
+<p style="margin-left:19%;">Returns a boolean indicating
+whether the specified filehandle is connected to a tty.
+Similar to the "−t" operator, see
+"−X" in perlfunc.</p>
+<p style="margin-left:9%;">"iscntrl"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.24. It was very similar to matching against
+"qr/ ˆ [[:cntrl:]]+ $ /x",
+which you should convert to use instead. See "POSIX
+Character Classes" in perlrecharclass.</p>
+<p style="margin-left:9%;">"isdigit"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.24. It was very similar to matching against
+"qr/ ˆ [[:digit:]]+ $ /x",
+which you should convert to use instead. See "POSIX
+Character Classes" in perlrecharclass.</p>
+<p style="margin-left:9%;">"isfinite"</p>
+<p style="margin-left:19%;">Returns true if the argument is
+a finite number (that is, not an infinity, or the
+not-a-number) [C99]. Added in Perl v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"isinf", "isnan", and
+"fpclassify".</p>
+<p style="margin-left:9%;">"isgraph"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.24. It was very similar to matching against
+"qr/ ˆ [[:graph:]]+ $ /x",
+which you should convert to use instead. See "POSIX
+Character Classes" in perlrecharclass.</p>
+<p style="margin-left:9%;">"isgreater"</p>
+<p style="margin-left:19%;">(Also
+"isgreaterequal", "isless",
+"islessequal", "islessgreater",
+"isunordered")</p>
+<p style="margin-left:19%; margin-top: 1em">Floating point
+comparisons which handle the "NaN" [C99]. Added in
+Perl v5.22.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"isinf"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Returns true if the argument is an infinity (positive or
+negative) [C99]. Added in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">See also
+"Inf", "isnan", "isfinite",
+and "fpclassify".</p>
+<p style="margin-left:9%;">"islower"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.24. It was very similar to matching against
+"qr/ ˆ [[:lower:]]+ $ /x",
+which you should convert to use instead. See "POSIX
+Character Classes" in perlrecharclass.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"isnan"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Returns true if the argument is "NaN"
+(not-a-number) [C99]. Added in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">Note that you
+can also test for ""NaN"−ness"
+with equality operators ("==" or "!="),
+as in</p>
+<p style="margin-left:19%; margin-top: 1em">print "x
+is not a NaN\n" if $x == $x;</p>
+<p style="margin-left:19%; margin-top: 1em">since the
+"NaN" is not equal to anything, <b>including
+itself</b>.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"nan", "NaN", "isinf", and
+"fpclassify".</p>
+<p style="margin-left:9%;">"isnormal"</p>
+<p style="margin-left:19%;">Returns true if the argument is
+normal (that is, not a subnormal/denormal, and not an
+infinity, or a not-a-number) [C99]. Added in Perl v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"isfinite", and "fpclassify".</p>
+<p style="margin-left:9%;">"isprint"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.24. It was very similar to matching against
+"qr/ ˆ [[:print:]]+ $ /x",
+which you should convert to use instead. See "POSIX
+Character Classes" in perlrecharclass.</p>
+<p style="margin-left:9%;">"ispunct"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.24. It was very similar to matching against
+"qr/ ˆ [[:punct:]]+ $ /x",
+which you should convert to use instead. See "POSIX
+Character Classes" in perlrecharclass.</p>
+<p style="margin-left:9%;">"issignaling"</p>
+<p style="margin-left:19%;">use POSIX ':nan_payload'; <br/>
+issignaling($var, $payload)</p>
+<p style="margin-left:19%; margin-top: 1em">Return true if
+the argument is a <i>signaling</i> NaN. Added in Perl
+v5.24.</p>
+<p style="margin-left:19%; margin-top: 1em">Note the API
+instability warning in "setpayload".</p>
+<p style="margin-left:19%; margin-top: 1em">See
+"nan" for more discussion about
+"NaN".</p>
+<p style="margin-left:9%;">"isspace"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.24. It was very similar to matching against
+"qr/ ˆ [[:space:]]+ $ /x",
+which you should convert to use instead. See "POSIX
+Character Classes" in perlrecharclass.</p>
+<p style="margin-left:9%;">"isupper"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.24. It was very similar to matching against
+"qr/ ˆ [[:upper:]]+ $ /x",
+which you should convert to use instead. See "POSIX
+Character Classes" in perlrecharclass.</p>
+<p style="margin-left:9%;">"isxdigit"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.24. It was very similar to matching against
+"qr/ ˆ [[:xdigit:]]+ $ /x",
+which you should convert to use instead. See "POSIX
+Character Classes" in perlrecharclass.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"j0"</p></td>
+<td width="2%"></td>
+<td width="81%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"j1"</p></td>
+<td width="2%"></td>
+<td width="81%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"jn"</p></td>
+<td width="2%"></td>
+<td width="81%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"y0"</p></td>
+<td width="2%"></td>
+<td width="81%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"y1"</p></td>
+<td width="2%"></td>
+<td width="81%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"yn"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>The Bessel function of the first kind of the order
+zero.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"kill"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin kill()
+function for sending signals to processes (often to
+terminate them), see "kill" in perlfunc.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"labs"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>Not implemented. (For returning absolute values of long
+integers.) labs() is C−specific, see "abs"
+in perlfunc instead.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"lchown"</p>
+<p style="margin-left:19%;">This is identical to the C
+function, except the order of arguments is consistent with
+Perl’s builtin chown() with the added restriction of
+only one path, not a list of paths. Does the same thing as
+the chown() function but changes the owner of a symbolic
+link instead of the file the symbolic link points to.</p>
+<p style="margin-left:19%; margin-top: 1em">POSIX::lchown($uid,
+$gid, $file_path);</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"ldexp"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function ldexp() for
+multiplying floating point numbers with powers of two.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$x_quadrupled =
+POSIX::ldexp($x, 2);</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"ldiv"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Not implemented. (For computing
+dividends of long integers.) ldiv() is C−specific, use
+"/" and int() instead.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"lgamma"</p>
+<p style="margin-left:19%;">The logarithm of the Gamma
+function [C99]. Added in Perl v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"tgamma".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"log1p"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Equivalent to "log(1 + x)", but more
+stable results for small argument values [C99]. Added in
+Perl v5.22.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"log2"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Logarithm base two [C99]. Added in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">See also
+"expm1".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"logb"</p></td>
+<td width="2%"></td>
+<td width="68%">
+<p style="margin-top: 1em">Integer binary logarithm [C99].
+Added in Perl v5.22.</p></td>
+<td width="13%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">For example
+logb(20) is 4, as a floating point number.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"ilogb".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"link"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p style="margin-top: 1em">This is identical to
+Perl’s builtin link() function for creating hard links
+into files, see "link" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"localeconv"</p>
+<p style="margin-left:19%;">Get numeric formatting
+information. Returns a reference to a hash containing the
+formatting values of the locale that currently underlies the
+program, regardless of whether or not it is called from
+within the scope of a "use locale". Users of
+this function should also read perllocale, which provides a
+comprehensive discussion of Perl locale handling, including
+a section devoted to this function. Prior to Perl 5.28, or
+when operating in a non thread-safe environment, it should
+not be used in a threaded application unless it’s
+certain that the underlying locale is C or POSIX. This is
+because it otherwise changes the locale, which globally
+affects all threads simultaneously. Windows platforms
+starting with Visual Studio 2005 are mostly thread-safe, but
+use of this function in those prior to Visual Studio 2015
+can have a race with a thread that has called
+"switch_to_global_locale" in perlapi.</p>
+<p style="margin-left:19%; margin-top: 1em">Here is how to
+query the database for the <b>de</b> (Deutsch or German)
+locale.</p>
+<p style="margin-left:19%; margin-top: 1em">my $loc =
+POSIX::setlocale( &amp;POSIX::LC_ALL, "de" ); <br/>
+print "Locale: \"$loc\"\n"; <br/>
+my $lconv = POSIX::localeconv(); <br/>
+foreach my $property (qw( <br/>
+decimal_point <br/>
+thousands_sep <br/>
+grouping <br/>
+int_curr_symbol <br/>
+currency_symbol <br/>
+mon_decimal_point <br/>
+mon_thousands_sep <br/>
+mon_grouping <br/>
+positive_sign <br/>
+negative_sign <br/>
+int_frac_digits <br/>
+frac_digits <br/>
+p_cs_precedes <br/>
+p_sep_by_space <br/>
+n_cs_precedes <br/>
+n_sep_by_space <br/>
+p_sign_posn <br/>
+n_sign_posn <br/>
+int_p_cs_precedes <br/>
+int_p_sep_by_space <br/>
+int_n_cs_precedes <br/>
+int_n_sep_by_space <br/>
+int_p_sign_posn <br/>
+int_n_sign_posn <br/>
+)) <br/>
+{ <br/>
+printf qq(%s: "%s",\n), <br/>
+$property, $lconv−&gt;{$property}; <br/>
+}</p>
+<p style="margin-left:19%; margin-top: 1em">The members
+whose names begin with "int_p_" and
+"int_n_" were added by POSIX.1−2008 and are
+only available on systems that support them.</p>
+<p style="margin-left:19%; margin-top: 1em">A value of
+−1 returned for numeric entries indicates that the
+field is not applicable to the locale. This is rare except
+in the C and related locales, which don’t have most
+monetary values defined. It can also happen, quirkily, in
+fields that are otherwise boolean to indicate that the value
+is kind of neither true nor false. This happens in
+"p_cs_precedes" and "int_p_cs_precedes"
+when the currency symbol neither precedes nor succeeds a
+positive value but is infixed, by replacing the radix
+character.</p>
+<p style="margin-left:19%; margin-top: 1em">Prior to Perl
+v5.37.7, empty string fields and numeric fields with value
+−1 were omittted from the returned hash.</p>
+<p style="margin-left:9%;">"localtime"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin localtime() function for converting
+seconds since the epoch to a date see "localtime"
+in perlfunc except that POSIX::localtime() must be provided
+an explicit value (rather than relying on an implicit
+$_):</p>
+<p style="margin-left:19%; margin-top: 1em">@localtime =
+POSIX::localtime(time); # good <br/>
+@localtime = localtime(); # good <br/>
+@localtime = POSIX::localtime(); # throws exception</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p>"log"</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin log() function
+for returning the natural (<i>e</i>−based) logarithm
+of the numerical argument −− except that
+POSIX::log() must be provided with an explicit value (rather
+than relying on an implicit $_):</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$log =
+POSIX::log(3); # good <br/>
+$log = POSIX::log(); # throws exception</p>
+<p style="margin-left:19%; margin-top: 1em">See
+"log" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"log10"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">This is identical to the C
+function log10(), returning the 10−base logarithm of
+the numerical argument. You can also use</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">sub log10 {
+log($_[0]) / log(10) }</p>
+<p style="margin-left:19%; margin-top: 1em">or</p>
+<p style="margin-left:19%; margin-top: 1em">sub log10 {
+log($_[0]) / 2.30258509299405 }</p>
+<p style="margin-left:19%; margin-top: 1em">or</p>
+<p style="margin-left:19%; margin-top: 1em">sub log10 {
+log($_[0]) * 0.434294481903252 }</p>
+<p style="margin-left:9%;">"longjmp"</p>
+<p style="margin-left:19%;">Not implemented. longjmp() is
+C−specific: use "die" in perlfunc
+instead.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"lseek"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Move the file’s read/write position. This uses
+file descriptors such as those obtained by calling
+"POSIX::open".</p> </td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$fd =
+POSIX::open( "foo", &amp;POSIX::O_RDONLY ); <br/>
+$off_t = POSIX::lseek( $fd, 0, &amp;POSIX::SEEK_SET );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"lrint"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Depending on the current
+floating point rounding mode, rounds the argument either
+toward nearest (like "round"), toward zero (like
+"trunc"), downward (toward negative infinity), or
+upward (toward positive infinity) [C99]. Added in Perl
+v5.22.</p> </td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">For the
+rounding mode, see "fegetround".</p>
+<p style="margin-left:9%;">"lround"</p>
+<p style="margin-left:19%;">Like "round", but as
+integer, as opposed to floating point [C99]. Added in Perl
+v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"ceil", "floor", "trunc".</p>
+<p style="margin-left:19%; margin-top: 1em">Owing to an
+oversight, this is not currently exported by default, or as
+part of the ":math_h_c99" export tag; importing it
+must therefore be done by explicit name.</p>
+<p style="margin-left:9%;">"malloc"</p>
+<p style="margin-left:19%;">Not implemented. malloc() is
+C−specific. Perl does memory management
+transparently.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"mblen"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is the same as the C function mblen() on unthreaded
+perls. On threaded perls, it transparently (almost)
+substitutes the more thread-safe "mbrlen"(3), if
+available, instead of "mblen".</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">Core Perl does
+not have any support for wide and multibyte locales, except
+Unicode UTF−8 locales. This function, in conjunction
+with "mbtowc" and "wctomb" may be used
+to roll your own decoding/encoding of other types of
+multi-byte locales.</p>
+<p style="margin-left:19%; margin-top: 1em">Use
+"undef" as the first parameter to this function to
+get the effect of passing NULL as the first parameter to
+"mblen". This resets any shift state to its
+initial value. The return value is undefined if
+"mbrlen" was substituted, so you should never rely
+on it.</p>
+<p style="margin-left:19%; margin-top: 1em">When the first
+parameter is a scalar containing a value that either is a PV
+string or can be forced into one, the return value is the
+number of bytes occupied by the first character of that
+string; or 0 if that first character is the wide NUL
+character; or negative if there is an error. This is based
+on the locale that currently underlies the program,
+regardless of whether or not the function is called from
+Perl code that is within the scope of
+"use locale". Perl makes no attempt at hiding
+from your code any differences in the "errno"
+setting between "mblen" and "mbrlen". It
+does set "errno" to 0 before calling them.</p>
+<p style="margin-left:19%; margin-top: 1em">The optional
+second parameter is ignored if it is larger than the actual
+length of the first parameter string.</p>
+<p style="margin-left:9%;">"mbtowc"</p>
+<p style="margin-left:19%;">This is the same as the C
+function mbtowc() on unthreaded perls. On threaded perls, it
+transparently (almost) substitutes the more thread-safe
+"mbrtowc"(3), if available, instead of
+"mbtowc".</p>
+<p style="margin-left:19%; margin-top: 1em">Core Perl does
+not have any support for wide and multibyte locales, except
+Unicode UTF−8 locales. This function, in conjunction
+with "mblen" and "wctomb" may be used to
+roll your own decoding/encoding of other types of multi-byte
+locales.</p>
+<p style="margin-left:19%; margin-top: 1em">The first
+parameter is a scalar into which, upon success, the wide
+character represented by the multi-byte string contained in
+the second parameter is stored. The optional third parameter
+is ignored if it is larger than the actual length of the
+second parameter string.</p>
+<p style="margin-left:19%; margin-top: 1em">Use
+"undef" as the second parameter to this function
+to get the effect of passing NULL as the second parameter to
+"mbtowc". This ignores the first parameter, and
+resets any shift state to its initial value. The return
+value is undefined if "mbrtowc" was substituted,
+so you should never rely on it.</p>
+<p style="margin-left:19%; margin-top: 1em">When the second
+parameter is a scalar containing a value that either is a PV
+string or can be forced into one, the return value is the
+number of bytes occupied by the first character of that
+string; or 0 if that first character is the wide NUL
+character; or negative if there is an error. This is based
+on the locale that currently underlies the program,
+regardless of whether or not the function is called from
+Perl code that is within the scope of
+"use locale". Perl makes no attempt at hiding
+from your code any differences in the "errno"
+setting between "mbtowc" and "mbrtowc".
+It does set "errno" to 0 before calling them.</p>
+<p style="margin-left:9%;">"memchr"</p>
+<p style="margin-left:19%;">Not implemented. memchr() is
+C−specific, see "index" in perlfunc
+instead.</p>
+<p style="margin-left:9%;">"memcmp"</p>
+<p style="margin-left:19%;">Not implemented. memcmp() is
+C−specific, use "eq" instead, see
+perlop.</p>
+<p style="margin-left:9%;">"memcpy"</p>
+<p style="margin-left:19%;">Not implemented. memcpy() is
+C−specific, use "=", see perlop, or see
+"substr" in perlfunc.</p>
+<p style="margin-left:9%;">"memmove"</p>
+<p style="margin-left:19%;">Not implemented. memmove() is
+C−specific, use "=", see perlop, or see
+"substr" in perlfunc.</p>
+<p style="margin-left:9%;">"memset"</p>
+<p style="margin-left:19%;">Not implemented. memset() is
+C−specific, use "x" instead, see perlop.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"mkdir"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin mkdir()
+function for creating directories, see "mkdir" in
+perlfunc.</p> </td></tr>
+</table>
+<p style="margin-left:9%;">"mkfifo"</p>
+<p style="margin-left:19%;">This is similar to the C
+function mkfifo() for creating FIFO special files.</p>
+<p style="margin-left:19%; margin-top: 1em">if
+(mkfifo($path, $mode)) { ....</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure. The $mode is similar to the
+mode of mkdir(), see "mkdir" in perlfunc, though
+for "mkfifo" you <b>must</b> specify the
+$mode.</p>
+<p style="margin-left:9%;">"mktime"</p>
+<p style="margin-left:19%;">Convert date/time info to a
+calendar time.</p>
+<p style="margin-left:19%; margin-top: 1em">Synopsis:</p>
+<p style="margin-left:19%; margin-top: 1em">mktime(sec,
+min, hour, mday, mon, year, wday = 0, <br/>
+yday = 0, isdst = −1)</p>
+<p style="margin-left:19%; margin-top: 1em">The month
+("mon"), weekday ("wday"), and yearday
+("yday") begin at zero, <i>i.e.</i>, January is 0,
+not 1; Sunday is 0, not 1; January 1st is 0, not 1. The year
+("year") is given in years since 1900;
+<i>i.e.</i>, the year 1995 is 95; the year 2001 is 101.
+Consult your system’s mktime() manpage for details
+about these and the other arguments.</p>
+<p style="margin-left:19%; margin-top: 1em">Calendar time
+for December 12, 1995, at 10:30 am.</p>
+<p style="margin-left:19%; margin-top: 1em">$time_t =
+POSIX::mktime( 0, 30, 10, 12, 11, 95 ); <br/>
+print "Date = ", POSIX::ctime($time_t);</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"modf"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>Return the integral and fractional parts of a
+floating-point number.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">($fractional,
+$integral) = POSIX::modf( 3.14 );</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"round".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">"NaN"</p></td>
+<td width="4%"></td>
+<td width="40%">
+<p style="margin-top: 1em">The not-a-number as a
+constant:</p> </td>
+<td width="41%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">use POSIX
+qw(NaN); <br/>
+my $nan = NaN;</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"nan", "/isnan", and
+"fpclassify".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">"nan"</p></td>
+<td width="85%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">my $nan =
+nan();</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"NaN", not-a-number [C99]. Added in Perl
+v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">The returned
+NaN is always a <i>quiet</i> NaN, as opposed to
+<i>signaling</i>.</p>
+<p style="margin-left:19%; margin-top: 1em">With an
+argument, can be used to generate a NaN with <i>payload</i>.
+The argument is first interpreted as a floating point
+number, but then any fractional parts are truncated (towards
+zero), and the value is interpreted as an unsigned integer.
+The bits of this integer are stored in the unused bits of
+the NaN.</p>
+<p style="margin-left:19%; margin-top: 1em">The result has
+a dual nature: it is a NaN, but it also carries the integer
+inside it. The integer can be retrieved with
+"getpayload". Note, though, that the payload is
+not propagated, not even on copies, and definitely not in
+arithmetic operations.</p>
+<p style="margin-left:19%; margin-top: 1em">How many bits
+fit in the NaN depends on what kind of floating points are
+being used, but on the most common platforms (64−bit
+IEEE 754, or the x86 80−bit long doubles) there are 51
+and 61 bits available, respectively. (There would be 52 and
+62, but the quiet/signaling bit of NaNs takes away one.)
+However, because of the floating−point−to−
+integer-and-back conversions, please test carefully whether
+you get back what you put in. If your integers are only 32
+bits wide, you probably should not rely on more than 32 bits
+of payload.</p>
+<p style="margin-left:19%; margin-top: 1em">Whether a
+"signaling" NaN is in any way different from a
+"quiet" NaN, depends on the platform. Also note
+that the payload of the default NaN (no argument to
+<b>nan()</b>) is not necessarily zero, use
+"setpayload" to explicitly set the payload. On
+some platforms like the 32−bit x86, (unless using the
+80−bit long doubles) the signaling bit is not
+supported at all.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"isnan", "NaN", "setpayload"
+and "issignaling".</p>
+<p style="margin-left:9%;">"nearbyint"</p>
+<p style="margin-left:19%;">Returns the nearest integer to
+the argument, according to the current rounding mode (see
+"fegetround") [C99]. Added in Perl v5.22.</p>
+<p style="margin-left:9%;">"nextafter"</p>
+<p style="margin-left:19%;">Returns the next representable
+floating point number after "x" in the direction
+of "y" [C99]. Added in Perl v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">my $nextafter =
+POSIX::nextafter($x, $y);</p>
+<p style="margin-left:19%; margin-top: 1em">Like
+"nexttoward", but potentially less accurate.</p>
+<p style="margin-left:9%;">"nexttoward"</p>
+<p style="margin-left:19%;">Returns the next representable
+floating point number after "x" in the direction
+of "y" [C99]. Added in Perl v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">my $nexttoward
+= POSIX::nexttoward($x, $y);</p>
+<p style="margin-left:19%; margin-top: 1em">Like
+"nextafter", but potentially more accurate.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"nice"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>This is similar to the C function nice(), for changing
+the scheduling preference of the current process. Positive
+arguments mean a more polite process, negative values a more
+needy process. Normal (non-root) user processes can only
+change towards being more polite.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"offsetof"</p>
+<p style="margin-left:19%;">Not implemented. offsetof() is
+C−specific, you probably want to see "pack"
+in perlfunc instead.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"open"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>Open a file for reading for writing. This returns file
+descriptors, not Perl filehandles. Use
+"POSIX::close" to close the file.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">Open a file
+read-only with mode 0666.</p>
+<p style="margin-left:19%; margin-top: 1em">$fd =
+POSIX::open( "foo" );</p>
+<p style="margin-left:19%; margin-top: 1em">Open a file for
+read and write.</p>
+<p style="margin-left:19%; margin-top: 1em">$fd =
+POSIX::open( "foo", &amp;POSIX::O_RDWR );</p>
+<p style="margin-left:19%; margin-top: 1em">Open a file for
+write, with truncation.</p>
+<p style="margin-left:19%; margin-top: 1em">$fd =
+POSIX::open( <br/>
+"foo", &amp;POSIX::O_WRONLY | &amp;POSIX::O_TRUNC
+<br/>
+);</p>
+<p style="margin-left:19%; margin-top: 1em">Create a new
+file with mode 0640. Set up the file for writing.</p>
+<p style="margin-left:19%; margin-top: 1em">$fd =
+POSIX::open( <br/>
+"foo", &amp;POSIX::O_CREAT | &amp;POSIX::O_WRONLY,
+0640 <br/>
+);</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"sysopen" in perlfunc.</p>
+<p style="margin-left:9%;">"opendir"</p>
+<p style="margin-left:19%;">Open a directory for
+reading.</p>
+<p style="margin-left:19%; margin-top: 1em">$dir =
+POSIX::opendir( "/var" ); <br/>
+@files = POSIX::readdir( $dir ); <br/>
+POSIX::closedir( $dir );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"pathconf"</p>
+<p style="margin-left:19%;">Retrieves the value of a
+configurable limit on a file or directory.</p>
+<p style="margin-left:19%; margin-top: 1em">The following
+will determine the maximum length of the longest allowable
+pathname on the filesystem which holds "/var".</p>
+<p style="margin-left:19%; margin-top: 1em">$path_max =
+POSIX::pathconf( "/var", <br/>
+&amp;POSIX::_PC_PATH_MAX );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"pause"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is similar to the C function pause(), which
+suspends the execution of the current process until a signal
+is received.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"perror"</p>
+<p style="margin-left:19%;">This is identical to the C
+function perror(), which outputs to the standard error
+stream the specified message followed by ": " and
+the current error string. Use the warn() function and the $!
+variable instead, see "warn" in perlfunc and
+"$ERRNO" in perlvar.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"pipe"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>Create an interprocess channel. This returns file
+descriptors like those returned by
+"POSIX::open".</p> </td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">my ($read,
+$write) = POSIX::pipe(); <br/>
+POSIX::write( $write, "hello", 5 ); <br/>
+POSIX::read( $read, $buf, 5 );</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"pipe" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">"pow"</p></td>
+<td width="4%"></td>
+<td width="54%">
+<p style="margin-top: 1em">Computes $x raised to the power
+$exponent.</p> </td>
+<td width="27%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$ret =
+POSIX::pow( $x, $exponent );</p>
+<p style="margin-left:19%; margin-top: 1em">You can also
+use the "**" operator, see perlop.</p>
+<p style="margin-left:9%;">"printf"</p>
+<p style="margin-left:19%;">Formats and prints the
+specified arguments to "STDOUT". See also
+"printf" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"putc"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>Not implemented. putc() is C−specific, see
+"print" in perlfunc instead.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"putchar"</p>
+<p style="margin-left:19%;">Not implemented. putchar() is
+C−specific, see "print" in perlfunc
+instead.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"puts"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. puts() is C−specific, see
+"print" in perlfunc instead.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"qsort"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. qsort() is C−specific, see
+"sort" in perlfunc instead.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"raise"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Sends the specified signal to the current process. See
+also "kill" in perlfunc and the $$ in
+"$PID" in perlvar.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"rand"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. rand() is non-portable, see
+"rand" in perlfunc instead.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"read"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Read from a file. This uses file descriptors such as
+those obtained by calling "POSIX::open". If the
+buffer $buf is not large enough for the read then Perl will
+extend it to make room for the request.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$fd =
+POSIX::open( "foo", &amp;POSIX::O_RDONLY ); <br/>
+$bytes = POSIX::read( $fd, $buf, 3 );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"sysread" in perlfunc.</p>
+<p style="margin-left:9%;">"readdir"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin readdir() function for reading
+directory entries, see "readdir" in perlfunc.</p>
+<p style="margin-left:9%;">"realloc"</p>
+<p style="margin-left:19%;">Not implemented. realloc() is
+C−specific. Perl does memory management
+transparently.</p>
+<p style="margin-left:9%;">"remainder"</p>
+<p style="margin-left:19%;">Given "x" and
+"y", returns the value
+"x − n*y", where "n" is
+the integer closest to "x"/"y" [C99].
+Added in Perl v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">my $remainder =
+POSIX::remainder($x, $y)</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"remquo".</p>
+<p style="margin-left:9%;">"remove"</p>
+<p style="margin-left:19%;">Deletes a name from the
+filesystem. Calls "unlink" in perlfunc for files
+and "rmdir" in perlfunc for directories.</p>
+<p style="margin-left:9%;">"remquo"</p>
+<p style="margin-left:19%;">Like "remainder" but
+also returns the low-order bits of the quotient (n) [C99].
+Added in Perl v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">(This is quite
+esoteric interface, mainly used to implement numerical
+algorithms.)</p>
+<p style="margin-left:9%;">"rename"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin rename() function for renaming files,
+see "rename" in perlfunc.</p>
+<p style="margin-left:9%;">"rewind"</p>
+<p style="margin-left:19%;">Seeks to the beginning of the
+file.</p>
+<p style="margin-left:9%;">"rewinddir"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin rewinddir() function for rewinding
+directory entry streams, see "rewinddir" in
+perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"rint"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Identical to "lrint".</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"rmdir"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin rmdir()
+function for removing (empty) directories, see
+"rmdir" in perlfunc.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"round"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Returns the integer (but still as floating point)
+nearest to the argument [C99]. Added in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">See also
+"ceil", "floor", "lround",
+"modf", and "trunc".</p>
+<p style="margin-left:9%;">"scalbn"</p>
+<p style="margin-left:19%;">Returns
+"x * 2**y" [C99]. Added in Perl
+v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"frexp" and "ldexp".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"scanf"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Not implemented. scanf() is C−specific, use
+&lt;&gt; and regular expressions instead, see perlre.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"setgid"</p>
+<p style="margin-left:19%;">Sets the real group identifier
+and the effective group identifier for this process. Similar
+to assigning a value to the Perl’s builtin $)
+variable, see "$EGID" in perlvar, except that the
+latter will change only the real user identifier, and that
+the <b>setgid()</b> uses only a single numeric argument, as
+opposed to a space-separated list of numbers.</p>
+<p style="margin-left:9%;">"setjmp"</p>
+<p style="margin-left:19%;">Not implemented. setjmp() is
+C−specific: use "eval {}" instead, see
+"eval" in perlfunc.</p>
+<p style="margin-left:9%;">"setlocale"</p>
+<p style="margin-left:19%;">WARNING! Prior to Perl 5.28 or
+on a system that does not support thread-safe locale
+operations, do NOT use this function in a thread. The locale
+will change in all other threads at the same time, and
+should your thread get paused by the operating system, and
+another started, that thread will not have the locale it is
+expecting. On some platforms, there can be a race leading to
+segfaults if two threads call this function nearly
+simultaneously. This warning does not apply on unthreaded
+builds, or on perls where "${ˆSAFE_LOCALES}"
+exists and is non-zero; namely Perl 5.28 and later compiled
+to be locale-thread-safe.</p>
+<p style="margin-left:19%; margin-top: 1em">This function
+modifies and queries the program’s underlying locale.
+Users of this function should read perllocale, whch provides
+a comprehensive discussion of Perl locale handling,
+knowledge of which is necessary to properly use this
+function. It contains a section devoted to this function.
+The discussion here is merely a summary reference for
+setlocale(). Note that Perl itself is almost entirely
+unaffected by the locale except within the scope of
+"use locale". (Exceptions are listed in
+"Not within the scope of "use locale""
+in perllocale, and locale-dependent functions within the
+POSIX module ARE always affected by the current locale.)</p>
+<p style="margin-left:19%; margin-top: 1em">The following
+examples assume</p>
+<p style="margin-left:19%; margin-top: 1em">use POSIX
+qw(setlocale LC_ALL LC_CTYPE);</p>
+<p style="margin-left:19%; margin-top: 1em">has been
+issued.</p>
+<p style="margin-left:19%; margin-top: 1em">The following
+will set the traditional UNIX system locale behavior (the
+second argument "C").</p>
+<p style="margin-left:19%; margin-top: 1em">$loc =
+setlocale( LC_ALL, "C" );</p>
+<p style="margin-left:19%; margin-top: 1em">The following
+will query the current "LC_CTYPE" category. (No
+second argument means ’query’.)</p>
+<p style="margin-left:19%; margin-top: 1em">$loc =
+setlocale( LC_CTYPE );</p>
+<p style="margin-left:19%; margin-top: 1em">The following
+will set the "LC_CTYPE" behaviour according to the
+locale environment variables (the second argument
+""). Please see your system’s setlocale(3)
+documentation for the locale environment variables’
+meaning or consult perllocale.</p>
+<p style="margin-left:19%; margin-top: 1em">$loc =
+setlocale( LC_CTYPE, "" );</p>
+<p style="margin-left:19%; margin-top: 1em">The following
+will set the "LC_COLLATE" behaviour to Argentinian
+Spanish. <b>NOTE</b>: The naming and availability of locales
+depends on your operating system. Please consult perllocale
+for how to find out which locales are available in your
+system.</p>
+<p style="margin-left:19%; margin-top: 1em">$loc =
+setlocale( LC_COLLATE, "es_AR.ISO8859−1"
+);</p>
+<p style="margin-left:9%;">"setpayload"</p>
+<p style="margin-left:19%;">use POSIX ':nan_payload'; <br/>
+setpayload($var, $payload);</p>
+<p style="margin-left:19%; margin-top: 1em">Sets the
+"NaN" payload of var. Added in Perl v5.24.</p>
+<p style="margin-left:19%; margin-top: 1em">NOTE: the NaN
+payload APIs are based on the latest (as of June 2015)
+proposed ISO C interfaces, but they are not yet a standard.
+Things may change.</p>
+<p style="margin-left:19%; margin-top: 1em">See
+"nan" for more discussion about
+"NaN".</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"setpayloadsig", "isnan",
+"getpayload", and "issignaling".</p>
+<p style="margin-left:9%;">"setpayloadsig"</p>
+<p style="margin-left:19%;">use POSIX ':nan_payload'; <br/>
+setpayloadsig($var, $payload);</p>
+<p style="margin-left:19%; margin-top: 1em">Like
+"setpayload" but also makes the NaN
+<i>signaling</i>. Added in Perl v5.24.</p>
+<p style="margin-left:19%; margin-top: 1em">Depending on
+the platform the NaN may or may not behave differently.</p>
+<p style="margin-left:19%; margin-top: 1em">Note the API
+instability warning in "setpayload".</p>
+<p style="margin-left:19%; margin-top: 1em">Note that
+because how the floating point formats work out, on the most
+common platforms signaling payload of zero is best avoided,
+since it might end up being identical to
+"+Inf".</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"nan", "isnan", "getpayload",
+and "issignaling".</p>
+<p style="margin-left:9%;">"setpgid"</p>
+<p style="margin-left:19%;">This is similar to the C
+function setpgid() for setting the process group identifier
+of the current process.</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"setsid"</p>
+<p style="margin-left:19%;">This is identical to the C
+function setsid() for setting the session identifier of the
+current process.</p>
+<p style="margin-left:9%;">"setuid"</p>
+<p style="margin-left:19%;">Sets the real user identifier
+and the effective user identifier for this process. Similar
+to assigning a value to the Perl’s builtin $&lt;
+variable, see "$UID" in perlvar, except that the
+latter will change only the real user identifier.</p>
+<p style="margin-left:9%;">"sigaction"</p>
+<p style="margin-left:19%;">Detailed signal management.
+This uses "POSIX::SigAction" objects for the
+"action" and "oldaction" arguments (the
+oldaction can also be just a hash reference). Consult your
+system’s "sigaction" manpage for details,
+see also "POSIX::SigRt".</p>
+<p style="margin-left:19%; margin-top: 1em">Synopsis:</p>
+<p style="margin-left:19%; margin-top: 1em">sigaction(signal,
+action, oldaction = 0)</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure. The "signal" must be
+a number (like "SIGHUP"), not a string (like
+"SIGHUP"), though Perl does try hard to understand
+you.</p>
+<p style="margin-left:19%; margin-top: 1em">If you use the
+"SA_SIGINFO" flag, the signal handler will in
+addition to the first argument, the signal name, also
+receive a second argument, a hash reference, inside which
+are the following keys with the following semantics, as
+defined by POSIX/SUSv3:</p>
+<p style="margin-left:19%; margin-top: 1em">signo the
+signal number <br/>
+errno the error number <br/>
+code if this is zero or less, the signal was sent by <br/>
+a user process and the uid and pid make sense, <br/>
+otherwise the signal was sent by the kernel</p>
+<p style="margin-left:19%; margin-top: 1em">The constants
+for specific "code" values can be imported
+individually or using the ":signal_h_si_code" tag,
+since Perl v5.24.</p>
+<p style="margin-left:19%; margin-top: 1em">The following
+are also defined by POSIX/SUSv3, but unfortunately not very
+widely implemented:</p>
+<p style="margin-left:19%; margin-top: 1em">pid the process
+id generating the signal <br/>
+uid the uid of the process id generating the signal <br/>
+status exit value or signal for SIGCHLD <br/>
+band band event for SIGPOLL <br/>
+addr address of faulting instruction or memory <br/>
+reference for SIGILL, SIGFPE, SIGSEGV or SIGBUS</p>
+<p style="margin-left:19%; margin-top: 1em">A third
+argument is also passed to the handler, which contains a
+copy of the raw binary contents of the "siginfo"
+structure: if a system has some non-POSIX fields, this third
+argument is where to unpack() them from.</p>
+<p style="margin-left:19%; margin-top: 1em">Note that not
+all "siginfo" values make sense simultaneously
+(some are valid only for certain signals, for example), and
+not all values make sense from Perl perspective, you should
+to consult your system’s "sigaction" and
+possibly also "siginfo" documentation.</p>
+<p style="margin-left:9%;">"siglongjmp"</p>
+<p style="margin-left:19%;">Not implemented. siglongjmp()
+is C−specific: use "die" in perlfunc
+instead.</p>
+<p style="margin-left:9%;">"signbit"</p>
+<p style="margin-left:19%;">Returns zero for positive
+arguments, non-zero for negative arguments [C99]. Added in
+Perl v5.22.</p>
+<p style="margin-left:9%;">"sigpending"</p>
+<p style="margin-left:19%;">Examine signals that are
+blocked and pending. This uses "POSIX::SigSet"
+objects for the "sigset" argument. Consult your
+system’s "sigpending" manpage for
+details.</p>
+<p style="margin-left:19%; margin-top: 1em">Synopsis:</p>
+<p style="margin-left:19%; margin-top: 1em">sigpending(sigset)</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"sigprocmask"</p>
+<p style="margin-left:19%;">Change and/or examine calling
+process’s signal mask. This uses
+"POSIX::SigSet" objects for the "sigset"
+and "oldsigset" arguments. Consult your
+system’s "sigprocmask" manpage for
+details.</p>
+<p style="margin-left:19%; margin-top: 1em">Synopsis:</p>
+<p style="margin-left:19%; margin-top: 1em">sigprocmask(how,
+sigset, oldsigset = 0)</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:19%; margin-top: 1em">Note that you
+can’t reliably block or unblock a signal from its own
+signal handler if you’re using safe signals. Other
+signals can be blocked or unblocked reliably.</p>
+<p style="margin-left:9%;">"sigsetjmp"</p>
+<p style="margin-left:19%;">Not implemented. sigsetjmp() is
+C−specific: use "eval {}" instead, see
+"eval" in perlfunc.</p>
+<p style="margin-left:9%;">"sigsuspend"</p>
+<p style="margin-left:19%;">Install a signal mask and
+suspend process until signal arrives. This uses
+"POSIX::SigSet" objects for the
+"signal_mask" argument. Consult your
+system’s "sigsuspend" manpage for
+details.</p>
+<p style="margin-left:19%; margin-top: 1em">Synopsis:</p>
+<p style="margin-left:19%; margin-top: 1em">sigsuspend(signal_mask)</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p>"sin"</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin sin()
+function, for returning the sine of its numerical argument
+−− except that POSIX::sin() must be provided
+with an explicit value (rather than relying on an implicit
+$_):</p> </td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$sine =
+POSIX::sin(3); # good <br/>
+$sine = POSIX::sin(); # throws exception</p>
+<p style="margin-left:19%; margin-top: 1em">See
+"sin" in perlfunc; see also Math::Trig.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"sinh"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">This is identical to the C
+function sinh() for returning the hyperbolic sine of the
+numerical argument. See also Math::Trig.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"sleep"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is functionally identical to Perl’s builtin
+sleep() function for suspending the execution of the current
+for process for certain number of seconds, see
+"sleep" in perlfunc. There is one significant
+difference, however: POSIX::sleep() returns the number of
+<b>unslept</b> seconds, while the CORE::sleep() returns the
+number of slept seconds.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"sprintf"</p>
+<p style="margin-left:19%;">This is similar to Perl’s
+builtin sprintf() function for returning a string that has
+the arguments formatted as requested, see
+"sprintf" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"sqrt"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin sqrt()
+function for returning the square root of the numerical
+argument −− except that POSIX::sqrt() must be
+provided with an explicit value (rather than relying on an
+implicit $_):</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$square_root =
+POSIX::sqrt(3); # good <br/>
+$square_root = POSIX::sqrt(); # throws exception</p>
+<p style="margin-left:19%; margin-top: 1em">See
+"sqrt" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"srand"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Give a seed the pseudorandom
+number generator, see "srand" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"sscanf"</p>
+<p style="margin-left:19%;">Not implemented. sscanf() is
+C−specific, use regular expressions instead, see
+perlre.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"stat"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin stat()
+function for returning information about files and
+directories.</p> </td></tr>
+</table>
+<p style="margin-left:9%;">"strcat"</p>
+<p style="margin-left:19%;">Not implemented. strcat() is
+C−specific, use ".=" instead, see
+perlop.</p>
+<p style="margin-left:9%;">"strchr"</p>
+<p style="margin-left:19%;">Not implemented. strchr() is
+C−specific, see "index" in perlfunc
+instead.</p>
+<p style="margin-left:9%;">"strcmp"</p>
+<p style="margin-left:19%;">Not implemented. strcmp() is
+C−specific, use "eq" or "cmp"
+instead, see perlop.</p>
+<p style="margin-left:9%;">"strcoll"</p>
+<p style="margin-left:19%;">This is identical to the C
+function strcoll() for collating (comparing) strings
+transformed using the strxfrm() function. Not really needed
+since Perl can do this transparently, see perllocale.</p>
+<p style="margin-left:19%; margin-top: 1em">Beware that in
+a UTF−8 locale, anything you pass to this function
+must be in UTF−8; and when not in a UTF−8
+locale, anything passed must not be UTF−8 encoded.</p>
+<p style="margin-left:19%; margin-top: 1em">Note also that
+it doesn’t make sense for a string to be encoded in
+one locale (say, ISO−8859−6, Arabic) and to
+collate it based on another (like ISO−8859−7,
+Greek). The results will be essentially meaningless.</p>
+<p style="margin-left:9%;">"strcpy"</p>
+<p style="margin-left:19%;">Not implemented. strcpy() is
+C−specific, use "=" instead, see perlop.</p>
+<p style="margin-left:9%;">"strcspn"</p>
+<p style="margin-left:19%;">Not implemented. strcspn() is
+C−specific, use regular expressions instead, see
+perlre.</p>
+<p style="margin-left:9%;">"strerror"</p>
+<p style="margin-left:19%;">Returns the error string for
+the specified errno. Identical to the string form of $!, see
+"$ERRNO" in perlvar.</p>
+<p style="margin-left:9%;">"strftime"</p>
+<p style="margin-left:19%;">Convert date and time
+information to string based on the current underlying locale
+of the program (except for any daylight savings time).
+Returns the string.</p>
+<p style="margin-left:19%; margin-top: 1em">Synopsis:</p>
+<p style="margin-left:19%; margin-top: 1em">strftime(fmt,
+sec, min, hour, mday, mon, year, <br/>
+wday = −1, yday = −1, isdst = −1)</p>
+<p style="margin-left:19%; margin-top: 1em">The month
+("mon") begins at zero, <i>e.g.</i>, January is 0,
+not 1. The year ("year") is given in years since
+1900, <i>e.g.</i>, the year 1995 is 95; the year 2001 is
+101. Consult your system’s strftime() manpage for
+details about these and the other arguments.</p>
+<p style="margin-left:19%; margin-top: 1em">The
+"wday", "yday", and "isdst"
+parameters are all ignored.</p>
+<p style="margin-left:19%; margin-top: 1em">If you want
+your code to be portable, your format ("fmt")
+argument should use only the conversion specifiers defined
+by the ANSI C standard (C99, to play safe). These are
+"aAbBcdHIjmMpSUwWxXyYZ%". But even then, the
+<b>results</b> of some of the conversion specifiers are
+non-portable. For example, the specifiers
+"aAbBcpZ" change according to the locale settings
+of the user, and both how to set locales (the locale names)
+and what output to expect are non-standard. The specifier
+"c" changes according to the timezone settings of
+the user and the timezone computation rules of the operating
+system. The "Z" specifier is notoriously
+unportable since the names of timezones are non-standard.
+Sticking to the numeric specifiers is the safest route.</p>
+<p style="margin-left:19%; margin-top: 1em">The given
+arguments are made consistent as though by calling mktime()
+before calling your system’s strftime() function,
+except that the "isdst" value is not affected, so
+that the returned value will always be as if the locale
+doesn’t have daylight savings time.</p>
+<p style="margin-left:19%; margin-top: 1em">The string for
+Tuesday, December 12, 1995 in the "C" locale.</p>
+<p style="margin-left:19%; margin-top: 1em">$str =
+POSIX::strftime( "%A, %B %d, %Y", <br/>
+0, 0, 0, 12, 11, 95, 2 ); <br/>
+print "$str\n";</p>
+<p style="margin-left:9%;">"strlen"</p>
+<p style="margin-left:19%;">Not implemented. strlen() is
+C−specific, use length() instead, see
+"length" in perlfunc.</p>
+<p style="margin-left:9%;">"strncat"</p>
+<p style="margin-left:19%;">Not implemented. strncat() is
+C−specific, use ".=" instead, see
+perlop.</p>
+<p style="margin-left:9%;">"strncmp"</p>
+<p style="margin-left:19%;">Not implemented. strncmp() is
+C−specific, use "eq" instead, see
+perlop.</p>
+<p style="margin-left:9%;">"strncpy"</p>
+<p style="margin-left:19%;">Not implemented. strncpy() is
+C−specific, use "=" instead, see perlop.</p>
+<p style="margin-left:9%;">"strpbrk"</p>
+<p style="margin-left:19%;">Not implemented. strpbrk() is
+C−specific, use regular expressions instead, see
+perlre.</p>
+<p style="margin-left:9%;">"strrchr"</p>
+<p style="margin-left:19%;">Not implemented. strrchr() is
+C−specific, see "rindex" in perlfunc
+instead.</p>
+<p style="margin-left:9%;">"strspn"</p>
+<p style="margin-left:19%;">Not implemented. strspn() is
+C−specific, use regular expressions instead, see
+perlre.</p>
+<p style="margin-left:9%;">"strstr"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin index() function, see "index"
+in perlfunc.</p>
+<p style="margin-left:9%;">"strtod"</p>
+<p style="margin-left:19%;">String to double translation.
+Returns the parsed number and the number of characters in
+the unparsed portion of the string. Truly POSIX-compliant
+systems set $! ($ERRNO) to indicate a translation error, so
+clear $! before calling "strtod". However,
+non-POSIX systems may not check for overflow, and therefore
+will never set $!.</p>
+<p style="margin-left:19%; margin-top: 1em">"strtod"
+respects any POSIX setlocale() "LC_NUMERIC"
+settings, regardless of whether or not it is called from
+Perl code that is within the scope of
+"use locale". Prior to Perl 5.28, or when
+operating in a non thread-safe environment, it should not be
+used in a threaded application unless it’s certain
+that the underlying locale is C or POSIX. This is because it
+otherwise changes the locale, which globally affects all
+threads simultaneously.</p>
+<p style="margin-left:19%; margin-top: 1em">To parse a
+string $str as a floating point number use</p>
+<p style="margin-left:19%; margin-top: 1em">$! = 0; <br/>
+($num, $n_unparsed) = POSIX::strtod($str);</p>
+<p style="margin-left:19%; margin-top: 1em">The second
+returned item and $! can be used to check for valid
+input:</p>
+<p style="margin-left:19%; margin-top: 1em">if (($str eq
+'') || ($n_unparsed != 0) || $!) { <br/>
+die "Non−numeric input $str" . ($! ? ":
+$!\n" : "\n"); <br/>
+}</p>
+<p style="margin-left:19%; margin-top: 1em">When called in
+a scalar context "strtod" returns the parsed
+number.</p>
+<p style="margin-left:9%;">"strtok"</p>
+<p style="margin-left:19%;">Not implemented. strtok() is
+C−specific, use regular expressions instead, see
+perlre, or "split" in perlfunc.</p>
+<p style="margin-left:9%;">"strtol"</p>
+<p style="margin-left:19%;">String to (long) integer
+translation. Returns the parsed number and the number of
+characters in the unparsed portion of the string. Truly
+POSIX-compliant systems set $! ($ERRNO) to indicate a
+translation error, so clear $! before calling
+"strtol". However, non-POSIX systems may not check
+for overflow, and therefore will never set $!.</p>
+<p style="margin-left:19%; margin-top: 1em">"strtol"
+should respect any POSIX <b><i>setlocale()</i></b>
+settings.</p>
+<p style="margin-left:19%; margin-top: 1em">To parse a
+string $str as a number in some base $base use</p>
+<p style="margin-left:19%; margin-top: 1em">$! = 0; <br/>
+($num, $n_unparsed) = POSIX::strtol($str, $base);</p>
+<p style="margin-left:19%; margin-top: 1em">The base should
+be zero or between 2 and 36, inclusive. When the base is
+zero or omitted "strtol" will use the string
+itself to determine the base: a leading "0x" or
+"0X" means hexadecimal; a leading "0"
+means octal; any other leading characters mean decimal.
+Thus, "1234" is parsed as a decimal number,
+"01234" as an octal number, and "0x1234"
+as a hexadecimal number.</p>
+<p style="margin-left:19%; margin-top: 1em">The second
+returned item and $! can be used to check for valid
+input:</p>
+<p style="margin-left:19%; margin-top: 1em">if (($str eq
+'') || ($n_unparsed != 0) || !$!) { <br/>
+die "Non−numeric input $str" . $! ? ":
+$!\n" : "\n"; <br/>
+}</p>
+<p style="margin-left:19%; margin-top: 1em">When called in
+a scalar context "strtol" returns the parsed
+number.</p>
+<p style="margin-left:9%;">"strtold"</p>
+<p style="margin-left:19%;">Like "strtod" but for
+long doubles. Defined only if the system supports long
+doubles.</p>
+<p style="margin-left:9%;">"strtoul"</p>
+<p style="margin-left:19%;">String to unsigned (long)
+integer translation. strtoul() is identical to strtol()
+except that strtoul() only parses unsigned integers. See
+"strtol" for details.</p>
+<p style="margin-left:19%; margin-top: 1em">Note: Some
+vendors supply strtod() and strtol() but not strtoul().
+Other vendors that do supply strtoul() parse
+"−1" as a valid value.</p>
+<p style="margin-left:9%;">"strxfrm"</p>
+<p style="margin-left:19%;">String transformation. Returns
+the transformed string.</p>
+<p style="margin-left:19%; margin-top: 1em">$dst =
+POSIX::strxfrm( $src );</p>
+<p style="margin-left:19%; margin-top: 1em">Used with
+"eq" or "cmp" as an alternative to
+"strcoll".</p>
+<p style="margin-left:19%; margin-top: 1em">Not really
+needed since Perl can do this transparently, see
+perllocale.</p>
+<p style="margin-left:19%; margin-top: 1em">Unlike the libc
+"strxfrm", this allows NUL characters in the input
+$src.</p>
+<p style="margin-left:19%; margin-top: 1em">It
+doesn’t make sense for a string to be encoded in one
+locale (say, ISO−8859−6, Arabic) and to collate
+it based on another (like ISO−8859−7, Greek).
+Perl assumes that the current "LC_CTYPE" locale
+correctly represents the encoding of $src, and ignores the
+value of "LC_COLLATE".</p>
+<p style="margin-left:9%;">"sysconf"</p>
+<p style="margin-left:19%;">Retrieves values of system
+configurable variables.</p>
+<p style="margin-left:19%; margin-top: 1em">The following
+will get the machine’s clock speed.</p>
+<p style="margin-left:19%; margin-top: 1em">$clock_ticks =
+POSIX::sysconf( &amp;POSIX::_SC_CLK_TCK );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"system"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin system() function, see
+"system" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"tan"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>This is identical to the C function tan(), returning the
+tangent of the numerical argument. See also Math::Trig.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"tanh"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>This is identical to the C function tanh(), returning
+the hyperbolic tangent of the numerical argument. See also
+Math::Trig.</p> </td></tr>
+</table>
+<p style="margin-left:9%;">"tcdrain"</p>
+<p style="margin-left:19%;">This is similar to the C
+function tcdrain() for draining the output queue of its
+argument stream.</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"tcflow"</p>
+<p style="margin-left:19%;">This is similar to the C
+function tcflow() for controlling the flow of its argument
+stream.</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"tcflush"</p>
+<p style="margin-left:19%;">This is similar to the C
+function tcflush() for flushing the I/O buffers of its
+argument stream.</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"tcgetpgrp"</p>
+<p style="margin-left:19%;">This is identical to the C
+function tcgetpgrp() for returning the process group
+identifier of the foreground process group of the
+controlling terminal.</p>
+<p style="margin-left:9%;">"tcsendbreak"</p>
+<p style="margin-left:19%;">This is similar to the C
+function tcsendbreak() for sending a break on its argument
+stream.</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"tcsetpgrp"</p>
+<p style="margin-left:19%;">This is similar to the C
+function tcsetpgrp() for setting the process group
+identifier of the foreground process group of the
+controlling terminal.</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"tgamma"</p>
+<p style="margin-left:19%;">The Gamma function [C99]. Added
+in Perl v5.22.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"lgamma".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"time"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin time()
+function for returning the number of seconds since the epoch
+(whatever it is for the system), see "time" in
+perlfunc.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"times"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>The times() function returns elapsed realtime since some
+point in the past (such as system startup), user and system
+times for this process, and user and system times used by
+child processes. All times are returned in clock ticks.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">($realtime,
+$user, $system, $cuser, $csystem) <br/>
+= POSIX::times();</p>
+<p style="margin-left:19%; margin-top: 1em">Note:
+Perl’s builtin times() function returns four values,
+measured in seconds.</p>
+<p style="margin-left:9%;">"tmpfile"</p>
+<p style="margin-left:19%;">Not implemented. Use method
+IO::File::new_tmpfile() instead, or see File::Temp.</p>
+<p style="margin-left:9%;">"tmpnam"</p>
+<p style="margin-left:19%;">For security reasons, which are
+probably detailed in your system’s documentation for
+the C library tmpnam() function, this interface is no longer
+available since Perl v5.26; instead use File::Temp.</p>
+<p style="margin-left:9%;">"tolower"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.26. This is identical to the C function,
+except that it can apply to a single character or to a whole
+string, and currently operates as if the locale always is
+"C". Consider using the lc() function, see
+"lc" in perlfunc, see "lc" in perlfunc,
+or the equivalent "\L" operator inside
+doublequotish strings.</p>
+<p style="margin-left:9%;">"toupper"</p>
+<p style="margin-left:19%;">This function has been removed
+as of Perl v5.26. This is similar to the C function, except
+that it can apply to a single character or to a whole
+string, and currently operates as if the locale always is
+"C". Consider using the uc() function, see
+"uc" in perlfunc, or the equivalent "\U"
+operator inside doublequotish strings.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"trunc"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Returns the integer toward zero from the argument [C99].
+Added in Perl v5.22.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">See also
+"ceil", "floor", and
+"round".</p>
+<p style="margin-left:9%;">"ttyname"</p>
+<p style="margin-left:19%;">This is identical to the C
+function ttyname() for returning the name of the current
+terminal.</p>
+<p style="margin-left:9%;">"tzname"</p>
+<p style="margin-left:19%;">Retrieves the time conversion
+information from the "tzname" variable.</p>
+<p style="margin-left:19%; margin-top: 1em">POSIX::tzset();
+<br/>
+($std, $dst) = POSIX::tzname();</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"tzset"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to the C function tzset() for setting
+the current timezone based on the environment variable
+"TZ", to be used by ctime(), localtime(),
+mktime(), and strftime() functions.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"umask"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin umask()
+function for setting (and querying) the file creation
+permission mask −− except that POSIX::umask()
+must be provided with an explicit value (rather than relying
+on an implicit $_):</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$current =
+umask(); # good <br/>
+$now = POSIX::umask($current); # good <br/>
+$now = POSIX::umask(); # throws exception</p>
+<p style="margin-left:19%; margin-top: 1em">See
+"umask" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"uname"</p></td>
+<td width="1%"></td>
+<td width="48%">
+<p style="margin-top: 1em">Get name of current operating
+system.</p> </td>
+<td width="33%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">($sysname,
+$nodename, $release, $version, $machine) <br/>
+= POSIX::uname();</p>
+<p style="margin-left:19%; margin-top: 1em">Note that the
+actual meanings of the various fields are not that well
+standardized, do not expect any great portability. The
+$sysname might be the name of the operating system, the
+$nodename might be the name of the host, the $release might
+be the (major) release number of the operating system, the
+$version might be the (minor) release number of the
+operating system, and the $machine might be a hardware
+identifier. Maybe.</p>
+<p style="margin-left:9%;">"ungetc"</p>
+<p style="margin-left:19%;">Not implemented. Use method
+IO::Handle::ungetc() instead.</p>
+<p style="margin-left:9%;">"unlink"</p>
+<p style="margin-left:19%;">This is identical to
+Perl’s builtin unlink() function for removing files,
+see "unlink" in perlfunc.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"utime"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin utime()
+function for changing the time stamps of files and
+directories, see "utime" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"vfprintf"</p>
+<p style="margin-left:19%;">Not implemented. vfprintf() is
+C−specific, see "printf" in perlfunc
+instead.</p>
+<p style="margin-left:9%;">"vprintf"</p>
+<p style="margin-left:19%;">Not implemented. vprintf() is
+C−specific, see "printf" in perlfunc
+instead.</p>
+<p style="margin-left:9%;">"vsprintf"</p>
+<p style="margin-left:19%;">Not implemented. vsprintf() is
+C−specific, see "sprintf" in perlfunc
+instead.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>"wait"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>This is identical to Perl’s builtin wait()
+function, see "wait" in perlfunc.</p></td></tr>
+</table>
+<p style="margin-left:9%;">"waitpid"</p>
+<p style="margin-left:19%;">Wait for a child process to
+change state. This is identical to Perl’s builtin
+waitpid() function, see "waitpid" in perlfunc.</p>
+<p style="margin-left:19%; margin-top: 1em">$pid =
+POSIX::waitpid( −1, POSIX::WNOHANG ); <br/>
+print "status = ", ($? / 256), "\n";</p>
+<p style="margin-left:19%; margin-top: 1em">See
+"mblen".</p>
+<p style="margin-left:9%;">"wctomb"</p>
+<p style="margin-left:19%;">This is the same as the C
+function wctomb() on unthreaded perls. On threaded perls, it
+transparently (almost) substitutes the more thread-safe
+"wcrtomb"(3), if available, instead of
+"wctomb".</p>
+<p style="margin-left:19%; margin-top: 1em">Core Perl does
+not have any support for wide and multibyte locales, except
+Unicode UTF−8 locales. This function, in conjunction
+with "mblen" and "mbtowc" may be used to
+roll your own decoding/encoding of other types of multi-byte
+locales.</p>
+<p style="margin-left:19%; margin-top: 1em">Use
+"undef" as the first parameter to this function to
+get the effect of passing NULL as the first parameter to
+"wctomb". This ignores the second parameter, and
+resets any shift state to its initial value. The return
+value is undefined if "wcrtomb" was substituted,
+so you should never rely on it.</p>
+<p style="margin-left:19%; margin-top: 1em">When the first
+parameter is a scalar, the code point contained in the
+scalar second parameter is converted into a multi-byte
+string and stored into the first parameter scalar. This is
+based on the locale that currently underlies the program,
+regardless of whether or not the function is called from
+Perl code that is within the scope of
+"use locale". The return value is the number
+of bytes stored; or negative if the code point isn’t
+representable in the current locale. Perl makes no attempt
+at hiding from your code any differences in the
+"errno" setting between "wctomb" and
+"wcrtomb". It does set "errno" to 0
+before calling them.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"write"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Write to a file. This uses file descriptors such as
+those obtained by calling "POSIX::open".</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$fd =
+POSIX::open( "foo", &amp;POSIX::O_WRONLY ); <br/>
+$buf = "hello"; <br/>
+$bytes = POSIX::write( $fd, $buf, 5 );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:19%; margin-top: 1em">See also
+"syswrite" in perlfunc.</p>
+<h2>CLASSES
+<a name="CLASSES"></a>
+</h2>
+<h3>"POSIX::SigAction"
+<a name='"POSIX::SigAction"'></a>
+</h3>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">"new"</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Creates a new
+"POSIX::SigAction" object which corresponds to the
+C "struct sigaction". This object will be
+destroyed automatically when it is no longer needed. The
+first parameter is the handler, a sub reference. The second
+parameter is a "POSIX::SigSet" object, it defaults
+to the empty set. The third parameter contains the
+"sa_flags", it defaults to 0.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$sigset =
+POSIX::SigSet−&gt;new(SIGINT, SIGQUIT); <br/>
+$sigaction = POSIX::SigAction−&gt;new( <br/>
+\&amp;handler, $sigset, &amp;POSIX::SA_NOCLDSTOP <br/>
+);</p>
+<p style="margin-left:19%; margin-top: 1em">This
+"POSIX::SigAction" object is intended for use with
+the POSIX::sigaction() function.</p>
+<p style="margin-left:9%;">"handler"</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"mask"</p></td>
+<td width="1%"></td>
+<td width="81%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"flags"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>accessor functions to get/set the values of a SigAction
+object.</p> </td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$sigset =
+$sigaction−&gt;mask; <br/>
+$sigaction−&gt;flags(&amp;POSIX::SA_RESTART);</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"safe"</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p style="margin-top: 1em">accessor function for the
+"safe signals" flag of a SigAction object; see
+perlipc for general information on safe (a.k.a.
+"deferred") signals. If you wish to handle a
+signal safely, use this accessor to set the "safe"
+flag in the "POSIX::SigAction" object:</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$sigaction−&gt;safe(1);</p>
+<p style="margin-left:19%; margin-top: 1em">You may also
+examine the "safe" flag on the output action
+object which is filled in when given as the third parameter
+to POSIX::sigaction():</p>
+<p style="margin-left:19%; margin-top: 1em">sigaction(SIGINT,
+$new_action, $old_action); <br/>
+if ($old_action−&gt;safe) { <br/>
+# previous SIGINT handler used safe signals <br/>
+}</p>
+<h3>"POSIX::SigRt"
+<a name='"POSIX::SigRt"'></a>
+</h3>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em">%SIGRT</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p style="margin-top: 1em">A hash of the POSIX realtime
+signal handlers. It is an extension of the standard %SIG,
+the $POSIX::SIGRT{SIGRTMIN} is roughly equivalent to
+$SIG{SIGRTMIN}, but the right POSIX moves (see below) are
+made with the "POSIX::SigSet" and
+"POSIX::sigaction" instead of accessing the
+%SIG.</p> </td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">You can set the
+%POSIX::SIGRT elements to set the POSIX realtime signal
+handlers, use "delete" and "exists" on
+the elements, and use "scalar" on the
+%POSIX::SIGRT to find out how many POSIX realtime signals
+there are available
+"(SIGRTMAX − SIGRTMIN + 1",
+the "SIGRTMAX" is a valid POSIX realtime
+signal).</p>
+<p style="margin-left:19%; margin-top: 1em">Setting the
+%SIGRT elements is equivalent to calling this:</p>
+<p style="margin-left:19%; margin-top: 1em">sub new { <br/>
+my ($rtsig, $handler, $flags) = @_; <br/>
+my $sigset = POSIX::SigSet($rtsig); <br/>
+my $sigact =
+POSIX::SigAction−&gt;new($handler,$sigset,$flags);
+<br/>
+sigaction($rtsig, $sigact); <br/>
+}</p>
+<p style="margin-left:19%; margin-top: 1em">The flags
+default to zero, if you want something different you can
+either use "local" on
+$POSIX::SigRt::SIGACTION_FLAGS, or you can derive from
+POSIX::SigRt and define your own new() (the tied hash STORE
+method of the %SIGRT calls "new($rtsig, $handler,
+$SIGACTION_FLAGS)", where the $rtsig ranges from zero
+to
+"SIGRTMAX − SIGRTMIN + 1)".</p>
+<p style="margin-left:19%; margin-top: 1em">Just as with
+any signal, you can use "sigaction($rtsig, undef,
+$oa)" to retrieve the installed signal handler (or,
+rather, the signal action).</p>
+<p style="margin-left:19%; margin-top: 1em"><b>NOTE:</b>
+whether POSIX realtime signals really work in your system,
+or whether Perl has been compiled so that it works with
+them, is outside of this discussion.</p>
+<p style="margin-left:9%;">"SIGRTMIN"</p>
+<p style="margin-left:19%;">Return the minimum POSIX
+realtime signal number available, or "undef" if no
+POSIX realtime signals are available.</p>
+<p style="margin-left:9%;">"SIGRTMAX"</p>
+<p style="margin-left:19%;">Return the maximum POSIX
+realtime signal number available, or "undef" if no
+POSIX realtime signals are available.</p>
+<h3>"POSIX::SigSet"
+<a name='"POSIX::SigSet"'></a>
+</h3>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">"new"</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Create a new SigSet object. This
+object will be destroyed automatically when it is no longer
+needed. Arguments may be supplied to initialize the set.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">Create an empty
+set.</p>
+<p style="margin-left:19%; margin-top: 1em">$sigset =
+POSIX::SigSet−&gt;new;</p>
+<p style="margin-left:19%; margin-top: 1em">Create a set
+with "SIGUSR1".</p>
+<p style="margin-left:19%; margin-top: 1em">$sigset =
+POSIX::SigSet−&gt;new( &amp;POSIX::SIGUSR1 );</p>
+<p style="margin-left:19%; margin-top: 1em">Throws an error
+if any of the signals supplied cannot be added to the
+set.</p>
+<p style="margin-left:9%;">"addset"</p>
+<p style="margin-left:19%;">Add a signal to a SigSet
+object.</p>
+<p style="margin-left:19%; margin-top: 1em">$sigset−&gt;addset(
+&amp;POSIX::SIGUSR2 );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"delset"</p>
+<p style="margin-left:19%;">Remove a signal from the SigSet
+object.</p>
+<p style="margin-left:19%; margin-top: 1em">$sigset−&gt;delset(
+&amp;POSIX::SIGUSR2 );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"emptyset"</p>
+<p style="margin-left:19%;">Initialize the SigSet object to
+be empty.</p>
+<p style="margin-left:19%; margin-top: 1em">$sigset−&gt;emptyset();</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"fillset"</p>
+<p style="margin-left:19%;">Initialize the SigSet object to
+include all signals.</p>
+<p style="margin-left:19%; margin-top: 1em">$sigset−&gt;fillset();</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"ismember"</p>
+<p style="margin-left:19%;">Tests the SigSet object to see
+if it contains a specific signal.</p>
+<p style="margin-left:19%; margin-top: 1em">if(
+$sigset−&gt;ismember( &amp;POSIX::SIGUSR1 ) ){ <br/>
+print "contains SIGUSR1\n"; <br/>
+}</p>
+<h3>"POSIX::Termios"
+<a name='"POSIX::Termios"'></a>
+</h3>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">"new"</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p style="margin-top: 1em">Create a new Termios object.
+This object will be destroyed automatically when it is no
+longer needed. A Termios object corresponds to the
+"termios" C struct. new() mallocs a new one,
+getattr() fills it from a file descriptor, and setattr()
+sets a file descriptor’s parameters to match
+Termios’ contents.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$termios =
+POSIX::Termios−&gt;new;</p>
+<p style="margin-left:9%;">"getattr"</p>
+<p style="margin-left:19%;">Get terminal control
+attributes.</p>
+<p style="margin-left:19%; margin-top: 1em">Obtain the
+attributes for "stdin".</p>
+<p style="margin-left:19%; margin-top: 1em">$termios−&gt;getattr(
+0 ) # Recommended for clarity. <br/>
+$termios−&gt;getattr()</p>
+<p style="margin-left:19%; margin-top: 1em">Obtain the
+attributes for stdout.</p>
+<p style="margin-left:19%; margin-top: 1em">$termios−&gt;getattr(
+1 )</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"getcc"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Retrieve a value from the "c_cc" field of a
+"termios" object. The "c_cc" field is an
+array so an index must be specified.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$c_cc[1] =
+$termios−&gt;getcc(1);</p>
+<p style="margin-left:9%;">"getcflag"</p>
+<p style="margin-left:19%;">Retrieve the
+"c_cflag" field of a "termios"
+object.</p>
+<p style="margin-left:19%; margin-top: 1em">$c_cflag =
+$termios−&gt;getcflag;</p>
+<p style="margin-left:9%;">"getiflag"</p>
+<p style="margin-left:19%;">Retrieve the
+"c_iflag" field of a "termios"
+object.</p>
+<p style="margin-left:19%; margin-top: 1em">$c_iflag =
+$termios−&gt;getiflag;</p>
+<p style="margin-left:9%;">"getispeed"</p>
+<p style="margin-left:19%;">Retrieve the input baud
+rate.</p>
+<p style="margin-left:19%; margin-top: 1em">$ispeed =
+$termios−&gt;getispeed;</p>
+<p style="margin-left:9%;">"getlflag"</p>
+<p style="margin-left:19%;">Retrieve the
+"c_lflag" field of a "termios"
+object.</p>
+<p style="margin-left:19%; margin-top: 1em">$c_lflag =
+$termios−&gt;getlflag;</p>
+<p style="margin-left:9%;">"getoflag"</p>
+<p style="margin-left:19%;">Retrieve the
+"c_oflag" field of a "termios"
+object.</p>
+<p style="margin-left:19%; margin-top: 1em">$c_oflag =
+$termios−&gt;getoflag;</p>
+<p style="margin-left:9%;">"getospeed"</p>
+<p style="margin-left:19%;">Retrieve the output baud
+rate.</p>
+<p style="margin-left:19%; margin-top: 1em">$ospeed =
+$termios−&gt;getospeed;</p>
+<p style="margin-left:9%;">"setattr"</p>
+<p style="margin-left:19%;">Set terminal control
+attributes.</p>
+<p style="margin-left:19%; margin-top: 1em">Set attributes
+immediately for stdout.</p>
+<p style="margin-left:19%; margin-top: 1em">$termios−&gt;setattr(
+1, &amp;POSIX::TCSANOW );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="9%">
+<p>"setcc"</p></td>
+<td width="1%"></td>
+<td width="81%">
+<p>Set a value in the "c_cc" field of a
+"termios" object. The "c_cc" field is an
+array so an index must be specified.</p></td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">$termios−&gt;setcc(
+&amp;POSIX::VEOF, 1 );</p>
+<p style="margin-left:9%;">"setcflag"</p>
+<p style="margin-left:19%;">Set the "c_cflag"
+field of a "termios" object.</p>
+<p style="margin-left:19%; margin-top: 1em">$termios−&gt;setcflag(
+$c_cflag | &amp;POSIX::CLOCAL );</p>
+<p style="margin-left:9%;">"setiflag"</p>
+<p style="margin-left:19%;">Set the "c_iflag"
+field of a "termios" object.</p>
+<p style="margin-left:19%; margin-top: 1em">$termios−&gt;setiflag(
+$c_iflag | &amp;POSIX::BRKINT );</p>
+<p style="margin-left:9%;">"setispeed"</p>
+<p style="margin-left:19%;">Set the input baud rate.</p>
+<p style="margin-left:19%; margin-top: 1em">$termios−&gt;setispeed(
+&amp;POSIX::B9600 );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">"setlflag"</p>
+<p style="margin-left:19%;">Set the "c_lflag"
+field of a "termios" object.</p>
+<p style="margin-left:19%; margin-top: 1em">$termios−&gt;setlflag(
+$c_lflag | &amp;POSIX::ECHO );</p>
+<p style="margin-left:9%;">"setoflag"</p>
+<p style="margin-left:19%;">Set the "c_oflag"
+field of a "termios" object.</p>
+<p style="margin-left:19%; margin-top: 1em">$termios−&gt;setoflag(
+$c_oflag | &amp;POSIX::OPOST );</p>
+<p style="margin-left:9%;">"setospeed"</p>
+<p style="margin-left:19%;">Set the output baud rate.</p>
+<p style="margin-left:19%; margin-top: 1em">$termios−&gt;setospeed(
+&amp;POSIX::B9600 );</p>
+<p style="margin-left:19%; margin-top: 1em">Returns
+"undef" on failure.</p>
+<p style="margin-left:9%;">Baud rate values</p>
+<p style="margin-left:19%;">"B38400"
+"B75" "B200" "B134"
+"B300" "B1800" "B150"
+"B0" "B19200" "B1200"
+"B9600" "B600" "B4800"
+"B50" "B2400" "B110"</p>
+<p style="margin-left:9%;">Terminal interface values</p>
+<p style="margin-left:19%;">"TCSADRAIN"
+"TCSANOW" "TCOON" "TCIOFLUSH"
+"TCOFLUSH" "TCION" "TCIFLUSH"
+"TCSAFLUSH" "TCIOFF"
+"TCOOFF"</p>
+<p style="margin-left:9%;">"c_cc" field
+values</p>
+<p style="margin-left:19%;">"VEOF"
+"VEOL" "VERASE" "VINTR"
+"VKILL" "VQUIT" "VSUSP"
+"VSTART" "VSTOP" "VMIN"
+"VTIME" "NCCS"</p>
+<p style="margin-left:9%;">"c_cflag" field
+values</p>
+<p style="margin-left:19%;">"CLOCAL"
+"CREAD" "CSIZE" "CS5"
+"CS6" "CS7" "CS8"
+"CSTOPB" "HUPCL" "PARENB"
+"PARODD"</p>
+<p style="margin-left:9%;">"c_iflag" field
+values</p>
+<p style="margin-left:19%;">"BRKINT"
+"ICRNL" "IGNBRK" "IGNCR"
+"IGNPAR" "INLCR" "INPCK"
+"ISTRIP" "IXOFF" "IXON"
+"PARMRK"</p>
+<p style="margin-left:9%;">"c_lflag" field
+values</p>
+<p style="margin-left:19%;">"ECHO"
+"ECHOE" "ECHOK" "ECHONL"
+"ICANON" "IEXTEN" "ISIG"
+"NOFLSH" "TOSTOP"</p>
+<p style="margin-left:9%;">"c_oflag" field
+values</p>
+<p style="margin-left:19%;">"OPOST"</p>
+<h2>PATHNAME CONSTANTS
+<a name="PATHNAME CONSTANTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"_PC_CHOWN_RESTRICTED"
+"_PC_LINK_MAX" "_PC_MAX_CANON"
+"_PC_MAX_INPUT" "_PC_NAME_MAX"
+"_PC_NO_TRUNC" "_PC_PATH_MAX"
+"_PC_PIPE_BUF" "_PC_VDISABLE"</p>
+<h2>POSIX CONSTANTS
+<a name="POSIX CONSTANTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"_POSIX_ARG_MAX"
+"_POSIX_CHILD_MAX"
+"_POSIX_CHOWN_RESTRICTED"
+"_POSIX_JOB_CONTROL" "_POSIX_LINK_MAX"
+"_POSIX_MAX_CANON" "_POSIX_MAX_INPUT"
+"_POSIX_NAME_MAX" "_POSIX_NGROUPS_MAX"
+"_POSIX_NO_TRUNC" "_POSIX_OPEN_MAX"
+"_POSIX_PATH_MAX" "_POSIX_PIPE_BUF"
+"_POSIX_SAVED_IDS" "_POSIX_SSIZE_MAX"
+"_POSIX_STREAM_MAX" "_POSIX_TZNAME_MAX"
+"_POSIX_VDISABLE" "_POSIX_VERSION"</p>
+<h2>RESOURCE CONSTANTS
+<a name="RESOURCE CONSTANTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Imported with
+the ":sys_resource_h" tag. <br/>
+Constants</p>
+<p style="margin-left:19%;">Added in Perl v5.28:</p>
+<p style="margin-left:19%; margin-top: 1em">"PRIO_PROCESS"
+"PRIO_PGRP" "PRIO_USER"</p>
+<h2>SYSTEM CONFIGURATION
+<a name="SYSTEM CONFIGURATION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"_SC_ARG_MAX"
+"_SC_CHILD_MAX" "_SC_CLK_TCK"
+"_SC_JOB_CONTROL" "_SC_NGROUPS_MAX"
+"_SC_OPEN_MAX" "_SC_PAGESIZE"
+"_SC_SAVED_IDS" "_SC_STREAM_MAX"
+"_SC_TZNAME_MAX" "_SC_VERSION"</p>
+<h2>ERRNO
+<a name="ERRNO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"E2BIG"
+"EACCES" "EADDRINUSE"
+"EADDRNOTAVAIL" "EAFNOSUPPORT"
+"EAGAIN" "EALREADY" "EBADF"
+"EBADMSG" "EBUSY" "ECANCELED"
+"ECHILD" "ECONNABORTED"
+"ECONNREFUSED" "ECONNRESET"
+"EDEADLK" "EDESTADDRREQ"
+"EDOM" "EDQUOT" "EEXIST"
+"EFAULT" "EFBIG" "EHOSTDOWN"
+"EHOSTUNREACH" "EIDRM"
+"EILSEQ" "EINPROGRESS" "EINTR"
+"EINVAL" "EIO" "EISCONN"
+"EISDIR" "ELOOP" "EMFILE"
+"EMLINK" "EMSGSIZE"
+"ENAMETOOLONG" "ENETDOWN"
+"ENETRESET" "ENETUNREACH"
+"ENFILE" "ENOBUFS" "ENODATA"
+"ENODEV" "ENOENT" "ENOEXEC"
+"ENOLCK" "ENOLINK" "ENOMEM"
+"ENOMSG" "ENOPROTOOPT"
+"ENOSPC" "ENOSR" "ENOSTR"
+"ENOSYS" "ENOTBLK" "ENOTCONN"
+"ENOTDIR" "ENOTEMPTY"
+"ENOTRECOVERABLE" "ENOTSOCK"
+"ENOTSUP" "ENOTTY" "ENXIO"
+"EOPNOTSUPP" "EOTHER"
+"EOVERFLOW" "EOWNERDEAD"
+"EPERM" "EPFNOSUPPORT" "EPIPE"
+"EPROCLIM" "EPROTO"
+"EPROTONOSUPPORT" "EPROTOTYPE"
+"ERANGE" "EREMOTE" "ERESTART"
+"EROFS" "ESHUTDOWN"
+"ESOCKTNOSUPPORT" "ESPIPE"
+"ESRCH" "ESTALE" "ETIME"
+"ETIMEDOUT" "ETOOMANYREFS"
+"ETXTBSY" "EUSERS"
+"EWOULDBLOCK" "EXDEV"</p>
+<h2>FCNTL
+<a name="FCNTL"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"FD_CLOEXEC"
+"F_DUPFD" "F_GETFD" "F_GETFL"
+"F_GETLK" "F_OK" "F_RDLCK"
+"F_SETFD" "F_SETFL" "F_SETLK"
+"F_SETLKW" "F_UNLCK" "F_WRLCK"
+"O_ACCMODE" "O_APPEND"
+"O_CREAT" "O_EXCL" "O_NOCTTY"
+"O_NONBLOCK" "O_RDONLY"
+"O_RDWR" "O_TRUNC"
+"O_WRONLY"</p>
+<h2>FLOAT
+<a name="FLOAT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"DBL_DIG"
+"DBL_EPSILON" "DBL_MANT_DIG"
+"DBL_MAX" "DBL_MAX_10_EXP"
+"DBL_MAX_EXP" "DBL_MIN"
+"DBL_MIN_10_EXP" "DBL_MIN_EXP"
+"FLT_DIG" "FLT_EPSILON"
+"FLT_MANT_DIG" "FLT_MAX"
+"FLT_MAX_10_EXP" "FLT_MAX_EXP"
+"FLT_MIN" "FLT_MIN_10_EXP"
+"FLT_MIN_EXP" "FLT_RADIX"
+"FLT_ROUNDS" "LDBL_DIG"
+"LDBL_EPSILON" "LDBL_MANT_DIG"
+"LDBL_MAX" "LDBL_MAX_10_EXP"
+"LDBL_MAX_EXP" "LDBL_MIN"
+"LDBL_MIN_10_EXP" "LDBL_MIN_EXP"</p>
+<h2>FLOATING-POINT ENVIRONMENT
+<a name="FLOATING-POINT ENVIRONMENT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"FE_DOWNWARD"
+"FE_TONEAREST" "FE_TOWARDZERO"
+"FE_UPWARD" on systems that support them.</p>
+<h2>LIMITS
+<a name="LIMITS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"ARG_MAX"
+"CHAR_BIT" "CHAR_MAX"
+"CHAR_MIN" "CHILD_MAX"
+"INT_MAX" "INT_MIN" "LINK_MAX"
+"LONG_MAX" "LONG_MIN"
+"MAX_CANON" "MAX_INPUT"
+"MB_LEN_MAX" "NAME_MAX"
+"NGROUPS_MAX" "OPEN_MAX"
+"PATH_MAX" "PIPE_BUF"
+"SCHAR_MAX" "SCHAR_MIN"
+"SHRT_MAX" "SHRT_MIN"
+"SSIZE_MAX" "STREAM_MAX"
+"TZNAME_MAX" "UCHAR_MAX"
+"UINT_MAX" "ULONG_MAX"
+"USHRT_MAX"</p>
+<h2>LOCALE
+<a name="LOCALE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"LC_ALL"
+"LC_COLLATE" "LC_CTYPE"
+"LC_MONETARY" "LC_NUMERIC"
+"LC_TIME" "LC_MESSAGES" on systems that
+support them.</p>
+<h2>MATH
+<a name="MATH"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"HUGE_VAL"</p>
+<p style="margin-left:19%; margin-top: 1em">Added in Perl
+v5.22:</p>
+<p style="margin-left:19%; margin-top: 1em">"FP_ILOGB0"
+"FP_ILOGBNAN" "FP_INFINITE"
+"FP_NAN" "FP_NORMAL"
+"FP_SUBNORMAL" "FP_ZERO"
+"INFINITY" "NAN" "Inf"
+"NaN" "M_1_PI" "M_2_PI"
+"M_2_SQRTPI" "M_E" "M_LN10"
+"M_LN2" "M_LOG10E" "M_LOG2E"
+"M_PI" "M_PI_2" "M_PI_4"
+"M_SQRT1_2" "M_SQRT2" on systems with
+C99 support.</p>
+<h2>SIGNAL
+<a name="SIGNAL"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"SA_NOCLDSTOP"
+"SA_NOCLDWAIT" "SA_NODEFER"
+"SA_ONSTACK" "SA_RESETHAND"
+"SA_RESTART" "SA_SIGINFO"
+"SIGABRT" "SIGALRM" "SIGCHLD"
+"SIGCONT" "SIGFPE" "SIGHUP"
+"SIGILL" "SIGINT" "SIGKILL"
+"SIGPIPE" "SIGQUIT" "SIGSEGV"
+"SIGSTOP" "SIGTERM" "SIGTSTP"
+"SIGTTIN" "SIGTTOU" "SIGUSR1"
+"SIGUSR2" "SIG_BLOCK"
+"SIG_DFL" "SIG_ERR" "SIG_IGN"
+"SIG_SETMASK" "SIG_UNBLOCK"</p>
+<p style="margin-left:19%; margin-top: 1em">Added in Perl
+v5.24:</p>
+<p style="margin-left:19%; margin-top: 1em">"ILL_ILLOPC"
+"ILL_ILLOPN" "ILL_ILLADR"
+"ILL_ILLTRP" "ILL_PRVOPC"
+"ILL_PRVREG" "ILL_COPROC"
+"ILL_BADSTK" "FPE_INTDIV"
+"FPE_INTOVF" "FPE_FLTDIV"
+"FPE_FLTOVF" "FPE_FLTUND"
+"FPE_FLTRES" "FPE_FLTINV"
+"FPE_FLTSUB" "SEGV_MAPERR"
+"SEGV_ACCERR" "BUS_ADRALN"
+"BUS_ADRERR" "BUS_OBJERR"
+"TRAP_BRKPT" "TRAP_TRACE"
+"CLD_EXITED" "CLD_KILLED"
+"CLD_DUMPED" "CLD_TRAPPED"
+"CLD_STOPPED" "CLD_CONTINUED"
+"POLL_IN" "POLL_OUT"
+"POLL_MSG" "POLL_ERR"
+"POLL_PRI" "POLL_HUP"
+"SI_USER" "SI_QUEUE"
+"SI_TIMER" "SI_ASYNCIO"
+"SI_MESGQ"</p>
+<h2>STAT
+<a name="STAT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"S_IRGRP"
+"S_IROTH" "S_IRUSR" "S_IRWXG"
+"S_IRWXO" "S_IRWXU" "S_ISGID"
+"S_ISUID" "S_IWGRP" "S_IWOTH"
+"S_IWUSR" "S_IXGRP" "S_IXOTH"
+"S_IXUSR"</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>Macros</p></td>
+<td width="2%"></td>
+<td width="81%">
+<p>"S_ISBLK" "S_ISCHR"
+"S_ISDIR" "S_ISFIFO" "S_ISLNK"
+"S_ISREG" "S_ISSOCK"</p></td></tr>
+</table>
+<h2>STDLIB
+<a name="STDLIB"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"EXIT_FAILURE"
+"EXIT_SUCCESS" "MB_CUR_MAX"
+"RAND_MAX"</p>
+<h2>STDIO
+<a name="STDIO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"BUFSIZ"
+"EOF" "FILENAME_MAX"
+"L_ctermid" "L_cuserid"
+"TMP_MAX"</p>
+<h2>TIME
+<a name="TIME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"CLK_TCK"
+"CLOCKS_PER_SEC"</p>
+<h2>UNISTD
+<a name="UNISTD"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"R_OK"
+"SEEK_CUR" "SEEK_END"
+"SEEK_SET" "STDIN_FILENO"
+"STDOUT_FILENO" "STDERR_FILENO"
+"W_OK" "X_OK"</p>
+<h2>WAIT
+<a name="WAIT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Constants</p>
+<p style="margin-left:19%;">"WNOHANG"
+"WUNTRACED"</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="24%">
+<p>"WNOHANG"</p></td>
+<td width="7%"></td>
+<td width="60%">
+<p>Do not suspend the calling process until a child process
+changes state but instead return immediately.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="24%">
+<p>"WUNTRACED"</p></td>
+<td width="7%"></td>
+<td width="60%">
+<p>Catch stopped child processes.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="24%">
+<p>Macros</p></td>
+<td width="7%"></td>
+<td width="60%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">"WIFEXITED"
+"WEXITSTATUS" "WIFSIGNALED"
+"WTERMSIG" "WIFSTOPPED"
+"WSTOPSIG"</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="19%"></td>
+<td width="17%">
+<p style="margin-top: 1em">"WIFEXITED"</p></td>
+<td width="4%"></td>
+<td width="60%">
+<p style="margin-top: 1em">WIFEXITED(${ˆCHILD_ERROR_NATIVE})
+returns true if the child process exited normally (exit() or
+by falling off the end of main())</p></td></tr>
+<tr align="left" valign="top">
+<td width="19%"></td>
+<td width="17%">
+<p>"WEXITSTATUS"</p></td>
+<td width="4%"></td>
+<td width="60%">
+<p>WEXITSTATUS(${ˆCHILD_ERROR_NATIVE}) returns the
+normal exit status of the child process (only meaningful if
+WIFEXITED(${ˆCHILD_ERROR_NATIVE}) is true)</p></td></tr>
+<tr align="left" valign="top">
+<td width="19%"></td>
+<td width="17%">
+<p>"WIFSIGNALED"</p></td>
+<td width="4%"></td>
+<td width="60%">
+<p>WIFSIGNALED(${ˆCHILD_ERROR_NATIVE}) returns true if
+the child process terminated because of a signal</p></td></tr>
+<tr align="left" valign="top">
+<td width="19%"></td>
+<td width="17%">
+<p>"WTERMSIG"</p></td>
+<td width="4%"></td>
+<td width="60%">
+<p>WTERMSIG(${ˆCHILD_ERROR_NATIVE}) returns the signal
+the child process terminated for (only meaningful if
+WIFSIGNALED(${ˆCHILD_ERROR_NATIVE}) is true)</p></td></tr>
+<tr align="left" valign="top">
+<td width="19%"></td>
+<td width="17%">
+<p>"WIFSTOPPED"</p></td>
+<td width="4%"></td>
+<td width="60%">
+<p>WIFSTOPPED(${ˆCHILD_ERROR_NATIVE}) returns true if
+the child process is currently stopped (can happen only if
+you specified the WUNTRACED flag to waitpid())</p></td></tr>
+<tr align="left" valign="top">
+<td width="19%"></td>
+<td width="17%">
+<p>"WSTOPSIG"</p></td>
+<td width="4%"></td>
+<td width="60%">
+<p>WSTOPSIG(${ˆCHILD_ERROR_NATIVE}) returns the signal
+the child process was stopped for (only meaningful if
+WIFSTOPPED(${ˆCHILD_ERROR_NATIVE}) is true)</p></td></tr>
+</table>
+<h2>WINSOCK
+<a name="WINSOCK"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">(Windows only.)
+<br/>
+Constants</p>
+<p style="margin-left:19%;">Added in Perl v5.24:</p>
+<p style="margin-left:19%; margin-top: 1em">"WSAEINTR"
+"WSAEBADF" "WSAEACCES"
+"WSAEFAULT" "WSAEINVAL"
+"WSAEMFILE" "WSAEWOULDBLOCK"
+"WSAEINPROGRESS" "WSAEALREADY"
+"WSAENOTSOCK" "WSAEDESTADDRREQ"
+"WSAEMSGSIZE" "WSAEPROTOTYPE"
+"WSAENOPROTOOPT" "WSAEPROTONOSUPPORT"
+"WSAESOCKTNOSUPPORT" "WSAEOPNOTSUPP"
+"WSAEPFNOSUPPORT" "WSAEAFNOSUPPORT"
+"WSAEADDRINUSE" "WSAEADDRNOTAVAIL"
+"WSAENETDOWN" "WSAENETUNREACH"
+"WSAENETRESET" "WSAECONNABORTED"
+"WSAECONNRESET" "WSAENOBUFS"
+"WSAEISCONN" "WSAENOTCONN"
+"WSAESHUTDOWN" "WSAETOOMANYREFS"
+"WSAETIMEDOUT" "WSAECONNREFUSED"
+"WSAELOOP" "WSAENAMETOOLONG"
+"WSAEHOSTDOWN" "WSAEHOSTUNREACH"
+"WSAENOTEMPTY" "WSAEPROCLIM"
+"WSAEUSERS" "WSAEDQUOT"
+"WSAESTALE" "WSAEREMOTE"
+"WSAEDISCON" "WSAENOMORE"
+"WSAECANCELLED" "WSAEINVALIDPROCTABLE"
+"WSAEINVALIDPROVIDER"
+"WSAEPROVIDERFAILEDINIT"
+"WSAEREFUSED"</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:42 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>IO::Socket::SSL::Intercept</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">IO::Socket::SSL::Intercept</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#How Intercepting SSL Works">How Intercepting SSL Works</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Socket::SSL::Intercept
+−− SSL interception (man in the middle)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+IO::Socket::SSL::Intercept; <br/>
+# create interceptor with proxy certificates <br/>
+my $mitm = IO::Socket::SSL::Intercept−&gt;new( <br/>
+proxy_cert_file =&gt; 'proxy_cert.pem', <br/>
+proxy_key_file =&gt; 'proxy_key.pem', <br/>
+... <br/>
+); <br/>
+my $listen = IO::Socket::INET−&gt;new( LocalAddr =&gt;
+.., Listen =&gt; .. ); <br/>
+while (1) { <br/>
+# TCP accept new client <br/>
+my $client = $listen−&gt;accept or next; <br/>
+# SSL connect to server <br/>
+my $server = IO::Socket::SSL−&gt;new( <br/>
+PeerAddr =&gt; .., <br/>
+SSL_verify_mode =&gt; ..., <br/>
+... <br/>
+) or die "ssl connect failed: $!,$SSL_ERROR"; <br/>
+# clone server certificate <br/>
+my ($cert,$key) = $mitm−&gt;clone_cert(
+$server−&gt;peer_certificate ); <br/>
+# and upgrade client side to SSL with cloned certificate
+<br/>
+IO::Socket::SSL−&gt;start_SSL($client, <br/>
+SSL_server =&gt; 1, <br/>
+SSL_cert =&gt; $cert, <br/>
+SSL_key =&gt; $key <br/>
+) or die "upgrade failed: $SSL_ERROR"; <br/>
+# now transfer data between $client and $server and analyze
+<br/>
+# the unencrypted data <br/>
+... <br/>
+}</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides functionality to clone certificates and sign them
+with a proxy certificate, thus making it easy to intercept
+SSL connections (man in the middle). It also manages a cache
+of the generated certificates.</p>
+<h2>How Intercepting SSL Works
+<a name="How Intercepting SSL Works"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Intercepting SSL
+connections is useful for analyzing encrypted traffic for
+security reasons or for testing. It does not break the
+end−to−end security of SSL, e.g. a properly
+written client will notice the interception unless you
+explicitly configure the client to trust your interceptor.
+Intercepting SSL works the following way:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Create a new CA certificate, which will be used to sign
+the cloned certificates. This proxy CA certificate should be
+trusted by the client, or (a properly written client) will
+throw error messages or deny the connections because it
+detected a man in the middle attack. Due to the way the
+interception works there no support for client side
+certificates is possible.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Using openssl
+such a proxy CA certificate and private key can be created
+with:</p>
+<p style="margin-left:14%; margin-top: 1em">openssl genrsa
+−out proxy_key.pem 1024 <br/>
+openssl req −new −x509 −extensions v3_ca
+−key proxy_key.pem −out proxy_cert.pem <br/>
+# export as PKCS12 for import into browser <br/>
+openssl pkcs12 −export −in proxy_cert.pem
+−inkey proxy_key.pem −out proxy_cert.p12</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">Configure client to connect to
+use intercepting proxy or somehow redirect connections from
+client to the proxy (e.g. packet filter redirects, ARP or
+DNS spoofing etc).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Accept the TCP connection from the client, e.g. don't do
+any SSL handshakes with the client yet.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Establish the SSL connection to the server and verify
+the servers certificate as usually. Then create a new
+certificate based on the original servers certificate, but
+signed by your proxy CA. This is the step where
+IO::Socket::SSL::Intercept helps.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Upgrade the TCP connection to the client to SSL using
+the cloned certificate from the server. If the client trusts
+your proxy CA it will accept the upgrade to SSL.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Transfer data between client and server. While the
+connections to client and server are both encrypted with SSL
+you will read/write the unencrypted data in your proxy
+application.</p> </td></tr>
+</table>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Socket::SSL::Intercept
+helps creating the cloned certificate with the following
+methods: <b><br/>
+$mitm =
+IO::Socket::SSL::Intercept−&gt;new(%args)</b></p>
+<p style="margin-left:14%;">This creates a new interceptor
+object. %args should be <br/>
+proxy_cert X509 | proxy_cert_file filename</p>
+<p style="margin-left:24%;">This is the proxy certificate.
+It can be either given by an X509 object from Net::SSLeays
+internal representation, or using a file in PEM format.</p>
+<p style="margin-left:14%;">proxy_key EVP_PKEY |
+proxy_key_file filename</p>
+<p style="margin-left:24%;">This is the key for the proxy
+certificate. It can be either given by an EVP_PKEY object
+from Net::SSLeays internal representation, or using a file
+in PEM format. The key should not have a passphrase.</p>
+<p style="margin-left:14%;">pubkey EVP_PKEY | pubkey_file
+filename</p>
+<p style="margin-left:24%;">This optional argument
+specifies the public key used for the cloned certificate. It
+can be either given by an EVP_PKEY object from Net::SSLeays
+internal representation, or using a file in PEM format. If
+not given it will create a new public key on each call of
+"new".</p>
+<p style="margin-left:14%;">serial INTEGER|CODE</p>
+<p style="margin-left:24%;">This optional argument gives
+the starting point for the serial numbers of the newly
+created certificates. If not set the serial number will be
+created based on the digest of the original certificate. If
+the value is code it will be called with
+"serial(original_cert,CERT_asHash(original_cert))"
+and should return the new serial number.</p>
+<p style="margin-left:14%;">cache HASH | SUBROUTINE</p>
+<p style="margin-left:24%;">This optional argument gives a
+way to cache created certificates, so that they don't get
+recreated on future accesses to the same host. If the
+argument ist not given an internal HASH ist used.</p>
+<p style="margin-left:24%; margin-top: 1em">If the argument
+is a hash it will store for each generated certificate a
+hash reference with "cert" and "atime"
+in the hash, where "atime" is the time of last
+access (to expire unused entries) and "cert" is
+the certificate. Please note, that the certificate is in
+Net::SSLeays internal X509 format and can thus not be simply
+dumped and restored. The key for the hash is an
+"ident" either given to "clone_cert" or
+generated from the original certificate.</p>
+<p style="margin-left:24%; margin-top: 1em">If the argument
+is a subroutine it will be called as
+"$cache−&gt;(ident,sub)". This call should
+return either an existing (cached) "(cert,key)" or
+call "sub" without arguments to create a new
+"(cert,key)", store it and return it. If called
+with $cache−&gt;('type') the function should just
+return 1 to signal that it supports the current type of
+cache. If it returns nothing instead the older cache
+interface is assumed for compatibility reasons.</p>
+<p style="margin-left:9%;"><b>($clone_cert,$key) =
+$mitm−&gt;clone_cert($original_cert,[ $ident
+])</b></p>
+<p style="margin-left:14%;">This clones the given
+certificate. An ident as the key into the cache can be given
+(like "host:port"), if not it will be created from
+the properties of the original certificate. It returns the
+cloned certificate and its key (which is the same for alle
+created certificates).</p>
+<p style="margin-left:9%;"><b>$string =
+$mitm−&gt;serialize</b></p>
+<p style="margin-left:14%;">This creates a serialized
+version of the object (e.g. a string) which can then be used
+to persistently store created certificates over restarts of
+the application. The cache will only be serialized if it is
+a HASH. To work together with Storable the
+"STORABLE_freeze" function is defined to call
+"serialize".</p>
+<p style="margin-left:9%;"><b>$mitm =
+IO::Socket::SSL::Intercept−&gt;unserialize($string)</b></p>
+<p style="margin-left:14%;">This restores an Intercept
+object from a serialized string. To work together with
+Storable the "STORABLE_thaw" function is defined
+to call "unserialize".</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Steffen
+Ullrich</p>
+<hr/>
+</body>
+</html>

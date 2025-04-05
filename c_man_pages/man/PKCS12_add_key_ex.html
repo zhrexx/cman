@@ -1,0 +1,202 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:49 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PKCS12_ADD_CERT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">PKCS12_ADD_CERT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#CONFORMING TO">CONFORMING TO</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">PKCS12_add_cert,
+PKCS12_add_key, PKCS12_add_key_ex, PKCS12_add_secret −
+Add an object to a set of PKCS#12 safeBags</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/pkcs12.h&gt; <br/>
+PKCS12_SAFEBAG *PKCS12_add_cert(STACK_OF(PKCS12_SAFEBAG)
+**pbags, X509 *cert); <br/>
+PKCS12_SAFEBAG *PKCS12_add_key(STACK_OF(PKCS12_SAFEBAG)
+**pbags, <br/>
+EVP_PKEY *key, int key_usage, int iter, <br/>
+int key_nid, const char *pass); <br/>
+PKCS12_SAFEBAG *PKCS12_add_key_ex(STACK_OF(PKCS12_SAFEBAG)
+**pbags, <br/>
+EVP_PKEY *key, int key_usage, int iter, <br/>
+int key_nid, const char *pass, <br/>
+OSSL_LIB_CTX *ctx, const char *propq); <br/>
+PKCS12_SAFEBAG *PKCS12_add_secret(STACK_OF(PKCS12_SAFEBAG)
+**pbags, <br/>
+int nid_type, const unsigned char *value, int len);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+create a new <b>PKCS12_SAFEBAG</b> and add it to the set of
+safeBags in <i>pbags</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_add_cert()</b>
+creates a PKCS#12 certBag containing the supplied
+certificate and adds this to the set of PKCS#12
+safeBags.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_add_key()</b>
+creates a PKCS#12 keyBag (unencrypted) or a
+pkcs8shroudedKeyBag (encrypted) containing the supplied
+<b>EVP_PKEY</b> and adds this to the set of PKCS#12
+safeBags. If <i>key_nid</i> is not −1 then the key is
+encrypted with the supplied algorithm, using <i>pass</i> as
+the passphrase and <i>iter</i> as the iteration count. If
+<i>iter</i> is zero then a default value for iteration count
+of 2048 is used.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_add_key_ex()</b>
+is identical to <b>PKCS12_add_key()</b> but allows for a
+library context <i>ctx</i> and property query <i>propq</i>
+to be used to select algorithm implementations.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_add_secret()</b>
+creates a PKCS#12 secretBag with an OID corresponding to the
+supplied <i>nid_type</i> containing the supplied value as an
+ASN1 octet string. This is then added to the set of PKCS#12
+safeBags.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If a certificate
+contains an <i>alias</i> or a <i>keyid</i> then this will be
+used for the corresponding <b>friendlyName</b> or
+<b>localKeyID</b> in the PKCS12 structure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_add_key()</b>
+makes assumptions regarding the encoding of the given pass
+phrase. See <b>passphrase−encoding</b>(7) for more
+information.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A valid
+<b>PKCS12_SAFEBAG</b> structure or NULL if an error
+occurred.</p>
+<h2>CONFORMING TO
+<a name="CONFORMING TO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IETF RFC 7292
+(&lt;https://tools.ietf.org/html/rfc7292&gt;)</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_create</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_add_secret()</b>
+and <b>PKCS12_add_key_ex()</b> were added in OpenSSL
+3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2020−2021 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

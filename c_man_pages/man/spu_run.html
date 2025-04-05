@@ -1,0 +1,388 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:00 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>spu_run</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">spu_run</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">spu_run −
+execute an SPU context</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;sys/spu.h&gt;</b> /* Definition of <b>SPU_*</b>
+constants */ <b><br/>
+#include &lt;sys/syscall.h&gt;</b> /* Definition of
+<b>SYS_*</b> constants */ <b><br/>
+#include &lt;unistd.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+syscall(SYS_spu_run, int</b> <i>fd</i><b>, uint32_t
+*</b><i>npc</i><b>, uint32_t *</b><i>event</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>Note</i>:
+glibc provides no wrapper for <b>spu_run</b>(),
+necessitating the use of <b>syscall</b>(2).</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>spu_run</b>() system call is used on PowerPC machines
+that implement the Cell Broadband Engine Architecture in
+order to access Synergistic Processor Units (SPUs). The
+<i>fd</i> argument is a file descriptor returned by
+<b>spu_create</b>(2) that refers to a specific SPU context.
+When the context gets scheduled to a physical SPU, it starts
+execution at the instruction pointer passed in
+<i>npc</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Execution of SPU
+code happens synchronously, meaning that <b>spu_run</b>()
+blocks while the SPU is still running. If there is a need to
+execute SPU code in parallel with other code on either the
+main CPU or other SPUs, a new thread of execution must be
+created first (e.g., using <b>pthread_create</b>(3)).</p>
+<p style="margin-left:9%; margin-top: 1em">When
+<b>spu_run</b>() returns, the current value of the SPU
+program counter is written to <i>npc</i>, so successive
+calls to <b>spu_run</b>() can use the same <i>npc</i>
+pointer.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>event</i>
+argument provides a buffer for an extended status code. If
+the SPU context was created with the
+<b>SPU_CREATE_EVENTS_ENABLED</b> flag, then this buffer is
+populated by the Linux kernel before <b>spu_run</b>()
+returns.</p>
+<p style="margin-left:9%; margin-top: 1em">The status code
+may be one (or more) of the following constants: <b><br/>
+SPE_EVENT_DMA_ALIGNMENT</b></p>
+<p style="margin-left:18%;">A DMA alignment error
+occurred.</p>
+<p style="margin-left:9%;"><b>SPE_EVENT_INVALID_DMA</b></p>
+<p style="margin-left:18%;">An invalid MFC DMA command was
+attempted.</p>
+<p style="margin-left:9%;"><b>SPE_EVENT_SPE_DATA_STORAGE</b></p>
+<p style="margin-left:18%;">A DMA storage error
+occurred.</p>
+<p style="margin-left:9%;"><b>SPE_EVENT_SPE_ERROR</b></p>
+<p style="margin-left:18%;">An illegal instruction was
+executed.</p>
+<p style="margin-left:9%; margin-top: 1em">NULL is a valid
+value for the <i>event</i> argument. In this case, the
+events will not be reported to the calling process.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>spu_run</b>() returns the value of the <i>spu_status</i>
+register. On failure, it returns −1 and sets
+<i>errno</i> is set to indicate the error.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>spu_status</i> register value is a bit mask of status
+codes and optionally a 14-bit code returned from the
+<b>stop-and-signal</b> instruction on the SPU. The bit masks
+for the status codes are:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><b>0x02</b></p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>SPU was stopped by a <b>stop-and-signal</b>
+instruction.</p> </td>
+<td width="19%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><b>0x04</b></p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>SPU was stopped by a <b>halt</b> instruction.</p></td>
+<td width="19%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><b>0x08</b></p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>SPU is waiting for a channel.</p></td>
+<td width="19%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><b>0x10</b></p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>SPU is in single-step mode.</p></td>
+<td width="19%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><b>0x20</b></p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>SPU has tried to execute an invalid instruction.</p></td>
+<td width="19%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><b>0x40</b></p></td>
+<td width="4%"></td>
+<td width="63%">
+<p>SPU has tried to access an invalid channel.</p></td>
+<td width="19%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><b>0x3fff0000</b></p>
+<p style="margin-left:18%;">The bits masked with this value
+contain the code returned from a <b>stop-and-signal</b>
+instruction. These bits are valid only if the 0x02 bit is
+set.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>spu_run</b>() has not returned an error, one or more bits
+among the lower eight ones are always set.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EBADF</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p style="margin-top: 1em"><i>fd</i> is not a valid file
+descriptor.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EFAULT</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><i>npc</i> is not a valid pointer, or <i>event</i> is
+non-NULL and an invalid pointer.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINTR</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>A signal occurred while <b>spu_run</b>() was in
+progress; see <b>signal</b>(7). The <i>npc</i> value has
+been updated to the new program counter value if
+necessary.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><i>fd</i> is not a valid file descriptor returned from
+<b>spu_create</b>(2).</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOMEM</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>There was not enough memory available to handle a page
+fault resulting from a Memory Flow Controller (MFC) direct
+memory access.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOSYS</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The functionality is not provided by the current system,
+because either the hardware does not provide SPUs or the
+spufs module is not loaded.</p></td></tr>
+</table>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux on
+PowerPC.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux
+2.6.16.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>spu_run</b>()
+is meant to be used from libraries that implement a more
+abstract interface to SPUs, not to be used from regular
+applications. See
+<a href="http://www.bsc.es/projects/deepcomputing/linuxoncell/">http://www.bsc.es/projects/deepcomputing/linuxoncell/</a>
+for the recommended libraries.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following is
+an example of running a simple, one-instruction SPU program
+with the <b>spu_run</b>() system call.</p>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;err.h&gt; <br/>
+#include &lt;fcntl.h&gt; <br/>
+#include &lt;stdint.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;sys/types.h&gt; <br/>
+#include &lt;unistd.h&gt; <br/>
+int main(void) <br/>
+{ <br/>
+int context, fd, spu_status; <br/>
+uint32_t instruction, npc; <br/>
+context = syscall(SYS_spu_create,
+"/spu/example−context", 0, 0755); <br/>
+if (context == −1) <br/>
+err(EXIT_FAILURE, "spu_create"); <br/>
+/* <br/>
+* Write a 'stop 0x1234' instruction to the SPU's <br/>
+* local store memory. <br/>
+*/ <br/>
+instruction = 0x00001234; <br/>
+fd = open("/spu/example−context/mem",
+O_RDWR); <br/>
+if (fd == −1) <br/>
+err(EXIT_FAILURE, "open"); <br/>
+write(fd, &amp;instruction, sizeof(instruction)); <br/>
+/* <br/>
+* set npc to the starting instruction address of the <br/>
+* SPU program. Since we wrote the instruction at the <br/>
+* start of the mem file, the entry point will be 0x0. <br/>
+*/ <br/>
+npc = 0; <br/>
+spu_status = syscall(SYS_spu_run, context, &amp;npc, NULL);
+<br/>
+if (spu_status == −1) <br/>
+err(EXIT_FAILURE, "open"); <br/>
+/* <br/>
+* We should see a status code of 0x12340002: <br/>
+* 0x00000002 (spu was stopped due to
+stop−and−signal) <br/>
+* | 0x12340000 (the stop−and−signal code) <br/>
+*/ <br/>
+printf("SPU Status: %#08x\n", spu_status); <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>close</b>(2),
+<b>spu_create</b>(2), <b>capabilities</b>(7),
+<b>spufs</b>(7)</p>
+<hr/>
+</body>
+</html>

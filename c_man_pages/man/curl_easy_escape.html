@@ -1,0 +1,211 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:29 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_easy_escape</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_easy_escape</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#ENCODING">ENCODING</a><br/>
+<a href="#URLs">URLs</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_escape
+− URL encode a string</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">char
+*curl_easy_escape(CURL *curl, const char *string, int
+length);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function
+converts the given input <i>string</i> to a URL encoded
+string and returns that as a new allocated string. All input
+characters that are not a−z, A−Z, 0−9,
+'−', '.', '_' or '˜' are converted to their
+"URL escaped" version (<b>%NN</b> where <b>NN</b>
+is a two−digit hexadecimal number).</p>
+<p style="margin-left:9%; margin-top: 1em">If <i>length</i>
+is set to 0 (zero), <i>curl_easy_escape(3)</i> uses strlen()
+on the input <i>string</i> to find out the size. This
+function does not accept input strings longer than
+<b>CURL_MAX_INPUT_LENGTH</b> (8 MB).</p>
+<p style="margin-left:9%; margin-top: 1em">You must
+<i>curl_free(3)</i> the returned string when you are done
+with it.</p>
+<h2>ENCODING
+<a name="ENCODING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libcurl is
+typically not aware of, nor does it care about, character
+encodings. <i>curl_easy_escape(3)</i> encodes the data
+byte−by−byte into the URL encoded version
+without knowledge or care for what particular character
+encoding the application or the receiving server may assume
+that the data uses.</p>
+<p style="margin-left:9%; margin-top: 1em">The caller of
+<i>curl_easy_escape(3)</i> must make sure that the data
+passed in to the function is encoded correctly.</p>
+<h2>URLs
+<a name="URLs"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">URLs are by
+definition <i>URL encoded</i>. To create a proper URL from a
+set of components that may not be URL encoded already, you
+cannot just URL encode the entire URL string with
+<i>curl_easy_escape(3)</i>, because it then also converts
+colons, slashes and other symbols that you probably want
+untouched.</p>
+<p style="margin-left:9%; margin-top: 1em">To create a
+proper URL from strings that are not already URL encoded, we
+recommend using libcurl's URL API: set the pieces with
+<i>curl_url_set(3)</i> and get the final correct URL with
+<i>curl_url_get(3)</i>.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+char *output = curl_easy_escape(curl, "data to
+convert", 15); <br/>
+if(output) { <br/>
+printf("Encoded: %s\n", output); <br/>
+curl_free(output); <br/>
+} <br/>
+curl_easy_cleanup(curl); <br/>
+} <br/>
+}</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Since 7.82.0,
+the <b>curl</b> parameter is ignored. Prior to that there
+was per−handle character conversion support for some
+old operating systems such as TPF, but it was otherwise
+ignored.</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.15.4</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A pointer to a
+null−terminated string or NULL if it failed.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curl_easy_unescape</b>(3),
+<b>curl_url_get</b>(3), <b>curl_url_set</b>(3)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,569 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:27 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Module::Pluggable</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Module::Pluggable</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#ADVANCED USAGE">ADVANCED USAGE</a><br/>
+<a href="#PLUGIN SEARCHING">PLUGIN SEARCHING</a><br/>
+<a href="#INNER PACKAGES">INNER PACKAGES</a><br/>
+<a href="#OPTIONS">OPTIONS</a><br/>
+<a href="#sub_name">sub_name</a><br/>
+<a href="#search_path">search_path</a><br/>
+<a href="#search_dirs">search_dirs</a><br/>
+<a href="#instantiate">instantiate</a><br/>
+<a href="#require">require</a><br/>
+<a href="#inner">inner</a><br/>
+<a href="#only">only</a><br/>
+<a href="#except">except</a><br/>
+<a href="#package">package</a><br/>
+<a href="#file_regex">file_regex</a><br/>
+<a href="#include_editor_junk">include_editor_junk</a><br/>
+<a href="#follow_symlinks">follow_symlinks</a><br/>
+<a href="#min_depth, max_depth">min_depth, max_depth</a><br/>
+<a href="#TRIGGERS">TRIGGERS</a><br/>
+<a href="#before_require &lt;plugin&gt;">before_require &lt;plugin&gt;</a><br/>
+<a href="#on_require_error &lt;plugin&gt; &lt;err&gt;">on_require_error &lt;plugin&gt; &lt;err&gt;</a><br/>
+<a href="#on_instantiate_error &lt;plugin&gt; &lt;err&gt;">on_instantiate_error &lt;plugin&gt; &lt;err&gt;</a><br/>
+<a href="#after_require &lt;plugin&gt;">after_require &lt;plugin&gt;</a><br/>
+<a href="#METHODs">METHODs</a><br/>
+<a href="#search_path">search_path</a><br/>
+<a href="#BEHAVIOUR UNDER TEST ENVIRONMENT">BEHAVIOUR UNDER TEST ENVIRONMENT</a><br/>
+<a href="#@INC hooks and App::FatPacker">@INC hooks and App::FatPacker</a><br/>
+<a href="#Module::Require recommended">Module::Require recommended</a><br/>
+<a href="#FUTURE PLANS">FUTURE PLANS</a><br/>
+<a href="#DEVELOPMENT">DEVELOPMENT</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYING">COPYING</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Module::Pluggable
+− automatically give your module the ability to have
+plugins</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Simple use
+Module::Pluggable −</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable;</p>
+<p style="margin-left:9%; margin-top: 1em">and then later
+...</p>
+<p style="margin-left:9%; margin-top: 1em">use MyClass;
+<br/>
+my $mc = MyClass−&gt;new(); <br/>
+# returns the names of all plugins installed under
+MyClass::Plugin::* <br/>
+my @plugins = $mc−&gt;plugins();</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Why would you
+want to do this? Say you have something that wants to pass
+an object to a number of different plugins in turn. For
+example you may want to extract meta−data from every
+email you get sent and do something with it. Plugins make
+sense here because then you can keep adding new meta data
+parsers and all the logic and docs for each one will be self
+contained and new handlers are easy to add without changing
+the core code. For that, you might do something like ...</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Email::Examiner; <br/>
+use strict; <br/>
+use Email::Simple; <br/>
+use Module::Pluggable require =&gt; 1; <br/>
+sub handle_email { <br/>
+my $self = shift; <br/>
+my $email = shift; <br/>
+foreach my $plugin ($self−&gt;plugins) { <br/>
+$plugin−&gt;examine($email); <br/>
+} <br/>
+return 1; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">.. and all the
+plugins will get a chance in turn to look at it.</p>
+<p style="margin-left:9%; margin-top: 1em">This can be
+trivially extended so that plugins could save the email
+somewhere and then no other plugin should try and do that.
+Simply have it so that the "examine" method
+returns 1 if it has saved the email somewhere. You might
+also want to be paranoid and check to see if the plugin has
+an "examine" method.</p>
+<p style="margin-left:9%; margin-top: 1em">foreach my
+$plugin ($self−&gt;plugins) { <br/>
+next unless $plugin−&gt;can('examine'); <br/>
+last if $plugin−&gt;examine($email); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">And so on. The
+sky's the limit.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Provides a
+simple but, hopefully, extensible way of having 'plugins'
+for your module. Obviously this isn't going to be the be all
+and end all of solutions but it works for me.</p>
+<p style="margin-left:9%; margin-top: 1em">Essentially all
+it does is export a method into your namespace that looks
+through a search path for .pm files and turn those into
+class names.</p>
+<p style="margin-left:9%; margin-top: 1em">Optionally it
+instantiates those classes for you.</p>
+<h2>ADVANCED USAGE
+<a name="ADVANCED USAGE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Alternatively,
+if you don't want to use 'plugins' as the method ...</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable sub_name =&gt; 'foo';</p>
+<p style="margin-left:9%; margin-top: 1em">and then later
+...</p>
+<p style="margin-left:9%; margin-top: 1em">my @plugins =
+$mc−&gt;foo();</p>
+<p style="margin-left:9%; margin-top: 1em">Or if you want
+to look in another namespace</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable search_path =&gt;
+['Acme::MyClass::Plugin', 'MyClass::Extend'];</p>
+<p style="margin-left:9%; margin-top: 1em">or directory</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Module::Pluggable search_dirs =&gt; ['mylibs/Foo'];</p>
+<p style="margin-left:9%; margin-top: 1em">Or if you want
+to instantiate each plugin rather than just return the
+name</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable instantiate =&gt; 'new';</p>
+<p style="margin-left:9%; margin-top: 1em">and then</p>
+<p style="margin-left:9%; margin-top: 1em"># whatever is
+passed to 'plugins' will be passed <br/>
+# to 'new' for each plugin <br/>
+my @plugins = $mc−&gt;plugins(@options);</p>
+<p style="margin-left:9%; margin-top: 1em">alternatively
+you can just require the module without instantiating it</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable require =&gt; 1;</p>
+<p style="margin-left:9%; margin-top: 1em">since requiring
+automatically searches inner packages, which may not be
+desirable, you can turn this off</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable require =&gt; 1, inner =&gt; 0;</p>
+<p style="margin-left:9%; margin-top: 1em">You can limit
+the plugins loaded using the except option, either as a
+string, array ref or regex</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable except =&gt;
+'MyClass::Plugin::Foo';</p>
+<p style="margin-left:9%; margin-top: 1em">or</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable except =&gt; ['MyClass::Plugin::Foo',
+'MyClass::Plugin::Bar'];</p>
+<p style="margin-left:9%; margin-top: 1em">or</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable except =&gt;
+qr/ˆMyClass::Plugin::(Foo|Bar)$/;</p>
+<p style="margin-left:9%; margin-top: 1em">and similarly
+for only which will only load plugins which match.</p>
+<p style="margin-left:9%; margin-top: 1em">Remember you can
+use the module more than once</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable search_path =&gt; 'MyClass::Filters'
+sub_name =&gt; 'filters'; <br/>
+use Module::Pluggable search_path =&gt; 'MyClass::Plugins'
+sub_name =&gt; 'plugins';</p>
+<p style="margin-left:9%; margin-top: 1em">and then later
+...</p>
+<p style="margin-left:9%; margin-top: 1em">my @filters =
+$self−&gt;filters; <br/>
+my @plugins = $self−&gt;plugins;</p>
+<h2>PLUGIN SEARCHING
+<a name="PLUGIN SEARCHING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Every time you
+call 'plugins' the whole search path is walked again. This
+allows for dynamically loading plugins even at run time.
+However this can get expensive and so if you don't expect to
+want to add new plugins at run time you could do</p>
+<p style="margin-left:9%; margin-top: 1em">package Foo;
+<br/>
+use strict; <br/>
+use Module::Pluggable sub_name =&gt; '_plugins'; <br/>
+our @PLUGINS; <br/>
+sub plugins { @PLUGINS ||= shift−&gt;_plugins } <br/>
+1;</p>
+<h2>INNER PACKAGES
+<a name="INNER PACKAGES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If you have, for
+example, a file <b>lib/Something/Plugin/Foo.pm</b> that
+contains package definitions for both
+"Something::Plugin::Foo" and
+"Something::Plugin::Bar" then as long as you
+either have either the <b>require</b> or <b>instantiate</b>
+option set then we'll also find
+"Something::Plugin::Bar". Nifty!</p>
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You can pass a
+hash of options when importing this module.</p>
+<p style="margin-left:9%; margin-top: 1em">The options can
+be ...</p>
+<h3>sub_name
+<a name="sub_name"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The name of the
+subroutine to create in your namespace.</p>
+<p style="margin-left:9%; margin-top: 1em">By default this
+is 'plugins'</p>
+<h3>search_path
+<a name="search_path"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">An array ref of
+namespaces to look in.</p>
+<h3>search_dirs
+<a name="search_dirs"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">An array ref of
+directories to look in before @INC.</p>
+<h3>instantiate
+<a name="instantiate"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Call this method
+on the class. In general this will probably be 'new' but it
+can be whatever you want. Whatever arguments are passed to
+'plugins' will be passed to the method.</p>
+<p style="margin-left:9%; margin-top: 1em">The default is
+'undef' i.e just return the class name.</p>
+<h3>require
+<a name="require"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Just require the
+class, don't instantiate (overrides 'instantiate');</p>
+<h3>inner
+<a name="inner"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If set to 0 will
+<b>not</b> search inner packages. If set to 1 will override
+"require".</p>
+<h3>only
+<a name="only"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes a string,
+array ref or regex describing the names of the only plugins
+to return. Whilst this may seem perverse ... well, it is.
+But it also makes sense. Trust me.</p>
+<h3>except
+<a name="except"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+"only" it takes a description of plugins to
+exclude from returning. This is slightly less perverse.</p>
+<h3>package
+<a name="package"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is for use
+by extension modules which build on
+"Module::Pluggable": passing a "package"
+option allows you to place the plugin method in a different
+package other than your own.</p>
+<h3>file_regex
+<a name="file_regex"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default
+"Module::Pluggable" only looks for <i>.pm</i>
+files.</p>
+<p style="margin-left:9%; margin-top: 1em">By supplying a
+new "file_regex" then you can change this
+behaviour e.g</p>
+<p style="margin-left:9%; margin-top: 1em">file_regex =&gt;
+qr/\.plugin$/</p>
+<h3>include_editor_junk
+<a name="include_editor_junk"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default
+"Module::Pluggable" ignores files that look like
+they were left behind by editors. Currently this means files
+ending in <i>˜</i> (˜), the extensions <i>.swp</i>
+or <i>.swo</i>, or files beginning with <i>.#</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Setting
+"include_editor_junk" changes
+"Module::Pluggable" so it does not ignore any
+files it finds.</p>
+<h3>follow_symlinks
+<a name="follow_symlinks"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Whether, when
+searching directories, to follow symlinks.</p>
+<p style="margin-left:9%; margin-top: 1em">Defaults to 1
+i.e do follow symlinks.</p>
+<h3>min_depth, max_depth
+<a name="min_depth, max_depth"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This will allow
+you to set what 'depth' of plugin will be allowed.</p>
+<p style="margin-left:9%; margin-top: 1em">So, for example,
+"MyClass::Plugin::Foo" will have a depth of 3 and
+"MyClass::Plugin::Foo::Bar" will have a depth of 4
+so to only get the former (i.e
+"MyClass::Plugin::Foo") do</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable max_depth =&gt; 3;</p>
+<p style="margin-left:9%; margin-top: 1em">and to only get
+the latter (i.e "MyClass::Plugin::Foo::Bar")</p>
+<p style="margin-left:9%; margin-top: 1em">package MyClass;
+<br/>
+use Module::Pluggable min_depth =&gt; 4;</p>
+<h2>TRIGGERS
+<a name="TRIGGERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Various triggers
+can also be passed in to the options.</p>
+<p style="margin-left:9%; margin-top: 1em">If any of these
+triggers return 0 then the plugin will not be returned.</p>
+<h3>before_require &lt;plugin&gt;
+<a name="before_require &lt;plugin&gt;"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Gets passed the
+plugin name.</p>
+<p style="margin-left:9%; margin-top: 1em">If 0 is returned
+then this plugin will not be required either.</p>
+<h3>on_require_error &lt;plugin&gt; &lt;err&gt;
+<a name="on_require_error &lt;plugin&gt; &lt;err&gt;"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Gets called when
+there's an error on requiring the plugin.</p>
+<p style="margin-left:9%; margin-top: 1em">Gets passed the
+plugin name and the error.</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+on_require_error handler is to "carp" the error
+and return 0.</p>
+<h3>on_instantiate_error &lt;plugin&gt; &lt;err&gt;
+<a name="on_instantiate_error &lt;plugin&gt; &lt;err&gt;"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Gets called when
+there's an error on instantiating the plugin.</p>
+<p style="margin-left:9%; margin-top: 1em">Gets passed the
+plugin name and the error.</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+on_instantiate_error handler is to "carp" the
+error and return 0.</p>
+<h3>after_require &lt;plugin&gt;
+<a name="after_require &lt;plugin&gt;"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Gets passed the
+plugin name.</p>
+<p style="margin-left:9%; margin-top: 1em">If 0 is returned
+then this plugin will be required but not returned as a
+plugin.</p>
+<h2>METHODs
+<a name="METHODs"></a>
+</h2>
+<h3>search_path
+<a name="search_path"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The method
+"search_path" is exported into you namespace as
+well. You can call that at any time to change or replace the
+search_path.</p>
+<p style="margin-left:9%; margin-top: 1em">$self−&gt;search_path(
+add =&gt; "New::Path" ); # add <br/>
+$self−&gt;search_path( new =&gt; "New::Path"
+); # replace</p>
+<h2>BEHAVIOUR UNDER TEST ENVIRONMENT
+<a name="BEHAVIOUR UNDER TEST ENVIRONMENT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">In order to make
+testing reliable we exclude anything not from blib if
+blib.pm is in %INC.</p>
+<p style="margin-left:9%; margin-top: 1em">However if the
+module being tested used another module that itself used
+"Module::Pluggable" then the second module would
+fail. This was fixed by checking to see if the caller had
+(ˆ|/)blib/ in their filename.</p>
+<p style="margin-left:9%; margin-top: 1em">There's an
+argument that this is the wrong behaviour and that modules
+should explicitly trigger this behaviour but that particular
+code has been around for 7 years now and I'm reluctant to
+change the default behaviour.</p>
+<p style="margin-left:9%; margin-top: 1em">You can now (as
+of version 4.1) force Module::Pluggable to look outside blib
+in a test environment by doing either</p>
+<p style="margin-left:9%; margin-top: 1em">require
+Module::Pluggable; <br/>
+$Module::Pluggable::FORCE_SEARCH_ALL_PATHS = 1; <br/>
+import Module::Pluggable;</p>
+<p style="margin-left:9%; margin-top: 1em">or</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Module::Pluggable force_search_all_paths =&gt; 1;</p>
+<h2>@INC hooks and App::FatPacker
+<a name="@INC hooks and App::FatPacker"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If a module's
+@INC has a hook and that hook is an object which has a
+files() method then we will try and require those files too.
+See "t/26inc_hook.t" for an example.</p>
+<p style="margin-left:9%; margin-top: 1em">This has allowed
+App::FatPacker (as of version 0.10.0) to provide support for
+Module::Pluggable.</p>
+<p style="margin-left:9%; margin-top: 1em">This should
+also, theoretically, allow someone to modify PAR to do the
+same thing.</p>
+<h2>Module::Require recommended
+<a name="Module::Require recommended"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Up until version
+5.2 Module::Pluggable used a string "eval" to
+require plugins.</p>
+<p style="margin-left:9%; margin-top: 1em">This has now
+been changed to optionally use Module::Runtime and it's
+"require_module" method when available and fall
+back to using a path based "require" when not.</p>
+<p style="margin-left:9%; margin-top: 1em">It's
+recommended, but not required, that you install
+Module::Runtime.</p>
+<h2>FUTURE PLANS
+<a name="FUTURE PLANS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This does
+everything I need and I can't really think of any other
+features I want to add. Famous last words of course (not
+least because we're up to version 5.0 at the time of
+writing).</p>
+<p style="margin-left:9%; margin-top: 1em">However
+suggestions (and patches) are always welcome.</p>
+<h2>DEVELOPMENT
+<a name="DEVELOPMENT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The master repo
+for this module is at</p>
+<p style="margin-left:9%; margin-top: 1em">https://github.com/simonwistow/Module−Pluggable</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Simon Wistow
+&lt;simon@thegestalt.org&gt;</p>
+<h2>COPYING
+<a name="COPYING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright, 2006
+Simon Wistow</p>
+<p style="margin-left:9%; margin-top: 1em">Distributed
+under the same terms as Perl itself.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">None known.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::Spec,
+File::Find, File::Basename, Class::Factory::Util,
+Module::Pluggable::Ordered</p>
+<hr/>
+</body>
+</html>

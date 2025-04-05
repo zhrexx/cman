@@ -1,0 +1,348 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:04 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Tools::Refcount</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Tools::Refcount</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#is_refcount">is_refcount</a><br/>
+<a href="#is_oneref">is_oneref</a><br/>
+<a href="#refcount">refcount</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#ACKNOWLEDGEMENTS">ACKNOWLEDGEMENTS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Test2::Tools::Refcount"
+− assert reference counts on objects</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::Tools::Refcount; <br/>
+use Some::Class; <br/>
+my $object = Some::Class−&gt;new(); <br/>
+is_oneref( $object, '$object has a refcount of 1' ); <br/>
+my $otherref = $object; <br/>
+is_refcount( $object, 2, '$object now has 2 references'
+);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The Perl garbage
+collector uses simple reference counting during the normal
+execution of a program. This means that cycles or unweakened
+references in other parts of code can keep an object around
+for longer than intended. To help avoid this problem, the
+reference count of a new object from its class constructor
+ought to be 1. This way, the caller can know the object will
+be properly DESTROYed when it drops all of its references to
+it.</p>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides two test functions to help ensure this property
+holds for an object class, so as to be polite to its
+callers.</p>
+<p style="margin-left:9%; margin-top: 1em">If the assertion
+fails; that is, if the actual reference count is different
+to what was expected, either of the following two modules
+may be used to assist the developer in finding where the
+references are.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="83%">
+<p>If Devel::MAT is installed, this test module will use it
+to dump the state of the memory after a failure. It will
+create a <i>.pmat</i> file named the same as the unit test,
+but with the trailing <i>.t</i> suffix replaced with
+<i>−TEST.pmat</i> where "TEST" is the number
+of the test that failed (in case there was more than
+one).</p> </td>
+<td width="3%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">See the examples
+below for more information.</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<h3>is_refcount
+<a name="is_refcount"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">is_refcount(
+$object, $count, $name )</p>
+<p style="margin-left:9%; margin-top: 1em">Test that
+$object has $count references to it.</p>
+<h3>is_oneref
+<a name="is_oneref"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">is_oneref(
+$object, $name )</p>
+<p style="margin-left:9%; margin-top: 1em">Assert that the
+$object has only 1 reference to it.</p>
+<h3>refcount
+<a name="refcount"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$count =
+refcount( $object )</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+reference count of the given object as used by the test
+functions. This is useful for making tests that don't care
+what the count is before they start, but simply assert that
+the count hasn't changed by the end.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::Tools::Refcount import =&gt; [qw( is_refcount
+refcount )]; <br/>
+{ <br/>
+my $count = refcount( $object ); <br/>
+do_something( $object ); <br/>
+is_refcount( $object, $count, 'do_something() preserves
+refcount' ); <br/>
+}</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Suppose, having
+written a new class "MyBall", you now want to
+check that its constructor and methods are
+well−behaved, and don't leak references. Consider the
+following test script:</p>
+<p style="margin-left:9%; margin-top: 1em">use Test::More
+tests =&gt; 2; <br/>
+use Test2::Tools::Refcount; <br/>
+use MyBall; <br/>
+my $ball = MyBall−&gt;new(); <br/>
+is_oneref( $ball, 'One reference after construct' ); <br/>
+$ball−&gt;bounce; <br/>
+# Any other code here that might be part of the test script
+<br/>
+is_oneref( $ball, 'One reference just before EOF' );</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+assertion is just after the constructor, to check that the
+reference returned by it is the only reference to that
+object. This fact is important if we ever want
+"DESTROY" to behave properly. The second call is
+right at the end of the file, just before the main scope
+closes. At this stage we expect the reference count also to
+be one, so that the object is properly cleaned up.</p>
+<p style="margin-left:9%; margin-top: 1em">Suppose, when
+run, this produces the following output (presuming
+Devel::MAT::Dumper is available):</p>
+<p style="margin-left:9%; margin-top: 1em">1..2 <br/>
+ok 1 − One reference after construct <br/>
+not ok 2 − One reference just before EOF <br/>
+# Failed test 'One reference just before EOF' <br/>
+# at ex.pl line 26. <br/>
+# expected 1 references, found 2 <br/>
+# SV address is 0x55e14c310278 <br/>
+# Writing heap dump to ex−2.pmat <br/>
+# Looks like you failed 1 test of 2.</p>
+<p style="margin-left:9%; margin-top: 1em">This has written
+a <i>ex−2.pmat</i> file we can load using the
+"pmat" shell and use the "identify"
+command on the given address to find where it went:</p>
+<p style="margin-left:9%; margin-top: 1em">$ pmat
+ex−2.pmat <br/>
+Perl memory dumpfile from perl 5.28.1 threaded <br/>
+Heap contains 25233 objects <br/>
+pmat&gt; identify 0x55e14c310278 <br/>
+HASH(0)=MyBall at 0x55e14c310278 is: <br/>
+├─(via RV) the lexical $ball at depth 1 of
+CODE() at 0x55e14c3104a0=main_cv, which is: <br/>
+│ └─the main code <br/>
+└─(via RV) value {self} of HASH(2) at
+0x55e14cacb860, which is (*A): <br/>
+└─(via RV) value {cycle} of HASH(2) at
+0x55e14cacb860, which is: <br/>
+itself</p>
+<p style="margin-left:9%; margin-top: 1em">(This document
+isn't intended to be a full tutorial on Devel::MAT and the
+"pmat" shell; for that see
+Devel::MAT::UserGuide).</p>
+<p style="margin-left:9%; margin-top: 1em">From this
+output, we can see that the constructor was
+well−behaved, but that a reference was leaked by the
+end of the script − the reference count was 2, when we
+expected just 1. Reading the trace output, we can see that
+there were 2 references that could be found − one
+stored in the $ball lexical in the main program, and one
+stored in a HASH. Since we expected to find the $ball
+lexical variable, we know we are now looking for a leak in a
+hash somewhere in the code. From reading the test script, we
+can guess this leak is likely to be in the <b>bounce()</b>
+method. Furthermore, we know that the reference to the
+object will be stored in a HASH in a member called
+"self".</p>
+<p style="margin-left:9%; margin-top: 1em">By reading the
+code which implements the <b>bounce()</b> method, we can see
+this is indeed the case:</p>
+<p style="margin-left:9%; margin-top: 1em">sub bounce <br/>
+{ <br/>
+my $self = shift; <br/>
+my $cycle = { self =&gt; $self }; <br/>
+$cycle−&gt;{cycle} = $cycle; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">From reading the
+tracing output, we find that the HASH this object is
+referenced in also contains a reference to itself, in a
+member called "cycle". This comes from the last
+line in this function, a line that purposely created a
+cycle, to demonstrate the point. While a real program
+probably wouldn't do anything quite this obvious, the trace
+would still be useful in finding the likely cause of the
+leak.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+"Devel::MAT::Dumper" is not available, then these
+detailed traces will not be produced. The basic reference
+count testing will still take place, but a smaller message
+will be produced:</p>
+<p style="margin-left:9%; margin-top: 1em">1..2 <br/>
+ok 1 − One reference after construct <br/>
+not ok 2 − One reference just before EOF <br/>
+# Failed test 'One reference just before EOF' <br/>
+# at demo.pl line 16. <br/>
+# expected 1 references, found 2 <br/>
+# Looks like you failed 1 test of 2.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p style="margin-top: 1em">Temporaries created on the
+stack</p> </td>
+<td width="45%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Code which
+creates temporaries on the stack, to be released again when
+the called function returns does not work correctly on perl
+5.8 (and probably before). Examples such as</p>
+<p style="margin-left:14%; margin-top: 1em">is_oneref( []
+);</p>
+<p style="margin-left:14%; margin-top: 1em">may fail and
+claim a reference count of 2 instead.</p>
+<p style="margin-left:14%; margin-top: 1em">Passing a
+variable such as</p>
+<p style="margin-left:14%; margin-top: 1em">my $array = [];
+<br/>
+is_oneref( $array );</p>
+<p style="margin-left:14%; margin-top: 1em">works fine.
+Because of the intention of this test module; that is, to
+assert reference counts on some object stored in a variable
+during the lifetime of the test script, this is unlikely to
+cause any problems.</p>
+<h2>ACKNOWLEDGEMENTS
+<a name="ACKNOWLEDGEMENTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Peter Rabbitson
+&lt;ribasushi@cpan.org&gt; − for suggesting using
+core's "B" instead of "Devel::Refcount"
+to obtain refcounts</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Paul Evans
+&lt;leonerd@leonerd.org.uk&gt;</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:03 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title></title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<hr/>
+<p><i>LIBZIP</i>(3) Library Functions Manual
+<i>LIBZIP</i>(3)</p>
+<p style="margin-top: 1em"><b>NAME</b></p>
+<p style="margin-left:9%;">libzip — library for
+manipulating zip archives</p>
+<p style="margin-top: 1em"><b>LIBRARY</b></p>
+<p style="margin-left:9%;">libzip (-lzip)</p>
+<p style="margin-top: 1em"><b>SYNOPSIS</b></p>
+<p style="margin-left:9%;"><b>#include
+&lt;zip.h&gt;</b></p>
+<p style="margin-top: 1em"><b>DESCRIPTION</b></p>
+<p style="margin-left:9%;"><b>libzip</b> is a library for
+reading, creating, and modifying zip archives.</p>
+<p style="margin-left:9%; margin-top: 1em">The main design
+criteria for <b>libzip</b> were:</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;">Do not create corrupt files,
+even in case of errors.</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;">Do not delete data.</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;">Be efficient.</p>
+<p style="margin-left:9%; margin-top: 1em">For this reason,
+when modifying zip archives, <b>libzip</b> writes to a
+temporary file and replaces the original zip archive
+atomically.</p>
+<p style="margin-left:9%; margin-top: 1em">Below there are
+two sections listing functions: one for how to read from zip
+archives and one for how to create/modify them.</p>
+<p style="margin-top: 1em"><b>GENERAL NOTES</b></p>
+<p style="margin-left:9%;">Unless explicitly documented,
+functions should not be passed NULL pointers as
+arguments.</p>
+<p style="margin-top: 1em"><b>FILE NAMES</b></p>
+<p style="margin-left:4%;"><b>Encoding</b></p>
+<p style="margin-left:9%;">Names of files in the host file
+system are expected in UTF-8 encoding. On Windows, variants
+for ASCII and UTF-16 are also available.</p>
+<p style="margin-left:9%; margin-top: 1em">Names of files
+inside archives are by default expected in UTF-8 encoding.
+Other encodings can be requested by using the flags
+ZIP_FL_ENC_CP437 and ZIP_FL_ENC_RAW.</p>
+<p style="margin-left:9%; margin-top: 1em">For details see
+the relevant man pages.</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Directory
+Separator</b></p>
+<p style="margin-left:9%;">The zip format requires the use
+of forward slash (‘/’) as directory separator.
+Since backslash (‘\’) can be part of a valid
+file name on Unix systems, <b>libzip</b> does not
+automatically convert them, even on Windows. It is the
+responsibility of the programmer to ensure that all
+directory separators are passed as forward slashes to
+<b>libzip</b>.</p>
+<p style="margin-top: 1em"><b>THREAD SAFETY</b></p>
+<p style="margin-left:9%;">In general, different zip
+archives opened by <b>libzip</b> are independent of each
+other and can be used by parallel-running threads without
+locking. If you want to use an archive from multiple
+threads, you have to synchronize access to it yourself. If
+you use an archive as a source for <i>zip_file_add</i>(3) or
+<i>zip_file_replace</i>(3), access to the target archive
+must be synchronized with access to the source archive as
+well.</p>
+<p style="margin-top: 1em"><b>READING ZIP ARCHIVES</b></p>
+<p style="margin-left:4%;"><b>Open Archive</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_open</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_fdopen</i>(3)</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Find
+Files</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_name_locate</i>(3)</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Read
+Files</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_fopen</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_fopen_encrypted</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_fopen_index</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_fopen_index_encrypted</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_fread</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_is_seekable</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_fseek</i>(3)
+(uncompressed files only)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_ftell</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_fclose</i>(3)</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Close
+Archive</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_close</i>(3)</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Miscellaneous</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_stat</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_compression_method_supported</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_encryption_method_supported</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_get_comment</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_get_external_attributes</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_get_archive_comment</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_get_archive_flag</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_get_name</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_get_num_entries</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_set_default_password</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_source_pass_to_lower_layer</i>(3)</p>
+<p style="margin-top: 1em"><b>CREATING/MODIFYING ZIP
+ARCHIVES</b></p>
+<p style="margin-left:4%;"><b>Create/Open Archive</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_open</i>(3)</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Add/Change
+Files and Directories</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_dir_add</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_add</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_replace</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_set_comment</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_set_dostime</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_set_external_attributes</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_set_encryption</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_set_mtime</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_set_file_compression</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_source_buffer</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_source_file</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_source_filep</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_source_free</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_source_function</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_source_layered</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_source_zip</i>(3)</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Rename
+Files</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_rename</i>(3)</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Delete
+Files</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_delete</i>(3)</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Revert
+Changes</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_unchange</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_unchange_all</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_unchange_archive</i>(3)</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Read/Modify
+Extra Fields</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_extra_field_delete</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_extra_field_delete_by_id</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_extra_field_get</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_extra_field_get_by_id</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_extra_field_set</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_extra_fields_count</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_extra_fields_count_by_id</i>(3)</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Close Archive
+(Writing)</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_close</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_discard</i>(3)</p>
+<p style="margin-left:4%; margin-top: 1em"><b>Miscellaneous
+(Writing)</b></p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_attributes_init</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_libzip_version</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_register_cancel_callback_with_state</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_register_progress_callback_with_state</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_set_archive_comment</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_set_archive_flag</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_source</i>(3)</p>
+<p style="margin-top: 1em"><b>ERROR HANDLING <br/>
+•</b></p>
+<p style="margin-left:14%;"><i>zip_error_strerror</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_strerror</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_strerror</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_file_get_error</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_get_error</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_error_init_with_code</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_error_set</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_error_set_from_source</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_error_system_type</i>(3)</p>
+<p><b>•</b></p>
+<p style="margin-left:14%;"><i>zip_errors</i>(3)</p>
+<p style="margin-top: 1em"><b>AUTHORS</b></p>
+<p style="margin-left:9%;">Dieter Baron
+&lt;<i>dillo@nih.at</i>&gt; and Thomas Klausner
+&lt;<i>wiz@gatalith.at</i>&gt; GNU August 21, 2024
+<i>LIBZIP</i>(3)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:51:46 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SDL_GL_GetProcAddress</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SDL_GL_GetProcAddress</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#HEADER FILE">HEADER FILE</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTION PARAMETERS">FUNCTION PARAMETERS</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#THREAD SAFETY">THREAD SAFETY</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SDL_GL_GetProcAddress
+− Get an OpenGL function by name.</p>
+<h2>HEADER FILE
+<a name="HEADER FILE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Defined in
+SDL3/SDL_video.h</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+"SDL3/SDL.h"</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_FunctionPointer
+SDL_GL_GetProcAddress(const char *proc);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If the GL
+library is loaded at runtime with</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_GL_LoadLibrary</b>
+(), then all GL functions must be retrieved this way.
+Usually this is used to retrieve function pointers to OpenGL
+extensions.</p>
+<p style="margin-left:9%; margin-top: 1em">There are some
+quirks to looking up OpenGL functions that require some
+extra care from the application. If you code carefully, you
+can handle these quirks without any platform-specific code,
+though:</p>
+<p style="margin-left:9%; margin-top: 1em">• On
+Windows, function pointers are specific to the current GL
+context; <br/>
+this means you need to have created a GL context and made it
+current <br/>
+before calling <b>SDL_GL_GetProcAddress</b> (). If you <br/>
+recreate your context or create a second context, you should
+assume that <br/>
+any existing function pointers aren’t valid to use
+with it. This is <br/>
+(currently) a Windows-specific limitation, and in practice
+lots of <br/>
+drivers don’t suffer this limitation, but it is still
+the way the wgl API <br/>
+is documented to work and you should expect crashes if you
+don’t respect <br/>
+it. Store a copy of the function pointers that comes and
+goes with <br/>
+context lifespan.</p>
+<p style="margin-left:9%; margin-top: 1em">• On X11,
+function pointers returned by this function are valid for
+any <br/>
+context, and can even be looked up before a context is
+created at all. <br/>
+This means that, for at least some common OpenGL
+implementations, if you <br/>
+look up a function that doesn’t exist, you’ll
+get a non-NULL result that <br/>
+is _NOT_ safe to call. You must always make sure the
+function is actually <br/>
+available for a given GL context before calling it, by
+checking for the <br/>
+existence of the appropriate extension with</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_GL_ExtensionSupported</b>
+(), or verifying <br/>
+that the version of OpenGL you’re using offers the
+function as core <br/>
+functionality.</p>
+<p style="margin-left:9%; margin-top: 1em">• Some
+OpenGL drivers, on all platforms, <i>will</i> return NULL if
+a function <br/>
+isn’t supported, but you can’t count on this
+behavior. Check for <br/>
+extensions you use, and if you get a NULL anyway, act as if
+that <br/>
+extension wasn’t available. This is probably a bug in
+the driver, but you <br/>
+can code defensively for this scenario anyhow.</p>
+<p style="margin-left:9%; margin-top: 1em">• Just
+because you’re on Linux/Unix, don’t assume
+you’ll be using X11. <br/>
+Next-gen display servers are waiting to replace it, and may
+or may not <br/>
+make the same promises about function pointers.</p>
+<p style="margin-left:9%; margin-top: 1em">• OpenGL
+function pointers must be declared <b>APIENTRY</b> as in the
+example <br/>
+code. This will ensure the proper calling convention is
+followed on <br/>
+platforms where this matters (Win32) thereby avoiding stack
+corruption.</p>
+<h2>FUNCTION PARAMETERS
+<a name="FUNCTION PARAMETERS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p style="margin-top: 1em"><i>proc</i></p></td>
+<td width="4%"></td>
+<td width="40%">
+<p style="margin-top: 1em">the name of an OpenGL
+function.</p> </td>
+<td width="42%">
+</td></tr>
+</table>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">(
+<b>SDL_FunctionPointer</b> ) Returns a pointer to the named
+OpenGL function. The returned pointer should be cast to the
+appropriate function signature.</p>
+<h2>THREAD SAFETY
+<a name="THREAD SAFETY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function
+should only be called on the main thread.</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function is
+available since SDL 3.2.0.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>•</b>(3),
+<b>SDL_GL_ExtensionSupported</b>(3), <b>•</b>(3),
+<b>SDL_GL_LoadLibrary</b>(3), <b>•</b>(3),
+<b>SDL_GL_UnloadLibrary</b>(3)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:14 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LIBPSX</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LIBPSX</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#CONFORMING TO">CONFORMING TO</a><br/>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">psx_syscall3,
+psx_syscall6, psx_set_sensitivity − POSIX semantics
+for system calls</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;sys/psx_syscall.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">long int
+psx_syscall3(long int syscall_nr, <br/>
+long int arg1, long int arg2, long int arg3); <br/>
+long int psx_syscall6(long int syscall_nr, <br/>
+long int arg1, long int arg2, long int arg3, <br/>
+long int arg4, long int arg5, long int arg6); <br/>
+int psx_set_sensitivity(psx_sensitivity_t sensitivity); <br/>
+void psx_load_syscalls(long int (**syscall_fn)(long int,
+<br/>
+long int, long int, long int), <br/>
+long int (**syscall6_fn)(long int, <br/>
+long int, long int, long int, <br/>
+long int, long int, long int));</p>
+<p style="margin-left:9%; margin-top: 1em">Link with one of
+these:</p>
+<p style="margin-left:9%; margin-top: 1em"><i>ld ...
+−lpsx −lpthread
+−−wrap=pthread_create</i></p>
+<p style="margin-left:9%; margin-top: 1em"><i>gcc ...
+−lpsx −lpthread
+−Wl,−wrap,pthread_create</i></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>libpsx</b> library attempts to fill a gap left by the
+<b>pthreads</b>(7) implementation on Linux. To be compliant
+POSIX threads, via the <b>nptl</b>(7) <b>setxid</b>
+mechanism, glibc maintains consistent UID and GID
+credentials amongst all of the threads associated with the
+current process. However, other credential state is not
+supported by this abstraction. To support these extended
+kernel managed security attributes, <b>libpsx</b> provides a
+more generic pair of wrapping system call functions:
+<b>psx_syscall3</b>() and <b>psx_syscall6</b>(). Like the
+<b>setxid</b> mechanism, the coordination of thread state is
+mediated by a realtime signal. Whereas the
+<b>nptl:setxid</b> mechanism uses signo=33 (which is hidden
+by glibc below a redefined <b>SIGRTMIN</b>), <b>libpsx</b>
+inserts itself in the <b>SIGSYS</b> handler stack. It goes
+to great length to be the first such handler but acts as a
+pass-through for other <b>SIGSYS</b> uses.</p>
+<p style="margin-left:9%; margin-top: 1em">A linker trick
+of <i>wrapping</i> the <b>pthread_create</b>() call with a
+psx thread registration function is used to ensure
+<b>libpsx</b> can keep track of all pthreads.</p>
+<p style="margin-left:9%; margin-top: 1em">An inefficient
+macrology trick supports the <b>psx_syscall</b>() pseudo
+function which takes 1 to 7 arguments, depending on the
+needs of the caller. The macrology (which ultimately invokes
+<b>__psx_syscall</b>()) pads out the call to actually use
+<b>psx_syscall3</b>() or <b>psx_syscall6</b>() with zeros
+filling the missing arguments. While using this in source
+code will make it appear clean, the actual code footprint is
+larger. You are encouraged to use the more explicit
+<b>psx_syscall3</b>() and <b>psx_syscall6</b>() functions as
+needed.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>psx_set_sensitivity</b>()
+changes the behavior of the mirrored system calls:
+<b>PSX_IGNORE</b> ensures that differences are ignored (the
+default behavior); <b>PSX_WARNING</b> prints a stderr
+notification about how the results differ; and
+<b>PSX_ERROR</b> prints the error details and generates a
+<b>SIGSYS</b> signal.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>psx_load_syscalls</b>()
+can be used to set caller defined function pointers for
+invoking 3 and 6 argument syscalls. This function can be
+used to configure a library, or program to change behavior
+when linked against <b>libpsx</b>. Indeed, <b>libcap</b>
+uses this function from <b>libpsx</b> to override its thread
+scoped default system call based API. When linked with
+<b>libpsx</b>, <b>libcap</b> can operate on all the threads
+of a multithreaded program to operate with POSIX
+semantics.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The return value
+for system call functions is generally the value returned by
+the kernel, or −1 in the case of an error. In such
+cases <b>errno</b>(3) is set to the detailed error value.
+The <b>psx_syscall3</b>() and <b>psx_syscall6</b>()
+functions attempt a single threaded system call and return
+immediately in the case of an error. Should this call
+succeed, then the same system calls are executed from a
+signal handler on each of the other threads of the
+process.</p>
+<h2>CONFORMING TO
+<a name="CONFORMING TO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The needs of
+<b>libcap</b>(3) for POSIX semantics of capability
+manipulation. You can read more about why this is needed
+here: <br/>
+
+https://sites.google.com/site/fullycapable/who-ordered-libpsx</p>
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>libpsx</b> library is distributed from
+https://sites.google.com/site/fullycapable/ where the
+release notes may already cover recent issues. Please report
+newly discovered bugs via: <br/>
+
+https://bugzilla.kernel.org/buglist.cgi?component=libcap&amp;list_id=1090757</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>libcap</b>(3),
+<b>pthreads</b>(7) and <b>nptl</b>(7).</p>
+<hr/>
+</body>
+</html>

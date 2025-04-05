@@ -1,0 +1,225 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:24 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>RAND_ADD</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">RAND_ADD</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">RAND_add,
+RAND_poll, RAND_seed, RAND_status, RAND_event, RAND_screen,
+RAND_keep_random_devices_open − add randomness to the
+PRNG or get its status</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/rand.h&gt; <br/>
+int RAND_status(void); <br/>
+int RAND_poll(); <br/>
+void RAND_add(const void *buf, int num, double randomness);
+<br/>
+void RAND_seed(const void *buf, int num); <br/>
+void RAND_keep_random_devices_open(int keep);</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions have been deprecated since OpenSSL 1.1.0, and can
+be hidden entirely by defining <b>OPENSSL_API_COMPAT</b>
+with a suitable version value, see
+<b>openssl_user_macros</b>(7):</p>
+<p style="margin-left:9%; margin-top: 1em">int
+RAND_event(UINT iMsg, WPARAM wParam, LPARAM lParam); <br/>
+void RAND_screen(void);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+can be used to seed the random generator and to check its
+seeded state. In general, manual (re−)seeding of the
+default OpenSSL random generator (<b>RAND_OpenSSL</b>(3)) is
+not necessary (but allowed), since it does (re−)seed
+itself automatically using trusted system entropy sources.
+This holds unless the default RAND_METHOD has been replaced
+or OpenSSL was built with automatic reseeding disabled, see
+<b>RAND</b>(7) for more details.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_status()</b>
+indicates whether or not the random generator has been
+sufficiently seeded. If not, functions such as
+<b>RAND_bytes</b>(3) will fail.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_poll()</b>
+uses the system's capabilities to seed the random generator
+using random input obtained from polling various trusted
+entropy sources. The default choice of the entropy source
+can be modified at build time, see <b>RAND</b>(7) for more
+details.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_add()</b>
+mixes the <b>num</b> bytes at <b>buf</b> into the internal
+state of the random generator. This function will not
+normally be needed, as mentioned above. The
+<b>randomness</b> argument is an estimate of how much
+randomness is contained in <b>buf</b>, in bytes, and should
+be a number between zero and <b>num</b>. Details about
+sources of randomness and how to estimate their randomness
+can be found in the literature; for example [NIST SP
+800−90B]. The content of <b>buf</b> cannot be
+recovered from subsequent random generator output.
+Applications that intend to save and restore random state in
+an external file should consider using
+<b>RAND_load_file</b>(3) instead.</p>
+<p style="margin-left:9%; margin-top: 1em">NOTE: In FIPS
+mode, random data provided by the application is not
+considered to be a trusted entropy source. It is mixed into
+the internal state of the RNG as additional data only and
+this does not count as a full reseed. For more details, see
+<b>EVP_RAND</b>(7).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_seed()</b>
+is equivalent to <b>RAND_add()</b> with <b>randomness</b>
+set to <b>num</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_keep_random_devices_open()</b>
+is used to control file descriptor usage by the random seed
+sources. Some seed sources maintain open file descriptors by
+default, which allows such sources to operate in a
+<b>chroot</b>(2) jail without the associated device nodes
+being available. When the <b>keep</b> argument is zero, this
+call disables the retention of file descriptors. Conversely,
+a nonzero argument enables the retention of file
+descriptors. This function is usually called during
+initialization and it takes effect immediately. This
+capability only applies to the default provider.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_event()</b>
+and <b>RAND_screen()</b> are equivalent to
+<b>RAND_poll()</b> and exist for compatibility reasons only.
+See HISTORY section below.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_status()</b>
+returns 1 if the random generator has been seeded with
+enough data, 0 otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_poll()</b>
+returns 1 if it generated seed data, 0 otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_event()</b>
+returns <b>RAND_status()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The other
+functions do not return values.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_bytes</b>(3),
+<b>RAND_egd</b>(3), <b>RAND_load_file</b>(3), <b>RAND</b>(7)
+<b>EVP_RAND</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_event()</b>
+and <b>RAND_screen()</b> were deprecated in OpenSSL 1.1.0
+and should not be used.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2000−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

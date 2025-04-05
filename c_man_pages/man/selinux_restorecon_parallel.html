@@ -1,0 +1,357 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:52:46 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>selinux_restorecon</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">selinux_restorecon</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">selinux_restorecon
+− restore file(s) default SELinux security
+contexts</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;selinux/restorecon.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+selinux_restorecon(const char
+*</b><i>pathname</i><b>,</b></p>
+<p style="margin-left:38%;"><b>unsigned int</b>
+<i>restorecon_flags</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+selinux_restorecon_parallel(const char
+*</b><i>pathname</i><b>,</b></p>
+<p style="margin-left:50%;"><b>unsigned int</b>
+<i>restorecon_flags</i><b>, <br/>
+size_t</b> <i>nthreads</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux_restorecon</b>()
+restores file default security contexts on filesystems that
+support extended attributes (see <b>xattr</b>(7)), based
+on:</p>
+<p style="margin-left:18%; margin-top: 1em"><i>pathname</i>
+containing a directory or file to be relabeled. <br/>
+If this is a directory and the <i>restorecon_flags</i>
+<b>SELINUX_RESTORECON_RECURSE</b> has been set (for
+descending through directories), then
+<b>selinux_restorecon</b>() will write an SHA256 digest of
+specfile entries calculated by
+<b>selabel_get_digests_all_partial_matches</b>(3) to an
+extended attribute of <i>security.sehash</i> once the
+relabeling has been completed successfully (see the
+<b>NOTES</b> section for details). <br/>
+These digests will be checked should
+<b>selinux_restorecon</b>() be rerun with the
+<i>restorecon_flags</i> <b>SELINUX_RESTORECON_RECURSE</b>
+flag set. If any of the specfile entries had been updated,
+the digest will also be updated. However if the digest is
+the same, no relabeling checks will take place. <br/>
+The <i>restorecon_flags</i> that can be used to manage the
+usage of the SHA256 digest are:</p>
+<p style="margin-left:27%;"><b>SELINUX_RESTORECON_SKIP_DIGEST
+<br/>
+SELINUX_RESTORECON_IGNORE_DIGEST</b></p>
+<p style="margin-left:18%; margin-top: 1em"><i>restorecon_flags</i>
+contains the labeling option/rules as follows:</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_SKIP_DIGEST</b>
+Do not check or update any extended attribute
+<i>security.sehash</i> entries.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_IGNORE_DIGEST</b>
+force the checking of labels even if the stored SHA256
+digest matches the specfile entries SHA256 digest. The
+specfile entries digest will be written to the
+<i>security.sehash</i> extended attribute once relabeling
+has been completed successfully provided the
+<b>SELINUX_RESTORECON_NOCHANGE</b> flag has not been set,
+and no errors have been skipped during the file tree walk
+due to the <b>SELINUX_RESTORECON_COUNT_ERRORS</b> flag.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_NOCHANGE</b>
+don’t change any file labels (passive check) or update
+the digest in the <i>security.sehash</i> extended
+attribute.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_SET_SPECFILE_CTX</b>
+If set, reset the files label to match the default specfile
+context. If not set only reset the files "type"
+component of the context to match the default specfile
+context.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_RECURSE</b>
+change file and directory labels recursively (descend
+directories) and if successful write an SHA256 digest of the
+specfile entries to an extended attribute as described in
+the <b>NOTES</b> section.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_VERBOSE</b>
+log file label changes.</p>
+<p style="margin-left:36%;">Note that if
+<b>SELINUX_RESTORECON_VERBOSE</b> and
+<b>SELINUX_RESTORECON_PROGRESS</b> flags are set, then
+<b>SELINUX_RESTORECON_PROGRESS</b> will take precedence.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_PROGRESS</b>
+show progress by outputting the number of files in 1k blocks
+processed to stdout. If the
+<b>SELINUX_RESTORECON_MASS_RELABEL</b> flag is also set then
+the approximate percentage complete will be shown.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_MASS_RELABEL</b>
+generally set when relabeling the entire OS, that will then
+show the approximate percentage complete. The
+<b>SELINUX_RESTORECON_PROGRESS</b> flag must also be
+set.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_REALPATH</b>
+convert passed-in <i>pathname</i> to the canonical pathname
+using <b>realpath</b>(3).</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_XDEV</b>
+prevent descending into directories that have a different
+device number than the <i>pathname</i> entry from which the
+descent began.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_ADD_ASSOC</b>
+attempt to add an association between an inode and a
+specification. If there is already an association for the
+inode and it conflicts with the specification, then use the
+last matching specification.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_ABORT_ON_ERROR</b>
+abort on errors during the file tree walk.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_SYSLOG_CHANGES</b>
+log any label changes to <b>syslog</b>(3).</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_LOG_MATCHES</b>
+log what specfile context matched each file.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_IGNORE_NOENTRY</b>
+ignore files that do not exist.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_IGNORE_MOUNTS</b>
+do not read <b>/proc/mounts</b> to obtain a list of
+non-seclabel mounts to be excluded from relabeling checks.
+<br/>
+Setting <b>SELINUX_RESTORECON_IGNORE_MOUNTS</b> is useful
+where there is a non-seclabel fs mounted with a seclabel fs
+mounted on a directory below this.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_CONFLICT_ERROR</b>
+to treat conflicting specifications, such as where two
+hardlinks for the same inode have different contexts, as
+errors.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_COUNT_ERRORS</b>
+Count, but otherwise ignore, errors during the file tree
+walk. Only makes a difference if the
+<b>SELINUX_RESTORECON_ABORT_ON_ERROR</b> flag is clear. Call
+<b>selinux_restorecon_get_skipped_errors</b>(3) for fetching
+the ignored (skipped) error count after
+<b>selinux_restorecon</b>(3) or
+<b>selinux_restorecon_parallel</b>(3) completes with
+success. In case any errors were skipped during the file
+tree walk, the specfile entries SHA256 digest will not have
+been written to the <i>security.sehash</i> extended
+attribute.</p>
+<p style="margin-left:18%; margin-top: 1em">The behavior
+regarding the checking and updating of the SHA256 digest
+described above is the default behavior. It is possible to
+change this by first calling <b>selabel_open</b>(3) and not
+enabling the <b>SELABEL_OPT_DIGEST</b> option, then calling
+<b>selinux_restorecon_set_sehandle</b>(3) to set the handle
+to be used by <b>selinux_restorecon</b>(3).</p>
+<p style="margin-left:18%; margin-top: 1em">If the
+<i>pathname</i> is a directory path, then it is possible to
+set directories to be excluded from the path by calling
+<b>selinux_restorecon_set_exclude_list</b>(3) with a
+<b>NULL</b> terminated list before calling
+<b>selinux_restorecon</b>(3).</p>
+<p style="margin-left:18%; margin-top: 1em">By default
+<b>selinux_restorecon</b>(3) reads <b>/proc/mounts</b> to
+obtain a list of non-seclabel mounts to be excluded from
+relabeling checks unless the
+<b>SELINUX_RESTORECON_IGNORE_MOUNTS</b> flag has been
+set.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux_restorecon_parallel()</b>
+is similar to <b>selinux_restorecon</b>(3), but accepts
+another parameter that allows to run relabeling over
+multiple threads:</p>
+<p style="margin-left:18%; margin-top: 1em"><i>nthreads</i>
+specifies the number of threads to use during relabeling.
+When set to 1, the behavior is the same as calling
+<b>selinux_restorecon</b>(3). When set to 0, the function
+will try to use as many threads as there are online CPU
+cores. When set to any other number, the function will try
+to use the given number of threads.</p>
+<p style="margin-left:18%; margin-top: 1em">Note that to
+use the parallel relabeling capability, the calling process
+must be linked with the <b>libpthread</b> library (either at
+compile time or dynamically at run time). Otherwise the
+function will print a warning and fall back to the single
+threaded mode.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success, zero
+is returned. On error, −1 is returned and <i>errno</i>
+is set appropriately.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">1.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p style="margin-top: 1em">To improve performance when
+relabeling file systems recursively (e.g. the
+<i>restorecon_flags</i> <b>SELINUX_RESTORECON_RECURSE</b>
+flag is set) <b>selinux_restorecon</b>() will write a
+calculated SHA256 digest of the specfile entries returned by
+<b>selabel_get_digests_all_partial_matches</b>(3) to an
+extended attribute named <i>security.sehash</i> for each
+directory in the <i>pathname</i> path.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>2.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>To check the extended attribute entry use
+<b>getfattr</b>(1)<b>,</b> for example:</p></td></tr>
+</table>
+<p style="margin-left:23%; margin-top: 1em">getfattr -e hex
+-n security.sehash /</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">3.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p style="margin-top: 1em">Should any of the specfile
+entries have changed, then when <b>selinux_restorecon</b>()
+is run again with the <b>SELINUX_RESTORECON_RECURSE</b> flag
+set, new SHA256 digests will be calculated and all files
+automatically relabeled depending on the settings of the
+<b>SELINUX_RESTORECON_SET_SPECFILE_CTX</b> flag (provided
+<b>SELINUX_RESTORECON_NOCHANGE</b> is not set).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>4.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p><b>/sys</b> and in-memory filesystems do not support the
+<i>security.sehash</i> extended attribute and are
+automatically excluded from any relabeling checks.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>5.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>By default <b>stderr</b> is used to log output messages
+and errors. This may be changed by calling
+<b>selinux_set_callback</b>(3) with the
+<b>SELINUX_CB_LOG</b> <i>type</i> option.</p></td></tr>
+</table>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>selabel_get_digests_all_partial_matches</b>(3),
+<b><br/>
+selinux_restorecon_set_sehandle</b>(3), <b><br/>
+selinux_restorecon_default_handle</b>(3), <b><br/>
+selinux_restorecon_get_skipped_errors</b>(3), <b><br/>
+selinux_restorecon_set_exclude_list</b>(3), <b><br/>
+selinux_restorecon_set_alt_rootpath</b>(3), <b><br/>
+selinux_restorecon_xattr</b>(3), <b><br/>
+ selinux_set_callback</b>(3)</p>
+<hr/>
+</body>
+</html>

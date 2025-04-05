@@ -1,0 +1,229 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:02 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LIBUNWIND−COREDUMP</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LIBUNWIND−COREDUMP</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#THREAD SAFETY">THREAD SAFETY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#FILES">FILES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind−coredump
+−− coredump() support in libunwind</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;libunwind−coredump.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">unw_accessors_t
+_UCD_accessors;</p>
+<p style="margin-left:9%; margin-top: 1em">struct UCD_info
+*_UCD_create(char const *); <br/>
+void _UCD_destroy(struct UCD_info *);</p>
+<p style="margin-left:9%; margin-top: 1em">int
+_UCD_get_num_threads(struct UCD_info *); <br/>
+void _UCD_select_thread(struct UCD_info *, int); <br/>
+void _UCD_get_pid(struct UCD_info *); <br/>
+void _UCD_get_cursig(struct UCD_info *);</p>
+<p style="margin-left:9%; margin-top: 1em">int
+_UCD_find_proc_info(unw_addr_space_t, unw_word_t,
+unw_proc_info_t *, int, void *); <br/>
+void _UCD_put_unwind_info(unw_addr_space_t, unw_proc_info_t
+*, void *); <br/>
+int _UCD_get_dyn_info_list_addr(unw_addr_space_t, unw_word_t
+*, void *); <br/>
+int _UCD_access_mem(unw_addr_space_t, unw_word_t, unw_word_t
+*, int, void *); <br/>
+int _UCD_access_reg(unw_addr_space_t, unw_regnum_t,
+unw_word_t *, int, void *); <br/>
+int _UCD_access_fpreg(unw_addr_space_t, unw_regnum_t,
+unw_fpreg_t *, int, void *); <br/>
+int _UCD_get_proc_name(unw_addr_space_t, unw_word_t, char *,
+size_t, unw_word_t *, void *); <br/>
+int _UCD_resume(unw_addr_space_t, unw_cursor_t *, void
+*);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">It is possible
+to generate a snapshot of a process state at a specific
+moment in time and save it in a specially−formatted
+file called a coredump. This often happens automatically
+when a process encounters an unrecoverable error and the OS
+itself captures the state of the process when the error
+occurred. libunwind provides a library that can be used as
+part of a lightweight tool to generate some useful
+information as to why the process abnormally terminated
+(such as a stack trace of al threads of execution). The
+routines and variables implementing this facility use a
+prefix of _UCD, which stands for
+‘‘unwind−via−coredump’’.</p>
+<p style="margin-left:9%; margin-top: 1em">An application
+that wants to use the coredump remote first needs to create
+a new libunwind address space that represents the target
+process. This is done by calling unw_create_addr_space(). In
+many cases, the application will simply want to pass the
+address of _UCD_accessors as the first argument to this
+routine. Doing so will ensure that libunwind will be able to
+properly unwind the target process. However, in special
+circumstances, an application may prefer to use only
+portions of the _UCD−facility. For this reason, the
+individual callback routines (_UCD_find_proc_info(),
+_UCD_put_unwind_info(), etc.) are also available for direct
+use. Of course, the addresses of these routines could also
+be picked up from _UCD_accessors, but doing so would prevent
+static initialization. Also, when using _UCD_accessors,
+<i>all</i> the callback routines will be linked into the
+application, even if they are never actually called.</p>
+<p style="margin-left:9%; margin-top: 1em">Next, the
+application needs to load the corefile for analysis and
+create an (opaque) UCD_info structure by calling
+_UCD_create(), passing the name of the corefile. The
+returned opaque pointer then needs to be passed as the
+‘‘argument’’ pointer (third
+argument) to unw_init_remote().</p>
+<p style="margin-left:9%; margin-top: 1em">When the
+application is done using libunwind on the corefile,
+_UCD_destroy() needs to be called, passing it the pointer
+that was returned by the corresponding call to
+_UCD_create(). This ensures that all memory and other
+resources are freed up. <br/>
+_UCD_get_num_threads()</p>
+<p style="margin-left:18%;">Gets the number of threads in
+the corefile.</p>
+<p style="margin-left:9%;">_UCD_get_pid()</p>
+<p style="margin-left:18%;">Gets the process ID of the
+process associated with the corefile.</p>
+<p style="margin-left:9%;">_UCD_get_cursig()</p>
+<p style="margin-left:18%;">Gets the current signal begin
+received by the process associated with the corefile (if
+any).</p>
+<p style="margin-left:9%;">_UCD_select_thread()</p>
+<p style="margin-left:18%;">Selects the current thread for
+unwinding.</p>
+<h2>THREAD SAFETY
+<a name="THREAD SAFETY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The coredump
+remote assumes that a single _UCD_info structure is never
+shared between threads. Because of this, no explicit locking
+is used. As long as only one thread uses a _UCD_info
+structure at any given time, this facility is
+thread−safe.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">_UCD_create()
+may return a null pointer if it fails to create the UCD_info
+for any reason.</p>
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind−coredump.h</p>
+<p style="margin-left:18%;">Header file to include when
+using the interface defined by this library.</p>
+<p style="margin-left:9%;"><b>−l</b>unwind−coredump
+<b>−l</b>unwind−generic</p>
+<p style="margin-left:18%;">Linker−switches to add
+when building a program that uses the functions defined by
+this library.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind(3libunwind)</p>
+<hr/>
+</body>
+</html>

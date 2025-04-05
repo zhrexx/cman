@@ -1,0 +1,660 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:22 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>EVP_MAC</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">EVP_MAC</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Types">Types</a><br/>
+<a href="#Algorithm implementation fetching">Algorithm implementation fetching</a><br/>
+<a href="#Context manipulation functions">Context manipulation functions</a><br/>
+<a href="#Computing functions">Computing functions</a><br/>
+<a href="#Information functions">Information functions</a><br/>
+<a href="#PARAMETERS">PARAMETERS</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">EVP_MAC,
+EVP_MAC_fetch, EVP_MAC_up_ref, EVP_MAC_free, EVP_MAC_is_a,
+EVP_MAC_get0_name, EVP_MAC_names_do_all,
+EVP_MAC_get0_description, EVP_MAC_get0_provider,
+EVP_MAC_get_params, EVP_MAC_gettable_params, EVP_MAC_CTX,
+EVP_MAC_CTX_new, EVP_MAC_CTX_free, EVP_MAC_CTX_dup,
+EVP_MAC_CTX_get0_mac, EVP_MAC_CTX_get_params,
+EVP_MAC_CTX_set_params, EVP_MAC_CTX_get_mac_size,
+EVP_MAC_CTX_get_block_size, EVP_Q_mac, EVP_MAC_init,
+EVP_MAC_update, EVP_MAC_final, EVP_MAC_finalXOF,
+EVP_MAC_gettable_ctx_params, EVP_MAC_settable_ctx_params,
+EVP_MAC_CTX_gettable_params, EVP_MAC_CTX_settable_params,
+EVP_MAC_do_all_provided − EVP MAC routines</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+typedef struct evp_mac_st EVP_MAC; <br/>
+typedef struct evp_mac_ctx_st EVP_MAC_CTX; <br/>
+EVP_MAC *EVP_MAC_fetch(OSSL_LIB_CTX *libctx, const char
+*algorithm, <br/>
+const char *properties); <br/>
+int EVP_MAC_up_ref(EVP_MAC *mac); <br/>
+void EVP_MAC_free(EVP_MAC *mac); <br/>
+int EVP_MAC_is_a(const EVP_MAC *mac, const char *name); <br/>
+const char *EVP_MAC_get0_name(const EVP_MAC *mac); <br/>
+int EVP_MAC_names_do_all(const EVP_MAC *mac, <br/>
+void (*fn)(const char *name, void *data), <br/>
+void *data); <br/>
+const char *EVP_MAC_get0_description(const EVP_MAC *mac);
+<br/>
+const OSSL_PROVIDER *EVP_MAC_get0_provider(const EVP_MAC
+*mac); <br/>
+int EVP_MAC_get_params(EVP_MAC *mac, OSSL_PARAM params[]);
+<br/>
+EVP_MAC_CTX *EVP_MAC_CTX_new(EVP_MAC *mac); <br/>
+void EVP_MAC_CTX_free(EVP_MAC_CTX *ctx); <br/>
+EVP_MAC_CTX *EVP_MAC_CTX_dup(const EVP_MAC_CTX *src); <br/>
+EVP_MAC *EVP_MAC_CTX_get0_mac(EVP_MAC_CTX *ctx); <br/>
+int EVP_MAC_CTX_get_params(EVP_MAC_CTX *ctx, OSSL_PARAM
+params[]); <br/>
+int EVP_MAC_CTX_set_params(EVP_MAC_CTX *ctx, const
+OSSL_PARAM params[]); <br/>
+size_t EVP_MAC_CTX_get_mac_size(EVP_MAC_CTX *ctx); <br/>
+size_t EVP_MAC_CTX_get_block_size(EVP_MAC_CTX *ctx); <br/>
+unsigned char *EVP_Q_mac(OSSL_LIB_CTX *libctx, const char
+*name, const char *propq, <br/>
+const char *subalg, const OSSL_PARAM *params, <br/>
+const void *key, size_t keylen, <br/>
+const unsigned char *data, size_t datalen, <br/>
+unsigned char *out, size_t outsize, size_t *outlen); <br/>
+int EVP_MAC_init(EVP_MAC_CTX *ctx, const unsigned char *key,
+size_t keylen, <br/>
+const OSSL_PARAM params[]); <br/>
+int EVP_MAC_update(EVP_MAC_CTX *ctx, const unsigned char
+*data, size_t datalen); <br/>
+int EVP_MAC_final(EVP_MAC_CTX *ctx, <br/>
+unsigned char *out, size_t *outl, size_t outsize); <br/>
+int EVP_MAC_finalXOF(EVP_MAC_CTX *ctx, unsigned char *out,
+size_t outsize); <br/>
+const OSSL_PARAM *EVP_MAC_gettable_params(const EVP_MAC
+*mac); <br/>
+const OSSL_PARAM *EVP_MAC_gettable_ctx_params(const EVP_MAC
+*mac); <br/>
+const OSSL_PARAM *EVP_MAC_settable_ctx_params(const EVP_MAC
+*mac); <br/>
+const OSSL_PARAM *EVP_MAC_CTX_gettable_params(EVP_MAC_CTX
+*ctx); <br/>
+const OSSL_PARAM *EVP_MAC_CTX_settable_params(EVP_MAC_CTX
+*ctx); <br/>
+void EVP_MAC_do_all_provided(OSSL_LIB_CTX *libctx, <br/>
+void (*fn)(EVP_MAC *mac, void *arg), <br/>
+void *arg);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These types and
+functions help the application to calculate MACs of
+different types and with different underlying algorithms if
+there are any.</p>
+<p style="margin-left:9%; margin-top: 1em">MACs are a bit
+complex insofar that some of them use other algorithms for
+actual computation. HMAC uses a digest, and CMAC uses a
+cipher. Therefore, there are sometimes two contexts to keep
+track of, one for the MAC algorithm itself and one for the
+underlying computation algorithm if there is one.</p>
+<p style="margin-left:9%; margin-top: 1em">To make things
+less ambiguous, this manual talks about a
+"context" or "MAC context", which is to
+denote the MAC level context, and about a "underlying
+context", or "computation context", which is
+to denote the context for the underlying computation
+algorithm if there is one.</p>
+<h3>Types
+<a name="Types"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC</b>
+is a type that holds the implementation of a MAC.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX</b>
+is a context type that holds internal MAC information as
+well as a reference to a computation context, for those MACs
+that rely on an underlying computation algorithm.</p>
+<h3>Algorithm implementation fetching
+<a name="Algorithm implementation fetching"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_fetch()</b>
+fetches an implementation of a MAC <i>algorithm</i>, given a
+library context <i>libctx</i> and a set of
+<i>properties</i>. See "ALGORITHM FETCHING" in
+<b>crypto</b>(7) for further information.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+"Message Authentication Code (MAC)" in
+<b>OSSL_PROVIDER−default</b>(7) for the list of
+algorithms supported by the default provider.</p>
+<p style="margin-left:9%; margin-top: 1em">The returned
+value must eventually be freed with
+<b>EVP_MAC_free</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_up_ref()</b>
+increments the reference count of an already fetched
+MAC.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_free()</b>
+frees a fetched algorithm. NULL is a valid parameter, for
+which this function is a no−op.</p>
+<h3>Context manipulation functions
+<a name="Context manipulation functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_new()</b>
+creates a new context for the MAC type <i>mac</i>. The
+created context can then be used with most other functions
+described here.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_free()</b>
+frees the contents of the context, including an underlying
+context if there is one, as well as the context itself. NULL
+is a valid parameter, for which this function is a
+no−op.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_dup()</b>
+duplicates the <i>src</i> context and returns a newly
+allocated context.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_get0_mac()</b>
+returns the <b>EVP_MAC</b> associated with the context
+<i>ctx</i>.</p>
+<h3>Computing functions
+<a name="Computing functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_Q_mac()</b>
+computes the message authentication code of <i>data</i> with
+length <i>datalen</i> using the MAC algorithm <i>name</i>
+and the key <i>key</i> with length <i>keylen</i>. The MAC
+algorithm is fetched using any given <i>libctx</i> and
+property query string <i>propq</i>. It takes parameters
+<i>subalg</i> and further <i>params</i>, both of which may
+be NULL if not needed. If <i>out</i> is not NULL, it places
+the result in the memory pointed at by <i>out</i>, but only
+if <i>outsize</i> is sufficient (otherwise no computation is
+made). If <i>out</i> is NULL, it allocates and uses a buffer
+of suitable length, which will be returned on success and
+must be freed by the caller. In either case, also on error,
+it assigns the number of bytes written to <i>*outlen</i>
+unless <i>outlen</i> is NULL.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_init()</b>
+sets up the underlying context <i>ctx</i> with information
+given via the <i>key</i> and <i>params</i> arguments. The
+MAC <i>key</i> has a length of <i>keylen</i> and the
+parameters in <i>params</i> are processed before setting the
+key. If <i>key</i> is NULL, the key must be set via
+<i>params</i> either as part of this call or separately
+using <b>EVP_MAC_CTX_set_params()</b>. Providing
+non−NULL <i>params</i> to this function is equivalent
+to calling <b>EVP_MAC_CTX_set_params()</b> with those
+<i>params</i> for the same <i>ctx</i> beforehand. Note:
+There are additional requirements for some MAC algorithms
+during re−initalization (i.e. calling
+<b>EVP_MAC_init()</b> on an EVP_MAC after
+<b>EVP_MAC_final()</b> has been called on the same object).
+See the NOTES section below.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_init()</b>
+should be called before <b>EVP_MAC_update()</b> and
+<b>EVP_MAC_final()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_update()</b>
+adds <i>datalen</i> bytes from <i>data</i> to the MAC
+input.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_final()</b>
+does the final computation and stores the result in the
+memory pointed at by <i>out</i> of size <i>outsize</i>, and
+sets the number of bytes written in <i>*outl</i> at. If
+<i>out</i> is NULL or <i>outsize</i> is too small, then no
+computation is made. To figure out what the output length
+will be and allocate space for it dynamically, simply call
+with <i>out</i> being NULL and <i>outl</i> pointing at a
+valid location, then allocate space and make a second call
+with <i>out</i> pointing at the allocated space.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_finalXOF()</b>
+does the final computation for an XOF based MAC and stores
+the result in the memory pointed at by <i>out</i> of size
+<i>outsize</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_get_params()</b>
+retrieves details about the implementation <i>mac</i>. The
+set of parameters given with <i>params</i> determine exactly
+what parameters should be retrieved. Note that a parameter
+that is unknown in the underlying context is simply
+ignored.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_get_params()</b>
+retrieves chosen parameters, given the context <i>ctx</i>
+and its underlying context. The set of parameters given with
+<i>params</i> determine exactly what parameters should be
+retrieved. Note that a parameter that is unknown in the
+underlying context is simply ignored.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_set_params()</b>
+passes chosen parameters to the underlying context, given a
+context <i>ctx</i>. The set of parameters given with
+<i>params</i> determine exactly what parameters are passed
+down. If <i>params</i> are NULL, the underlying context
+should do nothing and return 1. Note that a parameter that
+is unknown in the underlying context is simply ignored.
+Also, what happens when a needed parameter isn't passed down
+is defined by the implementation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_gettable_params()</b>
+returns an <b>OSSL_PARAM</b>(3) array that describes the
+retrievable and settable parameters.
+<b>EVP_MAC_gettable_params()</b> returns parameters that can
+be used with <b>EVP_MAC_get_params()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_gettable_ctx_params()</b>
+and <b>EVP_MAC_CTX_gettable_params()</b> return constant
+<b>OSSL_PARAM</b>(3) arrays that describe the retrievable
+parameters that can be used with
+<b>EVP_MAC_CTX_get_params()</b>.
+<b>EVP_MAC_gettable_ctx_params()</b> returns the parameters
+that can be retrieved from the algorithm, whereas
+<b>EVP_MAC_CTX_gettable_params()</b> returns the parameters
+that can be retrieved in the context's current state.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_settable_ctx_params()</b>
+and <b>EVP_MAC_CTX_settable_params()</b> return constant
+<b>OSSL_PARAM</b>(3) arrays that describe the settable
+parameters that can be used with
+<b>EVP_MAC_CTX_set_params()</b>.
+<b>EVP_MAC_settable_ctx_params()</b> returns the parameters
+that can be retrieved from the algorithm, whereas
+<b>EVP_MAC_CTX_settable_params()</b> returns the parameters
+that can be retrieved in the context's current state.</p>
+<h3>Information functions
+<a name="Information functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_get_mac_size()</b>
+returns the MAC output size for the given context.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_get_block_size()</b>
+returns the MAC block size for the given context. Not all
+MAC algorithms support this.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_is_a()</b>
+checks if the given <i>mac</i> is an implementation of an
+algorithm that's identifiable with <i>name</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_get0_provider()</b>
+returns the provider that holds the implementation of the
+given <i>mac</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_do_all_provided()</b>
+traverses all MAC implemented by all activated providers in
+the given library context <i>libctx</i>, and for each of the
+implementations, calls the given function <i>fn</i> with the
+implementation method and the given <i>arg</i> as
+argument.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_get0_name()</b>
+return the name of the given MAC. For fetched MACs with
+multiple names, only one of them is returned; it's
+recommended to use <b>EVP_MAC_names_do_all()</b>
+instead.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_names_do_all()</b>
+traverses all names for <i>mac</i>, and calls <i>fn</i> with
+each name and <i>data</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_get0_description()</b>
+returns a description of the <i>mac</i>, meant for display
+and human consumption. The description is at the discretion
+of the mac implementation.</p>
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Parameters are
+identified by name as strings, and have an expected data
+type and maximum size. OpenSSL has a set of macros for
+parameter names it expects to see in its own MAC
+implementations. Here, we show all three, the OpenSSL macro
+for the parameter name, the name in string form, and a type
+description.</p>
+<p style="margin-left:9%; margin-top: 1em">The standard
+parameter names are: <br/>
+"key" (<b>OSSL_MAC_PARAM_KEY</b>) &lt;octet
+string&gt;</p>
+<p style="margin-left:14%;">Its value is the MAC key as an
+array of bytes.</p>
+<p style="margin-left:14%; margin-top: 1em">For MACs that
+use an underlying computation algorithm, the algorithm must
+be set first, see parameter names "algorithm"
+below.</p>
+<p style="margin-left:9%;">"iv"
+(<b>OSSL_MAC_PARAM_IV</b>) &lt;octet string&gt;</p>
+<p style="margin-left:14%;">Some MAC implementations (GMAC)
+require an IV, this parameter sets the IV.</p>
+<p style="margin-left:9%;">"custom"
+(<b>OSSL_MAC_PARAM_CUSTOM</b>) &lt;octet string&gt;</p>
+<p style="margin-left:14%;">Some MAC implementations (KMAC,
+BLAKE2) accept a Customization String, this parameter sets
+the Customization String. The default value is the empty
+string.</p>
+<p style="margin-left:9%;">"salt"
+(<b>OSSL_MAC_PARAM_SALT</b>) &lt;octet string&gt;</p>
+<p style="margin-left:14%;">This option is used by BLAKE2
+MAC.</p>
+<p style="margin-left:9%;">"xof"
+(<b>OSSL_MAC_PARAM_XOF</b>) &lt;integer&gt;</p>
+<p style="margin-left:14%;">It's a simple flag, the value 0
+or 1 are expected.</p>
+<p style="margin-left:14%; margin-top: 1em">This option is
+used by KMAC.</p>
+<p style="margin-left:9%;">"digest−noinit"
+(<b>OSSL_MAC_PARAM_DIGEST_NOINIT</b>) &lt;integer&gt;</p>
+<p style="margin-left:14%;">A simple flag to set the MAC
+digest to not initialise the implementation specific data.
+The value 0 or 1 is expected.</p>
+<p style="margin-left:14%; margin-top: 1em">This option is
+used by HMAC.</p>
+<p style="margin-left:9%;">"digest−oneshot"
+(<b>OSSL_MAC_PARAM_DIGEST_ONESHOT</b>) &lt;integer&gt;</p>
+<p style="margin-left:14%;">A simple flag to set the MAC
+digest to be a oneshot operation. The value 0 or 1 is
+expected.</p>
+<p style="margin-left:14%; margin-top: 1em">This option is
+used by HMAC.</p>
+<p style="margin-left:9%;">"properties"
+(<b>OSSL_MAC_PARAM_PROPERTIES</b>) &lt;UTF8 string&gt; <br/>
+"digest" (<b>OSSL_MAC_PARAM_DIGEST</b>) &lt;UTF8
+string&gt; <br/>
+"cipher" (<b>OSSL_MAC_PARAM_CIPHER</b>) &lt;UTF8
+string&gt;</p>
+<p style="margin-left:14%;">For MAC implementations that
+use an underlying computation cipher or digest, these
+parameters set what the algorithm should be.</p>
+<p style="margin-left:14%; margin-top: 1em">The value is
+always the name of the intended algorithm, or the
+properties.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that not
+all algorithms may support all digests. HMAC does not
+support variable output length digests such as SHAKE128 or
+SHAKE256.</p>
+<p style="margin-left:9%;">"size"
+(<b>OSSL_MAC_PARAM_SIZE</b>) &lt;unsigned integer&gt;</p>
+<p style="margin-left:14%;">For MAC implementations that
+support it, set the output size that <b>EVP_MAC_final()</b>
+should produce. The allowed sizes vary between MAC
+implementations, but must never exceed what can be given
+with a <b>size_t</b>.</p>
+<p style="margin-left:9%;">"tls−data−size"
+(<b>OSSL_MAC_PARAM_TLS_DATA_SIZE</b>) &lt;unsigned
+integer&gt;</p>
+<p style="margin-left:14%;">This parameter is only
+supported by HMAC. If set then special handling is activated
+for calculating the MAC of a received
+mac−then−encrypt TLS record where variable
+length record padding has been used (as in the case of CBC
+mode ciphersuites). The value represents the total length of
+the record that is having the MAC calculated including the
+received MAC and the record padding.</p>
+<p style="margin-left:14%; margin-top: 1em">When used
+EVP_MAC_update must be called precisely twice. The first
+time with the 13 bytes of TLS "header" data, and
+the second time with the entire record including the MAC
+itself and any padding. The entire record length must equal
+the value passed in the
+"tls−data−size" parameter. The length
+passed in the <b>datalen</b> parameter to
+<b>EVP_MAC_update()</b> should be equal to the length of the
+record after the MAC and any padding has been removed.</p>
+<p style="margin-left:9%; margin-top: 1em">All these
+parameters should be used before the calls to any of
+<b>EVP_MAC_init()</b>, <b>EVP_MAC_update()</b> and
+<b>EVP_MAC_final()</b> for a full computation. Anything else
+may give undefined results.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The MAC
+life−cycle is described in
+<b>life_cycle−mac</b>(7). In the future, the
+transitions described there will be enforced. When this is
+done, it will not be considered a breaking change to the
+API.</p>
+<p style="margin-left:9%; margin-top: 1em">The usage of the
+parameter names "custom", "iv" and
+"salt" correspond to the names used in the
+standard where the algorithm was defined.</p>
+<p style="margin-left:9%; margin-top: 1em">Some MAC
+algorithms store internal state that cannot be extracted
+during re−initalization. For example GMAC cannot
+extract an <b>IV</b> from the underlying CIPHER context, and
+so calling <b>EVP_MAC_init()</b> on an EVP_MAC object after
+<b>EVP_MAC_final()</b> has been called cannot reset its
+cipher state to what it was when the <b>IV</b> was initially
+generated. For such instances, an <b>OSSL_MAC_PARAM_IV</b>
+parameter must be passed with each call to
+<b>EVP_MAC_init()</b>.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_fetch()</b>
+returns a pointer to a newly fetched <b>EVP_MAC</b>, or NULL
+if allocation failed.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_up_ref()</b>
+returns 1 on success, 0 on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_names_do_all()</b>
+returns 1 if the callback was called for all names. A return
+value of 0 means that the callback was not called for any
+names.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_free()</b>
+returns nothing at all.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_is_a()</b>
+returns 1 if the given method can be identified with the
+given name, otherwise 0.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_get0_name()</b>
+returns a name of the MAC, or NULL on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_get0_provider()</b>
+returns a pointer to the provider for the MAC, or NULL on
+error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_new()</b>
+and <b>EVP_MAC_CTX_dup()</b> return a pointer to a newly
+created EVP_MAC_CTX, or NULL if allocation failed.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_free()</b>
+returns nothing at all.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_get_params()</b>
+and <b>EVP_MAC_CTX_set_params()</b> return 1 on success, 0
+on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_Q_mac()</b>
+returns a pointer to the computed MAC value, or NULL on
+error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_init()</b>,
+<b>EVP_MAC_update()</b>, <b>EVP_MAC_final()</b>, and
+<b>EVP_MAC_finalXOF()</b> return 1 on success, 0 on
+error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_get_mac_size()</b>
+returns the expected output size, or 0 if it isn't set. If
+it isn't set, a call to <b>EVP_MAC_init()</b> will set
+it.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_CTX_get_block_size()</b>
+returns the block size, or 0 if it isn't set. If it isn't
+set, a call to <b>EVP_MAC_init()</b> will set it.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_MAC_do_all_provided()</b>
+returns nothing at all.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;stdlib.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;string.h&gt; <br/>
+#include &lt;stdarg.h&gt; <br/>
+#include &lt;unistd.h&gt; <br/>
+#include &lt;openssl/evp.h&gt; <br/>
+#include &lt;openssl/err.h&gt; <br/>
+#include &lt;openssl/params.h&gt; <br/>
+int main() { <br/>
+EVP_MAC *mac = EVP_MAC_fetch(NULL,
+getenv("MY_MAC"), NULL); <br/>
+const char *cipher = getenv("MY_MAC_CIPHER"); <br/>
+const char *digest = getenv("MY_MAC_DIGEST"); <br/>
+const char *key = getenv("MY_KEY"); <br/>
+EVP_MAC_CTX *ctx = NULL; <br/>
+unsigned char buf[4096]; <br/>
+size_t read_l; <br/>
+size_t final_l; <br/>
+size_t i; <br/>
+OSSL_PARAM params[3]; <br/>
+size_t params_n = 0; <br/>
+if (cipher != NULL) <br/>
+params[params_n++] = <br/>
+OSSL_PARAM_construct_utf8_string("cipher",
+(char*)cipher, 0); <br/>
+if (digest != NULL) <br/>
+params[params_n++] = <br/>
+OSSL_PARAM_construct_utf8_string("digest",
+(char*)digest, 0); <br/>
+params[params_n] = OSSL_PARAM_construct_end(); <br/>
+if (mac == NULL <br/>
+|| key == NULL <br/>
+|| (ctx = EVP_MAC_CTX_new(mac)) == NULL <br/>
+|| !EVP_MAC_init(ctx, (const unsigned char *)key,
+strlen(key), <br/>
+params)) <br/>
+goto err; <br/>
+while ( (read_l = read(STDIN_FILENO, buf, sizeof(buf))) &gt;
+0) { <br/>
+if (!EVP_MAC_update(ctx, buf, read_l)) <br/>
+goto err; <br/>
+} <br/>
+if (!EVP_MAC_final(ctx, buf, &amp;final_l, sizeof(buf)))
+<br/>
+goto err; <br/>
+printf("Result: "); <br/>
+for (i = 0; i &lt; final_l; i++) <br/>
+printf("%02X", buf[i]); <br/>
+printf("\n"); <br/>
+EVP_MAC_CTX_free(ctx); <br/>
+EVP_MAC_free(mac); <br/>
+exit(0); <br/>
+err: <br/>
+EVP_MAC_CTX_free(ctx); <br/>
+EVP_MAC_free(mac); <br/>
+fprintf(stderr, "Something went wrong\n"); <br/>
+ERR_print_errors_fp(stderr); <br/>
+exit (1); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">A run of this
+program, called with correct environment variables, can look
+like this:</p>
+<p style="margin-left:9%; margin-top: 1em">$ MY_MAC=cmac
+MY_KEY=secret0123456789
+MY_MAC_CIPHER=aes−128−cbc \ <br/>
+LD_LIBRARY_PATH=. ./foo &lt; foo.c <br/>
+Result: C5C06683CD9DDEF904D754505C560A4E</p>
+<p style="margin-left:9%; margin-top: 1em">(in this
+example, that program was stored in <i>foo.c</i> and
+compiled to <i>./foo</i>)</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>property</b>(7)
+<b>OSSL_PARAM</b>(3), <b>EVP_MAC−BLAKE2</b>(7),
+<b>EVP_MAC−CMAC</b>(7), <b>EVP_MAC−GMAC</b>(7),
+<b>EVP_MAC−HMAC</b>(7), <b>EVP_MAC−KMAC</b>(7),
+<b>EVP_MAC−Siphash</b>(7),
+<b>EVP_MAC−Poly1305</b>(7),
+<b>provider−mac</b>(7),
+<b>life_cycle−mac</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+were added in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2018−2024 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

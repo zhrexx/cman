@@ -1,0 +1,360 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:42 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>close_range</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">close_range</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#Closing all open file descriptors">Closing all open file descriptors</a><br/>
+<a href="#Closing file descriptors before exec">Closing file descriptors before exec</a><br/>
+<a href="#Closing files on exec">Closing files on exec</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Program source">Program source</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">close_range
+− close all file descriptors in a given range</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#define
+_GNU_SOURCE</b> /* See feature_test_macros(7) */ <b><br/>
+#include &lt;unistd.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;linux/close_range.h&gt;</b> /* Definition of
+<b>CLOSE_RANGE_*</b> <br/>
+constants */</p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+close_range(unsigned int</b> <i>first</i><b>, unsigned
+int</b> <i>last</i><b>, int</b> <i>flags</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>close_range</b>() system call closes all open file
+descriptors from <i>first</i> to <i>last</i> (included).</p>
+<p style="margin-left:9%; margin-top: 1em">Errors closing a
+given file descriptor are currently ignored.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>flags</i> is
+a bit mask containing 0 or more of the following: <b><br/>
+CLOSE_RANGE_CLOEXEC</b> (since Linux 5.11)</p>
+<p style="margin-left:18%;">Set the close-on-exec flag on
+the specified file descriptors, rather than immediately
+closing them.</p>
+<p style="margin-left:9%;"><b>CLOSE_RANGE_UNSHARE</b></p>
+<p style="margin-left:18%;">Unshare the specified file
+descriptors from any other processes before closing them,
+avoiding races with other threads sharing the file
+descriptor table.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>close_range</b>() returns 0. On error, −1 is
+returned and <i>errno</i> is set to indicate the error.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="64%">
+<p style="margin-top: 1em"><i>flags</i> is not valid, or
+<i>first</i> is greater than <i>last</i>.</p></td>
+<td width="18%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The following
+can occur with <b>CLOSE_RANGE_UNSHARE</b> (when constructing
+the new descriptor table):</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EMFILE</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p style="margin-top: 1em">The number of open file
+descriptors exceeds the limit specified in
+<i>/proc/sys/fs/nr_open</i> (see <b>proc</b>(5)). This error
+can occur in situations where that limit was lowered before
+a call to <b>close_range</b>() where the
+<b>CLOSE_RANGE_UNSHARE</b> flag is specified.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOMEM</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>Insufficient kernel memory was available.</p></td></tr>
+</table>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">None.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">FreeBSD. Linux
+5.9, glibc 2.34.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<h3>Closing all open file descriptors
+<a name="Closing all open file descriptors"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">To avoid blindly
+closing file descriptors in the range of possible file
+descriptors, this is sometimes implemented (on Linux) by
+listing open file descriptors in <i>/proc/self/fd/</i> and
+calling <b>close</b>(2) on each one. <b>close_range</b>()
+can take care of this without requiring <i>/proc</i> and
+within a single system call, which provides significant
+performance benefits.</p>
+<h3>Closing file descriptors before exec
+<a name="Closing file descriptors before exec"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">File descriptors
+can be closed safely using</p>
+<p style="margin-left:14%; margin-top: 1em">/* we
+don’t want anything past stderr here */ <br/>
+close_range(3, ~0U, CLOSE_RANGE_UNSHARE); <br/>
+execve(....);</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CLOSE_RANGE_UNSHARE</b>
+is conceptually equivalent to</p>
+<p style="margin-left:14%; margin-top: 1em">unshare(CLONE_FILES);
+<br/>
+close_range(first, last, 0);</p>
+<p style="margin-left:9%; margin-top: 1em">but can be more
+efficient: if the unshared range extends past the current
+maximum number of file descriptors allocated in the
+caller’s file descriptor table (the common case when
+<i>last</i> is ~0U), the kernel will unshare a new file
+descriptor table for the caller up to <i>first</i>, copying
+as few file descriptors as possible. This avoids subsequent
+<b>close</b>(2) calls entirely; the whole operation is
+complete once the table is unshared.</p>
+<h3>Closing files on exec
+<a name="Closing files on exec"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is
+particularly useful in cases where multiple pre-<b>exec</b>
+setup steps risk conflicting with each other. For example,
+setting up a <b>seccomp</b>(2) profile can conflict with a
+<b>close_range</b>() call: if the file descriptors are
+closed before the <b>seccomp</b>(2) profile is set up, the
+profile setup can’t use them itself, or control their
+closure; if the file descriptors are closed afterwards, the
+seccomp profile can’t block the <b>close_range</b>()
+call or any fallbacks. Using <b>CLOSE_RANGE_CLOEXEC</b>
+avoids this: the descriptors can be marked before the
+<b>seccomp</b>(2) profile is set up, and the profile can
+control access to <b>close_range</b>() without affecting the
+calling process.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The program
+shown below opens the files named in its command-line
+arguments, displays the list of files that it has opened (by
+iterating through the entries in <i>/proc/PID/fd</i>), uses
+<b>close_range</b>() to close all file descriptors greater
+than or equal to 3, and then once more displays the
+process’s list of open files. The following example
+demonstrates the use of the program:</p>
+<p style="margin-left:14%; margin-top: 1em">$ <b>touch
+/tmp/a /tmp/b /tmp/c</b> <br/>
+$ <b>./a.out /tmp/a /tmp/b /tmp/c</b> <br/>
+/tmp/a opened as FD 3 <br/>
+/tmp/b opened as FD 4 <br/>
+/tmp/c opened as FD 5 <br/>
+/proc/self/fd/0 ==&gt; /dev/pts/1 <br/>
+/proc/self/fd/1 ==&gt; /dev/pts/1 <br/>
+/proc/self/fd/2 ==&gt; /dev/pts/1 <br/>
+/proc/self/fd/3 ==&gt; /tmp/a <br/>
+/proc/self/fd/4 ==&gt; /tmp/b <br/>
+/proc/self/fd/5 ==&gt; /tmp/b <br/>
+/proc/self/fd/6 ==&gt; /proc/9005/fd <br/>
+========= About to call close_range() ======= <br/>
+/proc/self/fd/0 ==&gt; /dev/pts/1 <br/>
+/proc/self/fd/1 ==&gt; /dev/pts/1 <br/>
+/proc/self/fd/2 ==&gt; /dev/pts/1 <br/>
+/proc/self/fd/3 ==&gt; /proc/9005/fd</p>
+<p style="margin-left:9%; margin-top: 1em">Note that the
+lines showing the pathname <i>/proc/9005/fd</i> result from
+the calls to <b>opendir</b>(3).</p>
+<h3>Program source
+<a name="Program source"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">#define
+_GNU_SOURCE <br/>
+#include &lt;dirent.h&gt; <br/>
+#include &lt;fcntl.h&gt; <br/>
+#include &lt;limits.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;sys/types.h&gt; <br/>
+#include &lt;unistd.h&gt; <br/>
+/* Show the contents of the symbolic links in /proc/self/fd
+*/ <br/>
+static void <br/>
+show_fds(void) <br/>
+{ <br/>
+DIR *dirp; <br/>
+char path[PATH_MAX], target[PATH_MAX]; <br/>
+ssize_t len; <br/>
+struct dirent *dp; <br/>
+dirp = opendir("/proc/self/fd"); <br/>
+if (dirp == NULL) { <br/>
+perror("opendir"); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+for (;;) { <br/>
+dp = readdir(dirp); <br/>
+if (dp == NULL) <br/>
+break; <br/>
+if (dp−&gt;d_type == DT_LNK) { <br/>
+snprintf(path, sizeof(path), "/proc/self/fd/%s",
+<br/>
+dp−&gt;d_name); <br/>
+len = readlink(path, target, sizeof(target)); <br/>
+printf("%s ==&gt; %.*s\n", path, (int) len,
+target); <br/>
+} <br/>
+} <br/>
+closedir(dirp); <br/>
+} <br/>
+int <br/>
+main(int argc, char *argv[]) <br/>
+{ <br/>
+int fd; <br/>
+for (size_t j = 1; j &lt; argc; j++) { <br/>
+fd = open(argv[j], O_RDONLY); <br/>
+if (fd == −1) { <br/>
+perror(argv[j]); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+printf("%s opened as FD %d\n", argv[j], fd); <br/>
+} <br/>
+show_fds(); <br/>
+printf("========= About to call close_range()
+=======\n"); <br/>
+if (close_range(3, ~0U, 0) == −1) { <br/>
+perror("close_range"); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+show_fds(); <br/>
+exit(EXIT_FAILURE); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>close</b>(2)</p>
+<hr/>
+</body>
+</html>

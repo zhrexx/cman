@@ -1,0 +1,295 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:12 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>HTTP::Config</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">HTTP::Config</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Matching">Matching</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">HTTP::Config
+− Configuration for request and response objects</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version 6.46</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+HTTP::Config; <br/>
+my $c = HTTP::Config−&gt;new; <br/>
+$c−&gt;add(m_domain =&gt; ".example.com",
+m_scheme =&gt; "http", verbose =&gt; 1); <br/>
+use HTTP::Request; <br/>
+my $request = HTTP::Request−&gt;new(GET =&gt;
+"http://www.example.com"); <br/>
+if (my @m = $c−&gt;matching($request)) { <br/>
+print "Yadayada\n" if $m[0]−&gt;{verbose};
+<br/>
+}</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">An
+"HTTP::Config" object is a list of entries that
+can be matched against request or request/response pairs.
+Its purpose is to hold configuration data that can be looked
+up given a request or response object.</p>
+<p style="margin-left:9%; margin-top: 1em">Each
+configuration entry is a hash. Some keys specify matching to
+occur against attributes of request/response objects. Other
+keys can be used to hold user data.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+methods are provided: <br/>
+$conf = HTTP::Config−&gt;new</p>
+<p style="margin-left:14%;">Constructs a new empty
+"HTTP::Config" object and returns it.</p>
+<p style="margin-left:9%;">$conf−&gt;entries</p>
+<p style="margin-left:14%;">Returns the list of entries in
+the configuration object. In scalar context returns the
+number of entries.</p>
+<p style="margin-left:9%;">$conf−&gt;empty</p>
+<p style="margin-left:14%;">Return true if there are no
+entries in the configuration object. This is just a
+shorthand for "not $conf−&gt;entries".</p>
+<p style="margin-left:9%;">$conf−&gt;add( %matchspec,
+%other ) <br/>
+$conf−&gt;add( \%entry )</p>
+<p style="margin-left:14%;">Adds a new entry to the
+configuration. You can either pass separate key/value pairs
+or a hash reference.</p>
+<p style="margin-left:9%;">$conf−&gt;remove( %spec
+)</p>
+<p style="margin-left:14%;">Removes (and returns) the
+entries that have matches for all the key/value pairs in
+%spec. If %spec is empty this will match all entries; so it
+will empty the configuration object.</p>
+<p style="margin-left:9%;">$conf−&gt;matching( $uri,
+$request, $response ) <br/>
+$conf−&gt;matching( $uri ) <br/>
+$conf−&gt;matching( $request ) <br/>
+$conf−&gt;matching( $response )</p>
+<p style="margin-left:14%;">Returns the entries that match
+the given $uri, $request and $response triplet.</p>
+<p style="margin-left:14%; margin-top: 1em">If called with
+a single $request object then the $uri is obtained by
+calling its 'uri_canonical' method. If called with a single
+$response object, then the request object is obtained by
+calling its 'request' method; and then the $uri is obtained
+as if a single $request was provided.</p>
+<p style="margin-left:14%; margin-top: 1em">The entries are
+returned with the most specific matches first. In scalar
+context returns the most specific match or "undef"
+in none match.</p>
+<p style="margin-left:9%;">$conf−&gt;add_item( $item,
+%matchspec ) <br/>
+$conf−&gt;remove_items( %spec ) <br/>
+$conf−&gt;matching_items( $uri, $request, $response
+)</p>
+<p style="margin-left:14%;">Wrappers that hides the entries
+themselves.</p>
+<h3>Matching
+<a name="Matching"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+keys on a configuration entry specify matching. For all of
+these you can provide an array of values instead of a single
+value. The entry matches if at least one of the values in
+the array matches.</p>
+<p style="margin-left:9%; margin-top: 1em">Entries that
+require match against a response object attribute will never
+match unless a response object was provided. <br/>
+m_scheme =&gt; $scheme</p>
+<p style="margin-left:14%;">Matches if the URI uses the
+specified scheme; e.g. "http".</p>
+<p style="margin-left:9%;">m_secure =&gt; $bool</p>
+<p style="margin-left:14%;">If $bool is TRUE; matches if
+the URI uses a secure scheme. If $bool is FALSE; matches if
+the URI does not use a secure scheme. An example of a secure
+scheme is "https".</p>
+<p style="margin-left:9%;">m_host_port =&gt;
+"$hostname:$port"</p>
+<p style="margin-left:14%;">Matches if the URI's host_port
+method return the specified value.</p>
+<p style="margin-left:9%;">m_host =&gt; $hostname</p>
+<p style="margin-left:14%;">Matches if the URI's host
+method returns the specified value.</p>
+<p style="margin-left:9%;">m_port =&gt; $port</p>
+<p style="margin-left:14%;">Matches if the URI's port
+method returns the specified value.</p>
+<p style="margin-left:9%;">m_domain =&gt;
+".$domain"</p>
+<p style="margin-left:14%;">Matches if the URI's host
+method return a value that within the given domain. The
+hostname "www.example.com" will for instance match
+the domain ".com".</p>
+<p style="margin-left:9%;">m_path =&gt; $path</p>
+<p style="margin-left:14%;">Matches if the URI's path
+method returns the specified value.</p>
+<p style="margin-left:9%;">m_path_prefix =&gt; $path</p>
+<p style="margin-left:14%;">Matches if the URI's path is
+the specified path or has the specified path as prefix.</p>
+<p style="margin-left:9%;">m_path_match =&gt; $Regexp</p>
+<p style="margin-left:14%;">Matches if the regular
+expression matches the URI's path. Eg. qr/\.html$/.</p>
+<p style="margin-left:9%;">m_method =&gt; $method</p>
+<p style="margin-left:14%;">Matches if the request method
+matches the specified value. Eg. "GET" or
+"POST".</p>
+<p style="margin-left:9%;">m_code =&gt; $digit <br/>
+m_code =&gt; $status_code</p>
+<p style="margin-left:14%;">Matches if the response status
+code matches. If a single digit is specified; matches for
+all response status codes beginning with that digit.</p>
+<p style="margin-left:9%;">m_proxy =&gt; $url</p>
+<p style="margin-left:14%;">Matches if the request is to be
+sent to the given Proxy server.</p>
+<p style="margin-left:9%;">m_media_type =&gt;
+"*/*" <br/>
+m_media_type =&gt; "text/*" <br/>
+m_media_type =&gt; "html" <br/>
+m_media_type =&gt; "xhtml" <br/>
+m_media_type =&gt; "text/html"</p>
+<p style="margin-left:14%;">Matches if the response media
+type matches.</p>
+<p style="margin-left:14%; margin-top: 1em">With a value of
+"html" matches if
+$response−&gt;content_is_html returns TRUE. With a
+value of "xhtml" matches if
+$response−&gt;content_is_xhtml returns TRUE.</p>
+<p style="margin-left:9%;">m_uri__<i>$method</i> =&gt;
+undef</p>
+<p style="margin-left:14%;">Matches if the URI object
+provides the method.</p>
+<p style="margin-left:9%;">m_uri__<i>$method</i> =&gt;
+$string</p>
+<p style="margin-left:14%;">Matches if the URI's $method
+method returns the given value.</p>
+<p style="margin-left:9%;">m_header__<i>$field</i> =&gt;
+$string</p>
+<p style="margin-left:14%;">Matches if either the request
+or the response have a header $field with the given
+value.</p>
+<p style="margin-left:9%;">m_response_attr__<i>$key</i>
+=&gt; undef <br/>
+m_response_attr__<i>$key</i> =&gt; $string</p>
+<p style="margin-left:14%;">Matches if the response object
+has that key, or the entry has the given value.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">URI,
+HTTP::Request, HTTP::Response</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Gisle Aas
+&lt;gisle@activestate.com&gt;</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 1994 by Gisle Aas.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

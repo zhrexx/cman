@@ -1,0 +1,992 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:04 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::API</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::API</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#***INTERNALS NOTE***">***INTERNALS NOTE***</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#WRITING A TOOL">WRITING A TOOL</a><br/>
+<a href="#TESTING YOUR TOOLS">TESTING YOUR TOOLS</a><br/>
+<a href="#OTHER API FUNCTIONS">OTHER API FUNCTIONS</a><br/>
+<a href="#MAIN API EXPORTS">MAIN API EXPORTS</a><br/>
+<a href="#context(...)">context(...)</a><br/>
+<a href="#release($;$)">release($;$)</a><br/>
+<a href="#context_do(&amp;;@)">context_do(&amp;;@)</a><br/>
+<a href="#no_context(&amp;;$)">no_context(&amp;;$)</a><br/>
+<a href="#intercept(&amp;)">intercept(&amp;)</a><br/>
+<a href="#run_subtest(...)">run_subtest(...)</a><br/>
+<a href="#OTHER API EXPORTS">OTHER API EXPORTS</a><br/>
+<a href="#STATUS AND INITIALIZATION STATE">STATUS AND INITIALIZATION STATE</a><br/>
+<a href="#BEHAVIOR HOOKS">BEHAVIOR HOOKS</a><br/>
+<a href="#IPC AND CONCURRENCY">IPC AND CONCURRENCY</a><br/>
+<a href="#MANAGING FORMATTERS">MANAGING FORMATTERS</a><br/>
+<a href="#TIME STAMPS">TIME STAMPS</a><br/>
+<a href="#OTHER EXAMPLES">OTHER EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#MAGIC">MAGIC</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::API
+− Primary interface for writing Test2 based testing
+tools.</p>
+<h2>***INTERNALS NOTE***
+<a name="***INTERNALS NOTE***"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>The internals
+of this package are subject to change at any time!</b> The
+public methods provided will not change in
+backwards−incompatible ways (once there is a stable
+release), but the underlying implementation details might.
+<b>Do not break encapsulation here!</b></p>
+<p style="margin-left:9%; margin-top: 1em">Currently the
+implementation is to create a single instance of the
+Test2::API::Instance Object. All class methods defer to the
+single instance. There is no public access to the singleton,
+and that is intentional. The class methods provided by this
+package provide the only functionality publicly exposed.</p>
+<p style="margin-left:9%; margin-top: 1em">This is done
+primarily to avoid the problems Test::Builder had by
+exposing its singleton. We do not want anyone to replace
+this singleton, rebless it, or directly muck with its
+internals. If you need to do something and cannot because of
+the restrictions placed here, then please report it as an
+issue. If possible, we will create a way for you to
+implement your functionality without exposing things that
+should not be exposed.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This package
+exports all the functions necessary to write and/or verify
+testing tools. Using these building blocks you can begin
+writing test tools very quickly. You are also provided with
+tools that help you to test the tools you write.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<h3>WRITING A TOOL
+<a name="WRITING A TOOL"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The context()
+method is your primary interface into the Test2
+framework.</p>
+<p style="margin-left:9%; margin-top: 1em">package My::Ok;
+<br/>
+use Test2::API qw/context/; <br/>
+our @EXPORT = qw/my_ok/; <br/>
+use base 'Exporter'; <br/>
+# Just like ok() from Test::More <br/>
+sub my_ok($;$) { <br/>
+my ($bool, $name) = @_; <br/>
+my $ctx = context(); # Get a context <br/>
+$ctx−&gt;ok($bool, $name); <br/>
+$ctx−&gt;release; # Release the context <br/>
+return $bool; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">See
+Test2::API::Context for a list of methods available on the
+context object.</p>
+<h3>TESTING YOUR TOOLS
+<a name="TESTING YOUR TOOLS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+"intercept { ... }" tool lets you temporarily
+intercept all events generated by the test system:</p>
+<p style="margin-left:9%; margin-top: 1em">use Test2::API
+qw/intercept/; <br/>
+use My::Ok qw/my_ok/; <br/>
+my $events = intercept { <br/>
+# These events are not displayed <br/>
+my_ok(1, "pass"); <br/>
+my_ok(0, "fail"); <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">As of version
+1.302178 this now returns an arrayref that is also an
+instance of Test2::API::InterceptResult. See the
+Test2::API::InterceptResult documentation for details on how
+to best use it.</p>
+<h3>OTHER API FUNCTIONS
+<a name="OTHER API FUNCTIONS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use Test2::API
+qw{ <br/>
+test2_init_done <br/>
+test2_stack <br/>
+test2_set_is_end <br/>
+test2_get_is_end <br/>
+test2_ipc <br/>
+test2_formatter_set <br/>
+test2_formatter <br/>
+test2_is_testing_done <br/>
+}; <br/>
+my $init = test2_init_done(); <br/>
+my $stack = test2_stack(); <br/>
+my $ipc = test2_ipc(); <br/>
+test2_formatter_set($FORMATTER) <br/>
+my $formatter = test2_formatter(); <br/>
+... And others ...</p>
+<h2>MAIN API EXPORTS
+<a name="MAIN API EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All exports are
+optional. You must specify subs to import.</p>
+<p style="margin-left:9%; margin-top: 1em">use Test2::API
+qw/context intercept run_subtest/;</p>
+<p style="margin-left:9%; margin-top: 1em">This is the list
+of exports that are most commonly needed. If you are simply
+writing a tool, then this is probably all you need. If you
+need something and you cannot find it here, then you can
+also look at "OTHER API EXPORTS".</p>
+<p style="margin-left:9%; margin-top: 1em">These exports
+lack the 'test2_' prefix because of how important/common
+they are. Exports in the "OTHER API EXPORTS"
+section have the 'test2_' prefix to ensure they stand
+out.</p>
+<h3>context(...)
+<a name="context(...)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage: <br/>
+$ctx = <b>context()</b> <br/>
+$ctx = context(%params)</p>
+<p style="margin-left:9%; margin-top: 1em">The context()
+function will always return the current context. If there is
+already a context active, it will be returned. If there is
+not an active context, one will be generated. When a context
+is generated it will default to using the file and line
+number where the currently running sub was called from.</p>
+<p style="margin-left:9%; margin-top: 1em">Please see
+"CRITICAL DETAILS" in Test2::API::Context for
+important rules about what you can and cannot do with a
+context once it is obtained.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note</b> This
+function will throw an exception if you ignore the context
+object it returns.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note</b> On
+perls 5.14+ a depth check is used to ensure there are no
+context leaks. This cannot be safely done on older perls due
+to
+&lt;https://rt.perl.org/Public/Bug/Display.html?id=127774&gt;
+You can forcefully enable it either by setting
+"$ENV{T2_CHECK_DEPTH} = 1" or
+"$Test2::API::DO_DEPTH_CHECK = 1" <b>BEFORE</b>
+loading Test2::API.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>OPTIONAL
+PARAMETERS</i></p>
+<p style="margin-left:9%; margin-top: 1em">All parameters
+to "context" are optional. <br/>
+level =&gt; $int</p>
+<p style="margin-left:14%;">If you must obtain a context in
+a sub deeper than your entry point you can use this to tell
+it how many EXTRA stack frames to look back. If this option
+is not provided the default of 0 is used.</p>
+<p style="margin-left:14%; margin-top: 1em">sub
+third_party_tool { <br/>
+my $sub = shift; <br/>
+... # Does not obtain a context <br/>
+$sub−&gt;(); <br/>
+... <br/>
+} <br/>
+third_party_tool(sub { <br/>
+my $ctx = context(level =&gt; 1); <br/>
+... <br/>
+$ctx−&gt;release; <br/>
+});</p>
+<p style="margin-left:9%;">wrapped =&gt; $int</p>
+<p style="margin-left:14%;">Use this if you need to write
+your own tool that wraps a call to context() with the intent
+that it should return a context object.</p>
+<p style="margin-left:14%; margin-top: 1em">sub my_context
+{ <br/>
+my %params = ( wrapped =&gt; 0, @_ ); <br/>
+$params{wrapped}++; <br/>
+my $ctx = context(%params); <br/>
+... <br/>
+return $ctx; <br/>
+} <br/>
+sub my_tool { <br/>
+my $ctx = my_context(); <br/>
+... <br/>
+$ctx−&gt;release; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">If you do not
+do this, then tools you call that also check for a context
+will notice that the context they grabbed was created at the
+same stack depth, which will trigger protective measures
+that warn you and destroy the existing context.</p>
+<p style="margin-left:9%;">stack =&gt; $stack</p>
+<p style="margin-left:14%;">Normally context() looks at the
+global hub stack. If you are maintaining your own
+Test2::API::Stack instance you may pass it in to be used
+instead of the global one.</p>
+<p style="margin-left:9%;">hub =&gt; $hub</p>
+<p style="margin-left:14%;">Use this parameter if you want
+to obtain the context for a specific hub instead of whatever
+one happens to be at the top of the stack.</p>
+<p style="margin-left:9%;">on_init =&gt; sub { ... }</p>
+<p style="margin-left:14%;">This lets you provide a
+callback sub that will be called <b>ONLY</b> if your call to
+context() generated a new context. The callback <b>WILL
+NOT</b> be called if context() is returning an existing
+context. The only argument passed into the callback will be
+the context object itself.</p>
+<p style="margin-left:14%; margin-top: 1em">sub foo { <br/>
+my $ctx = context(on_init =&gt; sub { 'will run' }); <br/>
+my $inner = sub { <br/>
+# This callback is not run since we are getting the existing
+<br/>
+# context from our parent sub. <br/>
+my $ctx = context(on_init =&gt; sub { 'will NOT run' });
+<br/>
+$ctx−&gt;release; <br/>
+} <br/>
+$inner−&gt;(); <br/>
+$ctx−&gt;release; <br/>
+}</p>
+<p style="margin-left:9%;">on_release =&gt; sub { ... }</p>
+<p style="margin-left:14%;">This lets you provide a
+callback sub that will be called when the context instance
+is released. This callback will be added to the returned
+context even if an existing context is returned. If multiple
+calls to context add callbacks, then all will be called in
+reverse order when the context is finally released.</p>
+<p style="margin-left:14%; margin-top: 1em">sub foo { <br/>
+my $ctx = context(on_release =&gt; sub { 'will run second'
+}); <br/>
+my $inner = sub { <br/>
+my $ctx = context(on_release =&gt; sub { 'will run first'
+}); <br/>
+# Neither callback runs on this release <br/>
+$ctx−&gt;release; <br/>
+} <br/>
+$inner−&gt;(); <br/>
+# Both callbacks run here. <br/>
+$ctx−&gt;release; <br/>
+}</p>
+<h3>release($;$)
+<a name="release($;$)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage: <br/>
+release $ctx; <br/>
+release $ctx, ...;</p>
+<p style="margin-left:9%; margin-top: 1em">This is intended
+as a shortcut that lets you release your context and return
+a value in one statement. This function will get your
+context, and an optional return value. It will release your
+context, then return your value. Scalar context is always
+assumed.</p>
+<p style="margin-left:9%; margin-top: 1em">sub tool { <br/>
+my $ctx = context(); <br/>
+... <br/>
+return release $ctx, 1; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">This tool is
+most useful when you want to return the value you get from
+calling a function that needs to see the current
+context:</p>
+<p style="margin-left:9%; margin-top: 1em">my $ctx =
+context(); <br/>
+my $out = some_tool(...); <br/>
+$ctx−&gt;release; <br/>
+return $out;</p>
+<p style="margin-left:9%; margin-top: 1em">We can combine
+the last 3 lines of the above like so:</p>
+<p style="margin-left:9%; margin-top: 1em">my $ctx =
+context(); <br/>
+release $ctx, some_tool(...);</p>
+<h3>context_do(&amp;;@)
+<a name="context_do(&amp;;@)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage:</p>
+<p style="margin-left:9%; margin-top: 1em">sub my_tool {
+<br/>
+context_do { <br/>
+my $ctx = shift; <br/>
+my (@args) = @_; <br/>
+$ctx−&gt;ok(1, "pass"); <br/>
+... <br/>
+# No need to call $ctx−&gt;release, done for you on
+scope exit. <br/>
+} @_; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Using this
+inside your test tool takes care of a lot of boilerplate for
+you. It will ensure a context is acquired. It will capture
+and rethrow any exception. It will ensure the context is
+released when you are done. It preserves the subroutine call
+context (list, scalar, void).</p>
+<p style="margin-left:9%; margin-top: 1em">This is the
+safest way to write a test tool. The only two downsides to
+this are a slight performance decrease, and some extra
+indentation in your source. If the indentation is a problem
+for you then you can take a peek at the next section.</p>
+<h3>no_context(&amp;;$)
+<a name="no_context(&amp;;$)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage: <br/>
+no_context { ... }; <br/>
+no_context { ... } $hid;</p>
+<p style="margin-left:14%;">sub my_tool(&amp;) { <br/>
+my $code = shift; <br/>
+my $ctx = context(); <br/>
+... <br/>
+no_context { <br/>
+# Things in here will not see our current context, they get
+a new <br/>
+# one. <br/>
+$code−&gt;(); <br/>
+}; <br/>
+... <br/>
+$ctx−&gt;release; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">This tool will
+hide a context for the provided block of code. This means
+any tools run inside the block will get a completely new
+context if they acquire one. The new context will be
+inherited by tools nested below the one that acquired
+it.</p>
+<p style="margin-left:9%; margin-top: 1em">This will
+normally hide the current context for the top hub. If you
+need to hide the context for a different hub you can pass in
+the optional $hid parameter.</p>
+<h3>intercept(&amp;)
+<a name="intercept(&amp;)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage:</p>
+<p style="margin-left:9%; margin-top: 1em">my $events =
+intercept { <br/>
+ok(1, "pass"); <br/>
+ok(0, "fail"); <br/>
+... <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+takes a codeblock as its only argument, and it has a
+prototype. It will execute the codeblock, intercepting any
+generated events in the process. It will return an array
+reference with all the generated event objects. All events
+should be subclasses of Test2::Event.</p>
+<p style="margin-left:9%; margin-top: 1em">As of version
+1.302178 the events array that is returned is blssed as an
+Test2::API::InterceptResult instance.
+Test2::API::InterceptResult Provides a helpful interface for
+filtering and/or inspecting the events list overall, or
+individual events within the list.</p>
+<p style="margin-left:9%; margin-top: 1em">This is intended
+to help you test your test code. This is not intended for
+people simply writing tests.</p>
+<h3>run_subtest(...)
+<a name="run_subtest(...)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage:</p>
+<p style="margin-left:9%; margin-top: 1em">run_subtest($NAME,
+\&amp;CODE, $BUFFERED, @ARGS) <br/>
+# or <br/>
+run_subtest($NAME, \&amp;CODE, \%PARAMS, @ARGS)</p>
+<p style="margin-left:9%; margin-top: 1em">This will run
+the provided codeblock with the args in @args. This
+codeblock will be run as a subtest. A subtest is an isolated
+test state that is condensed into a single
+Test2::Event::Subtest event, which contains all events
+generated inside the subtest.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>ARGUMENTS:</i>
+<br/>
+$NAME</p>
+<p style="margin-left:14%;">The name of the subtest.</p>
+<p style="margin-left:9%;">\&amp;CODE</p>
+<p style="margin-left:14%;">The code to run inside the
+subtest.</p>
+<p style="margin-left:9%;">$BUFFERED or \%PARAMS</p>
+<p style="margin-left:14%;">If this is a simple scalar then
+it will be treated as a boolean for the 'buffered' setting.
+If this is a hash reference then it will be used as a
+parameters hash. The param hash will be used for hub
+construction (with the specified keys removed).</p>
+<p style="margin-left:14%; margin-top: 1em">Keys that are
+removed and used by run_subtest: <br/>
+'buffered' =&gt; $bool</p>
+<p style="margin-left:19%;">Toggle buffered status.</p>
+<p style="margin-left:14%;">'inherit_trace' =&gt; $bool</p>
+<p style="margin-left:19%;">Normally the subtest hub is
+pushed and the sub is allowed to generate its own root
+context for the hub. When this setting is turned on a root
+context will be created for the hub that shares the same
+trace as the current context.</p>
+<p style="margin-left:19%; margin-top: 1em">Set this to
+true if your tool is producing subtests without
+user−specified subs.</p>
+<p style="margin-left:14%;">'no_fork' =&gt; $bool</p>
+<p style="margin-left:19%;">Defaults to off. Normally
+forking inside a subtest will actually fork the subtest,
+resulting in 2 final subtest events. This parameter will
+turn off that behavior, only the original process/thread
+will return a final subtest event.</p>
+<p style="margin-left:9%;">@ARGS</p>
+<p style="margin-left:14%;">Any extra arguments you want
+passed into the subtest code.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>BUFFERED VS
+UNBUFFERED (OR STREAMED)</i></p>
+<p style="margin-left:9%; margin-top: 1em">Normally all
+events inside and outside a subtest are sent to the
+formatter immediately by the hub. Sometimes it is desirable
+to hold off sending events within a subtest until the
+subtest is complete. This usually depends on the formatter
+being used. <br/>
+Things not affected by this flag</p>
+<p style="margin-left:14%;">In both cases events are
+generated and stored in an array. This array is eventually
+used to populate the "subevents" attribute on the
+Test2::Event::Subtest event that is generated at the end of
+the subtest. This flag has no effect on this part, it always
+happens.</p>
+<p style="margin-left:14%; margin-top: 1em">At the end of
+the subtest, the final Test2::Event::Subtest event is sent
+to the formatter.</p>
+<p style="margin-left:9%;">Things that are affected by this
+flag</p>
+<p style="margin-left:14%;">The "buffered"
+attribute of the Test2::Event::Subtest event will be set to
+the value of this flag. This means any formatter, listener,
+etc which looks at the event will know if it was
+buffered.</p>
+<p style="margin-left:9%;">Things that are formatter
+dependent</p>
+<p style="margin-left:14%;">Events within a buffered
+subtest may or may not be sent to the formatter as they
+happen. If a formatter fails to specify then the default is
+to <b>NOT SEND</b> the events as they are generated, instead
+the formatter can pull them from the "subevents"
+attribute.</p>
+<p style="margin-left:14%; margin-top: 1em">A formatter can
+specify by implementing the hide_buffered() method. If this
+method returns true then events generated inside a buffered
+subtest will not be sent independently of the final subtest
+event.</p>
+<p style="margin-left:9%; margin-top: 1em">An example of
+how this is used is the Test2::Formatter::TAP formatter. For
+unbuffered subtests the events are rendered as they are
+generated. At the end of the subtest, the final subtest
+event is rendered, but the "subevents" attribute
+is ignored. For buffered subtests the opposite occurs, the
+events are NOT rendered as they are generated, instead the
+"subevents" attribute is used to render them all
+at once. This is useful when running subtests tests in
+parallel, since without it the output from subtests would be
+interleaved together.</p>
+<h2>OTHER API EXPORTS
+<a name="OTHER API EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Exports in this
+section are not commonly needed. These all have the 'test2_'
+prefix to help ensure they stand out. You should look at the
+"MAIN API EXPORTS" section before looking here.
+This section is one where "Great power comes with great
+responsibility". It is possible to break things badly
+if you are not careful with these.</p>
+<p style="margin-left:9%; margin-top: 1em">All exports are
+optional. You need to list which ones you want at import
+time:</p>
+<p style="margin-left:9%; margin-top: 1em">use Test2::API
+qw/test2_init_done .../;</p>
+<h3>STATUS AND INITIALIZATION STATE
+<a name="STATUS AND INITIALIZATION STATE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These provide
+access to internal state and object instances. <br/>
+$bool = <b>test2_init_done()</b></p>
+<p style="margin-left:14%;">This will return true if the
+stack and IPC instances have already been initialized. It
+will return false if they have not. Init happens as late as
+possible. It happens as soon as a tool requests the IPC
+instance, the formatter, or the stack.</p>
+<p style="margin-left:9%;">$bool =
+<b>test2_load_done()</b></p>
+<p style="margin-left:14%;">This will simply return the
+boolean value of the loaded flag. If Test2 has finished
+loading this will be true, otherwise false. Loading is
+considered complete the first time a tool requests a
+context.</p>
+<p style="margin-left:9%;"><b>test2_set_is_end()</b> <br/>
+test2_set_is_end($bool)</p>
+<p style="margin-left:14%;">This is used to toggle Test2's
+belief that the END phase has already started. With no
+arguments this will set it to true. With arguments it will
+set it to the first argument's value.</p>
+<p style="margin-left:14%; margin-top: 1em">This is used to
+prevent the use of caller() in END blocks which can cause
+segfaults. This is only necessary in some persistent
+environments that may have multiple END phases.</p>
+<p style="margin-left:9%;">$bool =
+<b>test2_get_is_end()</b></p>
+<p style="margin-left:14%;">Check if Test2 believes it is
+the END phase.</p>
+<p style="margin-left:9%;">$stack =
+<b>test2_stack()</b></p>
+<p style="margin-left:14%;">This will return the global
+Test2::API::Stack instance. If this has not yet been
+initialized it will be initialized now.</p>
+<p style="margin-left:9%;">$bool =
+<b>test2_is_testing_done()</b></p>
+<p style="margin-left:14%;">This will return true if
+testing is complete and no other events should be sent. This
+is useful in things like warning handlers where you might
+want to turn warnings into events, but need them to start
+acting like normal warnings when testing is done.</p>
+<p style="margin-left:14%; margin-top: 1em">$SIG{__WARN__}
+= sub { <br/>
+my ($warning) = @_; <br/>
+if (test2_is_testing_done()) { <br/>
+warn @_; <br/>
+} <br/>
+else { <br/>
+my $ctx = context(); <br/>
+... <br/>
+$ctx−&gt;release <br/>
+} <br/>
+}</p>
+<p style="margin-left:9%;">test2_ipc_disable</p>
+<p style="margin-left:14%;">Disable IPC.</p>
+<p style="margin-left:9%;">$bool = test2_ipc_disabled</p>
+<p style="margin-left:14%;">Check if IPC is disabled.</p>
+<p style="margin-left:9%;"><b>test2_ipc_wait_enable() <br/>
+test2_ipc_wait_disable()</b> <br/>
+$bool = <b>test2_ipc_wait_enabled()</b></p>
+<p style="margin-left:14%;">These can be used to turn IPC
+waiting on and off, or check the current value of the
+flag.</p>
+<p style="margin-left:14%; margin-top: 1em">Waiting is
+turned on by default. Waiting will cause the parent
+process/thread to wait until all child processes and threads
+are finished before exiting. You will almost never want to
+turn this off.</p>
+<p style="margin-left:9%;">$bool = <b>test2_no_wait()</b>
+<br/>
+test2_no_wait($bool)</p>
+<p style="margin-left:14%;"><b>DISCOURAGED</b>: This is a
+confusing interface, it is better to use
+test2_ipc_wait_enable(), test2_ipc_wait_disable() and
+test2_ipc_wait_enabled().</p>
+<p style="margin-left:14%; margin-top: 1em">This can be
+used to get/set the no_wait status. Waiting is turned on by
+default. Waiting will cause the parent process/thread to
+wait until all child processes and threads are finished
+before exiting. You will almost never want to turn this
+off.</p>
+<p style="margin-left:9%;">$fh = <b>test2_stdout()</b> <br/>
+$fh = <b>test2_stderr()</b></p>
+<p style="margin-left:14%;">These functions return the
+filehandles that test output should be written to. They are
+primarily useful when writing a custom formatter and code
+that turns events into actual output (TAP, etc.). They will
+return a dupe of the original filehandles that formatted
+output can be sent to regardless of whatever state the
+currently running test may have left STDOUT and STDERR
+in.</p>
+<p style="margin-left:9%;"><b>test2_reset_io()</b></p>
+<p style="margin-left:14%;">Re−dupe the internal
+filehandles returned by test2_stdout() and test2_stderr()
+from the current STDOUT and STDERR. You shouldn't need to do
+this except in very peculiar situations (for example, you're
+testing a new formatter and you need control over where the
+formatter is sending its output.)</p>
+<h3>BEHAVIOR HOOKS
+<a name="BEHAVIOR HOOKS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These are hooks
+that allow you to add custom behavior to actions taken by
+Test2 and tools built on top of it. <br/>
+test2_add_callback_exit(sub { ... })</p>
+<p style="margin-left:14%;">This can be used to add a
+callback that is called after all testing is done. This is
+too late to add additional results, the main use of this
+callback is to set the exit code.</p>
+<p style="margin-left:14%; margin-top: 1em">test2_add_callback_exit(
+<br/>
+sub { <br/>
+my ($context, $exit, \$new_exit) = @_; <br/>
+... <br/>
+} <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">The $context
+passed in will be an instance of Test2::API::Context. The
+$exit argument will be the original exit code before
+anything modified it. $$new_exit is a reference to the new
+exit code. You may modify this to change the exit code.
+Please note that $$new_exit may already be different from
+$exit</p>
+<p style="margin-left:9%;">test2_add_callback_post_load(sub
+{ ... })</p>
+<p style="margin-left:14%;">Add a callback that will be
+called when Test2 is finished loading. This means the
+callback will be run once, the first time a context is
+obtained. If Test2 has already finished loading then the
+callback will be run immediately.</p>
+<p style="margin-left:9%;">test2_add_callback_testing_done(sub
+{ ... })</p>
+<p style="margin-left:14%;">This adds your coderef as a
+follow−up to the root hub after Test2 is finished
+loading.</p>
+<p style="margin-left:14%; margin-top: 1em">This is
+essentially a helper to do the following:</p>
+<p style="margin-left:14%; margin-top: 1em">test2_add_callback_post_load(sub
+{ <br/>
+my $stack = test2_stack(); <br/>
+$stack−&gt;top; # Ensure we have a hub <br/>
+my ($hub) = Test2::API::test2_stack−&gt;all; <br/>
+$hub−&gt;set_active(1); <br/>
+$hub−&gt;follow_up(sub { ... }); # &lt;−−
+Your coderef here <br/>
+});</p>
+<p style="margin-left:9%;">test2_add_callback_context_acquire(sub
+{ ... })</p>
+<p style="margin-left:14%;">Add a callback that will be
+called every time someone tries to acquire a context. This
+will be called on EVERY call to context(). It gets a single
+argument, a reference to the hash of parameters being used
+the construct the context. This is your chance to change the
+parameters by directly altering the hash.</p>
+<p style="margin-left:14%; margin-top: 1em">test2_add_callback_context_acquire(sub
+{ <br/>
+my $params = shift; <br/>
+$params−&gt;{level}++; <br/>
+});</p>
+<p style="margin-left:14%; margin-top: 1em">This is a very
+scary API function. Please do not use this unless you need
+to. This is here for Test::Builder and backwards
+compatibility. This has you directly manipulate the hash
+instead of returning a new one for performance reasons.</p>
+<p style="margin-left:9%;">test2_add_callback_context_init(sub
+{ ... })</p>
+<p style="margin-left:14%;">Add a callback that will be
+called every time a new context is created. The callback
+will receive the newly created context as its only
+argument.</p>
+<p style="margin-left:9%;">test2_add_callback_context_release(sub
+{ ... })</p>
+<p style="margin-left:14%;">Add a callback that will be
+called every time a context is released. The callback will
+receive the released context as its only argument.</p>
+<p style="margin-left:9%;">test2_add_callback_pre_subtest(sub
+{ ... })</p>
+<p style="margin-left:14%;">Add a callback that will be
+called every time a subtest is going to be run. The callback
+will receive the subtest name, coderef, and any
+arguments.</p>
+<p style="margin-left:9%;">@list =
+<b>test2_list_context_acquire_callbacks()</b></p>
+<p style="margin-left:14%;">Return all the context acquire
+callback references.</p>
+<p style="margin-left:9%;">@list =
+<b>test2_list_context_init_callbacks()</b></p>
+<p style="margin-left:14%;">Returns all the context init
+callback references.</p>
+<p style="margin-left:9%;">@list =
+<b>test2_list_context_release_callbacks()</b></p>
+<p style="margin-left:14%;">Returns all the context release
+callback references.</p>
+<p style="margin-left:9%;">@list =
+<b>test2_list_exit_callbacks()</b></p>
+<p style="margin-left:14%;">Returns all the exit callback
+references.</p>
+<p style="margin-left:9%;">@list =
+<b>test2_list_post_load_callbacks()</b></p>
+<p style="margin-left:14%;">Returns all the post load
+callback references.</p>
+<p style="margin-left:9%;">@list =
+<b>test2_list_pre_subtest_callbacks()</b></p>
+<p style="margin-left:14%;">Returns all the
+pre−subtest callback references.</p>
+<p style="margin-left:9%;">test2_add_uuid_via(sub { ... })
+<br/>
+$sub = <b>test2_add_uuid_via()</b></p>
+<p style="margin-left:14%;">This allows you to provide a
+UUID generator. If provided UUIDs will be attached to all
+events, hubs, and contexts. This is useful for storing,
+tracking, and linking these objects.</p>
+<p style="margin-left:14%; margin-top: 1em">The sub you
+provide should always return a unique identifier. Most
+things will expect a proper UUID string, however nothing in
+Test2::API enforces this.</p>
+<p style="margin-left:14%; margin-top: 1em">The sub will
+receive exactly 1 argument, the type of thing being tagged
+'context', 'hub', or 'event'. In the future additional
+things may be tagged, in which case new strings will be
+passed in. These are purely informative, you can (and
+usually should) ignore them.</p>
+<p style="margin-left:9%;">test2_add_pending_diag($diag)
+<br/>
+test2_add_pending_diag($diag1, $diag2)</p>
+<p style="margin-left:14%;">Add a diagnostics message that
+will be issued the next time a context in which a failure
+occured is released.</p>
+<p style="margin-left:14%; margin-top: 1em">This can also
+be thought of like this: "If the next bit causes a
+failed assertion, add this diagnostics message".</p>
+<p style="margin-left:9%;">@diags =
+<b>test2_get_pending_diags()</b></p>
+<p style="margin-left:14%;">Get all the current pending
+diagnostics messages.</p>
+<p style="margin-left:9%;">@diags =
+<b>test2_clear_pending_diags()</b></p>
+<p style="margin-left:14%;">Clear any pending diagnostics,
+returning them.</p>
+<h3>IPC AND CONCURRENCY
+<a name="IPC AND CONCURRENCY"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These let you
+access, or specify, the IPC system internals. <br/>
+$bool = <b>test2_has_ipc()</b></p>
+<p style="margin-left:14%;">Check if IPC is enabled.</p>
+<p style="margin-left:9%;">$ipc = <b>test2_ipc()</b></p>
+<p style="margin-left:14%;">This will return the global
+Test2::IPC::Driver instance. If this has not yet been
+initialized it will be initialized now.</p>
+<p style="margin-left:9%;">test2_ipc_add_driver($DRIVER)</p>
+<p style="margin-left:14%;">Add an IPC driver to the list.
+This will add the driver to the start of the list.</p>
+<p style="margin-left:9%;">@drivers =
+<b>test2_ipc_drivers()</b></p>
+<p style="margin-left:14%;">Get the list of IPC
+drivers.</p>
+<p style="margin-left:9%;">$bool =
+<b>test2_ipc_polling()</b></p>
+<p style="margin-left:14%;">Check if polling is
+enabled.</p>
+<p style="margin-left:9%;"><b>test2_ipc_enable_polling()</b></p>
+<p style="margin-left:14%;">Turn on polling. This will cull
+events from other processes and threads every time a context
+is created.</p>
+<p style="margin-left:9%;"><b>test2_ipc_disable_polling()</b></p>
+<p style="margin-left:14%;">Turn off IPC polling.</p>
+<p style="margin-left:9%;"><b>test2_ipc_enable_shm()</b></p>
+<p style="margin-left:14%;">Legacy, this is currently a
+no−op that returns 0;</p>
+<p style="margin-left:9%;">test2_ipc_set_pending($uniq_val)</p>
+<p style="margin-left:14%;">Tell other processes and events
+that an event is pending. $uniq_val should be a unique value
+no other thread/process will generate.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+After calling this test2_ipc_get_pending() will return 1.
+This is intentional, and not avoidable.</p>
+<p style="margin-left:9%;">$pending =
+<b>test2_ipc_get_pending()</b></p>
+<p style="margin-left:14%;">This returns −1 if there
+is no way to check (assume yes)</p>
+<p style="margin-left:14%; margin-top: 1em">This returns 0
+if there are (most likely) no pending events.</p>
+<p style="margin-left:14%; margin-top: 1em">This returns 1
+if there are (likely) pending events. Upon return it will
+reset, nothing else will be able to see that there were
+pending events.</p>
+<p style="margin-left:9%;">$timeout =
+<b>test2_ipc_get_timeout()</b> <br/>
+test2_ipc_set_timeout($timeout)</p>
+<p style="margin-left:14%;">Get/Set the timeout value for
+the IPC system. This timeout is how long the IPC system will
+wait for child processes and threads to finish before
+aborting.</p>
+<p style="margin-left:14%; margin-top: 1em">The default
+value is 30 seconds.</p>
+<h3>MANAGING FORMATTERS
+<a name="MANAGING FORMATTERS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These let you
+access, or specify, the formatters that can/should be used.
+<br/>
+$formatter = test2_formatter</p>
+<p style="margin-left:14%;">This will return the global
+formatter class. This is not an instance. By default the
+formatter is set to Test2::Formatter::TAP.</p>
+<p style="margin-left:14%; margin-top: 1em">You can
+override this default using the "T2_FORMATTER"
+environment variable.</p>
+<p style="margin-left:14%; margin-top: 1em">Normally
+'Test2::Formatter::' is prefixed to the value in the
+environment variable:</p>
+<p style="margin-left:14%; margin-top: 1em">$
+T2_FORMATTER='TAP' perl test.t # Use the
+Test2::Formatter::TAP formatter <br/>
+$ T2_FORMATTER='Foo' perl test.t # Use the
+Test2::Formatter::Foo formatter</p>
+<p style="margin-left:14%; margin-top: 1em">If you want to
+specify a full module name you use the '+' prefix:</p>
+<p style="margin-left:14%; margin-top: 1em">$
+T2_FORMATTER='+Foo::Bar' perl test.t # Use the Foo::Bar
+formatter</p>
+<p style="margin-left:9%;">test2_formatter_set($class_or_instance)</p>
+<p style="margin-left:14%;">Set the global formatter class.
+This can only be set once. <b>Note:</b> This will override
+anything specified in the 'T2_FORMATTER' environment
+variable.</p>
+<p style="margin-left:9%;">@formatters =
+<b>test2_formatters()</b></p>
+<p style="margin-left:14%;">Get a list of all loaded
+formatters.</p>
+<p style="margin-left:9%;">test2_formatter_add($class_or_instance)</p>
+<p style="margin-left:14%;">Add a formatter to the list.
+Last formatter added is used at initialization. If this is
+called after initialization a warning will be issued.</p>
+<h3>TIME STAMPS
+<a name="TIME STAMPS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">You can enable
+or disable timestamps in trace facets. They are disabled by
+default for compatibility and performance reasons. <b><br/>
+test2_enable_trace_stamps()</b></p>
+<p style="margin-left:14%;">Enable stamps in traces.</p>
+<p style="margin-left:9%;"><b>test2_disable_trace_stamps()</b></p>
+<p style="margin-left:14%;">Disable stamps in traces.</p>
+<p style="margin-left:9%;">$bool =
+<b>test2_trace_stamps_enabled()</b></p>
+<p style="margin-left:14%;">Check status of trace
+stamps.</p>
+<h2>OTHER EXAMPLES
+<a name="OTHER EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the
+"/Examples/" directory included in this
+distribution.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::API::Context
+− Detailed documentation of the context object.</p>
+<p style="margin-left:9%; margin-top: 1em">Test2::IPC
+− The IPC system used for threading/fork support.</p>
+<p style="margin-left:9%; margin-top: 1em">Test2::Formatter
+− Formatters such as TAP live here.</p>
+<p style="margin-left:9%; margin-top: 1em">Test2::Event
+− Events live in this namespace.</p>
+<p style="margin-left:9%; margin-top: 1em">Test2::Hub
+− All events eventually funnel through a hub. Custom
+hubs are how intercept() and run_subtest() are
+implemented.</p>
+<h2>MAGIC
+<a name="MAGIC"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This package has
+an END block. This END block is responsible for setting the
+exit code based on the test results. This end block also
+calls the callbacks that can be added to this package.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2 can be found at
+&lt;https://github.com/Test−More/test−more/&gt;.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;https://dev.perl.org/licenses/&gt;</p>
+<hr/>
+</body>
+</html>

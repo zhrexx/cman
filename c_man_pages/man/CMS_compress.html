@@ -1,0 +1,195 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:08 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CMS_COMPRESS</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CMS_COMPRESS</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CMS_compress
+− create a CMS CompressedData structure</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/cms.h&gt; <br/>
+CMS_ContentInfo *CMS_compress(BIO *in, int comp_nid,
+unsigned int flags);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_compress()</b>
+creates and returns a CMS CompressedData structure.
+<b>comp_nid</b> is the compression algorithm to use or
+<b>NID_undef</b> to use the default algorithm (zlib
+compression). <b>in</b> is the content to be compressed.
+<b>flags</b> is an optional set of flags.</p>
+<p style="margin-left:9%; margin-top: 1em">The only
+currently supported compression algorithm is zlib using the
+NID NID_zlib_compression.</p>
+<p style="margin-left:9%; margin-top: 1em">If zlib support
+is not compiled into OpenSSL then <b>CMS_compress()</b> will
+return an error.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+<b>CMS_TEXT</b> flag is set MIME headers for type
+<b>text/plain</b> are prepended to the data.</p>
+<p style="margin-left:9%; margin-top: 1em">Normally the
+supplied content is translated into MIME canonical format
+(as required by the S/MIME specifications) if
+<b>CMS_BINARY</b> is set no translation occurs. This option
+should be used if the supplied data is in binary format
+otherwise the translation will corrupt it. If
+<b>CMS_BINARY</b> is set then <b>CMS_TEXT</b> is
+ignored.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+<b>CMS_STREAM</b> flag is set a partial
+<b>CMS_ContentInfo</b> structure is returned suitable for
+streaming I/O: no data is read from the BIO <b>in</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The compressed
+data is included in the CMS_ContentInfo structure, unless
+<b>CMS_DETACHED</b> is set in which case it is omitted. This
+is rarely used in practice and is not supported by
+<b>SMIME_write_CMS()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">If the flag
+<b>CMS_STREAM</b> is set the returned <b>CMS_ContentInfo</b>
+structure is <b>not</b> complete and outputting its contents
+via a function that does not properly finalize the
+<b>CMS_ContentInfo</b> structure will give unpredictable
+results.</p>
+<p style="margin-left:9%; margin-top: 1em">Several
+functions including <b>SMIME_write_CMS()</b>,
+<b>i2d_CMS_bio_stream()</b>,
+<b>PEM_write_bio_CMS_stream()</b> finalize the structure.
+Alternatively finalization can be performed by obtaining the
+streaming ASN1 <b>BIO</b> directly using
+<b>BIO_new_CMS()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">Additional
+compression parameters such as the zlib compression level
+cannot currently be set.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_compress()</b>
+returns either a CMS_ContentInfo structure or NULL if an
+error occurred. The error can be obtained from
+<b>ERR_get_error</b>(3).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ERR_get_error</b>(3),
+<b>CMS_uncompress</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>CMS_STREAM</b> flag was added in OpenSSL 1.0.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2008−2016 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

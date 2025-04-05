@@ -1,0 +1,293 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:30 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_USE_PSK_IDENTITY_HINT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_USE_PSK_IDENTITY_HINT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_psk_server_cb_func,
+SSL_psk_find_session_cb_func, SSL_CTX_use_psk_identity_hint,
+SSL_use_psk_identity_hint, SSL_CTX_set_psk_server_callback,
+SSL_set_psk_server_callback,
+SSL_CTX_set_psk_find_session_callback,
+SSL_set_psk_find_session_callback − set PSK identity
+hint to use</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+typedef int (*SSL_psk_find_session_cb_func)(SSL *ssl, <br/>
+const unsigned char *identity, <br/>
+size_t identity_len, <br/>
+SSL_SESSION **sess); <br/>
+void SSL_CTX_set_psk_find_session_callback(SSL_CTX *ctx,
+<br/>
+SSL_psk_find_session_cb_func cb); <br/>
+void SSL_set_psk_find_session_callback(SSL *s,
+SSL_psk_find_session_cb_func cb); <br/>
+typedef unsigned int (*SSL_psk_server_cb_func)(SSL *ssl,
+<br/>
+const char *identity, <br/>
+unsigned char *psk, <br/>
+unsigned int max_psk_len); <br/>
+int SSL_CTX_use_psk_identity_hint(SSL_CTX *ctx, const char
+*hint); <br/>
+int SSL_use_psk_identity_hint(SSL *ssl, const char *hint);
+<br/>
+void SSL_CTX_set_psk_server_callback(SSL_CTX *ctx,
+SSL_psk_server_cb_func cb); <br/>
+void SSL_set_psk_server_callback(SSL *ssl,
+SSL_psk_server_cb_func cb);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A server
+application wishing to use TLSv1.3 PSKs should set a
+callback using either
+<b>SSL_CTX_set_psk_find_session_callback()</b> or
+<b>SSL_set_psk_find_session_callback()</b> as
+appropriate.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback
+function is given a pointer to the SSL connection in
+<b>ssl</b> and an identity in <b>identity</b> of length
+<b>identity_len</b>. The callback function should identify
+an SSL_SESSION object that provides the PSK details and
+store it in <b>*sess</b>. The SSL_SESSION object should, as
+a minimum, set the master key, the ciphersuite and the
+protocol version. See
+<b>SSL_CTX_set_psk_use_session_callback</b>(3) for
+details.</p>
+<p style="margin-left:9%; margin-top: 1em">It is also
+possible for the callback to succeed but not supply a PSK.
+In this case no PSK will be used but the handshake will
+continue. To do this the callback should return successfully
+and ensure that <b>*sess</b> is NULL.</p>
+<p style="margin-left:9%; margin-top: 1em">Identity hints
+are not relevant for TLSv1.3. A server application wishing
+to use PSK ciphersuites for TLSv1.2 and below may call
+<b>SSL_CTX_use_psk_identity_hint()</b> to set the given
+<b>NUL</b>−terminated PSK identity hint <b>hint</b>
+for SSL context object <b>ctx</b>.
+<b>SSL_use_psk_identity_hint()</b> sets the given
+<b>NUL</b>−terminated PSK identity hint <b>hint</b>
+for the SSL connection object <b>ssl</b>. If <b>hint</b> is
+<b>NULL</b> the current hint from <b>ctx</b> or <b>ssl</b>
+is deleted.</p>
+<p style="margin-left:9%; margin-top: 1em">In the case
+where PSK identity hint is <b>NULL</b>, the server does not
+send the ServerKeyExchange message to the client.</p>
+<p style="margin-left:9%; margin-top: 1em">A server
+application wishing to use PSKs for TLSv1.2 and below must
+provide a callback function which is called when the server
+receives the ClientKeyExchange message from the client. The
+purpose of the callback function is to validate the received
+PSK identity and to fetch the pre−shared key used
+during the connection setup phase. The callback is set using
+the functions <b>SSL_CTX_set_psk_server_callback()</b> or
+<b>SSL_set_psk_server_callback()</b>. The callback function
+is given the connection in parameter <b>ssl</b>,
+<b>NUL</b>−terminated PSK identity sent by the client
+in parameter <b>identity</b>, and a buffer <b>psk</b> of
+length <b>max_psk_len</b> bytes where the pre−shared
+key is to be stored.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback for
+use in TLSv1.2 will also work in TLSv1.3 although it is
+recommended to use
+<b>SSL_CTX_set_psk_find_session_callback()</b> or
+<b>SSL_set_psk_find_session_callback()</b> for this purpose
+instead. If TLSv1.3 has been negotiated then OpenSSL will
+first check to see if a callback has been set via
+<b>SSL_CTX_set_psk_find_session_callback()</b> or
+<b>SSL_set_psk_find_session_callback()</b> and it will use
+that in preference. If no such callback is present then it
+will check to see if a callback has been set via
+<b>SSL_CTX_set_psk_server_callback()</b> or
+<b>SSL_set_psk_server_callback()</b> and use that. In this
+case the handshake digest will default to SHA−256 for
+any returned PSK. TLSv1.3 early data exchanges are possible
+in PSK connections only with the
+<b>SSL_psk_find_session_cb_func</b> callback, and are not
+possible with the <b>SSL_psk_server_cb_func</b>
+callback.</p>
+<p style="margin-left:9%; margin-top: 1em">A connection
+established via a TLSv1.3 PSK will appear as if session
+resumption has occurred so that <b>SSL_session_reused</b>(3)
+will return true.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_use_psk_identity_hint()</b>
+and <b>SSL_use_psk_identity_hint()</b> return 1 on success,
+0 otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em">Return values
+from the TLSv1.2 and below server callback are interpreted
+as follows:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>0</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>PSK identity was not found. An
+"unknown_psk_identity" alert message will be sent
+and the connection setup fails.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>&gt;0</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>PSK identity was found and the server callback has
+provided the PSK successfully in parameter <b>psk</b>.
+Return value is the length of <b>psk</b> in bytes. It is an
+error to return a value greater than <b>max_psk_len</b>.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">If the PSK
+identity was not found but the callback instructs the
+protocol to continue anyway, the callback must provide some
+random data to <b>psk</b> and return the length of the
+random data, so the connection will fail with
+decryption_error before it will be finished completely.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_psk_find_session_cb_func</b> callback should return 1
+on success or 0 on failure. In the event of failure the
+connection setup fails.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">There are no
+known security issues with sharing the same PSK between
+TLSv1.2 (or below) and TLSv1.3. However, the RFC has this
+note of caution:</p>
+<p style="margin-left:9%; margin-top: 1em">"While
+there is no known way in which the same PSK might produce
+related output in both versions, only limited analysis has
+been done. Implementations can ensure safety from
+cross−protocol related output by not reusing PSKs
+between TLS 1.3 and TLS 1.2."</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_CTX_set_psk_use_session_callback</b>(3),
+<b>SSL_set_psk_use_session_callback</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_psk_find_session_callback()</b>
+and <b>SSL_set_psk_find_session_callback()</b> were added in
+OpenSSL 1.1.1.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2006−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

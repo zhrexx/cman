@@ -1,0 +1,627 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:55:11 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>X509_STORE_CTX_GET_ERROR</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">X509_STORE_CTX_GET_ERROR</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#ERROR CODES">ERROR CODES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">X509_STORE_CTX_get_error,
+X509_STORE_CTX_set_error, X509_STORE_CTX_get_error_depth,
+X509_STORE_CTX_set_error_depth,
+X509_STORE_CTX_get_current_cert,
+X509_STORE_CTX_set_current_cert, X509_STORE_CTX_get0_cert,
+X509_STORE_CTX_get1_chain, X509_verify_cert_error_string
+− get or set certificate verification status
+information</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/x509.h&gt; <br/>
+int X509_STORE_CTX_get_error(const X509_STORE_CTX *ctx);
+<br/>
+void X509_STORE_CTX_set_error(X509_STORE_CTX *ctx, int s);
+<br/>
+int X509_STORE_CTX_get_error_depth(const X509_STORE_CTX
+*ctx); <br/>
+void X509_STORE_CTX_set_error_depth(X509_STORE_CTX *ctx, int
+depth); <br/>
+X509 *X509_STORE_CTX_get_current_cert(const X509_STORE_CTX
+*ctx); <br/>
+void X509_STORE_CTX_set_current_cert(X509_STORE_CTX *ctx,
+X509 *x); <br/>
+X509 *X509_STORE_CTX_get0_cert(const X509_STORE_CTX *ctx);
+<br/>
+STACK_OF(X509) *X509_STORE_CTX_get1_chain(const
+X509_STORE_CTX *ctx); <br/>
+const char *X509_verify_cert_error_string(long n);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+are typically called after certificate or chain verification
+using <b>X509_verify_cert</b>(3) or
+<b>X509_STORE_CTX_verify</b>(3) has indicated an error or in
+a verification callback to determine the nature of an
+error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_STORE_CTX_get_error()</b>
+returns the error code of <i>ctx</i>. See the "ERROR
+CODES" section for a full description of all error
+codes. It may return a code != X509_V_OK even if
+<b>X509_verify_cert()</b> did not indicate an error, likely
+because a verification callback function has waived the
+error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_STORE_CTX_set_error()</b>
+sets the error code of <i>ctx</i> to <i>s</i>. For example
+it might be used in a verification callback to set an error
+based on additional checks.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_STORE_CTX_get_error_depth()</b>
+returns the <i>depth</i> of the error. This is a nonnegative
+integer representing where in the certificate chain the
+error occurred. If it is zero it occurred in the end entity
+certificate, one if it is the certificate which signed the
+end entity certificate and so on.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_STORE_CTX_set_error_depth()</b>
+sets the error <i>depth</i>. This can be used in combination
+with <b>X509_STORE_CTX_set_error()</b> to set the depth at
+which an error condition was detected.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_STORE_CTX_get_current_cert()</b>
+returns the current certificate in <i>ctx</i>. If an error
+occurred, the current certificate will be the one that is
+most closely related to the error, or possibly NULL if no
+such certificate is relevant.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_STORE_CTX_set_current_cert()</b>
+sets the certificate <i>x</i> in <i>ctx</i> which caused the
+error. This value is not intended to remain valid for very
+long, and remains owned by the caller. It may be examined by
+a verification callback invoked to handle each error
+encountered during chain verification and is no longer
+required after such a callback. If a callback wishes the
+save the certificate for use after it returns, it needs to
+increment its reference count via <b>X509_up_ref</b>(3).
+Once such a <i>saved</i> certificate is no longer needed it
+can be freed with <b>X509_free</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_STORE_CTX_get0_cert()</b>
+retrieves an internal pointer to the certificate being
+verified by the <i>ctx</i>. It may be NULL if a raw public
+key is being verified.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_STORE_CTX_get1_chain()</b>
+returns a complete validate chain if a previous verification
+is successful. Otherwise the returned chain may be
+incomplete or invalid. The returned chain persists after the
+<i>ctx</i> structure is freed. When it is no longer needed
+it should be free up using:</p>
+<p style="margin-left:9%; margin-top: 1em">OSSL_STACK_OF_X509_free(chain);</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_verify_cert_error_string()</b>
+returns a human readable error string for verification error
+<i>n</i>.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_STORE_CTX_get_error()</b>
+returns <b>X509_V_OK</b> or an error code.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_STORE_CTX_get_error_depth()</b>
+returns a nonnegative error depth.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_STORE_CTX_get_current_cert()</b>
+returns the certificate which caused the error or NULL if no
+certificate is relevant to the error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_verify_cert_error_string()</b>
+returns a human readable error string for verification error
+<i>n</i>.</p>
+<h2>ERROR CODES
+<a name="ERROR CODES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A list of error
+codes and messages is shown below. Some of the error codes
+are defined but currently never returned: these are
+described as "unused". <b><br/>
+X509_V_OK: ok</b></p>
+<p style="margin-left:14%;">The operation was
+successful.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNSPECIFIED:
+unspecified certificate verification error</b></p>
+<p style="margin-left:14%;">Unspecified error; should not
+happen.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
+unable to get issuer certificate</b></p>
+<p style="margin-left:14%;">The issuer certificate of a
+locally looked up certificate could not be found. This
+normally means the list of trusted certificates is not
+complete. To allow any certificate (not only a
+self−signed one) in the trust store to terminate the
+chain the <b>X509_V_FLAG_PARTIAL_CHAIN</b> flag may be
+set.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNABLE_TO_GET_CRL:
+unable to get certificate CRL</b></p>
+<p style="margin-left:14%;">The CRL of a certificate could
+not be found.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNABLE_TO_DECRYPT_CERT_SIGNATURE:
+unable to decrypt <br/>
+certificate's signature</b></p>
+<p style="margin-left:14%;">The certificate signature could
+not be decrypted. This means that the actual signature value
+could not be determined rather than it not matching the
+expected value, this is only meaningful for RSA keys.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNABLE_TO_DECRYPT_CRL_SIGNATURE:
+unable to decrypt CRL's <br/>
+signature</b></p>
+<p style="margin-left:14%;">The CRL signature could not be
+decrypted: this means that the actual signature value could
+not be determined rather than it not matching the expected
+value. Unused.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNABLE_TO_DECODE_ISSUER_PUBLIC_KEY:
+unable to decode issuer <br/>
+public key</b></p>
+<p style="margin-left:14%;">The public key in the
+certificate "SubjectPublicKeyInfo" field could not
+be read.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CERT_SIGNATURE_FAILURE:
+certificate signature failure</b></p>
+<p style="margin-left:14%;">The signature of the
+certificate is invalid.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CRL_SIGNATURE_FAILURE:
+CRL signature failure</b></p>
+<p style="margin-left:14%;">The signature of the CRL is
+invalid.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CERT_NOT_YET_VALID:
+certificate is not yet valid</b></p>
+<p style="margin-left:14%;">The certificate is not yet
+valid: the "notBefore" date is after the current
+time.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CERT_HAS_EXPIRED:
+certificate has expired</b></p>
+<p style="margin-left:14%;">The certificate has expired:
+that is the "notAfter" date is before the current
+time.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CRL_NOT_YET_VALID:
+CRL is not yet valid</b></p>
+<p style="margin-left:14%;">The CRL is not yet valid.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CRL_HAS_EXPIRED:
+CRL has expired</b></p>
+<p style="margin-left:14%;">The CRL has expired.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_ERROR_IN_CERT_NOT_BEFORE_FIELD:
+format error in <br/>
+certificate's notBefore field</b></p>
+<p style="margin-left:14%;">The certificate
+"notBefore" field contains an invalid time.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_ERROR_IN_CERT_NOT_AFTER_FIELD:
+format error in certificate's <br/>
+notAfter field</b></p>
+<p style="margin-left:14%;">The certificate
+"notAfter" field contains an invalid time.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_ERROR_IN_CRL_LAST_UPDATE_FIELD:
+format error in CRL's <br/>
+lastUpdate field</b></p>
+<p style="margin-left:14%;">The CRL <b>lastUpdate</b> field
+contains an invalid time.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_ERROR_IN_CRL_NEXT_UPDATE_FIELD:
+format error in CRL's <br/>
+nextUpdate field</b></p>
+<p style="margin-left:14%;">The CRL "nextUpdate"
+field contains an invalid time.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_OUT_OF_MEM: out of
+memory</b></p>
+<p style="margin-left:14%;">An error occurred trying to
+allocate memory.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT:
+self−signed certificate</b></p>
+<p style="margin-left:14%;">The passed certificate is
+self−signed and the same certificate cannot be found
+in the list of trusted certificates.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN:
+self−signed certificate in <br/>
+certificate chain</b></p>
+<p style="margin-left:14%;">The certificate chain could be
+built up using the untrusted certificates but no suitable
+trust anchor (which typically is a self−signed root
+certificate) could be found in the trust store.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY:
+unable to get local <br/>
+issuer certificate</b></p>
+<p style="margin-left:14%;">The issuer certificate could
+not be found: this occurs if the issuer certificate of an
+untrusted certificate cannot be found.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE:
+unable to verify the first <br/>
+certificate</b></p>
+<p style="margin-left:14%;">No signatures could be verified
+because the chain contains only one certificate and it is
+not self−signed and the
+<b>X509_V_FLAG_PARTIAL_CHAIN</b> flag is not set.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CERT_CHAIN_TOO_LONG:
+certificate chain too long</b></p>
+<p style="margin-left:14%;">The certificate chain length is
+greater than the supplied maximum depth.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CERT_REVOKED:
+certificate revoked</b></p>
+<p style="margin-left:14%;">The certificate has been
+revoked.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_NO_ISSUER_PUBLIC_KEY:
+issuer certificate doesn't have a <br/>
+public key</b></p>
+<p style="margin-left:14%;">The issuer certificate does not
+have a public key.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_PATH_LENGTH_EXCEEDED:
+path length constraint exceeded</b></p>
+<p style="margin-left:14%;">The basicConstraints
+path−length parameter has been exceeded.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_INVALID_PURPOSE:
+unsuitable certificate purpose</b></p>
+<p style="margin-left:14%;">The target certificate cannot
+be used for the specified purpose.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CERT_UNTRUSTED:
+certificate not trusted</b></p>
+<p style="margin-left:14%;">The root CA is not marked as
+trusted for the specified purpose.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CERT_REJECTED:
+certificate rejected</b></p>
+<p style="margin-left:14%;">The root CA is marked to reject
+the specified purpose.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_SUBJECT_ISSUER_MISMATCH:
+subject issuer mismatch</b></p>
+<p style="margin-left:14%;">The current candidate issuer
+certificate was rejected because its subject name did not
+match the issuer name of the current certificate.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_AKID_SKID_MISMATCH:
+authority and subject key identifier <br/>
+mismatch</b></p>
+<p style="margin-left:14%;">The current candidate issuer
+certificate was rejected because its subject key identifier
+was present and did not match the authority key identifier
+current certificate.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_AKID_ISSUER_SERIAL_MISMATCH:
+authority and issuer serial <br/>
+number mismatch</b></p>
+<p style="margin-left:14%;">The current candidate issuer
+certificate was rejected because its issuer name and serial
+number was present and did not match the authority key
+identifier of the current certificate.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_KEYUSAGE_NO_CERTSIGN:
+key usage does not include certificate <br/>
+signing</b></p>
+<p style="margin-left:14%;">The current candidate issuer
+certificate was rejected because its "keyUsage"
+extension does not permit certificate signing.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNABLE_TO_GET_CRL_ISSUER:
+unable to get CRL issuer <br/>
+certificate</b></p>
+<p style="margin-left:14%;">Unable to get CRL issuer
+certificate.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNHANDLED_CRITICAL_EXTENSION:
+unhandled critical extension</b></p>
+<p style="margin-left:14%;">Unhandled critical
+extension.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_KEYUSAGE_NO_CRL_SIGN:
+key usage does not include CRL signing</b></p>
+<p style="margin-left:14%;">Key usage does not include CRL
+signing.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNHANDLED_CRITICAL_CRL_EXTENSION:
+unhandled critical CRL <br/>
+extension</b></p>
+<p style="margin-left:14%;">Unhandled critical CRL
+extension.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_INVALID_NON_CA:
+invalid non−CA certificate (has CA markings)</b></p>
+<p style="margin-left:14%;">Invalid non−CA
+certificate has CA markings.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_PROXY_PATH_LENGTH_EXCEEDED:
+proxy path length constraint <br/>
+exceeded</b></p>
+<p style="margin-left:14%;">Proxy path length constraint
+exceeded.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_KEYUSAGE_NO_DIGITAL_SIGNATURE:
+key usage does not include <br/>
+digital signature</b></p>
+<p style="margin-left:14%;">Key usage does not include
+digital signature, and therefore cannot sign
+certificates.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_PROXY_CERTIFICATES_NOT_ALLOWED:
+proxy certificates not <br/>
+allowed, please set the appropriate flag</b></p>
+<p style="margin-left:14%;">Proxy certificates not allowed
+unless the <b>X509_V_FLAG_ALLOW_PROXY_CERTS</b> flag is
+set.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_INVALID_EXTENSION:
+invalid or inconsistent certificate <br/>
+extension</b></p>
+<p style="margin-left:14%;">A certificate extension had an
+invalid value (for example an incorrect encoding) or some
+value inconsistent with other extensions.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_INVALID_POLICY_EXTENSION:
+invalid or inconsistent <br/>
+certificate policy extension</b></p>
+<p style="margin-left:14%;">A certificate policies
+extension had an invalid value (for example an incorrect
+encoding) or some value inconsistent with other extensions.
+This error only occurs if policy processing is enabled.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_NO_EXPLICIT_POLICY:
+no explicit policy</b></p>
+<p style="margin-left:14%;">The verification flags were set
+to require and explicit policy but none was present.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_DIFFERENT_CRL_SCOPE:
+different CRL scope</b></p>
+<p style="margin-left:14%;">The only CRLs that could be
+found did not match the scope of the certificate.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNSUPPORTED_EXTENSION_FEATURE:
+unsupported extension feature</b></p>
+<p style="margin-left:14%;">Some feature of a certificate
+extension is not supported. Unused.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNNESTED_RESOURCE:
+RFC 3779 resource not subset of parent's <br/>
+resources</b></p>
+<p style="margin-left:14%;">See RFC 3779 for details.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_PERMITTED_VIOLATION:
+permitted subtree violation</b></p>
+<p style="margin-left:14%;">A name constraint violation
+occurred in the permitted subtrees.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_EXCLUDED_VIOLATION:
+excluded subtree violation</b></p>
+<p style="margin-left:14%;">A name constraint violation
+occurred in the excluded subtrees.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_SUBTREE_MINMAX:
+name constraints minimum and maximum not <br/>
+supported</b></p>
+<p style="margin-left:14%;">A certificate name constraints
+extension included a minimum or maximum field: this is not
+supported.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_APPLICATION_VERIFICATION:
+application verification failure</b></p>
+<p style="margin-left:14%;">An application specific error.
+This will never be returned unless explicitly set by an
+application callback.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNSUPPORTED_CONSTRAINT_TYPE:
+unsupported name constraint <br/>
+type</b></p>
+<p style="margin-left:14%;">An unsupported name constraint
+type was encountered. OpenSSL currently only supports
+directory name, DNS name, email and URI types.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNSUPPORTED_CONSTRAINT_SYNTAX:
+unsupported or invalid name <br/>
+constraint syntax</b></p>
+<p style="margin-left:14%;">The format of the name
+constraint is not recognised: for example an email address
+format of a form not mentioned in RFC3280. This could be
+caused by a garbage extension or some new feature not
+currently supported.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNSUPPORTED_NAME_SYNTAX:
+unsupported or invalid name syntax</b></p>
+<p style="margin-left:14%;">Unsupported or invalid name
+syntax.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CRL_PATH_VALIDATION_ERROR:
+CRL path validation error</b></p>
+<p style="margin-left:14%;">An error occurred when
+attempting to verify the CRL path. This error can only
+happen if extended CRL checking is enabled.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_PATH_LOOP: path
+loop</b></p>
+<p style="margin-left:14%;">Path loop.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_HOSTNAME_MISMATCH:
+hostname mismatch</b></p>
+<p style="margin-left:14%;">Hostname mismatch.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_EMAIL_MISMATCH:
+email address mismatch</b></p>
+<p style="margin-left:14%;">Email address mismatch.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_IP_ADDRESS_MISMATCH:
+IP address mismatch</b></p>
+<p style="margin-left:14%;">IP address mismatch.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_DANE_NO_MATCH: no
+matching DANE TLSA records</b></p>
+<p style="margin-left:14%;">DANE TLSA authentication is
+enabled, but no TLSA records matched the certificate chain.
+This error is only possible in
+<b>openssl−s_client</b>(1).</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_EE_KEY_TOO_SMALL:
+EE certificate key too weak</b></p>
+<p style="margin-left:14%;">EE certificate key too
+weak.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CA_KEY_TOO_SMALL:
+CA certificate key too weak</b></p>
+<p style="margin-left:14%;">CA certificate key too
+weak.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_CA_MD_TOO_WEAK: CA
+signature digest algorithm too weak</b></p>
+<p style="margin-left:14%;">CA signature digest algorithm
+too weak.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_INVALID_CALL:
+invalid certificate verification context</b></p>
+<p style="margin-left:14%;">Invalid certificate
+verification context.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_STORE_LOOKUP:
+issuer certificate lookup error</b></p>
+<p style="margin-left:14%;">Issuer certificate lookup
+error.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_NO_VALID_SCTS:
+certificate transparency required, but no <br/>
+valid SCTs found</b></p>
+<p style="margin-left:14%;">Certificate Transparency
+required, but no valid SCTs found.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_PROXY_SUBJECT_NAME_VIOLATION:
+proxy subject name violation</b></p>
+<p style="margin-left:14%;">Proxy subject name
+violation.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_OCSP_VERIFY_NEEDED:
+OCSP verification needed</b></p>
+<p style="margin-left:14%;">Returned by the verify callback
+to indicate an OCSP verification is needed.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_OCSP_VERIFY_FAILED:
+OCSP verification failed</b></p>
+<p style="margin-left:14%;">Returned by the verify callback
+to indicate OCSP verification failed.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_OCSP_CERT_UNKNOWN:
+OCSP unknown cert</b></p>
+<p style="margin-left:14%;">Returned by the verify callback
+to indicate that the certificate is not recognized by the
+OCSP responder.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_UNSUPPORTED_SIGNATURE_ALGORITHM:
+unsupported signature <br/>
+algorithm</b></p>
+<p style="margin-left:14%;">Cannot find certificate
+signature algorithm.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_SIGNATURE_ALGORITHM_MISMATCH:
+subject signature algorithm <br/>
+and issuer public key algorithm mismatch</b></p>
+<p style="margin-left:14%;">The issuer's public key is not
+of the type required by the signature in the subject's
+certificate.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_SIGNATURE_ALGORITHM_INCONSISTENCY:
+cert info signature and <br/>
+signature algorithm mismatch</b></p>
+<p style="margin-left:14%;">The algorithm given in the
+certificate info is inconsistent <br/>
+with the one used for the certificate signature.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_INVALID_CA:
+invalid CA certificate</b></p>
+<p style="margin-left:14%;">A CA certificate is invalid.
+Either it is not a CA or its extensions are not consistent
+with the supplied purpose.</p>
+<p style="margin-left:9%;"><b>X509_V_ERR_RPK_UNTRUSTED: raw
+public key untrusted, no trusted keys <br/>
+configured</b></p>
+<p style="margin-left:14%;">No TLS records were configured
+to validate the raw public key, or DANE was not enabled on
+the connection.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The above
+functions should be used instead of directly referencing the
+fields in the <b>X509_VERIFY_CTX</b> structure.</p>
+<p style="margin-left:9%; margin-top: 1em">In versions of
+OpenSSL before 1.0 the current certificate returned by
+<b>X509_STORE_CTX_get_current_cert()</b> was never NULL.
+Applications should check the return value before printing
+out any debugging information relating to the current
+certificate.</p>
+<p style="margin-left:9%; margin-top: 1em">If an
+unrecognised error code is passed to
+<b>X509_verify_cert_error_string()</b> the numerical value
+of the unknown code is returned in a static buffer. This is
+not thread safe but will never happen unless an invalid code
+is passed.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Previous
+versions of this documentation swapped the meaning of the
+<b>X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT</b> and
+<b>X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY</b> error
+codes.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_verify_cert</b>(3),
+<b>X509_STORE_CTX_verify</b>(3), <b>X509_up_ref</b>(3),
+<b>X509_free</b>(3).</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2009−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

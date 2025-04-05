@@ -1,0 +1,188 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:35 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>UNW_SET_CACHING_POLICY</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">UNW_SET_CACHING_POLICY</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#THREAD AND SIGNAL SAFETY">THREAD AND SIGNAL SAFETY</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">unw_set_caching_policy
+−− set unwind caching policy</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;libunwind.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">int
+unw_set_caching_policy(unw_addr_space_t as,
+unw_caching_policy_t policy);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+unw_set_caching_policy() routine sets the caching policy of
+address space as to the policy specified by argument policy.
+The policy argument can take one of three possible values:
+<br/>
+UNW_CACHE_NONE</p>
+<p style="margin-left:18%;">Turns off caching completely.
+This also implicitly flushes the contents of all caches as
+if unw_flush_cache() had been called.</p>
+<p style="margin-left:9%;">UNW_CACHE_GLOBAL</p>
+<p style="margin-left:18%;">Enables caching using a global
+cache that is shared by all threads. If global caching is
+unavailable or unsupported, libunwind may fall back on using
+a per−thread cache, as if UNW_CACHE_PER_THREAD had
+been specified.</p>
+<p style="margin-left:9%;">UNW_CACHE_PER_THREAD</p>
+<p style="margin-left:18%;">Enables caching using
+thread−local caches. If a thread−local caching
+are unavailable or unsupported, libunwind may fall back on
+using a global cache, as if UNW_CACHE_GLOBAL had been
+specified.</p>
+<p style="margin-left:9%; margin-top: 1em">If caching is
+enabled, an application must be prepared to make appropriate
+calls to unw_flush_cache() whenever the target changes in a
+way that could affect the validity of cached information.
+For example, after unloading (removing) a shared library,
+unw_flush_cache() would have to be called (at least) for the
+address−range that was covered by the shared
+library.</p>
+<p style="margin-left:9%; margin-top: 1em">For address
+spaces created via unw_create_addr_space(3libunwind),
+caching is turned off by default. For the local address
+space unw_local_addr_space, caching is turned on by
+default.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On successful
+completion, unw_set_caching_policy() returns 0. Otherwise
+the negative value of one of the error−codes below is
+returned.</p>
+<h2>THREAD AND SIGNAL SAFETY
+<a name="THREAD AND SIGNAL SAFETY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">unw_set_caching_policy()
+is thread−safe but <i>not</i> safe to use from a
+signal handler.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">UNW_ENOMEM</p>
+<p style="margin-left:18%;">The desired caching policy
+could not be established because the application is out of
+memory.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind(3libunwind),
+unw_create_addr_space(3libunwind),
+unw_set_cache_size(3libunwind),
+unw_flush_cache(3libunwind)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">David
+Mosberger−Tang <br/>
+Email: <b>dmosberger@gmail.com</b> <br/>
+WWW: <b>http://www.nongnu.org/libunwind/</b>.</p>
+<hr/>
+</body>
+</html>

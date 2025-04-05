@@ -1,0 +1,245 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:32 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_multi_socket_action</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_multi_socket_action</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#TYPICAL USAGE">TYPICAL USAGE</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_multi_socket_action
+− read/write available data given an action</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLMcode
+curl_multi_socket_action(CURLM *multi_handle, <br/>
+curl_socket_t sockfd, <br/>
+int ev_bitmask, <br/>
+int *running_handles);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">When the
+application has detected action on a socket handled by
+libcurl, it should call <i>curl_multi_socket_action(3)</i>
+with the <b>sockfd</b> argument set to the socket with the
+action. When the events on a socket are known, they can be
+passed as an events bitmask <b>ev_bitmask</b> by first
+setting <b>ev_bitmask</b> to 0, and then adding using
+bitwise OR (|) any combination of events to be chosen from
+CURL_CSELECT_IN, CURL_CSELECT_OUT or CURL_CSELECT_ERR. When
+the events on a socket are unknown, pass 0 instead, and
+libcurl tests the descriptor internally. It is also
+permissible to pass CURL_SOCKET_TIMEOUT to the <b>sockfd</b>
+parameter in order to initiate the whole process or when a
+timeout occurs.</p>
+<p style="margin-left:9%; margin-top: 1em">At return,
+<b>running_handles</b> points to the number of running easy
+handles within the multi handle. When this number reaches
+zero, all transfers are complete/done. When you call
+<i>curl_multi_socket_action(3)</i> on a specific socket and
+the counter decreases by one, it DOES NOT necessarily mean
+that this exact socket/transfer is the one that completed.
+Use <i>curl_multi_info_read(3)</i> to figure out which easy
+handle that completed.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>curl_multi_socket_action(3)</i> function informs the
+application about updates in the socket (file descriptor)
+status by doing none, one, or multiple calls to the socket
+callback function set with the
+<i>CURLMOPT_SOCKETFUNCTION(3)</i> option to
+<i>curl_multi_setopt(3)</i>. They update the status with
+changes since the previous time the callback was called.</p>
+<p style="margin-left:9%; margin-top: 1em">Get the timeout
+time by setting the <i>CURLMOPT_TIMERFUNCTION(3)</i> option
+with <i>curl_multi_setopt(3)</i>. Your application then gets
+called with information on how long to wait for socket
+actions at most before doing the timeout action: call the
+<i>curl_multi_socket_action(3)</i> function with the
+<b>sockfd</b> argument set to CURL_SOCKET_TIMEOUT. You can
+also use the <i>curl_multi_timeout(3)</i> function to poll
+the value at any given time, but for an event−based
+system using the callback is far better than relying on
+polling the timeout value.</p>
+<p style="margin-left:9%; margin-top: 1em">When this
+function returns error, the state of all transfers are
+uncertain and they cannot be continued.
+<i>curl_multi_socket_action(3)</i> should not be called
+again on the same multi handle after an error has been
+returned, unless first removing all the handles and adding
+new ones.</p>
+<h2>TYPICAL USAGE
+<a name="TYPICAL USAGE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">1. Create a
+multi handle</p>
+<p style="margin-left:9%; margin-top: 1em">2. Set the
+socket callback with <i>CURLMOPT_SOCKETFUNCTION(3)</i></p>
+<p style="margin-left:9%; margin-top: 1em">3. Set the
+timeout callback with <i>CURLMOPT_TIMERFUNCTION(3)</i>, to
+get to know what timeout value to use when waiting for
+socket activities.</p>
+<p style="margin-left:9%; margin-top: 1em">4. Add easy
+handles with curl_multi_add_handle()</p>
+<p style="margin-left:9%; margin-top: 1em">5. Provide some
+means to manage the sockets libcurl is using, so you can
+check them for activity. This can be done through your
+application code, or by way of an external library such as
+libevent or glib.</p>
+<p style="margin-left:9%; margin-top: 1em">6. Call
+curl_multi_socket_action(..., CURL_SOCKET_TIMEOUT, 0, ...)
+to kickstart everything. To get one or more callbacks
+called.</p>
+<p style="margin-left:9%; margin-top: 1em">7. Wait for
+activity on any of libcurl's sockets, use the timeout value
+your callback has been told.</p>
+<p style="margin-left:9%; margin-top: 1em">8, When activity
+is detected, call curl_multi_socket_action() for the
+socket(s) that got action. If no activity is detected and
+the timeout expires, call <i>curl_multi_socket_action(3)</i>
+with <i>CURL_SOCKET_TIMEOUT</i>.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+/* the event-library gets told when there activity on the
+socket ’fd’, <br/>
+which we translate to a call to curl_multi_socket_action()
+*/ <br/>
+int running; <br/>
+CURLM *multi; /* the stack we work with */ <br/>
+int fd; /* the descriptor that had action */ <br/>
+int bitmask; /* what activity that happened */ <br/>
+CURLMcode mc = curl_multi_socket_action(multi, fd, bitmask,
+&amp;running); <br/>
+if(mc) <br/>
+printf("error: %s\n", curl_multi_strerror(mc));
+<br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.15.4</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLMcode type,
+general libcurl multi interface error code. See
+<i>libcurl−errors(3)</i></p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i><b>curl_multi_cleanup</b></i>(3),
+<b>curl_multi_fdset</b>(3), <b>curl_multi_info_read</b>(3),
+<b>curl_multi_init</b>(3),
+<b>the</b>hiperfifo.c<b>example</b></p>
+<hr/>
+</body>
+</html>

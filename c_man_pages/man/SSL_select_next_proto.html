@@ -1,0 +1,337 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:31 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SET_ALPN_SELECT_CB</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SET_ALPN_SELECT_CB</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_set_alpn_protos,
+SSL_set_alpn_protos, SSL_CTX_set_alpn_select_cb,
+SSL_CTX_set_next_proto_select_cb,
+SSL_CTX_set_next_protos_advertised_cb,
+SSL_select_next_proto, SSL_get0_alpn_selected,
+SSL_get0_next_proto_negotiated − handle application
+layer protocol negotiation (ALPN)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+int SSL_CTX_set_alpn_protos(SSL_CTX *ctx, const unsigned
+char *protos, <br/>
+unsigned int protos_len); <br/>
+int SSL_set_alpn_protos(SSL *ssl, const unsigned char
+*protos, <br/>
+unsigned int protos_len); <br/>
+void SSL_CTX_set_alpn_select_cb(SSL_CTX *ctx, <br/>
+int (*cb) (SSL *ssl, <br/>
+const unsigned char **out, <br/>
+unsigned char *outlen, <br/>
+const unsigned char *in, <br/>
+unsigned int inlen, <br/>
+void *arg), void *arg); <br/>
+void SSL_get0_alpn_selected(const SSL *ssl, const unsigned
+char **data, <br/>
+unsigned int *len); <br/>
+void SSL_CTX_set_next_protos_advertised_cb(SSL_CTX *ctx,
+<br/>
+int (*cb)(SSL *ssl, <br/>
+const unsigned char **out, <br/>
+unsigned int *outlen, <br/>
+void *arg), <br/>
+void *arg); <br/>
+void SSL_CTX_set_next_proto_select_cb(SSL_CTX *ctx, <br/>
+int (*cb)(SSL *s, <br/>
+unsigned char **out, <br/>
+unsigned char *outlen, <br/>
+const unsigned char *in, <br/>
+unsigned int inlen, <br/>
+void *arg), <br/>
+void *arg); <br/>
+int SSL_select_next_proto(unsigned char **out, unsigned char
+*outlen, <br/>
+const unsigned char *server, <br/>
+unsigned int server_len, <br/>
+const unsigned char *client, <br/>
+unsigned int client_len); <br/>
+void SSL_get0_next_proto_negotiated(const SSL *s, const
+unsigned char **data, <br/>
+unsigned *len);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_alpn_protos()</b>
+and <b>SSL_set_alpn_protos()</b> are used by the client to
+set the list of protocols available to be negotiated. The
+<b>protos</b> must be in protocol−list format,
+described below. The length of <b>protos</b> is specified in
+<b>protos_len</b>. Setting <b>protos_len</b> to 0 clears any
+existing list of ALPN protocols and no ALPN extension will
+be sent to the server.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_alpn_select_cb()</b>
+sets the application callback <b>cb</b> used by a server to
+select which protocol to use for the incoming connection.
+When <b>cb</b> is NULL, ALPN is not used. The <b>arg</b>
+value is a pointer which is passed to the application
+callback.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>cb</b> is the
+application defined callback. The <b>in</b>, <b>inlen</b>
+parameters are a vector in protocol−list format. The
+value of the <b>out</b>, <b>outlen</b> vector should be set
+to the value of a single protocol selected from the
+<b>in</b>, <b>inlen</b> vector. The <b>out</b> buffer may
+point directly into <b>in</b>, or to a buffer that outlives
+the handshake. The <b>arg</b> parameter is the pointer set
+via <b>SSL_CTX_set_alpn_select_cb()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_select_next_proto()</b>
+is a helper function used to select protocols. It implements
+the standard protocol selection. It is expected that this
+function is called from the application callback <b>cb</b>.
+The protocol data in <b>server</b>, <b>server_len</b> and
+<b>client</b>, <b>client_len</b> must be in the
+protocol−list format described below. The first item
+in the <b>server</b>, <b>server_len</b> list that matches an
+item in the <b>client</b>, <b>client_len</b> list is
+selected, and returned in <b>out</b>, <b>outlen</b>. The
+<b>out</b> value will point into either <b>server</b> or
+<b>client</b>, so it should be copied immediately. The
+client list must include at least one valid (nonempty)
+protocol entry in the list.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_select_next_proto()</b> helper function can be useful
+from either the ALPN callback or the NPN callback (described
+below). If no match is found, the first item in
+<b>client</b>, <b>client_len</b> is returned in <b>out</b>,
+<b>outlen</b> and <b>OPENSSL_NPN_NO_OVERLAP</b> is returned.
+This can be useful when implementing the NPN callback. In
+the ALPN case, the value returned in <b>out</b> and
+<b>outlen</b> must be ignored if
+<b>OPENSSL_NPN_NO_OVERLAP</b> has been returned from
+<b>SSL_select_next_proto()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_next_proto_select_cb()</b>
+sets a callback <b>cb</b> that is called when a client needs
+to select a protocol from the server's provided list, and a
+user−defined pointer argument <b>arg</b> which will be
+passed to this callback. For the callback itself, <b>out</b>
+must be set to point to the selected protocol (which may be
+within <b>in</b>). The length of the protocol name must be
+written into <b>outlen</b>. The server's advertised
+protocols are provided in <b>in</b> and <b>inlen</b>. The
+callback can assume that <b>in</b> is syntactically valid.
+The client must select a protocol (although it may be an
+empty, zero length protocol). It is fatal to the connection
+if this callback returns a value other than
+<b>SSL_TLSEXT_ERR_OK</b> or if the zero length protocol is
+selected. The <b>arg</b> parameter is the pointer set via
+<b>SSL_CTX_set_next_proto_select_cb()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_next_protos_advertised_cb()</b>
+sets a callback <b>cb</b> that is called when a TLS server
+needs a list of supported protocols for Next Protocol
+Negotiation. The returned list must be in
+protocol−list format, described below. The list is
+returned by setting <b>out</b> to point to it and
+<b>outlen</b> to its length. This memory will not be
+modified, but the <b>SSL</b> does keep a reference to it.
+The callback should return <b>SSL_TLSEXT_ERR_OK</b> if it
+wishes to advertise. Otherwise, no such extension will be
+included in the ServerHello.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get0_alpn_selected()</b>
+returns a pointer to the selected protocol in <b>data</b>
+with length <b>len</b>. It is not NUL−terminated.
+<b>data</b> is set to NULL and <b>len</b> is set to 0 if no
+protocol has been selected. <b>data</b> must not be
+freed.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get0_next_proto_negotiated()</b>
+sets <b>data</b> and <b>len</b> to point to the client's
+requested protocol for this connection. If the client did
+not request any protocol or NPN is not enabled, then
+<b>data</b> is set to NULL and <b>len</b> to 0. Note that
+the client can request any protocol it chooses. The value
+returned from this function need not be a member of the list
+of supported protocols provided by the callback.</p>
+<p style="margin-left:9%; margin-top: 1em">NPN
+functionality cannot be used with QUIC SSL objects. Use of
+ALPN is mandatory when using QUIC SSL objects.
+<b>SSL_CTX_set_next_protos_advertised_cb()</b> and
+<b>SSL_CTX_set_next_proto_select_cb()</b> have no effect if
+called on a QUIC SSL context.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+protocol−lists must be in wire−format, which is
+defined as a vector of nonempty, 8−bit
+length−prefixed, byte strings. The length−prefix
+byte is not included in the length. Each string is limited
+to 255 bytes. A byte−string length of 0 is invalid. A
+truncated byte−string is invalid. The length of the
+vector is not in the vector itself, but in a separate
+variable.</p>
+<p style="margin-left:9%; margin-top: 1em">Example:</p>
+<p style="margin-left:9%; margin-top: 1em">unsigned char
+vector[] = { <br/>
+6, 's', 'p', 'd', 'y', '/', '1', <br/>
+8, 'h', 't', 't', 'p', '/', '1', '.', '1' <br/>
+}; <br/>
+unsigned int length = sizeof(vector);</p>
+<p style="margin-left:9%; margin-top: 1em">The ALPN
+callback is executed after the servername callback; as that
+servername callback may update the SSL_CTX, and
+subsequently, the ALPN callback.</p>
+<p style="margin-left:9%; margin-top: 1em">If there is no
+ALPN proposed in the ClientHello, the ALPN callback is not
+invoked.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_alpn_protos()</b>
+and <b>SSL_set_alpn_protos()</b> return 0 on success, and
+non−0 on failure. WARNING: these functions reverse the
+return value convention.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_select_next_proto()</b>
+returns one of the following: <br/>
+OPENSSL_NPN_NEGOTIATED</p>
+<p style="margin-left:14%;">A match was found and is
+returned in <b>out</b>, <b>outlen</b>.</p>
+<p style="margin-left:9%;">OPENSSL_NPN_NO_OVERLAP</p>
+<p style="margin-left:14%;">No match was found. The first
+item in <b>client</b>, <b>client_len</b> is returned in
+<b>out</b>, <b>outlen</b> (or <b>NULL</b> and 0 in the case
+where the first entry in <b>client</b> is invalid).</p>
+<p style="margin-left:9%; margin-top: 1em">The ALPN select
+callback <b>cb</b>, must return one of the following: <br/>
+SSL_TLSEXT_ERR_OK</p>
+<p style="margin-left:14%;">ALPN protocol selected.</p>
+<p style="margin-left:9%;">SSL_TLSEXT_ERR_ALERT_FATAL</p>
+<p style="margin-left:14%;">There was no overlap between
+the client's supplied list and the server configuration.</p>
+<p style="margin-left:9%;">SSL_TLSEXT_ERR_NOACK</p>
+<p style="margin-left:14%;">ALPN protocol not selected,
+e.g., because no ALPN protocols are configured for this
+connection.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback set
+using <b>SSL_CTX_set_next_proto_select_cb()</b> should
+return <b>SSL_TLSEXT_ERR_OK</b> if successful. Any other
+value is fatal to the connection.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback set
+using <b>SSL_CTX_set_next_protos_advertised_cb()</b> should
+return <b>SSL_TLSEXT_ERR_OK</b> if it wishes to advertise.
+Otherwise, no such extension will be included in the
+ServerHello.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_CTX_set_tlsext_servername_callback</b>(3),
+<b>SSL_CTX_set_tlsext_servername_arg</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2016−2024 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

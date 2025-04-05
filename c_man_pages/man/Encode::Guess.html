@@ -1,0 +1,334 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:47 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Encode::Guess</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Encode::Guess</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#ABSTRACT">ABSTRACT</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#TO DO">TO DO</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode::Guess
+−− Guesses encoding from data</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"># if you are
+sure $data won't contain anything bogus <br/>
+use Encode; <br/>
+use Encode::Guess qw/euc−jp shiftjis 7bit−jis/;
+<br/>
+my $utf8 = decode("Guess", $data); <br/>
+my $data = encode("Guess", $utf8); # this doesn't
+work! <br/>
+# more elaborate way <br/>
+use Encode::Guess; <br/>
+my $enc = guess_encoding($data, qw/euc−jp shiftjis
+7bit−jis/); <br/>
+ref($enc) or die "Can't guess: $enc"; # trap error
+this way <br/>
+$utf8 = $enc−&gt;decode($data); <br/>
+# or <br/>
+$utf8 = decode($enc−&gt;name, $data)</p>
+<h2>ABSTRACT
+<a name="ABSTRACT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode::Guess
+enables you to guess in what encoding a given data is
+encoded, or at least tries to.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">By default, it
+checks only ascii, utf8 and UTF−16/32 with BOM.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Encode::Guess; # ascii/utf8/BOMed UTF</p>
+<p style="margin-left:9%; margin-top: 1em">To use it more
+practically, you have to give the names of encodings to
+check (<i>suspects</i> as follows). The name of suspects can
+either be canonical names or aliases.</p>
+<p style="margin-left:9%; margin-top: 1em">CAVEAT: Unlike
+UTF−(16|32), BOM in utf8 is NOT AUTOMATICALLY
+STRIPPED.</p>
+<p style="margin-left:9%; margin-top: 1em"># tries all
+major Japanese Encodings as well <br/>
+use Encode::Guess qw/euc−jp shiftjis
+7bit−jis/;</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+$Encode::Guess::NoUTFAutoGuess variable is set to a true
+value, no heuristics will be applied to UTF8/16/32, and the
+result will be limited to the suspects and
+"ascii". <br/>
+Encode::Guess−&gt;set_suspects</p>
+<p style="margin-left:14%;">You can also change the
+internal suspects list via "set_suspects"
+method.</p>
+<p style="margin-left:14%; margin-top: 1em">use
+Encode::Guess; <br/>
+Encode::Guess−&gt;set_suspects(qw/euc−jp
+shiftjis 7bit−jis/);</p>
+<p style="margin-left:9%;">Encode::Guess−&gt;add_suspects</p>
+<p style="margin-left:14%;">Or you can use
+"add_suspects" method. The difference is that
+"set_suspects" flushes the current suspects list
+while "add_suspects" adds.</p>
+<p style="margin-left:14%; margin-top: 1em">use
+Encode::Guess; <br/>
+Encode::Guess−&gt;add_suspects(qw/euc−jp
+shiftjis 7bit−jis/); <br/>
+# now the suspects are euc−jp,shiftjis,7bit−jis,
+AND <br/>
+# euc−kr,euc−cn, and big5−eten <br/>
+Encode::Guess−&gt;add_suspects(qw/euc−kr
+euc−cn big5−eten/);</p>
+<p style="margin-left:9%;">Encode::decode("Guess"
+...)</p>
+<p style="margin-left:14%;">When you are content with
+suspects list, you can now</p>
+<p style="margin-left:14%; margin-top: 1em">my $utf8 =
+Encode::decode("Guess", $data);</p>
+<p style="margin-left:9%;">Encode::Guess−&gt;guess($data)</p>
+<p style="margin-left:14%;">But it will croak if:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="35%">
+<p>Two or more suspects remain</p></td>
+<td width="46%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="35%">
+<p>No suspects left</p></td>
+<td width="46%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">So you should
+instead try this;</p>
+<p style="margin-left:14%; margin-top: 1em">my $decoder =
+Encode::Guess−&gt;guess($data);</p>
+<p style="margin-left:14%; margin-top: 1em">On success,
+$decoder is an object that is documented in
+Encode::Encoding. So you can now do this;</p>
+<p style="margin-left:14%; margin-top: 1em">my $utf8 =
+$decoder−&gt;decode($data);</p>
+<p style="margin-left:14%; margin-top: 1em">On failure,
+$decoder now contains an error message so the whole thing
+would be as follows;</p>
+<p style="margin-left:14%; margin-top: 1em">my $decoder =
+Encode::Guess−&gt;guess($data); <br/>
+die $decoder unless ref($decoder); <br/>
+my $utf8 = $decoder−&gt;decode($data);</p>
+<p style="margin-left:9%;">guess_encoding($data, [, <i>list
+of suspects</i>])</p>
+<p style="margin-left:14%;">You can also try
+"guess_encoding" function which is exported by
+default. It takes $data to check and it also takes the list
+of suspects by option. The optional suspect list is <i>not
+reflected</i> to the internal suspects list.</p>
+<p style="margin-left:14%; margin-top: 1em">my $decoder =
+guess_encoding($data, qw/euc−jp euc−kr
+euc−cn/); <br/>
+die $decoder unless ref($decoder); <br/>
+my $utf8 = $decoder−&gt;decode($data); <br/>
+# check only ascii, utf8 and UTF−(16|32) with BOM <br/>
+my $decoder = guess_encoding($data);</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="76%">
+<p style="margin-top: 1em">Because of the algorithm used,
+ISO−8859 series and other single−byte encodings
+do not work well unless either one of ISO−8859 is the
+only one suspect (besides ascii and utf8).</p></td>
+<td width="10%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">use
+Encode::Guess; <br/>
+# perhaps ok <br/>
+my $decoder = guess_encoding($data, 'latin1'); <br/>
+# definitely NOT ok <br/>
+my $decoder = guess_encoding($data, qw/latin1 greek/);</p>
+<p style="margin-left:14%; margin-top: 1em">The reason is
+that Encode::Guess guesses encoding by trial and error. It
+first splits $data into lines and tries to decode the line
+for each suspect. It keeps it going until all but one
+encoding is eliminated out of suspects list. ISO−8859
+series is just too successful for most cases (because it
+fills almost all code points in \x00−\xff).</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">Do not mix national standard
+encodings and the corresponding vendor encodings.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em"># a very bad
+idea <br/>
+my $decoder <br/>
+= guess_encoding($data, qw/shiftjis MacJapanese cp932/);</p>
+<p style="margin-left:14%; margin-top: 1em">The reason is
+that vendor encoding is usually a superset of national
+standard so it becomes too ambiguous for most cases.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="78%">
+<p style="margin-top: 1em">On the other hand, mixing
+various national standard encodings automagically works
+unless $data is too short to allow for guessing.</p></td>
+<td width="8%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em"># This is ok if
+$data is long enough <br/>
+my $decoder = <br/>
+guess_encoding($data, qw/euc−cn <br/>
+euc−jp shiftjis 7bit−jis <br/>
+euc−kr <br/>
+big5−eten/);</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="83%">
+<p style="margin-top: 1em">DO NOT PUT TOO MANY SUSPECTS!
+Don't you try something like this!</p></td>
+<td width="3%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">my $decoder =
+guess_encoding($data, <br/>
+Encode−&gt;encodings(":all"));</p>
+<p style="margin-left:9%; margin-top: 1em">It is, after
+all, just a guess. You should alway be explicit when it
+comes to encodings. But there are some, especially Japanese,
+environment that guess−coding is a must. Use this
+module with care.</p>
+<h2>TO DO
+<a name="TO DO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode::Guess
+does not work on EBCDIC platforms.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode,
+Encode::Encoding</p>
+<hr/>
+</body>
+</html>

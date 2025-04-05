@@ -1,0 +1,320 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:01 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LIBTRACEEVENT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LIBTRACEEVENT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#FILES">FILES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#RESOURCES">RESOURCES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">tep_parse_saved_cmdlines,
+tep_parse_printk_formats, tep_parse_kallsyms − Parsing
+functions to load mappings</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;event−parse.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em">int
+<b>tep_parse_saved_cmdlines</b>(struct tep_handle
+*<i>tep</i>, const char *<i>buf</i>); <br/>
+int <b>tep_parse_printk_formats</b>(struct tep_handle
+*<i>tep</i>, const char *<i>buf</i>); <br/>
+int <b>tep_parse_kallsyms</b>(struct tep_handle *<i>tep</i>,
+const char *<i>buf</i>);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>tep_parse_saved_cmdlines()</b>
+is a helper function to parse content in the tracefs file
+system of the "saved_cmdlines" file (stored in a
+string buffer passed in by <i>buf</i>) and loads the mapping
+of the process IDs (pid) to the comm names in the <i>tep</i>
+handler. The events store the pid and this is used to be
+able to show the process names associated to those process
+ids. It parses the string <i>buf</i> that holds the content
+of saved_cmdlines and ends with a nul character
+(<i>\0</i>).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tep_parse_printk_formats()</b>
+is a helper function to parse content in the tracefs file
+system of the "printk_formats" file (stored in a
+string buffer passed in by <i>buf</i>) and loads the mapping
+of addresses of strings that may be referenced by events.
+Events only store the address of constant strings in the
+kernel, and the mapping of their address to the string is
+exported to user space in the printk_formats file. It parses
+the string <i>buf</i> that holds the content of
+printk_formats and ends with a nul character
+(<i>\0</i>).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tep_parse_kallsyms()</b>
+is a helper function to parse the Linux kernel
+/proc/kallsyms format (stored in a string buffer passed in
+by <i>buf</i>) and load the functions into the <i>tep</i>
+handler such that function IP addresses can be mapped to
+their name when parsing events with %pS in the print format
+field. It parses the string <i>buf</i> that holds the
+content of /proc/kallsyms and ends with a nul character
+(<i>\0</i>).</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>tep_parse_saved_cmdlines</b>() function returns 0 in case
+of success, or −1 in case of an error.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>tep_parse_printk_formats</b>() function returns 0 in case
+of success, or −1 in case of an error.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>tep_parse_kallsyms</b>() function returns 0 in case of
+success, or −1 in case of an error.</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em">... <br/>
+#include &lt;event−parse.h&gt; <br/>
+#include &lt;tracefs.h&gt; <br/>
+#include &lt;stdlib.h&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">int
+load_cmdlines(struct tep_handle *tep) <br/>
+{ <br/>
+char *buf = NULL; <br/>
+int r;</p>
+<p style="margin-left:14%; margin-top: 1em">buf =
+tracefs_instance_file_read(NULL, "saved_cmdlines",
+NULL); <br/>
+if (!buf) <br/>
+return −1; <br/>
+r = tep_parse_saved_cmdlines(tep, buf); <br/>
+free(buf); <br/>
+return r; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">int
+load_print_strings(struct tep_handle *tep) <br/>
+{ <br/>
+char *buf = NULL; <br/>
+int r;</p>
+<p style="margin-left:14%; margin-top: 1em">buf =
+tracefs_instance_file_read(NULL, "printk_formats",
+NULL); <br/>
+if (!buf) <br/>
+return −1; <br/>
+r = tep_parse_printk_formats(tep, buf); <br/>
+free(buf); <br/>
+return r; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">int
+load_kallsyms(struct tep_handle *tep) <br/>
+{ <br/>
+char *line = NULL; <br/>
+char *buf = NULL; <br/>
+size_t sz = 0; <br/>
+FILE *fp; <br/>
+int len = 0; <br/>
+int r;</p>
+<p style="margin-left:14%; margin-top: 1em">fp =
+fopen("/proc/kallsyms", "r"); <br/>
+while ((r = getline(&amp;line, &amp;sz, fp)) &gt;= 0) { <br/>
+buf = realloc(buf, len + r + 1); <br/>
+memcpy(buf + len, line, r); <br/>
+len += r; <br/>
+} <br/>
+free(line); <br/>
+fclose(fp); <br/>
+if (!buf) <br/>
+return −1; <br/>
+buf[len] = 0;</p>
+<p style="margin-left:14%; margin-top: 1em">r =
+tep_parse_kallsyms(tep, buf); <br/>
+free(buf); <br/>
+return r; <br/>
+} <br/>
+...</p>
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em"><b>event−parse.h</b>
+<br/>
+Header file to include in order to have access to the
+library APIs. <b><br/>
+−ltraceevent</b> <br/>
+Linker switch to add when building a program that uses the
+library.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>libtraceevent</b>(3),
+<b>trace−cmd</b>(1), <b>tep_register_comm</b>(3),
+<b>tep_register_function</b>(3),
+<b>tep_register_print_string</b>(3)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em"><b>Steven
+Rostedt</b>
+&lt;<b><font color="#0000FF">rostedt@goodmis.org</font></b>
+<small><font color="#000000">[1]</font></small>
+<font color="#000000">&gt;, author of <b>libtraceevent</b>.
+<b><br/>
+Tzvetomir Stoyanov</b>
+&lt;</font><b><font color="#0000FF">tz.stoyanov@gmail.com</font></b>
+<small><font color="#000000">[2]</font></small>
+<font color="#000000">&gt;, coauthor of
+<b>libtraceevent</b>.</font></p>
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><font color="#000000">Report
+bugs to
+&lt;</font><b><font color="#0000FF">linux−trace−devel@vger.kernel.org</font></b>
+<small><font color="#000000">[3]</font></small>
+<font color="#000000">&gt;</font></p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><font color="#000000">libtraceevent
+is Free Software licensed under the GNU LGPL 2.1</font></p>
+<h2>RESOURCES
+<a name="RESOURCES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b><font color="#0000FF">https://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git/</font></b></p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">1.</font></p> </td>
+<td width="1%"></td>
+<td width="24%">
+<p style="margin-top: 1em"><font color="#000000">rostedt@goodmis.org</font></p> </td>
+<td width="62%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:rostedt@goodmis.org</font></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">2.</font></p> </td>
+<td width="1%"></td>
+<td width="27%">
+<p style="margin-top: 1em"><font color="#000000">tz.stoyanov@gmail.com</font></p> </td>
+<td width="59%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:tz.stoyanov@gmail.com</font></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">3.</font></p> </td>
+<td width="1%"></td>
+<td width="42%">
+<p style="margin-top: 1em"><font color="#000000">linux-trace-devel@vger.kernel.org</font></p> </td>
+<td width="44%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:linux-trace-devel@vger.kernel.org</font></p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:31 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Package::Generator</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Package::Generator</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#INTERFACE">INTERFACE</a><br/>
+<a href="#new_package">new_package</a><br/>
+<a href="#assign_symbols">assign_symbols</a><br/>
+<a href="#package_exists">package_exists</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Package::Generator
+− generate new packages quickly and easily</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version
+1.106</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Package::Generator; <br/>
+my $package = Package::Generator−&gt;new_package; <br/>
+...</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module lets
+you quickly and easily construct new packages. It gives them
+unused names and sets up their package data, if
+provided.</p>
+<h2>INTERFACE
+<a name="INTERFACE"></a>
+</h2>
+<h3>new_package
+<a name="new_package"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $package =
+Package::Generator−&gt;new_package(\%arg);</p>
+<p style="margin-left:9%; margin-top: 1em">This returns the
+newly generated package. It can be called with no arguments,
+in which case it just returns the name of a pristene
+package. The "base" argument can be provided to
+generate the package under an existing namespace. A
+"make_unique" argument can also be provided; it
+must be a coderef which will be passed the base package name
+and returns a unique package name under the base name.</p>
+<p style="margin-left:9%; margin-top: 1em">A
+"data" argument may be passed as a reference to an
+array of pairs. These pairs will be used to set up the data
+in the generated package. For example, the following call
+will create a package with a $foo set to 1 and a @foo set to
+the first ten counting numbers.</p>
+<p style="margin-left:9%; margin-top: 1em">my $package =
+Package::Generator−&gt;new_package({ <br/>
+data =&gt; [ <br/>
+foo =&gt; 1, <br/>
+foo =&gt; [ 1 .. 10 ], <br/>
+] <br/>
+});</p>
+<p style="margin-left:9%; margin-top: 1em">For convenience,
+"isa" and "version" arguments may be
+passed to "new_package". They will set up @ISA,
+$VERSION, or &amp;VERSION, as appropriate. If a single
+scalar value is passed as the "isa" argument, it
+will be used as the only value to assign to @ISA. (That is,
+it will not cause $ISA to be assigned; that wouldn't be very
+helpful.)</p>
+<h3>assign_symbols
+<a name="assign_symbols"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Package::Generator−&gt;assign_symbols($package,
+\@key_value_pairs);</p>
+<p style="margin-left:9%; margin-top: 1em">This routine is
+used by "new_package" to set up the data in a
+package.</p>
+<h3>package_exists
+<a name="package_exists"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">... if
+Package::Generator−&gt;package_exists($package);</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns true if something has already created a symbol table
+for the named package. This is equivalent to:</p>
+<p style="margin-left:9%; margin-top: 1em">... if defined
+*{$package . '::'};</p>
+<p style="margin-left:9%; margin-top: 1em">It's just a
+little less voodoo−y.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Ricardo SIGNES
+&lt;rjbs@cpan.org&gt;</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2005 by Ricardo SIGNES.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

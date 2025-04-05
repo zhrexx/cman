@@ -1,0 +1,254 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:09 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CMS_DECRYPT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CMS_DECRYPT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CMS_decrypt,
+CMS_decrypt_set1_pkey_and_peer, CMS_decrypt_set1_pkey,
+CMS_decrypt_set1_password − decrypt content from a CMS
+envelopedData structure</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/cms.h&gt; <br/>
+int CMS_decrypt(CMS_ContentInfo *cms, EVP_PKEY *pkey, X509
+*cert, <br/>
+BIO *dcont, BIO *out, unsigned int flags); <br/>
+int CMS_decrypt_set1_pkey_and_peer(CMS_ContentInfo *cms,
+<br/>
+EVP_PKEY *pk, X509 *cert, X509 *peer); <br/>
+int CMS_decrypt_set1_pkey(CMS_ContentInfo *cms, EVP_PKEY
+*pk, X509 *cert); <br/>
+int CMS_decrypt_set1_password(CMS_ContentInfo *cms, <br/>
+unsigned char *pass, ossl_ssize_t passlen);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_decrypt()</b>
+extracts the decrypted content from a CMS EnvelopedData or
+AuthEnvelopedData structure. It uses
+<b>CMS_decrypt_set1_pkey()</b> to decrypt the content with
+the recipient private key <i>pkey</i> if <i>pkey</i> is not
+NULL. In this case, the associated certificate is
+recommended to provide in <i>cert</i> − see the NOTES
+below. <i>out</i> is a BIO to write the content to and
+<i>flags</i> is an optional set of flags. If <i>pkey</i> is
+NULL the function assumes that decryption was already done
+(e.g., using <b>CMS_decrypt_set1_pkey()</b> or
+<b>CMS_decrypt_set1_password()</b>) and just provides the
+content unless <i>cert</i>, <i>dcont</i>, and <i>out</i> are
+NULL as well. The <i>dcont</i> parameter is used in the rare
+case where the encrypted content is detached. It will
+normally be set to NULL.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_decrypt_set1_pkey_and_peer()</b>
+decrypts the CMS_ContentInfo structure <i>cms</i> using the
+private key <i>pkey</i>, the corresponding certificate
+<i>cert</i>, which is recommended but may be NULL, and the
+(optional) originator certificate <i>peer</i>. On success,
+it also records in <i>cms</i> the decryption key
+<i>pkey</i>, and then should be followed by
+"CMS_decrypt(cms, NULL, NULL, dcont, out, flags)".
+This call deallocates any decryption key stored in
+<i>cms</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_decrypt_set1_pkey()</b>
+is the same as <b>CMS_decrypt_set1_pkey_and_peer()</b> with
+<i>peer</i> being NULL.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_decrypt_set1_password()</b>
+decrypts the CMS_ContentInfo structure <i>cms</i> using the
+secret <i>pass</i> of length <i>passlen</i>. On success, it
+also records in <i>cms</i> the decryption key used, and then
+should be followed by "CMS_decrypt(cms, NULL, NULL,
+dcont, out, flags)". This call deallocates any
+decryption key stored in <i>cms</i>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Although the
+recipients certificate is not needed to decrypt the data it
+is needed to locate the appropriate (of possible several)
+recipients in the CMS structure.</p>
+<p style="margin-left:9%; margin-top: 1em">If <i>cert</i>
+is set to NULL all possible recipients are tried. This case
+however is problematic. To thwart the MMA attack
+(Bleichenbacher's attack on PKCS #1 v1.5 RSA padding) all
+recipients are tried whether they succeed or not. If no
+recipient succeeds then a random symmetric key is used to
+decrypt the content: this will typically output garbage and
+may (but is not guaranteed to) ultimately return a padding
+error only. If <b>CMS_decrypt()</b> just returned an error
+when all recipient encrypted keys failed to decrypt an
+attacker could use this in a timing attack. If the special
+flag <b>CMS_DEBUG_DECRYPT</b> is set then the above
+behaviour is modified and an error <b>is</b> returned if no
+recipient encrypted key can be decrypted <b>without</b>
+generating a random content encryption key. Applications
+should use this flag with <b>extreme caution</b> especially
+in automated gateways as it can leave them open to
+attack.</p>
+<p style="margin-left:9%; margin-top: 1em">It is possible
+to determine the correct recipient key by other means (for
+example looking them up in a database) and setting them in
+the CMS structure in advance using the CMS utility functions
+such as <b>CMS_set1_pkey()</b>, or use
+<b>CMS_decrypt_set1_password()</b> if the recipient has a
+symmetric key. In these cases both <i>cert</i> and
+<i>pkey</i> should be set to NULL.</p>
+<p style="margin-left:9%; margin-top: 1em">To process
+KEKRecipientInfo types <b>CMS_set1_key()</b> or
+<b>CMS_RecipientInfo_set0_key()</b> and
+<b>CMS_RecipientInfo_decrypt()</b> should be called before
+<b>CMS_decrypt()</b> and <i>cert</i> and <i>pkey</i> set to
+NULL.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+flags can be passed in the <i>flags</i> parameter.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+<b>CMS_TEXT</b> flag is set MIME headers for type
+"text/plain" are deleted from the content. If the
+content is not of type "text/plain" then an error
+is returned.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_decrypt()</b>,
+<b>CMS_decrypt_set1_pkey_and_peer()</b>,
+<b>CMS_decrypt_set1_pkey()</b>, and
+<b>CMS_decrypt_set1_password()</b> return either 1 for
+success or 0 for failure. The error can be obtained from
+<b>ERR_get_error</b>(3).</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The <b>set1_</b>
+part of these function names is misleading and should better
+read: <b>with_</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The lack of
+single pass processing and the need to hold all data in
+memory as mentioned in <b>CMS_verify()</b> also applies to
+<b>CMS_decrypt()</b>.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ERR_get_error</b>(3),
+<b>CMS_encrypt</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_decrypt_set1_pkey_and_peer()</b>
+and <b>CMS_decrypt_set1_password()</b> were added in OpenSSL
+3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2008−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

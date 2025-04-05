@@ -1,0 +1,233 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:35 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_SET1_HOST</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_SET1_HOST</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_set1_host,
+SSL_add1_host, SSL_set_hostflags, SSL_get0_peername −
+SSL server verification parameters</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+int SSL_set1_host(SSL *s, const char *hostname); <br/>
+int SSL_add1_host(SSL *s, const char *hostname); <br/>
+void SSL_set_hostflags(SSL *s, unsigned int flags); <br/>
+const char *SSL_get0_peername(SSL *s);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+configure server hostname checks in the SSL client.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set1_host()</b>
+sets the expected DNS hostname to <b>name</b> clearing any
+previously specified hostname. If <b>name</b> is NULL or the
+empty string, the list of hostnames is cleared and name
+checks are not performed on the peer certificate. When a
+nonempty <b>name</b> is specified, certificate verification
+automatically checks the peer hostname via
+<b>X509_check_host</b>(3) with <b>flags</b> as specified via
+<b>SSL_set_hostflags()</b>. Clients that enable DANE TLSA
+authentication via <b>SSL_dane_enable</b>(3) should leave it
+to that function to set the primary reference identifier of
+the peer, and should not call <b>SSL_set1_host()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_add1_host()</b>
+adds <b>name</b> as an additional reference identifier that
+can match the peer's certificate. Any previous names set via
+<b>SSL_set1_host()</b> or <b>SSL_add1_host()</b> are
+retained, no change is made if <b>name</b> is NULL or empty.
+When multiple names are configured, the peer is considered
+verified when any name matches. This function is required
+for DANE TLSA in the presence of service name indirection
+via CNAME, MX or SRV records as specified in RFC7671,
+RFC7672 or RFC7673.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_hostflags()</b>
+sets the <b>flags</b> that will be passed to
+<b>X509_check_host</b>(3) when name checks are applicable,
+by default the <b>flags</b> value is 0. See
+<b>X509_check_host</b>(3) for the list of available flags
+and their meaning.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get0_peername()</b>
+returns the DNS hostname or subject CommonName from the peer
+certificate that matched one of the reference identifiers.
+When wildcard matching is not disabled, the name matched in
+the peer certificate may be a wildcard name. When one of the
+reference identifiers configured via <b>SSL_set1_host()</b>
+or <b>SSL_add1_host()</b> starts with ".", which
+indicates a parent domain prefix rather than a fixed name,
+the matched peer name may be a sub−domain of the
+reference identifier. The returned string is allocated by
+the library and is no longer valid once the associated
+<b>ssl</b> handle is cleared or freed, or a renegotiation
+takes place. Applications must not free the return
+value.</p>
+<p style="margin-left:9%; margin-top: 1em">SSL clients are
+advised to use these functions in preference to explicitly
+calling <b>X509_check_host</b>(3). Hostname checks may be
+out of scope with the RFC7671 <b>DANE−EE</b>(3)
+certificate usage, and the internal check will be suppressed
+as appropriate when DANE is enabled.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set1_host()</b>
+and <b>SSL_add1_host()</b> return 1 for success and 0 for
+failure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get0_peername()</b>
+returns NULL if peername verification is not applicable (as
+with RFC7671 <b>DANE−EE</b>(3)), or no trusted
+peername was matched. Otherwise, it returns the matched
+peername. To determine whether verification succeeded call
+<b>SSL_get_verify_result</b>(3).</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Suppose
+"smtp.example.com" is the MX host of the domain
+"example.com". The calls below will arrange to
+match either the MX hostname or the destination domain name
+in the SMTP server certificate. Wildcards are supported, but
+must match the entire label. The actual name matched in the
+certificate (which might be a wildcard) is retrieved, and
+must be copied by the application if it is to be retained
+beyond the lifetime of the SSL connection.</p>
+<p style="margin-left:9%; margin-top: 1em">SSL_set_hostflags(ssl,
+X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS); <br/>
+if (!SSL_set1_host(ssl, "smtp.example.com")) <br/>
+/* error */ <br/>
+if (!SSL_add1_host(ssl, "example.com")) <br/>
+/* error */ <br/>
+/* XXX: Perform SSL_connect() handshake and handle errors
+here */ <br/>
+if (SSL_get_verify_result(ssl) == X509_V_OK) { <br/>
+const char *peername = SSL_get0_peername(ssl); <br/>
+if (peername != NULL) <br/>
+/* Name checks were in scope and matched the peername */
+<br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>X509_check_host</b>(3), <b>SSL_get_verify_result</b>(3).
+<b>SSL_dane_enable</b>(3).</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+were added in OpenSSL 1.1.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2016−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:56 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curs_memleaks</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curs_memleaks</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#PORTABILITY">PORTABILITY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>exit_curses</b>,
+<b>exit_terminfo</b> − check for memory leaks in
+<i>curses</i></p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i><b>#include
+&lt;curses.h&gt; <br/>
+void exit_curses(int</b> code</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;term.h&gt; <br/>
+void exit_terminfo(int</b> <i>code</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>/* deprecated
+(intentionally not declared in curses.h or term.h) */</i>
+<b><br/>
+void _nc_freeall(void); <br/>
+void _nc_free_and_exit(int</b> <i>code</i><b>); <br/>
+void _nc_free_tinfo(int</b> <i>code</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+are used to simplify analysis of memory leaks in the
+<i>ncurses</i> library.</p>
+<p style="margin-left:9%; margin-top: 1em">Any
+implementation of curses must not free the memory associated
+with a screen, since (even after calling <b>endwin</b>(3X)),
+it must be available for use in the next call to
+<b>refresh</b>(3X). There are also chunks of memory held for
+performance reasons. That makes it hard to analyze curses
+applications for memory leaks. When using the specially
+configured debugging version of the <i>ncurses</i> library,
+applications can call functions which free those chunks of
+memory, simplifying the process of memory-leak checking.</p>
+<p style="margin-left:9%; margin-top: 1em">Some of the
+functions are named with a “_nc_” prefix because
+they are not intended for use in the non-debugging library:
+<b><br/>
+_nc_freeall</b></p>
+<p style="margin-left:15%;">This frees (almost) all of the
+memory allocated by <i>ncurses</i>.</p>
+<p style="margin-left:9%;"><b>_nc_free_and_exit</b></p>
+<p style="margin-left:15%;">This frees the memory allocated
+by <i>ncurses</i> (like <b>_nc_freeall</b>), and exits the
+program. It is preferred over <b>_nc_freeall</b> since some
+of that memory may be required to keep the application
+running. Simply exiting (with the given exit-code) is
+safer.</p>
+<p style="margin-left:9%;"><b>_nc_free_tinfo</b></p>
+<p style="margin-left:15%;">Use this function if only the
+low-level terminfo functions (and corresponding library) are
+used. Like <b>_nc_free_and_exit</b>, it exits the program
+after freeing memory.</p>
+<p style="margin-left:9%; margin-top: 1em">The functions
+prefixed “_nc” are normally not available; they
+must be configured into the library at build time using the
+<b>−−disable-leaks</b> option. That compiles-in
+code that frees memory that normally would not be freed.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>exit_curses</b> and <b>exit_terminfo</b> functions call
+<b>_nc_free_and_exit</b> and <b>_nc_free_tinfo</b> if the
+library is configured to support memory-leak checking. If
+the library is not configured to support memory-leak
+checking, they simply call <b>exit</b>.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+do not return a value.</p>
+<h2>PORTABILITY
+<a name="PORTABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+are not part of X/Open Curses; nor do other implementations
+of curses provide a similar feature.</p>
+<p style="margin-left:9%; margin-top: 1em">In any
+implementation of X/Open Curses, an application can free
+part of the memory allocated by curses:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>The portable part of <b>exit_curses</b> can be freed
+using <b>delscreen</b>, passing the <i>SCREEN</i> pointer
+returned by <b>newterm</b>.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">In some
+implementations, there is a global variable <b>sp</b> which
+could be used, e.g., if the screen were only initialized
+using <b>initscr</b>.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p style="margin-top: 1em">The portable part of
+<b>exit_terminfo</b> can be freed using
+<b>del_curterm</b>.</p> </td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">In this case,
+there is a global variable <b>cur_term</b> which can be used
+as parameter.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curses</b>(3X),
+<b>curs_initscr</b>(3X), <b>curs_terminfo</b>(3X)</p>
+<hr/>
+</body>
+</html>

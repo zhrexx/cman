@@ -1,0 +1,252 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:14 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TIFFWRITEDIRECTORY</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">TIFFWRITEDIRECTORY</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TIFFWriteDirectory
+− write the current directory in an open TIFF file</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<pre style="margin-left:13%; margin-top: 1em">#include &lt;tiffio.h&gt;</pre>
+<p style="margin-left:9%;"><b>int TIFFWriteDirectory(TIFF
+*tif) <br/>
+int TIFFRewriteDirectory(TIFF *tif) <br/>
+int TIFFCheckpointDirectory(TIFF *tif) <br/>
+void TIFFSetWriteOffset(TIFF *tif, toff_t off) <br/>
+int TIFFWriteCheck(TIFF *tif, int tiles, const char
+*module)</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b><i>TIFFWriteDirectory()</i></b>
+will write the contents of the current directory (IFD) to
+the file and setup to create a new directory (IFD) using
+<i>TIFFCreateDirectory()</i>. Applications only need to call
+<i>TIFFWriteDirectory()</i> when writing multiple subfiles
+(images) to a single TIFF file. This is called
+“multi−page TIFF” or
+“multi−image TIFF” (see <i>Multi Page /
+Multi Image TIFF</i>). <i>TIFFWriteDirectory()</i> is
+automatically called by <i>TIFFClose()</i> and
+<i>TIFFFlush()</i> to write a modified directory if the file
+is open for writing.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>TIFFRewriteDirectory()</i> function operates similarly to
+<i>TIFFWriteDirectory()</i>, but can be called with
+directories previously read or written that already have an
+established location in the file. It will rewrite the
+directory, but instead of placing it at its old location (as
+<i>TIFFWriteDirectory()</i> would) it will place them at the
+end of the file, correcting the pointer from the preceding
+directory or file header to point to it’s new
+location. This is particularly important in cases where the
+size of the directory and pointed to data has grown, so it
+won’t fit in the space available at the old
+location.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>TIFFCheckpointDirectory()</i> writes the current state of
+the tiff directory into the file to make what is currently
+in the file readable. Unlike <i>TIFFWriteDirectory()</i>,
+<i>TIFFCheckpointDirectory()</i> does not free up the
+directory data structures in memory, so they can be updated
+(as strips/tiles are written) and written again. Reading
+such a partial file you will at worst get a tiff read error
+for the first strip/tile encountered that is incomplete, but
+you will at least get all the valid data in the file before
+that. When the file is complete, just use
+<i>TIFFWriteDirectory()</i> as usual to finish it off
+cleanly.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>TIFFSetWriteOffset()</i> sets the current write offset.
+This should only be used to set the offset to a known
+previous location (very carefully), or to 0 so that the next
+write gets appended to the end of the file.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>TIFFWriteCheck()</i> verify file is writable and that the
+directory information is setup properly. In doing the latter
+we also “freeze” the state of the directory so
+that important information is not changed.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">1 is returned
+when the contents are successfully written to the file.
+Otherwise, 0 is returned if an error was encountered when
+writing the directory contents.</p>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All error
+messages are directed to the <i>TIFFErrorExtR()</i>
+routine.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Error
+post−encoding before directory write"</b>:</p>
+<p style="margin-left:13%;">Before writing the contents of
+the current directory, any pending data are flushed. This
+message indicates that an error occurred while doing
+this.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Error
+flushing data before directory write"</b>:</p>
+<p style="margin-left:13%;">Before writing the contents of
+the current directory, any pending data are flushed. This
+message indicates that an error occurred while doing
+this.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Cannot
+write directory, out of space"</b>:</p>
+<p style="margin-left:13%;">There was not enough space to
+allocate a temporary area for the directory that was to be
+written.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Error
+writing directory count"</b>:</p>
+<p style="margin-left:13%;">A write error occurred when
+writing the count of fields in the directory.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Error
+writing directory contents"</b>:</p>
+<p style="margin-left:13%;">A write error occurred when
+writing the directory fields.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Error
+writing directory link"</b>:</p>
+<p style="margin-left:13%;">A write error occurred when
+writing the link to the next directory.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Error writing
+data for field "%s"</b>:</p>
+<p style="margin-left:13%;">A write error occurred when
+writing indirect data for the specified field.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Error
+writing TIFF header"</b>:</p>
+<p style="margin-left:13%;">A write error occurred when
+re−writing header at the front of the file.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Error
+fetching directory count"</b>:</p>
+<p style="margin-left:13%;">A read error occurred when
+fetching the directory count field for a previous directory.
+This can occur when setting up a link to the directory that
+is being written.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Error
+fetching directory link"</b>:</p>
+<p style="margin-left:13%;">A read error occurred when
+fetching the directory link field for a previous directory.
+This can occur when setting up a link to the directory that
+is being written.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFquery</i>
+(3tiff), <i>TIFFOpen</i> (3tiff), <i>TIFFCreateDirectory</i>
+(3tiff), <i>TIFFCustomDirectory</i> (3tiff),
+<i>TIFFSetDirectory</i> (3tiff), <i>TIFFReadDirectory</i>
+(3tiff), <i>TIFFError</i> (3tiff), <i>Multi Page / Multi
+Image TIFF</i>, <i>libtiff</i> (3tiff)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">LibTIFF
+contributors</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">1988-2022,
+LibTIFF contributors</p>
+<hr/>
+</body>
+</html>

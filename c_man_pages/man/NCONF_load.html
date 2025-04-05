@@ -1,0 +1,204 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:35 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>NCONF_NEW_EX</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">NCONF_NEW_EX</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NCONF_new_ex,
+NCONF_new, NCONF_free, NCONF_default, NCONF_load,
+NCONF_get0_libctx, NCONF_get_section,
+NCONF_get_section_names − functionality to Load and
+parse configuration files manually</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/conf.h&gt; <br/>
+typedef struct { <br/>
+char *section; <br/>
+char *name; <br/>
+char *value; <br/>
+} CONF_VALUE; <br/>
+CONF *NCONF_new_ex(OSSL_LIB_CTX *libctx, CONF_METHOD *meth);
+<br/>
+CONF *NCONF_new(CONF_METHOD *meth); <br/>
+void NCONF_free(CONF *conf); <br/>
+CONF_METHOD *NCONF_default(void); <br/>
+int NCONF_load(CONF *conf, const char *file, long *eline);
+<br/>
+OSSL_LIB_CTX *NCONF_get0_libctx(const CONF *conf); <br/>
+STACK_OF(CONF_VALUE) *NCONF_get_section(const CONF *conf,
+const char *name); <br/>
+STACK_OF(OPENSSL_CSTRING) *NCONF_get_section_names(const
+CONF *conf);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>NCONF_new_ex()</b>
+creates a new CONF object in heap memory and assigns to it a
+context <i>libctx</i> that can be used during loading. If
+the method table <i>meth</i> is set to NULL then the default
+value of <b>NCONF_default()</b> is used.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NCONF_new()</b>
+is similar to <b>NCONF_new_ex()</b> but sets the
+<i>libctx</i> to NULL.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NCONF_free()</b>
+frees the data associated with <i>conf</i> and then frees
+the <i>conf</i> object. If the argument is NULL, nothing is
+done.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NCONF_load()</b>
+parses the file named <i>filename</i> and adds the values
+found to <i>conf</i>. If an error occurs <i>file</i> and
+<i>eline</i> list the file and line that the load failed on
+if they are not NULL.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NCONF_default()</b>
+gets the default method table for processing a configuration
+file.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NCONF_get0_libctx()</b>
+gets the library context associated with the <i>conf</i>
+parameter.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NCONF_get_section_names()</b>
+gets the names of the sections associated with the
+<i>conf</i> as <b>STACK_OF(OPENSSL_CSTRING)</b> strings. The
+individual strings are associated with the <i>conf</i> and
+will be invalid after <i>conf</i> is freed. The returned
+stack must be freed with
+<b>sk_OPENSSL_CSTRING_free()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NCONF_get_section()</b>
+gets the config values associated with the <i>conf</i> from
+the config section <i>name</i> as
+<b>STACK_OF(CONF_VALUE)</b> structures. The returned stack
+is associated with the <i>conf</i> and will be invalid after
+<i>conf</i> is freed. It must not be freed by the
+caller.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>NCONF_load()</b>
+returns 1 on success or 0 on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NCONF_new_ex()</b>
+and <b>NCONF_new()</b> return a newly created <i>CONF</i>
+object or NULL if an error occurs.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CONF_modules_load_file</b>(3),</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>NCONF_new_ex()</b>,
+<b>NCONF_get0_libctx()</b>, and
+<b>NCONF_get_section_names()</b> were added in OpenSSL
+3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2020−2024 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

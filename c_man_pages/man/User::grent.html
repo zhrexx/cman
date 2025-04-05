@@ -1,0 +1,170 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>User::grent</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">User::grent</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTE">NOTE</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">User::grent
+− by−name interface to Perl’s
+built−in getgr*() functions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use User::grent;
+<br/>
+my $gr = getgrgid(0) or die "No group zero"; <br/>
+if ( $gr−&gt;name eq 'wheel' &amp;&amp;
+@{$gr−&gt;members} &gt; 1 ) { <br/>
+print "gid zero name wheel, with other members";
+<br/>
+} <br/>
+use User::grent qw(:FIELDS); <br/>
+getgrgid(0) or die "No group zero"; <br/>
+if ( $gr_name eq 'wheel' &amp;&amp; @gr_members &gt; 1 ) {
+<br/>
+print "gid zero name wheel, with other members";
+<br/>
+} <br/>
+my $gr = getgr($whoever);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+module’s default exports override the core
+<b>getgrent()</b>, <b>getgrgid()</b>, and <b>getgrnam()</b>
+functions, replacing them with versions that return
+"User::grent" objects. This object has methods
+that return the similarly named structure field name from
+the C’s passwd structure from <i>grp.h</i>; namely
+name, passwd, gid, and members (not mem). The first three
+return scalars, the last an array reference.</p>
+<p style="margin-left:9%; margin-top: 1em">You may also
+import all the structure fields directly into your namespace
+as regular variables using the :FIELDS import tag. (Note
+that this still overrides your core functions.) Access these
+fields as variables named with a preceding "gr_".
+Thus, "$group_obj−&gt;gid()" corresponds to
+$gr_gid if you import the fields. Array references are
+available as regular array variables, so "@{
+$group_obj−&gt;members() }" would be simply
+@gr_members.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>getgr()</b> function is a simple front-end that forwards
+a numeric argument to <b>getgrgid()</b> and the rest to
+<b>getgrnam()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">To access this
+functionality without the core overrides, pass the
+"use" an empty import list, and then access
+function functions with their full qualified names. On the
+other hand, the built-ins are still available via the
+"CORE::" pseudo-package.</p>
+<h2>NOTE
+<a name="NOTE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">While this class
+is currently implemented using the Class::Struct module to
+build a struct-like class, you shouldn’t rely upon
+this.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Tom
+Christiansen</p>
+<hr/>
+</body>
+</html>

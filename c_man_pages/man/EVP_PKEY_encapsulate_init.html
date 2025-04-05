@@ -1,0 +1,249 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:42 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>EVP_PKEY_ENCAPSULATE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">EVP_PKEY_ENCAPSULATE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">EVP_PKEY_encapsulate_init,
+EVP_PKEY_auth_encapsulate_init, EVP_PKEY_encapsulate −
+Key encapsulation using a KEM algorithm with a public
+key</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+int EVP_PKEY_encapsulate_init(EVP_PKEY_CTX *ctx, const
+OSSL_PARAM params[]); <br/>
+int EVP_PKEY_auth_encapsulate_init(EVP_PKEY_CTX *ctx,
+EVP_PKEY *authpriv, <br/>
+const OSSL_PARAM params[]); <br/>
+int EVP_PKEY_encapsulate(EVP_PKEY_CTX *ctx, <br/>
+unsigned char *wrappedkey, size_t *wrappedkeylen, <br/>
+unsigned char *genkey, size_t *genkeylen);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>EVP_PKEY_encapsulate_init()</b> function initializes a
+public key algorithm context <i>ctx</i> for an encapsulation
+operation and then sets the <i>params</i> on the context in
+the same way as calling <b>EVP_PKEY_CTX_set_params</b>(3).
+Note that <i>ctx</i> is usually is produced using
+<b>EVP_PKEY_CTX_new_from_pkey</b>(3), specifying the public
+key to use.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>EVP_PKEY_auth_encapsulate_init()</b> function is similar
+to <b>EVP_PKEY_encapsulate_init()</b> but also passes an
+<i>authpriv</i> authentication private key that is used
+during encapsulation.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>EVP_PKEY_encapsulate()</b> function performs a public key
+encapsulation operation using <i>ctx</i>. The symmetric
+secret generated in <i>genkey</i> can be used as key
+material. The ciphertext in <i>wrappedkey</i> is its
+encapsulated form, which can be sent to another party, who
+can use <b>EVP_PKEY_decapsulate</b>(3) to retrieve it using
+their private key. If <i>wrappedkey</i> is NULL then the
+maximum size of the output buffer is written to the
+<i>*wrappedkeylen</i> parameter unless <i>wrappedkeylen</i>
+is NULL and the maximum size of the generated key buffer is
+written to <i>*genkeylen</i> unless <i>genkeylen</i> is
+NULL. If <i>wrappedkey</i> is not NULL and the call is
+successful then the internally generated key is written to
+<i>genkey</i> and its size is written to <i>*genkeylen</i>.
+The encapsulated version of the generated key is written to
+<i>wrappedkey</i> and its size is written to
+<i>*wrappedkeylen</i>. Note that if <i>wrappedlen</i> is not
+NULL, then the value it points to must initially hold the
+size of the <i>unwrapped</i> buffer so that its size can be
+validated by the call, ensuring it is large enough to hold
+the result written to <i>wrapped</i>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">After the call
+to <b>EVP_PKEY_encapsulate_init()</b>
+algorithm−specific parameters for the operation may be
+set or modified using <b>EVP_PKEY_CTX_set_params</b>(3).</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_encapsulate_init()</b>,
+<b>EVP_PKEY_auth_encapsulate_init()</b> and
+<b>EVP_PKEY_encapsulate()</b> return 1 for success and 0 or
+a negative value for failure. In particular a return value
+of −2 indicates the operation is not supported by the
+public key algorithm.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encapsulate an
+RSASVE key (for RSA keys).</p>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+/* <br/>
+* NB: assumes rsa_pub_key is an public key of another party.
+<br/>
+*/ <br/>
+EVP_PKEY_CTX *ctx = NULL; <br/>
+size_t secretlen = 0, outlen = 0; <br/>
+unsigned char *out = NULL, *secret = NULL; <br/>
+ctx = EVP_PKEY_CTX_new_from_pkey(libctx, rsa_pub_key, NULL);
+<br/>
+if (ctx == NULL) <br/>
+/* Error */ <br/>
+if (EVP_PKEY_encapsulate_init(ctx, NULL) &lt;= 0) <br/>
+/* Error */ <br/>
+/* Set the mode − only 'RSASVE' is currently supported
+*/ <br/>
+if (EVP_PKEY_CTX_set_kem_op(ctx, "RSASVE") &lt;=
+0) <br/>
+/* Error */ <br/>
+/* Determine buffer length */ <br/>
+if (EVP_PKEY_encapsulate(ctx, NULL, &amp;outlen, NULL,
+&amp;secretlen) &lt;= 0) <br/>
+/* Error */ <br/>
+out = OPENSSL_malloc(outlen); <br/>
+secret = OPENSSL_malloc(secretlen); <br/>
+if (out == NULL || secret == NULL) <br/>
+/* malloc failure */ <br/>
+/* <br/>
+* The generated 'secret' can be used as key material. <br/>
+* The encapsulated 'out' can be sent to another party who
+can <br/>
+* decapsulate it using their private key to retrieve the
+'secret'. <br/>
+*/ <br/>
+if (EVP_PKEY_encapsulate(ctx, out, &amp;outlen, secret,
+&amp;secretlen) &lt;= 0) <br/>
+/* Error */</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_CTX_new_from_pkey</b>(3),
+<b>EVP_PKEY_decapsulate</b>(3), <b>EVP_KEM−RSA</b>(7),
+<b>EVP_KEM−X25519</b>(7),
+<b>EVP_KEM−EC</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+<b>EVP_PKEY_encapsulate_init()</b> and
+<b>EVP_PKEY_encapsulate()</b> were added in OpenSSL 3.0. The
+function <b>EVP_PKEY_auth_encapsulate_init()</b> was added
+in OpenSSL 3.2.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2020−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:00 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>subpage_prot</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">subpage_prot</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#Rationale">Rationale</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">subpage_prot
+− define a subpage protection for an address range</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;sys/syscall.h&gt;</b> /* Definition of <b>SYS_*</b>
+constants */ <b><br/>
+#include &lt;unistd.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+syscall(SYS_subpage_prot, unsigned long</b> <i>addr</i><b>,
+unsigned long</b> <i>len</i><b>, <br/>
+uint32_t *</b><i>map</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>Note</i>:
+glibc provides no wrapper for <b>subpage_prot</b>(),
+necessitating the use of <b>syscall</b>(2).</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+PowerPC-specific <b>subpage_prot</b>() system call provides
+the facility to control the access permissions on individual
+4 kB subpages on systems configured with a page size of
+64 kB.</p>
+<p style="margin-left:9%; margin-top: 1em">The protection
+map is applied to the memory pages in the region starting at
+<i>addr</i> and continuing for <i>len</i> bytes. Both of
+these arguments must be aligned to a 64-kB boundary.</p>
+<p style="margin-left:9%; margin-top: 1em">The protection
+map is specified in the buffer pointed to by <i>map</i>. The
+map has 2 bits per 4 kB subpage; thus each 32-bit word
+specifies the protections of 16 4 kB subpages inside a
+64 kB page (so, the number of 32-bit words pointed to
+by <i>map</i> should equate to the number of 64-kB pages
+specified by <i>len</i>). Each 2-bit field in the protection
+map is either 0 to allow any access, 1 to prevent writes, or
+2 or 3 to prevent all accesses.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>subpage_prot</b>() returns 0. Otherwise, one of the error
+codes specified below is returned.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EFAULT</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p style="margin-top: 1em">The buffer referred to by
+<i>map</i> is not accessible.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The <i>addr</i> or <i>len</i> arguments are incorrect.
+Both of these arguments must be aligned to a multiple of the
+system page size, and they must not refer to a region
+outside of the address space of the process or to a region
+that consists of huge pages.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOMEM</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>Out of memory.</p></td></tr>
+</table>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux 2.6.25
+(PowerPC).</p>
+<p style="margin-left:9%; margin-top: 1em">The system call
+is provided only if the kernel is configured with
+<b>CONFIG_PPC_64K_PAGES</b>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Normal page
+protections (at the 64-kB page level) also apply; the
+subpage protection mechanism is an additional constraint, so
+putting 0 in a 2-bit field won’t allow writes to a
+page that is otherwise write-protected.</p>
+<h3>Rationale
+<a name="Rationale"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This system call
+is provided to assist writing emulators that operate using
+64-kB pages on PowerPC systems. When emulating systems such
+as x86, which uses a smaller page size, the emulator can no
+longer use the memory-management unit (MMU) and normal
+system calls for controlling page protections. (The emulator
+could emulate the MMU by checking and possibly remapping the
+address for each memory access in software, but that is
+slow.) The idea is that the emulator supplies an array of
+protection masks to apply to a specified range of virtual
+addresses. These masks are applied at the level where
+hardware page-table entries (PTEs) are inserted into the
+hardware page table based on the Linux PTEs, so the Linux
+PTEs are not affected. Implicit in this is that the regions
+of the address space that are protected are switched to use
+4-kB hardware pages rather than 64-kB hardware pages (on
+machines with hardware 64-kB page support).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>mprotect</b>(2),
+<b>syscall</b>(2)</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Documentation/admin−guide/mm/hugetlbpage.rst</i>
+in the Linux kernel source tree</p>
+<hr/>
+</body>
+</html>

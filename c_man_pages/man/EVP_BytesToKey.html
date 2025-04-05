@@ -1,0 +1,193 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:58 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>EVP_BYTESTOKEY</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">EVP_BYTESTOKEY</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#KEY DERIVATION ALGORITHM">KEY DERIVATION ALGORITHM</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">EVP_BytesToKey
+− password based encryption routine</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+int EVP_BytesToKey(const EVP_CIPHER *type, const EVP_MD *md,
+<br/>
+const unsigned char *salt, <br/>
+const unsigned char *data, int datal, int count, <br/>
+unsigned char *key, unsigned char *iv);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_BytesToKey()</b>
+derives a key and IV from various parameters. <b>type</b> is
+the cipher to derive the key and IV for. <b>md</b> is the
+message digest to use. The <b>salt</b> parameter is used as
+a salt in the derivation: it should point to an 8 byte
+buffer or NULL if no salt is used. <b>data</b> is a buffer
+containing <b>datal</b> bytes which is used to derive the
+keying data. <b>count</b> is the iteration count to use. The
+derived key and IV will be written to <b>key</b> and
+<b>iv</b> respectively.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A typical
+application of this function is to derive keying material
+for an encryption algorithm from a password in the
+<b>data</b> parameter.</p>
+<p style="margin-left:9%; margin-top: 1em">Increasing the
+<b>count</b> parameter slows down the algorithm which makes
+it harder for an attacker to perform a brute force attack
+using a large number of candidate passwords.</p>
+<p style="margin-left:9%; margin-top: 1em">If the total key
+and IV length is less than the digest length and <b>MD5</b>
+is used then the derivation algorithm is compatible with
+PKCS#5 v1.5 otherwise a non standard extension is used to
+derive the extra data.</p>
+<p style="margin-left:9%; margin-top: 1em">Newer
+applications should use a more modern algorithm such as
+PBKDF2 as defined in PKCS#5v2.1 and provided by
+PKCS5_PBKDF2_HMAC.</p>
+<h2>KEY DERIVATION ALGORITHM
+<a name="KEY DERIVATION ALGORITHM"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The key and IV
+is derived by concatenating D_1, D_2, etc until enough data
+is available for the key and IV. D_i is defined as:</p>
+<p style="margin-left:9%; margin-top: 1em">D_i =
+HASHˆcount(D_(i−1) || data || salt)</p>
+<p style="margin-left:9%; margin-top: 1em">where || denotes
+concatenation, D_0 is empty, HASH is the digest algorithm in
+use, HASHˆ1(data) is simply HASH(data),
+HASHˆ2(data) is HASH(HASH(data)) and so on.</p>
+<p style="margin-left:9%; margin-top: 1em">The initial
+bytes are used for the key and the subsequent bytes for the
+IV.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If <b>data</b>
+is NULL, then <b>EVP_BytesToKey()</b> returns the number of
+bytes needed to store the derived key. Otherwise,
+<b>EVP_BytesToKey()</b> returns the size of the derived key
+in bytes, or 0 on error.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>evp</b>(7),
+<b>RAND_bytes</b>(3), <b>PKCS5_PBKDF2_HMAC</b>(3),
+<b>EVP_EncryptInit</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2001−2016 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

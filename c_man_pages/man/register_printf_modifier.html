@@ -1,0 +1,710 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:07 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>printf.h</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">printf.h</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#Callbacks">Callbacks</a><br/>
+<a href="#Types">Types</a><br/>
+<a href="#Constants">Constants</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#register_printf_specifier()">register_printf_specifier()</a><br/>
+<a href="#register_printf_modifier()">register_printf_modifier()</a><br/>
+<a href="#register_printf_type()">register_printf_type()</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#Callbacks">Callbacks</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">printf.h,
+register_printf_specifier, register_printf_modifier,
+register_printf_type, printf_function,
+printf_arginfo_size_function, printf_va_arg_function,
+printf_info, PA_INT, PA_CHAR, PA_WCHAR, PA_STRING,
+PA_WSTRING, PA_POINTER, PA_FLOAT, PA_DOUBLE, PA_LAST,
+PA_FLAG_LONG_LONG, PA_FLAG_LONG_DOUBLE, PA_FLAG_LONG,
+PA_FLAG_SHORT, PA_FLAG_PTR − define custom behavior
+for printf-like functions</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;printf.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+register_printf_specifier(int</b> <i>spec</i><b>,
+printf_function</b> <i>func</i><b>, <br/>
+printf_arginfo_size_function</b> <i>arginfo</i><b>); <br/>
+int register_printf_modifier(const wchar_t
+*</b><i>str</i><b>); <br/>
+int register_printf_type(printf_va_arg_function</b>
+<i>fct</i><b>);</b></p>
+<h3>Callbacks
+<a name="Callbacks"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>typedef int
+printf_function(FILE *</b><i>stream</i><b>, const struct
+printf_info *</b><i>info</i><b>, <br/>
+const void *const</b> <i>args</i><b>[]); <br/>
+typedef int printf_arginfo_size_function(const struct
+printf_info *</b><i>info</i><b>, <br/>
+size_t</b> <i>n</i><b>, int</b>
+<i>argtypes</i><b>[</b><i>n</i><b>], int</b>
+<i>size</i><b>[</b><i>n</i><b>]); <br/>
+typedef void printf_va_arg_function(void *</b><i>mem</i><b>,
+va_list *</b><i>ap</i><b>);</b></p>
+<h3>Types
+<a name="Types"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>struct
+printf_info { <br/>
+int prec;</b> // Precision <b><br/>
+int width;</b> // Width <b><br/>
+wchar_t spec;</b> // Format letter <b><br/>
+unsigned int is_long_double:1;</b>// <b>L</b> or <b>ll</b>
+flag <b><br/>
+unsigned int is_short:1;</b> // <b>h</b> flag <b><br/>
+unsigned int is_long:1;</b> // <b>l</b> flag <b><br/>
+unsigned int alt:1;</b> // <b>#</b> flag <b><br/>
+unsigned int space:1;</b> // Space flag <b><br/>
+unsigned int left:1;</b> // <b>-</b> flag <b><br/>
+unsigned int showsign:1;</b> // <b>+</b> flag <b><br/>
+unsigned int group:1;</b> // <b>'</b> flag <b><br/>
+unsigned int extra:1;</b> // For special use <b><br/>
+unsigned int is_char:1;</b> // <b>hh</b> flag <b><br/>
+unsigned int wide:1;</b> // True for wide character streams
+<b><br/>
+unsigned int i18n:1;</b> // <b>I</b> flag <b><br/>
+unsigned int is_binary128:1;</b> /* Floating-point argument
+is <br/>
+ABI-compatible with <br/>
+IEC 60559 binary128 */ <b><br/>
+unsigned short user;</b> // Bits for user-installed
+modifiers <b><br/>
+wchar_t pad;</b> // Padding character <b><br/>
+};</b></p>
+<h3>Constants
+<a name="Constants"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>#define
+PA_FLAG_LONG_LONG</b> /* ... */ <b><br/>
+#define PA_FLAG_LONG_DOUBLE</b> /* ... */ <b><br/>
+#define PA_FLAG_LONG</b> /* ... */ <b><br/>
+#define PA_FLAG_SHORT</b> /* ... */ <b><br/>
+#define PA_FLAG_PTR</b> /* ... */</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+serve to extend and/or modify the behavior of the
+<b>printf</b>(3) family of functions.</p>
+<h3>register_printf_specifier()
+<a name="register_printf_specifier()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This function
+registers a custom conversion specifier for the
+<b>printf</b>(3) family of functions.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><i>spec</i></p></td>
+<td width="4%"></td>
+<td width="82%">
+<p>The character which will be used as a conversion
+specifier in the format string.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><i>func</i></p></td>
+<td width="4%"></td>
+<td width="82%">
+<p>Callback function that will be executed by the
+<b>printf</b>(3) family of functions to format the input
+arguments into the output <i>stream</i>.</p></td></tr>
+</table>
+<p style="margin-left:18%;"><i>stream</i></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="5%"></td>
+<td width="4%"></td>
+<td width="73%">
+<p style="margin-top: 1em">Output stream where the
+formatted output should be printed. This stream
+transparently represents the output, even in the case of
+functions that write to a string.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="5%">
+<p><i>info</i></p></td>
+<td width="4%"></td>
+<td width="73%">
+<p>Structure that holds context information, including the
+modifiers specified in the format string. This holds the
+same contents as in <i>arginfo</i>.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="5%">
+<p><i>args</i></p></td>
+<td width="4%"></td>
+<td width="73%">
+<p>Array of pointers to the arguments to the
+<b>printf</b>(3)-like function.</p></td></tr>
+</table>
+<p style="margin-left:9%;"><i>arginfo</i></p>
+<p style="margin-left:18%;">Callback function that will be
+executed by the <b>printf</b>(3) family of functions to know
+how many arguments should be parsed for the custom specifier
+and also their types.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="5%">
+<p><i>info</i></p></td>
+<td width="4%"></td>
+<td width="73%">
+<p>Structure that holds context information, including the
+modifiers specified in the format string. This holds the
+same contents as in <i>func</i>.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="5%">
+<p><i>n</i></p></td>
+<td width="4%"></td>
+<td width="73%">
+<p>Number of arguments remaining to be parsed.</p></td></tr>
+</table>
+<p style="margin-left:18%;"><i>argtypes</i></p>
+<p style="margin-left:27%;">This array should be set to
+define the type of each of the arguments that will be
+parsed. Each element in the array represents one of the
+arguments to be parsed, in the same order that they are
+passed to the <b>printf</b>(3)-like function. Each element
+should be set to a base type (<b>PA_</b>*) from the enum
+above, or a custom one, and optionally ORed with an
+appropriate length modifier (<b>PA_FLAG_</b>*).</p>
+<p style="margin-left:27%; margin-top: 1em">The type is
+determined by using one of the following constants:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="27%"></td>
+<td width="8%">
+<p><b>PA_INT</b></p></td>
+<td width="1%"></td>
+<td width="5%">
+<p><i>int</i>.</p></td>
+<td width="59%">
+</td></tr>
+</table>
+<p style="margin-left:27%;"><b>PA_CHAR</b></p>
+<p style="margin-left:36%;"><i>int</i>, cast to
+<i>char</i>.</p>
+<p style="margin-left:27%;"><b>PA_WCHAR</b></p>
+<p style="margin-left:36%;"><i>wchar_t</i>.</p>
+<p style="margin-left:27%;"><b>PA_STRING</b></p>
+<p style="margin-left:36%;"><i>const char *</i>, a
+'\0'-terminated string.</p>
+<p style="margin-left:27%;"><b>PA_WSTRING</b></p>
+<p style="margin-left:36%;"><i>const wchar_t *</i>, a
+wide character L'\0'-terminated string.</p>
+<p style="margin-left:27%;"><b>PA_POINTER</b></p>
+<p style="margin-left:36%;"><i>void *</i>.</p>
+<p style="margin-left:27%;"><b>PA_FLOAT</b></p>
+<p style="margin-left:36%;"><i>float</i>.</p>
+<p style="margin-left:27%;"><b>PA_DOUBLE</b></p>
+<p style="margin-left:36%;"><i>double</i>.</p>
+<p style="margin-left:27%;"><b>PA_LAST</b></p>
+<p style="margin-left:36%;">TODO.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="5%">
+<p><i>size</i></p></td>
+<td width="4%"></td>
+<td width="73%">
+<p>For user-defined types, the size of the type (in bytes)
+should also be specified through this array. Otherwise,
+leave it unused.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><i>arginfo</i>
+is called before <i>func</i>, and prepares some information
+needed to call <i>func</i>.</p>
+<h3>register_printf_modifier()
+<a name="register_printf_modifier()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">TODO</p>
+<h3>register_printf_type()
+<a name="register_printf_type()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">TODO</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>register_printf_specifier</b>(),
+<b>register_printf_modifier</b>(), and
+<b>register_printf_type</b>() return zero on success, or
+−1 on error.</p>
+<h3>Callbacks
+<a name="Callbacks"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The callback of
+type <i>printf_function</i> should return the number of
+characters written, or −1 on error.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback of
+type <i>printf_arginfo_size_function</i> should return the
+number of arguments to be parsed by this specifier. It also
+passes information about the type of those arguments to the
+caller through <i>argtypes</i>. On error, it should return
+−1.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="51%">
+<p style="margin-top: 1em">The specifier was not a valid
+character.</p> </td>
+<td width="31%">
+</td></tr>
+</table>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">GNU.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>register_printf_function</b>(3)
+is an older function similar to
+<b>register_printf_specifier</b>(), and is now deprecated.
+That function can’t handle user-defined types.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>register_printf_specifier</b>()
+supersedes <b>register_printf_function</b>(3).</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+example program registers the ’b’ and
+’B’ specifiers to print integers in binary
+format, mirroring rules for other unsigned conversion
+specifiers like ’x’ and ’u’. This
+can be used to print in binary prior to C23.</p>
+<p style="margin-left:9%; margin-top: 1em">/* This code is
+in the public domain */ <br/>
+#include &lt;err.h&gt; <br/>
+#include &lt;limits.h&gt; <br/>
+#include &lt;stddef.h&gt; <br/>
+#include &lt;stdint.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;string.h&gt; <br/>
+#include &lt;sys/param.h&gt; <br/>
+#include &lt;printf.h&gt; <br/>
+#define GROUP_SEP '\'' <br/>
+struct Printf_Pad { <br/>
+char ch; <br/>
+size_t len; <br/>
+}; <br/>
+static int b_printf(FILE *stream, const struct printf_info
+*info, <br/>
+const void *const args[]); <br/>
+static int b_arginf_sz(const struct printf_info *info, <br/>
+size_t n, int argtypes[n], int size[n]); <br/>
+static uintmax_t b_value(const struct printf_info *info,
+<br/>
+const void *arg); <br/>
+static size_t b_bin_repr(char bin[UINTMAX_WIDTH], <br/>
+const struct printf_info *info, const void *arg); <br/>
+static size_t b_bin_len(const struct printf_info *info, <br/>
+ptrdiff_t min_len); <br/>
+static size_t b_pad_len(const struct printf_info *info, <br/>
+ptrdiff_t bin_len); <br/>
+static ssize_t b_print_prefix(FILE *stream, <br/>
+const struct printf_info *info); <br/>
+static ssize_t b_pad_zeros(FILE *stream, const struct
+printf_info *info, <br/>
+ptrdiff_t min_len); <br/>
+static ssize_t b_print_number(FILE *stream, <br/>
+const struct printf_info *info, <br/>
+const char bin[UINTMAX_WIDTH], <br/>
+size_t min_len, size_t bin_len); <br/>
+static char pad_ch(const struct printf_info *info); <br/>
+static ssize_t pad_spaces(FILE *stream, size_t pad_len);
+<br/>
+int <br/>
+main(void) <br/>
+{ <br/>
+if (register_printf_specifier('b', b_printf, b_arginf_sz) ==
+−1) <br/>
+err(EXIT_FAILURE, "register_printf_specifier('b',
+...)"); <br/>
+if (register_printf_specifier('B', b_printf, b_arginf_sz) ==
+−1) <br/>
+err(EXIT_FAILURE, "register_printf_specifier('B',
+...)"); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%llb;\n", 0x5Ellu); <br/>
+printf("%lB;\n", 0x5Elu); <br/>
+printf("%b;\n", 0x5Eu); <br/>
+printf("%hB;\n", 0x5Eu); <br/>
+printf("%hhb;\n", 0x5Eu); <br/>
+printf("%jb;\n", (uintmax_t)0x5E); <br/>
+printf("%zb;\n", (size_t)0x5E); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%#b;\n", 0x5Eu); <br/>
+printf("%#B;\n", 0x5Eu); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%10b;\n", 0x5Eu); <br/>
+printf("%010b;\n", 0x5Eu); <br/>
+printf("%.10b;\n", 0x5Eu); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%−10B;\n", 0x5Eu); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%'B;\n", 0x5Eu); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%#16.12b;\n", 0xAB); <br/>
+printf("%−#'20.12b;\n", 0xAB); <br/>
+printf("%#'020B;\n", 0xAB); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%#020B;\n", 0xAB); <br/>
+printf("%'020B;\n", 0xAB); <br/>
+printf("%020B;\n", 0xAB); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%#021B;\n", 0xAB); <br/>
+printf("%'021B;\n", 0xAB); <br/>
+printf("%021B;\n", 0xAB); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%#022B;\n", 0xAB); <br/>
+printf("%'022B;\n", 0xAB); <br/>
+printf("%022B;\n", 0xAB); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%#023B;\n", 0xAB); <br/>
+printf("%'023B;\n", 0xAB); <br/>
+printf("%023B;\n", 0xAB); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%−#'19.11b;\n", 0xAB); <br/>
+printf("%#'019B;\n", 0xAB); <br/>
+printf("%#019B;\n", 0xAB); <br/>
+printf("....----....----....----....----\n"); <br/>
+printf("%'019B;\n", 0xAB); <br/>
+printf("%019B;\n", 0xAB); <br/>
+printf("%#016b;\n", 0xAB); <br/>
+printf("....----....----....----....----\n"); <br/>
+return 0; <br/>
+} <br/>
+static int <br/>
+b_printf(FILE *stream, const struct printf_info *info, <br/>
+const void *const args[]) <br/>
+{ <br/>
+char bin[UINTMAX_WIDTH]; <br/>
+size_t min_len, bin_len; <br/>
+ssize_t len, tmp; <br/>
+struct Printf_Pad pad = {0}; <br/>
+len = 0; <br/>
+min_len = b_bin_repr(bin, info, args[0]); <br/>
+bin_len = b_bin_len(info, min_len); <br/>
+pad.ch = pad_ch(info); <br/>
+if (pad.ch == ' ') <br/>
+pad.len = b_pad_len(info, bin_len); <br/>
+/* Padding with ' ' (right aligned) */ <br/>
+if ((pad.ch == ' ') &amp;&amp; !info-&gt;left) { <br/>
+tmp = pad_spaces(stream, pad.len); <br/>
+if (tmp == EOF) <br/>
+return EOF; <br/>
+len += tmp; <br/>
+} <br/>
+/* "0b"/"0B" prefix */ <br/>
+if (info-&gt;alt) { <br/>
+tmp = b_print_prefix(stream, info); <br/>
+if (tmp == EOF) <br/>
+return EOF; <br/>
+len += tmp; <br/>
+} <br/>
+/* Padding with '0' */ <br/>
+if (pad.ch == '0') { <br/>
+tmp = b_pad_zeros(stream, info, min_len); <br/>
+if (tmp == EOF) <br/>
+return EOF; <br/>
+len += tmp; <br/>
+} <br/>
+/* Print number (including leading 0s to fill precision) */
+<br/>
+tmp = b_print_number(stream, info, bin, min_len, bin_len);
+<br/>
+if (tmp == EOF) <br/>
+return EOF; <br/>
+len += tmp; <br/>
+/* Padding with ' ' (left aligned) */ <br/>
+if (info−&gt;left) { <br/>
+tmp = pad_spaces(stream, pad.len); <br/>
+if (tmp == EOF) <br/>
+return EOF; <br/>
+len += tmp; <br/>
+} <br/>
+return len; <br/>
+} <br/>
+static int <br/>
+b_arginf_sz(const struct printf_info *info, size_t n, int
+argtypes[n], <br/>
+[[maybe_unused]] int size[n]) <br/>
+{ <br/>
+if (n &lt; 1) <br/>
+return −1; <br/>
+if (info−&gt;is_long_double) <br/>
+argtypes[0] = PA_INT | PA_FLAG_LONG_LONG; <br/>
+else if (info−&gt;is_long) <br/>
+argtypes[0] = PA_INT | PA_FLAG_LONG; <br/>
+else <br/>
+argtypes[0] = PA_INT; <br/>
+return 1; <br/>
+} <br/>
+static uintmax_t <br/>
+b_value(const struct printf_info *info, const void *arg)
+<br/>
+{ <br/>
+if (info−&gt;is_long_double) <br/>
+return *(const unsigned long long *)arg; <br/>
+if (info−&gt;is_long) <br/>
+return *(const unsigned long *)arg; <br/>
+/* short and char are both promoted to int */ <br/>
+return *(const unsigned int *)arg; <br/>
+} <br/>
+static size_t <br/>
+b_bin_repr(char bin[UINTMAX_WIDTH], <br/>
+const struct printf_info *info, const void *arg) <br/>
+{ <br/>
+size_t min_len; <br/>
+uintmax_t val; <br/>
+val = b_value(info, arg); <br/>
+bin[0] = '0'; <br/>
+for (min_len = 0; val; min_len++) { <br/>
+bin[min_len] = '0' + (val % 2); <br/>
+val &gt;&gt;= 1; <br/>
+} <br/>
+return MAX(min_len, 1); <br/>
+} <br/>
+static size_t <br/>
+b_bin_len(const struct printf_info *info, ptrdiff_t min_len)
+<br/>
+{ <br/>
+return MAX(info−&gt;prec, min_len); <br/>
+} <br/>
+static size_t <br/>
+b_pad_len(const struct printf_info *info, ptrdiff_t bin_len)
+<br/>
+{ <br/>
+ptrdiff_t pad_len; <br/>
+pad_len = info−&gt;width − bin_len; <br/>
+if (info−&gt;alt) <br/>
+pad_len −= 2; <br/>
+if (info−&gt;group) <br/>
+pad_len −= (bin_len − 1) / 4; <br/>
+return MAX(pad_len, 0); <br/>
+} <br/>
+static ssize_t <br/>
+b_print_prefix(FILE *stream, const struct printf_info *info)
+<br/>
+{ <br/>
+ssize_t len; <br/>
+len = 0; <br/>
+if (fputc('0', stream) == EOF) <br/>
+return EOF; <br/>
+len++; <br/>
+if (fputc(info−&gt;spec, stream) == EOF) <br/>
+return EOF; <br/>
+len++; <br/>
+return len; <br/>
+} <br/>
+static ssize_t <br/>
+b_pad_zeros(FILE *stream, const struct printf_info *info,
+<br/>
+ptrdiff_t min_len) <br/>
+{ <br/>
+ssize_t len; <br/>
+ptrdiff_t tmp; <br/>
+len = 0; <br/>
+tmp = info−&gt;width − (info−&gt;alt * 2);
+<br/>
+if (info−&gt;group) <br/>
+tmp −= tmp / 5 − !(tmp % 5); <br/>
+for (ptrdiff_t i = tmp − 1; i &gt; min_len − 1;
+i−−) { <br/>
+if (fputc('0', stream) == EOF) <br/>
+return EOF; <br/>
+len++; <br/>
+if (!info−&gt;group || (i % 4)) <br/>
+continue; <br/>
+if (fputc(GROUP_SEP, stream) == EOF) <br/>
+return EOF; <br/>
+len++; <br/>
+} <br/>
+return len; <br/>
+} <br/>
+static ssize_t <br/>
+b_print_number(FILE *stream, const struct printf_info *info,
+<br/>
+const char bin[UINTMAX_WIDTH], <br/>
+size_t min_len, size_t bin_len) <br/>
+{ <br/>
+ssize_t len; <br/>
+len = 0; <br/>
+/* Print leading zeros to fill precision */ <br/>
+for (size_t i = bin_len − 1; i &gt; min_len − 1;
+i−−) { <br/>
+if (fputc('0', stream) == EOF) <br/>
+return EOF; <br/>
+len++; <br/>
+if (!info−&gt;group || (i % 4)) <br/>
+continue; <br/>
+if (fputc(GROUP_SEP, stream) == EOF) <br/>
+return EOF; <br/>
+len++; <br/>
+} <br/>
+/* Print number */ <br/>
+for (size_t i = min_len − 1; i &lt; min_len;
+i−−) { <br/>
+if (fputc(bin[i], stream) == EOF) <br/>
+return EOF; <br/>
+len++; <br/>
+if (!info−&gt;group || (i % 4) || !i) <br/>
+continue; <br/>
+if (fputc(GROUP_SEP, stream) == EOF) <br/>
+return EOF; <br/>
+len++; <br/>
+} <br/>
+return len; <br/>
+} <br/>
+static char <br/>
+pad_ch(const struct printf_info *info) <br/>
+{ <br/>
+if ((info−&gt;prec != −1) || (info−&gt;pad
+== ' ') || info−&gt;left) <br/>
+return ' '; <br/>
+return '0'; <br/>
+} <br/>
+static ssize_t <br/>
+pad_spaces(FILE *stream, size_t pad_len) <br/>
+{ <br/>
+ssize_t len; <br/>
+len = 0; <br/>
+for (size_t i = pad_len - 1; i &lt; pad_len;
+i−−) { <br/>
+if (fputc(' ', stream) == EOF) <br/>
+return EOF; <br/>
+len++; <br/>
+} <br/>
+return len; <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>asprintf</b>(3),
+<b>printf</b>(3), <b>wprintf</b>(3)</p>
+<hr/>
+</body>
+</html>

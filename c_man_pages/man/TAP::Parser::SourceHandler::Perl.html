@@ -1,0 +1,239 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:54 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TAP::Parser::SourceHandler::Perl</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">TAP::Parser::SourceHandler::Perl</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#Class Methods">Class Methods</a><br/>
+<a href="#SUBCLASSING">SUBCLASSING</a><br/>
+<a href="#Example">Example</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TAP::Parser::SourceHandler::Perl
+− Stream TAP from a Perl executable</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Version 3.50</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+TAP::Parser::Source; <br/>
+use TAP::Parser::SourceHandler::Perl; <br/>
+my $source =
+TAP::Parser::Source−&gt;new−&gt;raw(
+\'script.pl' ); <br/>
+$source−&gt;assemble_meta; <br/>
+my $class = 'TAP::Parser::SourceHandler::Perl'; <br/>
+my $vote = $class−&gt;can_handle( $source ); <br/>
+my $iter = $class−&gt;make_iterator( $source );</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This is a
+<i>Perl</i> TAP::Parser::SourceHandler − it has 2
+jobs:</p>
+<p style="margin-left:9%; margin-top: 1em">1. Figure out if
+the TAP::Parser::Source it's given is actually a Perl script
+("can_handle").</p>
+<p style="margin-left:9%; margin-top: 1em">2. Creates an
+iterator for Perl sources ("make_iterator").</p>
+<p style="margin-left:9%; margin-top: 1em">Unless you're
+writing a plugin or subclassing TAP::Parser, you probably
+won't need to use this module directly.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>Class Methods
+<a name="Class Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>"can_handle"</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $vote =
+$class−&gt;can_handle( $source );</p>
+<p style="margin-left:9%; margin-top: 1em">Only votes if
+$source looks like a file. Casts the following votes:</p>
+<p style="margin-left:9%; margin-top: 1em">0.9 if it has a
+shebang ala "#!...perl" <br/>
+0.3 if it has any shebang <br/>
+0.8 if it's a .t file <br/>
+0.9 if it's a .pl file <br/>
+0.75 if it's in a 't' directory <br/>
+0.25 by default (backwards compat)</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"make_iterator"</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $iterator =
+$class−&gt;make_iterator( $source );</p>
+<p style="margin-left:9%; margin-top: 1em">Constructs &amp;
+returns a new TAP::Parser::Iterator::Process for the source.
+Assumes "$source−&gt;raw" contains a
+reference to the perl script. "croak"s if the file
+could not be found.</p>
+<p style="margin-left:9%; margin-top: 1em">The command to
+run is built as follows:</p>
+<p style="margin-left:9%; margin-top: 1em">$perl @switches
+$perl_script @test_args</p>
+<p style="margin-left:9%; margin-top: 1em">The perl command
+to use is determined by "get_perl". The command
+generated is guaranteed to preserve:</p>
+<p style="margin-left:9%; margin-top: 1em">PERL5LIB <br/>
+PERL5OPT <br/>
+Taint Mode, if set in the script's shebang</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Note:</i> the
+command generated will <i>not</i> respect any shebang line
+defined in your Perl script. This is only a problem if you
+have compiled a custom version of Perl or if you want to use
+a specific version of Perl for one test and a different
+version for another, for example:</p>
+<p style="margin-left:9%; margin-top: 1em">#!/path/to/a/custom_perl
+−−some −−args <br/>
+#!/usr/local/perl−5.6/bin/perl −w</p>
+<p style="margin-left:9%; margin-top: 1em">Currently you
+need to write a plugin to get around this.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"get_taint"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Decode any taint
+switches from a Perl shebang line.</p>
+<p style="margin-left:9%; margin-top: 1em"># $taint will be
+'t' <br/>
+my $taint =
+TAP::Parser::SourceHandler::Perl−&gt;get_taint(
+'#!/usr/bin/perl −t' ); <br/>
+# $untaint will be undefined <br/>
+my $untaint =
+TAP::Parser::SourceHandler::Perl−&gt;get_taint(
+'#!/usr/bin/perl' );</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"get_perl"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Gets the version
+of Perl currently running the test suite.</p>
+<h2>SUBCLASSING
+<a name="SUBCLASSING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please see
+"SUBCLASSING" in TAP::Parser for a subclassing
+overview.</p>
+<h3>Example
+<a name="Example"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">package
+MyPerlSourceHandler; <br/>
+use strict; <br/>
+use TAP::Parser::SourceHandler::Perl; <br/>
+use base 'TAP::Parser::SourceHandler::Perl'; <br/>
+# use the version of perl from the shebang line in the test
+file <br/>
+sub get_perl { <br/>
+my $self = shift; <br/>
+if (my $shebang = $self−&gt;shebang(
+$self−&gt;{file} )) { <br/>
+$shebang =˜ /ˆ#!(.*\bperl.*?)(?:(?:\s)|(?:$))/;
+<br/>
+return $1 if $1; <br/>
+} <br/>
+return $self−&gt;SUPER::get_perl(@_); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TAP::Object,
+TAP::Parser, TAP::Parser::IteratorFactory,
+TAP::Parser::SourceHandler,
+TAP::Parser::SourceHandler::Executable,
+TAP::Parser::SourceHandler::File,
+TAP::Parser::SourceHandler::Handle,
+TAP::Parser::SourceHandler::RawTAP</p>
+<hr/>
+</body>
+</html>

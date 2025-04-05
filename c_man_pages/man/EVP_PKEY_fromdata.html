@@ -1,0 +1,393 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:42 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>EVP_PKEY_FROMDATA</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">EVP_PKEY_FROMDATA</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Selections">Selections</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Creating an RSA keypair using raw key data">Creating an RSA keypair using raw key data</a><br/>
+<a href="#Creating an ECC keypair using raw key data">Creating an ECC keypair using raw key data</a><br/>
+<a href="#Finding out params for an unknown key type">Finding out params for an unknown key type</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">EVP_PKEY_fromdata_init,
+EVP_PKEY_fromdata, EVP_PKEY_fromdata_settable −
+functions to create keys and key parameters from user
+data</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+int EVP_PKEY_fromdata_init(EVP_PKEY_CTX *ctx); <br/>
+int EVP_PKEY_fromdata(EVP_PKEY_CTX *ctx, EVP_PKEY **ppkey,
+int selection, <br/>
+OSSL_PARAM params[]); <br/>
+const OSSL_PARAM *EVP_PKEY_fromdata_settable(EVP_PKEY_CTX
+*ctx, int selection);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The functions
+described here are used to create new keys from user
+provided key data, such as <i>n</i>, <i>e</i> and <i>d</i>
+for a minimal RSA keypair.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+use an <b>EVP_PKEY_CTX</b> context, which should primarily
+be created with <b>EVP_PKEY_CTX_new_from_name</b>(3) or
+<b>EVP_PKEY_CTX_new_id</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The exact key
+data that the user can pass depends on the key type. These
+are passed as an <b>OSSL_PARAM</b>(3) array.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_fromdata_init()</b>
+initializes a public key algorithm context for creating a
+key or key parameters from user data.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_fromdata()</b>
+creates the structure to store a key or key parameters,
+given data from <i>params</i>, <i>selection</i> and a
+context that's been initialized with
+<b>EVP_PKEY_fromdata_init()</b>. The result is written to
+<i>*ppkey</i>. <i>selection</i> is described in
+"Selections". The parameters that can be used for
+various types of key are as described by the diverse
+"Common parameters" sections of the
+<b>EVP_PKEY−RSA</b>(7), <b>EVP_PKEY−DSA</b>(7),
+<b>EVP_PKEY−DH</b>(7), <b>EVP_PKEY−EC</b>(7),
+<b>EVP_PKEY−ED448</b>(7),
+<b>EVP_PKEY−X25519</b>(7),
+<b>EVP_PKEY−X448</b>(7), and
+<b>EVP_PKEY−ED25519</b>(7) pages.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_fromdata_settable()</b>
+gets a constant <b>OSSL_PARAM</b>(3) array that describes
+the settable parameters that can be used with
+<b>EVP_PKEY_fromdata()</b>. <i>selection</i> is described in
+"Selections".</p>
+<p style="margin-left:9%; margin-top: 1em">Parameters in
+the <i>params</i> array that are not among the settable
+parameters for the given <i>selection</i> are ignored.</p>
+<h3>Selections
+<a name="Selections"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+constants can be used for <i>selection</i>: <b><br/>
+EVP_PKEY_KEY_PARAMETERS</b></p>
+<p style="margin-left:14%;">Only key parameters will be
+selected.</p>
+<p style="margin-left:9%;"><b>EVP_PKEY_PUBLIC_KEY</b></p>
+<p style="margin-left:14%;">Only public key components will
+be selected. This includes optional key parameters.</p>
+<p style="margin-left:9%;"><b>EVP_PKEY_KEYPAIR</b></p>
+<p style="margin-left:14%;">Any keypair components will be
+selected. This includes the private key, public key and key
+parameters.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+only work with key management methods coming from a
+provider. This is the mirror function to
+<b>EVP_PKEY_todata</b>(3).</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_fromdata_init()</b>
+and <b>EVP_PKEY_fromdata()</b> return 1 for success and 0 or
+a negative value for failure. In particular a return value
+of −2 indicates the operation is not supported by the
+public key algorithm.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These examples
+are very terse for the sake of staying on topic, which is
+the <b>EVP_PKEY_fromdata()</b> set of functions. In real
+applications, BIGNUMs would be handled and converted to byte
+arrays with <b>BN_bn2nativepad()</b>, but that's off topic
+here.</p>
+<h3>Creating an RSA keypair using raw key data
+<a name="Creating an RSA keypair using raw key data"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+/* <br/>
+* These are extremely small to make this example simple. A
+real <br/>
+* and secure application will not use such small numbers. A
+real <br/>
+* and secure application is expected to use BIGNUMs, and to
+build <br/>
+* this array dynamically. <br/>
+*/ <br/>
+unsigned long rsa_n = 0xbc747fc5; <br/>
+unsigned long rsa_e = 0x10001; <br/>
+unsigned long rsa_d = 0x7b133399; <br/>
+OSSL_PARAM params[] = { <br/>
+OSSL_PARAM_ulong("n", &amp;rsa_n), <br/>
+OSSL_PARAM_ulong("e", &amp;rsa_e), <br/>
+OSSL_PARAM_ulong("d", &amp;rsa_d), <br/>
+OSSL_PARAM_END <br/>
+}; <br/>
+int main() <br/>
+{ <br/>
+EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL,
+"RSA", NULL); <br/>
+EVP_PKEY *pkey = NULL; <br/>
+if (ctx == NULL <br/>
+|| EVP_PKEY_fromdata_init(ctx) &lt;= 0 <br/>
+|| EVP_PKEY_fromdata(ctx, &amp;pkey, EVP_PKEY_KEYPAIR,
+params) &lt;= 0) <br/>
+exit(1); <br/>
+/* Do what you want with |pkey| */ <br/>
+}</p>
+<h3>Creating an ECC keypair using raw key data
+<a name="Creating an ECC keypair using raw key data"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+#include &lt;openssl/param_build.h&gt; <br/>
+#include &lt;openssl/ec.h&gt; <br/>
+/* <br/>
+* Fixed data to represent the private and public key. <br/>
+*/ <br/>
+const unsigned char priv_data[] = { <br/>
+0xb9, 0x2f, 0x3c, 0xe6, 0x2f, 0xfb, 0x45, 0x68, <br/>
+0x39, 0x96, 0xf0, 0x2a, 0xaf, 0x6c, 0xda, 0xf2, <br/>
+0x89, 0x8a, 0x27, 0xbf, 0x39, 0x9b, 0x7e, 0x54, <br/>
+0x21, 0xc2, 0xa1, 0xe5, 0x36, 0x12, 0x48, 0x5d <br/>
+}; <br/>
+/* UNCOMPRESSED FORMAT */ <br/>
+const unsigned char pub_data[] = { <br/>
+POINT_CONVERSION_UNCOMPRESSED, <br/>
+0xcf, 0x20, 0xfb, 0x9a, 0x1d, 0x11, 0x6c, 0x5e, <br/>
+0x9f, 0xec, 0x38, 0x87, 0x6c, 0x1d, 0x2f, 0x58, <br/>
+0x47, 0xab, 0xa3, 0x9b, 0x79, 0x23, 0xe6, 0xeb, <br/>
+0x94, 0x6f, 0x97, 0xdb, 0xa3, 0x7d, 0xbd, 0xe5, <br/>
+0x26, 0xca, 0x07, 0x17, 0x8d, 0x26, 0x75, 0xff, <br/>
+0xcb, 0x8e, 0xb6, 0x84, 0xd0, 0x24, 0x02, 0x25, <br/>
+0x8f, 0xb9, 0x33, 0x6e, 0xcf, 0x12, 0x16, 0x2f, <br/>
+0x5c, 0xcd, 0x86, 0x71, 0xa8, 0xbf, 0x1a, 0x47 <br/>
+}; <br/>
+int main() <br/>
+{ <br/>
+EVP_PKEY_CTX *ctx; <br/>
+EVP_PKEY *pkey = NULL; <br/>
+BIGNUM *priv; <br/>
+OSSL_PARAM_BLD *param_bld; <br/>
+OSSL_PARAM *params = NULL; <br/>
+int exitcode = 0; <br/>
+priv = BN_bin2bn(priv_data, sizeof(priv_data), NULL); <br/>
+param_bld = OSSL_PARAM_BLD_new(); <br/>
+if (priv != NULL &amp;&amp; param_bld != NULL <br/>
+&amp;&amp; OSSL_PARAM_BLD_push_utf8_string(param_bld,
+"group", <br/>
+"prime256v1", 0) <br/>
+&amp;&amp; OSSL_PARAM_BLD_push_BN(param_bld,
+"priv", priv) <br/>
+&amp;&amp; OSSL_PARAM_BLD_push_octet_string(param_bld,
+"pub", <br/>
+pub_data, sizeof(pub_data))) <br/>
+params = OSSL_PARAM_BLD_to_param(param_bld); <br/>
+ctx = EVP_PKEY_CTX_new_from_name(NULL, "EC",
+NULL); <br/>
+if (ctx == NULL <br/>
+|| params == NULL <br/>
+|| EVP_PKEY_fromdata_init(ctx) &lt;= 0 <br/>
+|| EVP_PKEY_fromdata(ctx, &amp;pkey, EVP_PKEY_KEYPAIR,
+params) &lt;= 0) { <br/>
+exitcode = 1; <br/>
+} else { <br/>
+/* Do what you want with |pkey| */ <br/>
+} <br/>
+EVP_PKEY_free(pkey); <br/>
+EVP_PKEY_CTX_free(ctx); <br/>
+OSSL_PARAM_free(params); <br/>
+OSSL_PARAM_BLD_free(param_bld); <br/>
+BN_free(priv); <br/>
+exit(exitcode); <br/>
+}</p>
+<h3>Finding out params for an unknown key type
+<a name="Finding out params for an unknown key type"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+#include &lt;openssl/core.h&gt; <br/>
+/* Program expects a key type as first argument */ <br/>
+int main(int argc, char *argv[]) <br/>
+{ <br/>
+EVP_PKEY_CTX *ctx = EVP_PKEY_CTX_new_from_name(NULL,
+argv[1], NULL); <br/>
+const OSSL_PARAM *settable_params = NULL; <br/>
+if (ctx == NULL) <br/>
+exit(1); <br/>
+settable_params = EVP_PKEY_fromdata_settable(ctx,
+EVP_PKEY_KEYPAIR); <br/>
+if (settable_params == NULL) <br/>
+exit(1); <br/>
+for (; settable_params−&gt;key != NULL;
+settable_params++) { <br/>
+const char *datatype = NULL; <br/>
+switch (settable_params−&gt;data_type) { <br/>
+case OSSL_PARAM_INTEGER: <br/>
+datatype = "integer"; <br/>
+break; <br/>
+case OSSL_PARAM_UNSIGNED_INTEGER: <br/>
+datatype = "unsigned integer"; <br/>
+break; <br/>
+case OSSL_PARAM_UTF8_STRING: <br/>
+datatype = "printable string (utf−8 encoding
+expected)"; <br/>
+break; <br/>
+case OSSL_PARAM_UTF8_PTR: <br/>
+datatype = "printable string pointer (utf−8
+encoding expected)"; <br/>
+break; <br/>
+case OSSL_PARAM_OCTET_STRING: <br/>
+datatype = "octet string"; <br/>
+break; <br/>
+case OSSL_PARAM_OCTET_PTR: <br/>
+datatype = "octet string pointer"; <br/>
+break; <br/>
+} <br/>
+printf("%s : %s ", settable_params−&gt;key,
+datatype); <br/>
+if (settable_params−&gt;data_size == 0) <br/>
+printf("(unlimited size)\n"); <br/>
+else <br/>
+printf("(maximum size %zu)\n",
+settable_params−&gt;data_size); <br/>
+} <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">The descriptor
+<b>OSSL_PARAM</b>(3) returned by
+<b>EVP_PKEY_fromdata_settable()</b> may also be used
+programmatically, for example with
+<b>OSSL_PARAM_allocate_from_text</b>(3).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_CTX_new</b>(3),
+<b>provider</b>(7), <b>EVP_PKEY_gettable_params</b>(3),
+<b>OSSL_PARAM</b>(3), <b>EVP_PKEY_todata</b>(3),
+<b>EVP_PKEY−RSA</b>(7), <b>EVP_PKEY−DSA</b>(7),
+<b>EVP_PKEY−DH</b>(7), <b>EVP_PKEY−EC</b>(7),
+<b>EVP_PKEY−ED448</b>(7),
+<b>EVP_PKEY−X25519</b>(7),
+<b>EVP_PKEY−X448</b>(7),
+<b>EVP_PKEY−ED25519</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+were added in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2019−2021 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

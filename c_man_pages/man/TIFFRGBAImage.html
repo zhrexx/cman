@@ -1,0 +1,373 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:14 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TIFFRGBAIMAGE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">TIFFRGBAIMAGE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#ALTERNATE RASTER FORMATS">ALTERNATE RASTER FORMATS</a><br/>
+<a href="#SIMULTANEOUS RASTER STORE AND DISPLAY">SIMULTANEOUS RASTER STORE AND DISPLAY</a><br/>
+<a href="#SUPPORTING ADDITIONAL TIFF FORMATS">SUPPORTING ADDITIONAL TIFF FORMATS</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TIFFRGBAImage
+− read and decode an image into a raster</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<pre style="margin-left:13%; margin-top: 1em">#include &lt;tiffio.h&gt;</pre>
+<p style="margin-left:9%;"><b>typedef unsigned char
+TIFFRGBValue <br/>
+typedef struct _TIFFRGBAImage TIFFRGBAImage <br/>
+int TIFFRGBAImageOK(TIFF *tif, char emsg[1024]) <br/>
+int TIFFRGBAImageBegin(</b><i>TIFFRGBAImage</i> <b>*img,
+TIFF *tif, int stopOnError, <br/>
+char emsg[1024]) <br/>
+int TIFFRGBAImageGet(</b><i>TIFFRGBAImage</i> <b>*img,
+uint32_t *raster, uint32_t <br/>
+width, uint32_t height) <br/>
+void TIFFRGBAImageEnd(</b><i>TIFFRGBAImage</i>
+<b>*img)</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The routines
+described here provide a high−level interface through
+which TIFF images may be read into memory. Images may be
+strip− or tile−based and have a variety of
+different characteristics: bits/sample, samples/pixel,
+photometric, etc. Decoding state is encapsulated in a
+<i>TIFFRGBAImage</i> structure making it possible to capture
+state for multiple images and quickly switch between them.
+The target raster format can be customized to a particular
+application’s needs by installing custom routines that
+manipulate image data according to application
+requirements.</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+usage for these routines is:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>check if an image can be processed using
+<i>TIFFRGBAImageOK()</i></p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>construct a decoder state block using
+<i>TIFFRGBAImageBegin()</i></p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>read and decode an image into a target raster using
+<i>TIFFRGBAImageGet()</i>, and then</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>release resources using <i>TIFFRGBAImageEnd()</i></p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFRGBAImageGet()</i>
+can be called multiple times to decode an image using
+different state parameters. If multiple images are to be
+displayed and there is not enough space for each of the
+decoded rasters, multiple state blocks can be managed and
+then calls can be made to <i>TIFFRGBAImageGet()</i> as
+needed to display an image.</p>
+<p style="margin-left:9%; margin-top: 1em">The generated
+raster is assumed to be an array of <i>width</i> ×
+<i>height</i> 32−bit entries, where <i>width</i> must
+be less than or equal to the width of the image
+(<i>height</i> may be any non−zero size). If the
+raster dimensions are smaller than the image, the image data
+is cropped to the raster bounds. If the raster height is
+greater than that of the image, then the image data are
+placed in the lower part of the raster. (Note that the
+raster is assume to be organized such that the pixel at
+location (<i>x</i>, <i>y</i>) is <i>raster</i> [ <i>y</i>
+× <i>width</i> + <i>x</i> ]; with the raster origin in
+the <i>lower−left hand corner</i>.)</p>
+<p style="margin-left:9%; margin-top: 1em">Raster pixels
+are 8−bit packed red, green, blue, alpha samples. The
+macros <i>TIFFGetR</i>, <i>TIFFGetG</i>, <i>TIFFGetB</i>,
+and <i>TIFFGetA</i> should be used to access individual
+samples. Images without Associated Alpha matting information
+have a constant Alpha of 1.0 (255).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFRGBAImageGet()</i>
+converts non−8−bit images by scaling sample
+values. Palette, grayscale, bilevel, CMYK, and YCbCr images
+are converted to RGB transparently. Raster pixels are
+returned uncorrected by any colorimetry information present
+in the directory.</p>
+<p style="margin-left:9%; margin-top: 1em">The parameter
+<i>stopOnError</i> specifies how to act if an error is
+encountered while reading the image. If <i>stopOnError</i>
+is non−zero, then an error will terminate the
+operation; otherwise <i>TIFFRGBAImageGet()</i> will continue
+processing data until all the possible data in the image
+have been requested.</p>
+<h2>ALTERNATE RASTER FORMATS
+<a name="ALTERNATE RASTER FORMATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">To use the core
+support for reading and processing TIFF images, but write
+the resulting raster data in a different format one need
+only override the “put methods” used to store
+raster data. These methods are are defined in the
+<i>TIFFRGBAImage</i> structure and initially setup by
+<i>TIFFRGBAImageBegin()</i> to point to routines that pack
+raster data in the default ABGR pixel format. Two different
+routines are used according to the physical organization of
+the image data in the file: <b>PlanarConfiguration</b> = 1
+(packed samples), and <b>PlanarConfiguration</b> = 2
+(separated samples). Note that this mechanism can be used to
+transform the data before storing it in the raster. For
+example one can convert data to colormap indices for display
+on a colormap display.</p>
+<h2>SIMULTANEOUS RASTER STORE AND DISPLAY
+<a name="SIMULTANEOUS RASTER STORE AND DISPLAY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">It is simple to
+display an image as it is being read into memory by
+overriding the put methods as described above for supporting
+alternate raster formats. Simply keep a reference to the
+default put methods setup by <i>TIFFRGBAImageBegin()</i> and
+then invoke them before or after each display operation. An
+example for a “put” method to update the display
+as the raster is being filled:</p>
+<pre style="margin-left:13%; margin-top: 1em">static void
+putContigAndDraw(TIFFRGBAImage* img, uint32_t* raster,
+    uint32_t x, uint32_t y, uint32_t w, uint32_t h,
+    int32_t fromskew, int32_t toskew,
+    unsigned char* cp)
+{
+    (*putContig)(img, raster, x, y, w, h, fromskew, toskew, cp);
+    if (x+w == width) {
+        w = width;
+        if (img−&gt;orientation == ORIENTATION_TOPLEFT)
+            lrectwrite(0, y−(h−1), w−1, y, raster−x−(h−1)*w);
+        else
+            lrectwrite(0, y, w−1, y+h−1, raster);
+    }
+}</pre>
+<p style="margin-left:9%; margin-top: 1em">(the original
+routine provided by the library is saved in the variable
+<b>putContig</b>.)</p>
+<h2>SUPPORTING ADDITIONAL TIFF FORMATS
+<a name="SUPPORTING ADDITIONAL TIFF FORMATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>TIFFRGBAImage()</i> routines support the most commonly
+encountered flavors of TIFF. It is possible to extend this
+support by overriding the “get method” invoked
+by <i>TIFFRGBAImageGet()</i> to read TIFF image data.
+Details of doing this are a bit involved, it is best to make
+a copy of an existing get method and modify it to suit the
+needs of an application.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Samples must be
+either 1, 2, 4, 8, or 16 bits. Colorimetric samples/pixel
+must be either 1, 3, or 4 (i.e. <b>SamplesPerPixel</b>
+−<b>ExtraSamples</b>).</p>
+<p style="margin-left:9%; margin-top: 1em">Palette image
+colormaps that appear to be incorrectly written as
+8−bit values are automatically scaled to
+16−bits.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All routines
+return 1 if the operation was successful. Otherwise, 0 is
+returned if an error was encountered and <i>stopOnError</i>
+is zero.</p>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All error
+messages are directed to the <i>TIFFErrorExtR()</i>
+routine.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Sorry,
+can not handle %d−bit pictures"</b>:</p>
+<p style="margin-left:13%;">The image had
+<b>BitsPerSample</b> other than 1, 2, 4, 8, or 16.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Sorry,
+can not handle %d−channel images"</b>:</p>
+<p style="margin-left:13%;">The image had
+<b>SamplesPerPixel</b> other than 1, 3, or 4.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Missing
+needed "PhotometricInterpretation" tag</b>:</p>
+<p style="margin-left:13%;">The image did not have a tag
+that describes how to display the data.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>No
+"PhotometricInterpretation" tag, assuming
+RGB</b>:</p>
+<p style="margin-left:13%;">The image was missing a tag
+that describes how to display it, but because it has 3 or 4
+samples/pixel, it is assumed to be RGB.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>No
+"PhotometricInterpretation" tag, assuming
+min−is−black</b>:</p>
+<p style="margin-left:13%;">The image was missing a tag
+that describes how to display it, but because it has 1
+sample/pixel, it is assumed to be a grayscale or bilevel
+image.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"No
+space for photometric conversion table"</b>:</p>
+<p style="margin-left:13%;">There was insufficient memory
+for a table used to convert image samples to 8−bit
+RGB.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Missing
+required "Colormap" tag</b>:</p>
+<p style="margin-left:13%;">A Palette image did not have a
+required <b>Colormap</b> tag.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"No
+space for tile buffer"</b>:</p>
+<p style="margin-left:13%;">There was insufficient memory
+to allocate an i/o buffer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"No
+space for strip buffer"</b>:</p>
+<p style="margin-left:13%;">There was insufficient memory
+to allocate an i/o buffer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"Can not
+handle format"</b>:</p>
+<p style="margin-left:13%;">The image has a format
+(combination of <b>BitsPerSample</b>, <b>SamplesPerPixel</b>
+and <b>PhotometricInterpretation</b>) that can not be
+handled.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"No
+space for B&amp;W mapping table"</b>:</p>
+<p style="margin-left:13%;">There was insufficient memory
+to allocate a table used to map grayscale data to RGB.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>"No
+space for Palette mapping table"</b>:</p>
+<p style="margin-left:13%;">There was insufficient memory
+to allocate a table used to map data to 8−bit RGB.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFOpen</i>
+(3tiff), <i>TIFFReadRGBAImage</i> (3tiff),
+<i>TIFFReadRGBAStrip</i> (3tiff), <i>TIFFReadRGBATile</i>
+(3tiff), <i>libtiff</i> (3tiff)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">LibTIFF
+contributors</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">1988-2022,
+LibTIFF contributors</p>
+<hr/>
+</body>
+</html>

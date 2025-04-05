@@ -1,0 +1,314 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:54 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TAP::Parser::Scheduler</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">TAP::Parser::Scheduler</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#Class Methods">Class Methods</a><br/>
+<a href="#Rules data structure">Rules data structure</a><br/>
+<a href="#Instance Methods">Instance Methods</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TAP::Parser::Scheduler
+− Schedule tests during parallel testing</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Version 3.50</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+TAP::Parser::Scheduler;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>Class Methods
+<a name="Class Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>"new"</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $sched =
+TAP::Parser::Scheduler−&gt;new(tests =&gt; \@tests);
+<br/>
+my $sched = TAP::Parser::Scheduler−&gt;new( <br/>
+tests =&gt; [ ['t/test_name.t','Test Description'], ... ],
+<br/>
+rules =&gt; \%rules, <br/>
+);</p>
+<p style="margin-left:9%; margin-top: 1em">Given 'tests'
+and optional 'rules' as input, returns a new
+"TAP::Parser::Scheduler" object. Each member of
+@tests should be either a a test file name, or a two element
+arrayref, where the first element is a test file name, and
+the second element is a test description. By default, we'll
+use the test name as the description.</p>
+<p style="margin-left:9%; margin-top: 1em">The optional
+"rules" attribute provides direction on which
+tests should be run in parallel and which should be run
+sequentially. If no rule data structure is provided, a
+default data structure is used which makes every test
+eligible to be run in parallel:</p>
+<p style="margin-left:9%; margin-top: 1em">{ par =&gt; '**'
+},</p>
+<p style="margin-left:9%; margin-top: 1em">The rules data
+structure is documented more in the next section.</p>
+<h3>Rules data structure
+<a name="Rules data structure"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+""rules"" data structure is the the
+heart of the scheduler. It allows you to express simple
+rules like "run all tests in sequence" or
+"run all tests in parallel except these five
+tests.". However, the rules structure also supports
+glob−style pattern matching and recursive definitions,
+so you can also express arbitarily complicated patterns.</p>
+<p style="margin-left:9%; margin-top: 1em">The rule must
+only have one top level key: either 'par' for
+"parallel" or 'seq' for "sequence".</p>
+<p style="margin-left:9%; margin-top: 1em">Values must be
+either strings with possible glob−style matching, or
+arrayrefs of strings or hashrefs which follow this pattern
+recursively.</p>
+<p style="margin-left:9%; margin-top: 1em">Every element in
+an arrayref directly below a 'par' key is eligible to be run
+in parallel, while vavalues directly below a 'seq' key must
+be run in sequence.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Rules
+examples</i></p>
+<p style="margin-left:9%; margin-top: 1em">Here are some
+examples:</p>
+<p style="margin-left:9%; margin-top: 1em"># All tests be
+run in parallel (the default rule) <br/>
+{ par =&gt; '**' }, <br/>
+# Run all tests in sequence, except those starting with
+"p" <br/>
+{ par =&gt; 't/p*.t' }, <br/>
+# Run all tests in parallel, except those starting with
+"p" <br/>
+{ <br/>
+seq =&gt; [ <br/>
+{ seq =&gt; 't/p*.t' }, <br/>
+{ par =&gt; '**' }, <br/>
+], <br/>
+} <br/>
+# Run some startup tests in sequence, then some parallel
+tests then some <br/>
+# teardown tests in sequence. <br/>
+{ <br/>
+seq =&gt; [ <br/>
+{ seq =&gt; 't/startup/*.t' }, <br/>
+{ par =&gt; ['t/a/*.t','t/b/*.t','t/c/*.t'], } <br/>
+{ seq =&gt; 't/shutdown/*.t' }, <br/>
+], <br/>
+},</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Rules
+resolution</i></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>By default, all tests are eligible to be run in
+parallel. Specifying any of your own rules removes this
+one.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>"First match wins". The first rule that
+matches a test will be the one that applies.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Any test which does not match a rule will be run in
+sequence at the end of the run.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>The existence of a rule does not imply selecting a test.
+You must still specify the tests to run.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Specifying a rule to allow tests to run in parallel does
+not make the run in parallel. You still need specify the
+number of parallel "jobs" in your Harness
+object.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><i>Glob−style
+pattern matching for rules</i></p>
+<p style="margin-left:9%; margin-top: 1em">We implement our
+own glob−style pattern matching. Here are the patterns
+it supports:</p>
+<p style="margin-left:9%; margin-top: 1em">** is any number
+of characters, including /, within a pathname <br/>
+* is zero or more characters within a filename/directory
+name <br/>
+? is exactly one character within a filename/directory name
+<br/>
+{foo,bar,baz} is any of foo, bar or baz. <br/>
+\ is an escape character</p>
+<h3>Instance Methods
+<a name="Instance Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>"get_all"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Get a list of
+all remaining tests.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"get_job"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Return the next
+available job as TAP::Parser::Scheduler::Job object or
+"undef" if none are available. Returns a
+TAP::Parser::Scheduler::Spinner if the scheduler still has
+pending jobs but none are available to run right now.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"as_string"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Return a human
+readable representation of the scheduling tree. For
+example:</p>
+<p style="margin-left:9%; margin-top: 1em">my @tests = (qw{
+<br/>
+t/startup/foo.t <br/>
+t/shutdown/foo.t <br/>
+t/a/foo.t t/b/foo.t t/c/foo.t t/d/foo.t <br/>
+}); <br/>
+my $sched = TAP::Parser::Scheduler−&gt;new( <br/>
+tests =&gt; \@tests, <br/>
+rules =&gt; { <br/>
+seq =&gt; [ <br/>
+{ seq =&gt; 't/startup/*.t' }, <br/>
+{ par =&gt; ['t/a/*.t','t/b/*.t','t/c/*.t'] }, <br/>
+{ seq =&gt; 't/shutdown/*.t' }, <br/>
+], <br/>
+}, <br/>
+);</p>
+<p style="margin-left:9%; margin-top: 1em">Produces:</p>
+<p style="margin-left:9%; margin-top: 1em">par: <br/>
+seq: <br/>
+par: <br/>
+seq: <br/>
+par: <br/>
+seq: <br/>
+'t/startup/foo.t' <br/>
+par: <br/>
+seq: <br/>
+'t/a/foo.t' <br/>
+seq: <br/>
+'t/b/foo.t' <br/>
+seq: <br/>
+'t/c/foo.t' <br/>
+par: <br/>
+seq: <br/>
+'t/shutdown/foo.t' <br/>
+ 't/d/foo.t'</p>
+<hr/>
+</body>
+</html>

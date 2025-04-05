@@ -1,0 +1,1193 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:19 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Math::BigFloat</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Math::BigFloat</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Input">Input</a><br/>
+<a href="#Output">Output</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#Configuration methods">Configuration methods</a><br/>
+<a href="#Constructor methods">Constructor methods</a><br/>
+<a href="#Arithmetic methods">Arithmetic methods</a><br/>
+<a href="#ACCURACY AND PRECISION">ACCURACY AND PRECISION</a><br/>
+<a href="#Rounding">Rounding</a><br/>
+<a href="#NUMERIC LITERALS">NUMERIC LITERALS</a><br/>
+<a href="#Hexadecimal, octal, and binary floating point literals">Hexadecimal, octal, and binary floating point literals</a><br/>
+<a href="#Math library">Math library</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SUPPORT">SUPPORT</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Math::BigFloat
+− arbitrary size floating point math package</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigFloat; <br/>
+# Configuration methods (may be used as class methods and
+instance methods) <br/>
+Math::BigFloat−&gt;accuracy(); # get class accuracy
+<br/>
+Math::BigFloat−&gt;accuracy($n); # set class accuracy
+<br/>
+Math::BigFloat−&gt;precision(); # get class precision
+<br/>
+Math::BigFloat−&gt;precision($n); # set class
+precision <br/>
+Math::BigFloat−&gt;round_mode(); # get class rounding
+mode <br/>
+Math::BigFloat−&gt;round_mode($m); # set global round
+mode, must be one of <br/>
+# 'even', 'odd', '+inf', '−inf', 'zero', <br/>
+# 'trunc', or 'common' <br/>
+Math::BigFloat−&gt;config("lib"); # name of
+backend math library <br/>
+# Constructor methods (when the class methods below are used
+as instance <br/>
+# methods, the value is assigned the invocand) <br/>
+$x = Math::BigFloat−&gt;new($str); # defaults to 0
+<br/>
+$x = Math::BigFloat−&gt;new('0x123'); # from
+hexadecimal <br/>
+$x = Math::BigFloat−&gt;new('0o377'); # from octal
+<br/>
+$x = Math::BigFloat−&gt;new('0b101'); # from binary
+<br/>
+$x = Math::BigFloat−&gt;from_hex('0xc.afep+3'); # from
+hex <br/>
+$x = Math::BigFloat−&gt;from_hex('cafe'); # ditto <br/>
+$x = Math::BigFloat−&gt;from_oct('1.3267p−4'); #
+from octal <br/>
+$x = Math::BigFloat−&gt;from_oct('01.3267p−4');
+# ditto <br/>
+$x = Math::BigFloat−&gt;from_oct('0o1.3267p−4');
+# ditto <br/>
+$x = Math::BigFloat−&gt;from_oct('0377'); # ditto <br/>
+$x = Math::BigFloat−&gt;from_bin('0b1.1001p−4');
+# from binary <br/>
+$x = Math::BigFloat−&gt;from_bin('0101'); # ditto <br/>
+$x = Math::BigFloat−&gt;from_ieee754($b,
+"binary64"); # from IEEE−754 bytes <br/>
+$x = Math::BigFloat−&gt;bzero(); # create a +0 <br/>
+$x = Math::BigFloat−&gt;bone(); # create a +1 <br/>
+$x = Math::BigFloat−&gt;bone('−'); # create a
+−1 <br/>
+$x = Math::BigFloat−&gt;binf(); # create a +inf <br/>
+$x = Math::BigFloat−&gt;binf('−'); # create a
+−inf <br/>
+$x = Math::BigFloat−&gt;bnan(); # create a
+Not−A−Number <br/>
+$x = Math::BigFloat−&gt;bpi(); # returns pi <br/>
+$y = $x−&gt;copy(); # make a copy (unlike $y = $x)
+<br/>
+$y = $x−&gt;as_int(); # return as BigInt <br/>
+$y = $x−&gt;as_float(); # return as a Math::BigFloat
+<br/>
+$y = $x−&gt;as_rat(); # return as a Math::BigRat <br/>
+# Boolean methods (these don't modify the invocand) <br/>
+$x−&gt;is_zero(); # if $x is 0 <br/>
+$x−&gt;is_one(); # if $x is +1 <br/>
+$x−&gt;is_one("+"); # ditto <br/>
+$x−&gt;is_one("−"); # if $x is
+−1 <br/>
+$x−&gt;is_inf(); # if $x is +inf or −inf <br/>
+$x−&gt;is_inf("+"); # if $x is +inf <br/>
+$x−&gt;is_inf("−"); # if $x is
+−inf <br/>
+$x−&gt;is_nan(); # if $x is NaN <br/>
+$x−&gt;is_positive(); # if $x &gt; 0 <br/>
+$x−&gt;is_pos(); # ditto <br/>
+$x−&gt;is_negative(); # if $x &lt; 0 <br/>
+$x−&gt;is_neg(); # ditto <br/>
+$x−&gt;is_odd(); # if $x is odd <br/>
+$x−&gt;is_even(); # if $x is even <br/>
+$x−&gt;is_int(); # if $x is an integer <br/>
+# Comparison methods <br/>
+$x−&gt;bcmp($y); # compare numbers (undef, &lt; 0, ==
+0, &gt; 0) <br/>
+$x−&gt;bacmp($y); # compare absolutely (undef, &lt; 0,
+== 0, &gt; 0) <br/>
+$x−&gt;beq($y); # true if and only if $x == $y <br/>
+$x−&gt;bne($y); # true if and only if $x != $y <br/>
+$x−&gt;blt($y); # true if and only if $x &lt; $y <br/>
+$x−&gt;ble($y); # true if and only if $x &lt;= $y <br/>
+$x−&gt;bgt($y); # true if and only if $x &gt; $y <br/>
+$x−&gt;bge($y); # true if and only if $x &gt;= $y <br/>
+# Arithmetic methods <br/>
+$x−&gt;bneg(); # negation <br/>
+$x−&gt;babs(); # absolute value <br/>
+$x−&gt;bsgn(); # sign function (−1, 0, 1, or
+NaN) <br/>
+$x−&gt;bnorm(); # normalize (no−op) <br/>
+$x−&gt;binc(); # increment $x by 1 <br/>
+$x−&gt;bdec(); # decrement $x by 1 <br/>
+$x−&gt;badd($y); # addition (add $y to $x) <br/>
+$x−&gt;bsub($y); # subtraction (subtract $y from $x)
+<br/>
+$x−&gt;bmul($y); # multiplication (multiply $x by $y)
+<br/>
+$x−&gt;bmuladd($y,$z); # $x = $x * $y + $z <br/>
+$x−&gt;bdiv($y); # division (floored), set $x to
+quotient <br/>
+# return (quo,rem) or quo if scalar <br/>
+$x−&gt;btdiv($y); # division (truncated), set $x to
+quotient <br/>
+# return (quo,rem) or quo if scalar <br/>
+$x−&gt;bmod($y); # modulus (x % y) <br/>
+$x−&gt;btmod($y); # modulus (truncated) <br/>
+$x−&gt;bmodinv($mod); # modular multiplicative inverse
+<br/>
+$x−&gt;bmodpow($y,$mod); # modular exponentiation (($x
+** $y) % $mod) <br/>
+$x−&gt;bpow($y); # power of arguments (x ** y) <br/>
+$x−&gt;blog(); # logarithm of $x to base e (Euler's
+number) <br/>
+$x−&gt;blog($base); # logarithm of $x to base $base
+(e.g., base 2) <br/>
+$x−&gt;bexp(); # calculate e ** $x where e is Euler's
+number <br/>
+$x−&gt;bnok($y); # x over y (binomial coefficient n
+over k) <br/>
+$x−&gt;bsin(); # sine <br/>
+$x−&gt;bcos(); # cosine <br/>
+$x−&gt;batan(); # inverse tangent <br/>
+$x−&gt;batan2($y); # two−argument inverse
+tangent <br/>
+$x−&gt;bsqrt(); # calculate square root <br/>
+$x−&gt;broot($y); # $y'th root of $x (e.g. $y == 3
+=&gt; cubic root) <br/>
+$x−&gt;bfac(); # factorial of $x (1*2*3*4*..$x) <br/>
+$x−&gt;blsft($n); # left shift $n places in base 2
+<br/>
+$x−&gt;blsft($n,$b); # left shift $n places in base $b
+<br/>
+# returns (quo,rem) or quo (scalar context) <br/>
+$x−&gt;brsft($n); # right shift $n places in base 2
+<br/>
+$x−&gt;brsft($n,$b); # right shift $n places in base
+$b <br/>
+# returns (quo,rem) or quo (scalar context) <br/>
+# Bitwise methods <br/>
+$x−&gt;bblsft($y); # bitwise left shift <br/>
+$x−&gt;bbrsft($y); # bitwise right shift <br/>
+$x−&gt;band($y); # bitwise and <br/>
+$x−&gt;bior($y); # bitwise inclusive or <br/>
+$x−&gt;bxor($y); # bitwise exclusive or <br/>
+$x−&gt;bnot(); # bitwise not (two's complement) <br/>
+# Rounding methods <br/>
+$x−&gt;round($A,$P,$mode); # round to accuracy or
+precision using <br/>
+# rounding mode $mode <br/>
+$x−&gt;bround($n); # accuracy: preserve $n digits <br/>
+$x−&gt;bfround($n); # $n &gt; 0: round to $nth digit
+left of dec. point <br/>
+# $n &lt; 0: round to $nth digit right of dec. point <br/>
+$x−&gt;bfloor(); # round towards minus infinity <br/>
+$x−&gt;bceil(); # round towards plus infinity <br/>
+$x−&gt;bint(); # round towards zero <br/>
+# Other mathematical methods <br/>
+$x−&gt;bgcd($y); # greatest common divisor <br/>
+$x−&gt;blcm($y); # least common multiple <br/>
+# Object property methods (do not modify the invocand) <br/>
+$x−&gt;sign(); # the sign, either +, − or NaN
+<br/>
+$x−&gt;digit($n); # the nth digit, counting from the
+right <br/>
+$x−&gt;digit(−$n); # the nth digit, counting
+from the left <br/>
+$x−&gt;length(); # return number of digits in number
+<br/>
+($xl,$f) = $x−&gt;length(); # length of number and
+length of fraction <br/>
+# part, latter is always 0 digits long <br/>
+# for Math::BigInt objects <br/>
+$x−&gt;mantissa(); # return (signed) mantissa as
+BigInt <br/>
+$x−&gt;exponent(); # return exponent as BigInt <br/>
+$x−&gt;parts(); # return (mantissa,exponent) as BigInt
+<br/>
+$x−&gt;sparts(); # mantissa and exponent (as integers)
+<br/>
+$x−&gt;nparts(); # mantissa and exponent (normalised)
+<br/>
+$x−&gt;eparts(); # mantissa and exponent (engineering
+notation) <br/>
+$x−&gt;dparts(); # integer and fraction part <br/>
+$x−&gt;fparts(); # numerator and denominator <br/>
+$x−&gt;numerator(); # numerator <br/>
+$x−&gt;denominator(); # denominator <br/>
+# Conversion methods (do not modify the invocand) <br/>
+$x−&gt;bstr(); # decimal notation, possibly zero
+padded <br/>
+$x−&gt;bsstr(); # string in scientific notation with
+integers <br/>
+$x−&gt;bnstr(); # string in normalized notation <br/>
+$x−&gt;bestr(); # string in engineering notation <br/>
+$x−&gt;bdstr(); # string in decimal notation <br/>
+$x−&gt;bfstr(); # string in fractional notation <br/>
+$x−&gt;as_hex(); # as signed hexadecimal string with
+prefixed 0x <br/>
+$x−&gt;as_bin(); # as signed binary string with
+prefixed 0b <br/>
+$x−&gt;as_oct(); # as signed octal string with
+prefixed 0 <br/>
+$x−&gt;to_ieee754($format); # to bytes encoded
+according to IEEE 754−2008 <br/>
+# Other conversion methods <br/>
+$x−&gt;numify(); # return as scalar (might overflow or
+underflow)</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Math::BigFloat
+provides support for arbitrary precision floating point.
+Overloading is also provided for Perl operators.</p>
+<p style="margin-left:9%; margin-top: 1em">All operators
+(including basic math operations) are overloaded if you
+declare your big floating point numbers as</p>
+<p style="margin-left:9%; margin-top: 1em">$x =
+Math::BigFloat −&gt;
+new('12_3.456_789_123_456_789E−2');</p>
+<p style="margin-left:9%; margin-top: 1em">Operations with
+overloaded operators preserve the arguments, which is
+exactly what you expect.</p>
+<h3>Input
+<a name="Input"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Input values to
+these routines may be any scalar number or string that looks
+like a number. Anything that is accepted by Perl as a
+literal numeric constant should be accepted by this
+module.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Leading and trailing whitespace is ignored.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Leading zeros are ignored, except for floating point
+numbers with a binary exponent, in which case the number is
+interpreted as an octal floating point number. For example,
+"01.4p+0" gives 1.5, "00.4p+0" gives
+0.5, but "0.4p+0" gives a NaN. And while
+"0377" gives 255, "0377p0" gives
+255.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>If the string has a "0x" or "0X"
+prefix, it is interpreted as a hexadecimal number.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>If the string has a "0o" or "0O"
+prefix, it is interpreted as an octal number. A floating
+point literal with a "0" prefix is also
+interpreted as an octal number.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>If the string has a "0b" or "0B"
+prefix, it is interpreted as a binary number.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Underline characters are allowed in the same way as they
+are allowed in literal numerical constants.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>If the string can not be interpreted, NaN is
+returned.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>For hexadecimal, octal, and binary floating point
+numbers, the exponent must be separated from the significand
+(mantissa) by the letter "p" or "P", not
+"e" or "E" as with decimal numbers.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Some examples of
+valid string input</p>
+<p style="margin-left:9%; margin-top: 1em">Input string
+Resulting value <br/>
+123 123 <br/>
+1.23e2 123 <br/>
+12300e−2 123 <br/>
+67_538_754 67538754 <br/>
+−4_5_6.7_8_9e+0_1_0 −4567890000000 <br/>
+0x13a 314 <br/>
+0x13ap0 314 <br/>
+0x1.3ap+8 314 <br/>
+0x0.00013ap+24 314 <br/>
+0x13a000p−12 314 <br/>
+0o472 314 <br/>
+0o1.164p+8 314 <br/>
+0o0.0001164p+20 314 <br/>
+0o1164000p−10 314 <br/>
+0472 472 Note! <br/>
+01.164p+8 314 <br/>
+00.0001164p+20 314 <br/>
+01164000p−10 314 <br/>
+0b100111010 314 <br/>
+0b1.0011101p+8 314 <br/>
+0b0.00010011101p+12 314 <br/>
+0b100111010000p−3 314 <br/>
+0x1.921fb5p+1 3.14159262180328369140625e+0 <br/>
+0o1.2677025p1 2.71828174591064453125 <br/>
+01.2677025p1 2.71828174591064453125 <br/>
+0b1.1001p−4 9.765625e−2</p>
+<h3>Output
+<a name="Output"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Output values
+are usually Math::BigFloat objects.</p>
+<p style="margin-left:9%; margin-top: 1em">Boolean
+operators is_zero(), is_one(), is_inf(), etc. return true or
+false.</p>
+<p style="margin-left:9%; margin-top: 1em">Comparison
+operators bcmp() and bacmp()) return −1, 0, 1, or
+undef.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Math::BigFloat
+supports all methods that Math::BigInt supports, except it
+calculates non−integer results when possible. Please
+see Math::BigInt for a full description of each method.
+Below are just the most important differences:</p>
+<h3>Configuration methods
+<a name="Configuration methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>accuracy()</b></p>
+<p style="margin-left:14%;">$x−&gt;accuracy(5); #
+local for $x <br/>
+CLASS−&gt;accuracy(5); # global for all members of
+CLASS <br/>
+# Note: This also applies to new()! <br/>
+$A = $x−&gt;accuracy(); # read out accuracy that
+affects $x <br/>
+$A = CLASS−&gt;accuracy(); # read out global
+accuracy</p>
+<p style="margin-left:14%; margin-top: 1em">Set or get the
+global or local accuracy, aka how many significant digits
+the results have. If you set a global accuracy, then this
+also applies to <b>new()</b>!</p>
+<p style="margin-left:14%; margin-top: 1em">Warning! The
+accuracy <i>sticks</i>, e.g. once you created a number under
+the influence of "CLASS−&gt;accuracy($A)",
+all results from math operations with that number will also
+be rounded.</p>
+<p style="margin-left:14%; margin-top: 1em">In most cases,
+you should probably round the results explicitly using one
+of "<b>round()</b>" in Math::BigInt,
+"<b>bround()</b>" in Math::BigInt or
+"<b>bfround()</b>" in Math::BigInt or by passing
+the desired accuracy to the math operation as additional
+parameter:</p>
+<p style="margin-left:14%; margin-top: 1em">my $x =
+Math::BigInt−&gt;new(30000); <br/>
+my $y = Math::BigInt−&gt;new(7); <br/>
+print scalar $x−&gt;copy()−&gt;bdiv($y, 2); #
+print 4300 <br/>
+print scalar
+$x−&gt;copy()−&gt;bdiv($y)−&gt;bround(2);
+# print 4300</p>
+<p style="margin-left:9%;"><b>precision()</b></p>
+<p style="margin-left:14%;">$x−&gt;precision(−2);
+# local for $x, round at the second <br/>
+# digit right of the dot <br/>
+$x−&gt;precision(2); # ditto, round at the second
+digit <br/>
+# left of the dot <br/>
+CLASS−&gt;precision(5); # Global for all members of
+CLASS <br/>
+# This also applies to new()! <br/>
+CLASS−&gt;precision(−5); # ditto <br/>
+$P = CLASS−&gt;precision(); # read out global
+precision <br/>
+$P = $x−&gt;precision(); # read out precision that
+affects $x</p>
+<p style="margin-left:14%; margin-top: 1em">Note: You
+probably want to use "<b>accuracy()</b>" instead.
+With "<b>accuracy()</b>" you set the number of
+digits each result should have, with
+"<b>precision()</b>" you set the place where to
+round!</p>
+<h3>Constructor methods
+<a name="Constructor methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>from_hex()</b></p>
+<p style="margin-left:14%;">$x −&gt;
+from_hex("0x1.921fb54442d18p+1"); <br/>
+$x = Math::BigFloat −&gt;
+from_hex("0x1.921fb54442d18p+1");</p>
+<p style="margin-left:14%; margin-top: 1em">Interpret input
+as a hexadecimal string.A prefix ("0x",
+"x", ignoring case) is optional. A single
+underscore character ("_") may be placed between
+any two digits. If the input is invalid, a NaN is returned.
+The exponent is in base 2 using decimal digits.</p>
+<p style="margin-left:14%; margin-top: 1em">If called as an
+instance method, the value is assigned to the invocand.</p>
+<p style="margin-left:9%;"><b>from_oct()</b></p>
+<p style="margin-left:14%;">$x −&gt;
+from_oct("1.3267p−4"); <br/>
+$x = Math::BigFloat −&gt;
+from_oct("1.3267p−4");</p>
+<p style="margin-left:14%; margin-top: 1em">Interpret input
+as an octal string. A single underscore character
+("_") may be placed between any two digits. If the
+input is invalid, a NaN is returned. The exponent is in base
+2 using decimal digits.</p>
+<p style="margin-left:14%; margin-top: 1em">If called as an
+instance method, the value is assigned to the invocand.</p>
+<p style="margin-left:9%;"><b>from_bin()</b></p>
+<p style="margin-left:14%;">$x −&gt;
+from_bin("0b1.1001p−4"); <br/>
+$x = Math::BigFloat −&gt;
+from_bin("0b1.1001p−4");</p>
+<p style="margin-left:14%; margin-top: 1em">Interpret input
+as a hexadecimal string. A prefix ("0b" or
+"b", ignoring case) is optional. A single
+underscore character ("_") may be placed between
+any two digits. If the input is invalid, a NaN is returned.
+The exponent is in base 2 using decimal digits.</p>
+<p style="margin-left:14%; margin-top: 1em">If called as an
+instance method, the value is assigned to the invocand.</p>
+<p style="margin-left:9%;"><b>from_ieee754()</b></p>
+<p style="margin-left:14%;">Interpret the input as a value
+encoded as described in IEEE754−2008. The input can be
+given as a byte string, hex string or binary string. The
+input is assumed to be in big−endian
+byte−order.</p>
+<p style="margin-left:14%; margin-top: 1em"># both $dbl and
+$mbf are 3.141592... <br/>
+$bytes = "\x40\x09\x21\xfb\x54\x44\x2d\x18"; <br/>
+$dbl = unpack "d&gt;", $bytes; <br/>
+$mbf = Math::BigFloat −&gt; from_ieee754($bytes,
+"binary64");</p>
+<p style="margin-left:9%;"><b>bpi()</b></p>
+<p style="margin-left:14%;">print
+Math::BigFloat−&gt;bpi(100), "\n";</p>
+<p style="margin-left:14%; margin-top: 1em">Calculate PI to
+N digits (including the 3 before the dot). The result is
+rounded according to the current rounding mode, which
+defaults to "even".</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in v1.87 of Math::BigInt (June 2007).</p>
+<h3>Arithmetic methods
+<a name="Arithmetic methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>bmuladd()</b></p>
+<p style="margin-left:14%;">$x−&gt;bmuladd($y,$z);</p>
+<p style="margin-left:14%; margin-top: 1em">Multiply $x by
+$y, and then add $z to the result.</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in v1.87 of Math::BigInt (June 2007).</p>
+<p style="margin-left:9%;"><b>binv()</b></p>
+<p style="margin-left:14%;">$x−&gt;binv();</p>
+<p style="margin-left:14%; margin-top: 1em">Invert the
+value of $x, i.e., compute 1/$x.</p>
+<p style="margin-left:9%;"><b>bdiv()</b></p>
+<p style="margin-left:14%;">$q = $x−&gt;bdiv($y);
+<br/>
+($q, $r) = $x−&gt;bdiv($y);</p>
+<p style="margin-left:14%; margin-top: 1em">In scalar
+context, divides $x by $y and returns the result to the
+given or default accuracy/precision. In list context, does
+floored division (F−division), returning an integer $q
+and a remainder $r so that $x = $q * $y + $r. The remainer
+(modulo) is equal to what is returned by
+"$x−&gt;bmod($y)".</p>
+<p style="margin-left:9%;"><b>bmod()</b></p>
+<p style="margin-left:14%;">$x−&gt;bmod($y);</p>
+<p style="margin-left:14%; margin-top: 1em">Returns $x
+modulo $y. When $x is finite, and $y is finite and
+non−zero, the result is identical to the remainder
+after floored division (F−division). If, in addition,
+both $x and $y are integers, the result is identical to the
+result from Perl's % operator.</p>
+<p style="margin-left:9%;"><b>bexp()</b></p>
+<p style="margin-left:14%;">$x−&gt;bexp($accuracy); #
+calculate e ** X</p>
+<p style="margin-left:14%; margin-top: 1em">Calculates the
+expression "e ** $x" where "e" is
+Euler's number.</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in v1.82 of Math::BigInt (April 2007).</p>
+<p style="margin-left:9%;"><b>bnok()</b></p>
+<p style="margin-left:14%;">$x−&gt;bnok($y); # x over
+y (binomial coefficient n over k)</p>
+<p style="margin-left:14%; margin-top: 1em">Calculates the
+binomial coefficient n over k, also called the
+"choose" function. The result is equivalent
+to:</p>
+<p style="margin-left:14%; margin-top: 1em">( n ) n! <br/>
+| − | =
+−−−−−−− <br/>
+( k ) k!(n−k)!</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in v1.84 of Math::BigInt (April 2007).</p>
+<p style="margin-left:9%;"><b>bsin()</b></p>
+<p style="margin-left:14%;">my $x =
+Math::BigFloat−&gt;new(1); <br/>
+print $x−&gt;bsin(100), "\n";</p>
+<p style="margin-left:14%; margin-top: 1em">Calculate the
+sinus of $x, modifying $x in place.</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in v1.87 of Math::BigInt (June 2007).</p>
+<p style="margin-left:9%;"><b>bcos()</b></p>
+<p style="margin-left:14%;">my $x =
+Math::BigFloat−&gt;new(1); <br/>
+print $x−&gt;bcos(100), "\n";</p>
+<p style="margin-left:14%; margin-top: 1em">Calculate the
+cosinus of $x, modifying $x in place.</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in v1.87 of Math::BigInt (June 2007).</p>
+<p style="margin-left:9%;"><b>batan()</b></p>
+<p style="margin-left:14%;">my $x =
+Math::BigFloat−&gt;new(1); <br/>
+print $x−&gt;batan(100), "\n";</p>
+<p style="margin-left:14%; margin-top: 1em">Calculate the
+arcus tanges of $x, modifying $x in place. See also
+"<b>batan2()</b>".</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in v1.87 of Math::BigInt (June 2007).</p>
+<p style="margin-left:9%;"><b>batan2()</b></p>
+<p style="margin-left:14%;">my $y =
+Math::BigFloat−&gt;new(2); <br/>
+my $x = Math::BigFloat−&gt;new(3); <br/>
+print $y−&gt;batan2($x), "\n";</p>
+<p style="margin-left:14%; margin-top: 1em">Calculate the
+arcus tanges of $y divided by $x, modifying $y in place. See
+also "<b>batan()</b>".</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in v1.87 of Math::BigInt (June 2007).</p>
+<p style="margin-left:9%;"><b>as_float()</b></p>
+<p style="margin-left:14%;">This method is called when
+Math::BigFloat encounters an object it doesn't know how to
+handle. For instance, assume $x is a Math::BigFloat, or
+subclass thereof, and $y is defined, but not a
+Math::BigFloat, or subclass thereof. If you do</p>
+<p style="margin-left:14%; margin-top: 1em">$x −&gt;
+badd($y);</p>
+<p style="margin-left:14%; margin-top: 1em">$y needs to be
+converted into an object that $x can deal with. This is done
+by first checking if $y is something that $x might be
+upgraded to. If that is the case, no further attempts are
+made. The next is to see if $y supports the method
+as_float(). The method as_float() is expected to return
+either an object that has the same class as $x, a subclass
+thereof, or a string that
+"ref($x)−&gt;new()" can parse to create an
+object.</p>
+<p style="margin-left:14%; margin-top: 1em">In
+Math::BigFloat, as_float() has the same effect as
+copy().</p>
+<p style="margin-left:9%;"><b>to_ieee754()</b></p>
+<p style="margin-left:14%;">Encodes the invocand as a byte
+string in the given format as specified in IEEE
+754−2008. Note that the encoded value is the nearest
+possible representation of the value. This value might not
+be exactly the same as the value in the invocand.</p>
+<p style="margin-left:14%; margin-top: 1em"># $x =
+3.1415926535897932385 <br/>
+$x = Math::BigFloat −&gt; bpi(30); <br/>
+$b = $x −&gt; to_ieee754("binary64"); #
+encode as 8 bytes <br/>
+$h = unpack "H*", $b; #
+"400921fb54442d18" <br/>
+# 3.141592653589793115997963... <br/>
+$y = Math::BigFloat −&gt; from_ieee754($h,
+"binary64");</p>
+<p style="margin-left:14%; margin-top: 1em">All binary
+formats in IEEE 754−2008 are accepted. For
+convenience, som aliases are recognized: "half"
+for "binary16", "single" for
+"binary32", "double" for
+"binary64", "quadruple" for
+"binary128", "octuple" for
+"binary256", and "sexdecuple" for
+"binary512".</p>
+<p style="margin-left:14%; margin-top: 1em">See also
+&lt;https://en.wikipedia.org/wiki/IEEE_754&gt;.</p>
+<h3>ACCURACY AND PRECISION
+<a name="ACCURACY AND PRECISION"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">See also:
+Rounding.</p>
+<p style="margin-left:9%; margin-top: 1em">Math::BigFloat
+supports both precision (rounding to a certain place before
+or after the dot) and accuracy (rounding to a certain number
+of digits). For a full documentation, examples and tips on
+these topics please see the large section about rounding in
+Math::BigInt.</p>
+<p style="margin-left:9%; margin-top: 1em">Since things
+like sqrt(2) or "1 / 3" must presented with a
+limited accuracy lest a operation consumes all resources,
+each operation produces no more than the requested number of
+digits.</p>
+<p style="margin-left:9%; margin-top: 1em">If there is no
+global precision or accuracy set, <b>and</b> the operation
+in question was not called with a requested precision or
+accuracy, <b>and</b> the input $x has no accuracy or
+precision set, then a fallback parameter will be used. For
+historical reasons, it is called "div_scale" and
+can be accessed via:</p>
+<p style="margin-left:9%; margin-top: 1em">$d =
+Math::BigFloat−&gt;div_scale(); # query <br/>
+Math::BigFloat−&gt;div_scale($n); # set to $n
+digits</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+value for "div_scale" is 40.</p>
+<p style="margin-left:9%; margin-top: 1em">In case the
+result of one operation has more digits than specified, it
+is rounded. The rounding mode taken is either the default
+mode, or the one supplied to the operation after the
+<i>scale</i>:</p>
+<p style="margin-left:9%; margin-top: 1em">$x =
+Math::BigFloat−&gt;new(2); <br/>
+Math::BigFloat−&gt;accuracy(5); # 5 digits max <br/>
+$y = $x−&gt;copy()−&gt;bdiv(3); # gives 0.66667
+<br/>
+$y = $x−&gt;copy()−&gt;bdiv(3,6); # gives
+0.666667 <br/>
+$y = $x−&gt;copy()−&gt;bdiv(3,6,undef,'odd'); #
+gives 0.666667 <br/>
+Math::BigFloat−&gt;round_mode('zero'); <br/>
+$y = $x−&gt;copy()−&gt;bdiv(3,6); # will also
+give 0.666667</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+"Math::BigFloat−&gt;accuracy()" and
+"Math::BigFloat−&gt;precision()" set the
+global variables, and thus <b>any</b> newly created number
+will be subject to the global rounding <b>immediately</b>.
+This means that in the examples above, the 3 as argument to
+bdiv() will also get an accuracy of <b>5</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">It is less
+confusing to either calculate the result fully, and
+afterwards round it explicitly, or use the additional
+parameters to the math functions like so:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigFloat; <br/>
+$x = Math::BigFloat−&gt;new(2); <br/>
+$y = $x−&gt;copy()−&gt;bdiv(3); <br/>
+print $y−&gt;bround(5),"\n"; # gives 0.66667
+<br/>
+or <br/>
+use Math::BigFloat; <br/>
+$x = Math::BigFloat−&gt;new(2); <br/>
+$y = $x−&gt;copy()−&gt;bdiv(3,5); # gives
+0.66667 <br/>
+print "$y\n";</p>
+<h3>Rounding
+<a name="Rounding"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">bfround (
++$scale )</p>
+<p style="margin-left:14%;">Rounds to the $scale'th place
+left from the '.', counting from the dot. The first digit is
+numbered 1.</p>
+<p style="margin-left:9%;">bfround ( −$scale )</p>
+<p style="margin-left:14%;">Rounds to the $scale'th place
+right from the '.', counting from the dot.</p>
+<p style="margin-left:9%;">bfround ( 0 )</p>
+<p style="margin-left:14%;">Rounds to an integer.</p>
+<p style="margin-left:9%;">bround ( +$scale )</p>
+<p style="margin-left:14%;">Preserves accuracy to $scale
+digits from the left (aka significant digits) and pads the
+rest with zeros. If the number is between 1 and −1,
+the significant digits count from the first non−zero
+after the '.'</p>
+<p style="margin-left:9%;">bround ( −$scale ) and
+bround ( 0 )</p>
+<p style="margin-left:14%;">These are effectively
+no−ops.</p>
+<p style="margin-left:9%; margin-top: 1em">All rounding
+functions take as a second parameter a rounding mode from
+one of the following: 'even', 'odd', '+inf', '−inf',
+'zero', 'trunc' or 'common'.</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+rounding mode is 'even'. By using
+"Math::BigFloat−&gt;round_mode($round_mode);"
+you can get and set the default mode for subsequent
+rounding. The usage of
+"$Math::BigFloat::$round_mode" is no longer
+supported. The second parameter to the round functions then
+overrides the default temporarily.</p>
+<p style="margin-left:9%; margin-top: 1em">The as_number()
+function returns a BigInt from a Math::BigFloat. It uses
+'trunc' as rounding mode to make it equivalent to:</p>
+<p style="margin-left:9%; margin-top: 1em">$x = 2.5; <br/>
+$y = int($x) + 2;</p>
+<p style="margin-left:9%; margin-top: 1em">You can override
+this by passing the desired rounding mode as parameter to
+as_number():</p>
+<p style="margin-left:9%; margin-top: 1em">$x =
+Math::BigFloat−&gt;new(2.5); <br/>
+$y = $x−&gt;as_number('odd'); # $y = 3</p>
+<h2>NUMERIC LITERALS
+<a name="NUMERIC LITERALS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">After "use
+Math::BigFloat ':constant'" all numeric literals in the
+given scope are converted to "Math::BigFloat"
+objects. This conversion happens at compile time.</p>
+<p style="margin-left:9%; margin-top: 1em">For example,</p>
+<p style="margin-left:9%; margin-top: 1em">perl
+−MMath::BigFloat=:constant −le 'print
+2e−150'</p>
+<p style="margin-left:9%; margin-top: 1em">prints the exact
+value of 2e−150. Note that without conversion of
+constants the expression 2e−150 is calculated using
+Perl scalars, which leads to an inaccuracte result.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+strings are not affected, so that</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigFloat qw/:constant/; <br/>
+$y = "1234567890123456789012345678901234567890"
+<br/>
++ "123456789123456789";</p>
+<p style="margin-left:9%; margin-top: 1em">does not give
+you what you expect. You need an explicit
+Math::BigFloat−&gt;<b>new()</b> around at least one of
+the operands. You should also quote large constants to
+prevent loss of precision:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigFloat; <br/>
+$x =
+Math::BigFloat−&gt;new("1234567889123456789123456789123456789");</p>
+<p style="margin-left:9%; margin-top: 1em">Without the
+quotes Perl converts the large number to a floating point
+constant at compile time, and then converts the result to a
+Math::BigFloat object at runtime, which results in an
+inaccurate result.</p>
+<h3>Hexadecimal, octal, and binary floating point literals
+<a name="Hexadecimal, octal, and binary floating point literals"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Perl (and this
+module) accepts hexadecimal, octal, and binary floating
+point literals, but use them with care with Perl versions
+before v5.32.0, because some versions of Perl silently give
+the wrong result. Below are some examples of different ways
+to write the number decimal 314.</p>
+<p style="margin-left:9%; margin-top: 1em">Hexadecimal
+floating point literals:</p>
+<p style="margin-left:9%; margin-top: 1em">0x1.3ap+8
+0X1.3AP+8 <br/>
+0x1.3ap8 0X1.3AP8 <br/>
+0x13a0p−4 0X13A0P−4</p>
+<p style="margin-left:9%; margin-top: 1em">Octal floating
+point literals (with "0" prefix):</p>
+<p style="margin-left:9%; margin-top: 1em">01.164p+8
+01.164P+8 <br/>
+01.164p8 01.164P8 <br/>
+011640p−4 011640P−4</p>
+<p style="margin-left:9%; margin-top: 1em">Octal floating
+point literals (with "0o" prefix) (requires
+v5.34.0):</p>
+<p style="margin-left:9%; margin-top: 1em">0o1.164p+8
+0O1.164P+8 <br/>
+0o1.164p8 0O1.164P8 <br/>
+0o11640p−4 0O11640P−4</p>
+<p style="margin-left:9%; margin-top: 1em">Binary floating
+point literals:</p>
+<p style="margin-left:9%; margin-top: 1em">0b1.0011101p+8
+0B1.0011101P+8 <br/>
+0b1.0011101p8 0B1.0011101P8 <br/>
+0b10011101000p−2 0B10011101000P−2</p>
+<h3>Math library
+<a name="Math library"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Math with the
+numbers is done (by default) by a module called
+Math::BigInt::Calc. This is equivalent to saying:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigFloat lib =&gt; "Calc";</p>
+<p style="margin-left:9%; margin-top: 1em">You can change
+this by using:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigFloat lib =&gt; "GMP";</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note</b>:
+General purpose packages should not be explicit about the
+library to use; let the script author decide which is
+best.</p>
+<p style="margin-left:9%; margin-top: 1em">Note: The
+keyword 'lib' will warn when the requested library could not
+be loaded. To suppress the warning use 'try' instead:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigFloat try =&gt; "GMP";</p>
+<p style="margin-left:9%; margin-top: 1em">If your script
+works with huge numbers and Calc is too slow for them, you
+can also for the loading of one of these libraries and if
+none of them can be used, the code will die:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigFloat only =&gt; "GMP,Pari";</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+would first try to find Math::BigInt::Foo, then
+Math::BigInt::Bar, and when this also fails, revert to
+Math::BigInt::Calc:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigFloat lib =&gt;
+"Foo,Math::BigInt::Bar";</p>
+<p style="margin-left:9%; margin-top: 1em">See the
+respective low−level library documentation for further
+details.</p>
+<p style="margin-left:9%; margin-top: 1em">See Math::BigInt
+for more details about using a different low−level
+library.</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Math::BigFloat"
+exports nothing by default, but can export the bpi()
+method:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Math::BigFloat qw/bpi/; <br/>
+print bpi(10), "\n"; <br/>
+stringify, <b>bstr()</b></p>
+<p style="margin-left:14%;">Both stringify and
+<b>bstr()</b> now drop the leading '+'. The old code would
+return '+1.23', the new returns '1.23'. See the
+documentation in Math::BigInt for reasoning and details.</p>
+<p style="margin-left:9%;"><b>brsft()</b></p>
+<p style="margin-left:14%;">The following will probably not
+print what you expect:</p>
+<p style="margin-left:14%; margin-top: 1em">my $c =
+Math::BigFloat−&gt;new('3.14159'); <br/>
+print $c−&gt;brsft(3,10),"\n"; # prints
+0.00314153.1415</p>
+<p style="margin-left:14%; margin-top: 1em">It prints both
+quotient and remainder, since print calls brsft() in list
+context. Also, "$c−&gt;brsft()" will modify
+$c, so be careful. You probably want to use</p>
+<p style="margin-left:14%; margin-top: 1em">print scalar
+$c−&gt;copy()−&gt;brsft(3,10),"\n";
+<br/>
+# or if you really want to modify $c <br/>
+print scalar $c−&gt;brsft(3,10),"\n";</p>
+<p style="margin-left:14%; margin-top: 1em">instead.</p>
+<p style="margin-left:9%;">Modifying and =</p>
+<p style="margin-left:14%;">Beware of:</p>
+<p style="margin-left:14%; margin-top: 1em">$x =
+Math::BigFloat−&gt;new(5); <br/>
+$y = $x;</p>
+<p style="margin-left:14%; margin-top: 1em">It will not do
+what you think, e.g. making a copy of $x. Instead it just
+makes a second reference to the <b>same</b> object and
+stores it in $y. Thus anything that modifies $x will modify
+$y (except overloaded math operators), and vice versa. See
+Math::BigInt for details and how to avoid that.</p>
+<p style="margin-left:9%;"><b>precision()</b> vs.
+<b>accuracy()</b></p>
+<p style="margin-left:14%;">A common pitfall is to use
+"<b>precision()</b>" when you want to round a
+result to a certain number of digits:</p>
+<p style="margin-left:14%; margin-top: 1em">use
+Math::BigFloat; <br/>
+Math::BigFloat−&gt;precision(4); # does not do what
+you <br/>
+# think it does <br/>
+my $x = Math::BigFloat−&gt;new(12345); # rounds $x to
+"12000"! <br/>
+print "$x\n"; # print "12000" <br/>
+my $y = Math::BigFloat−&gt;new(3); # rounds $y to
+"0"! <br/>
+print "$y\n"; # print "0" <br/>
+$z = $x / $y; # 12000 / 0 =&gt; NaN! <br/>
+print "$z\n"; <br/>
+print $z−&gt;precision(),"\n"; # 4</p>
+<p style="margin-left:14%; margin-top: 1em">Replacing
+"<b>precision()</b>" with
+"<b>accuracy()</b>" is probably not what you want,
+either:</p>
+<p style="margin-left:14%; margin-top: 1em">use
+Math::BigFloat; <br/>
+Math::BigFloat−&gt;accuracy(4); # enables global
+rounding: <br/>
+my $x = Math::BigFloat−&gt;new(123456); # rounded
+immediately <br/>
+# to "12350" <br/>
+print "$x\n"; # print "123500" <br/>
+my $y = Math::BigFloat−&gt;new(3); # rounded to
+"3 <br/>
+print "$y\n"; # print "3" <br/>
+print $z =
+$x−&gt;copy()−&gt;bdiv($y),"\n"; #
+41170 <br/>
+print $z−&gt;accuracy(),"\n"; # 4</p>
+<p style="margin-left:14%; margin-top: 1em">What you want
+to use instead is:</p>
+<p style="margin-left:14%; margin-top: 1em">use
+Math::BigFloat; <br/>
+my $x = Math::BigFloat−&gt;new(123456); # no rounding
+<br/>
+print "$x\n"; # print "123456" <br/>
+my $y = Math::BigFloat−&gt;new(3); # no rounding <br/>
+print "$y\n"; # print "3" <br/>
+print $z =
+$x−&gt;copy()−&gt;bdiv($y,4),"\n"; #
+41150 <br/>
+print $z−&gt;accuracy(),"\n"; # undef</p>
+<p style="margin-left:14%; margin-top: 1em">In addition to
+computing what you expected, the last example also does
+<b>not</b> "taint" the result with an accuracy or
+precision setting, which would influence any further
+operation.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please report
+any bugs or feature requests to
+"bug−math−bigint at rt.cpan.org", or
+through the web interface at
+&lt;https://rt.cpan.org/Ticket/Create.html?Queue=Math−BigInt&gt;
+(requires login). We will be notified, and then you'll
+automatically be notified of progress on your bug as I make
+changes.</p>
+<h2>SUPPORT
+<a name="SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You can find
+documentation for this module with the perldoc command.</p>
+<p style="margin-left:9%; margin-top: 1em">perldoc
+Math::BigFloat</p>
+<p style="margin-left:9%; margin-top: 1em">You can also
+look for information at:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="8%">
+<p>GitHub</p></td>
+<td width="78%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;https://github.com/pjacklam/p5−Math−BigInt&gt;</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="33%">
+<p style="margin-top: 1em">RT: CPAN's request tracker</p></td>
+<td width="53%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;https://rt.cpan.org/Dist/Display.html?Name=Math−BigInt&gt;</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p style="margin-top: 1em">MetaCPAN</p></td>
+<td width="76%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;https://metacpan.org/release/Math−BigInt&gt;</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="24%">
+<p style="margin-top: 1em">CPAN Testers Matrix</p></td>
+<td width="62%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">&lt;http://matrix.cpantesters.org/?dist=Math−BigInt&gt;</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you may redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Math::BigInt and
+Math::BigRat as well as the backend libraries
+Math::BigInt::FastCalc, Math::BigInt::GMP, and
+Math::BigInt::Pari, Math::BigInt::GMPz, and
+Math::BigInt::BitVect.</p>
+<p style="margin-left:9%; margin-top: 1em">The pragmas
+bigint, bigfloat, and bigrat might also be of interest. In
+addition there is the bignum pragma which does upgrading and
+downgrading.</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="83%">
+<p style="margin-top: 1em">Mark Biggar, overloaded
+interface by Ilya Zakharevich, 1996−2001.</p></td>
+<td width="3%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="83%">
+<p>Completely rewritten by Tels
+&lt;http://bloodgate.com&gt; in 2001−2008.</p></td>
+<td width="3%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="83%">
+<p>Florian Ragwitz &lt;flora@cpan.org&gt;, 2010.</p></td>
+<td width="3%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="83%">
+<p>Peter John Acklam &lt;pjacklam@gmail.com&gt;,
+2011−.</p> </td>
+<td width="3%">
+</td></tr>
+</table>
+<hr/>
+</body>
+</html>

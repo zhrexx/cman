@@ -1,0 +1,210 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:33 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>parent</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">parent</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHORS AND CONTRIBUTORS">AUTHORS AND CONTRIBUTORS</a><br/>
+<a href="#MAINTAINER">MAINTAINER</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">parent −
+Establish an ISA relationship with base classes at compile
+time</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">package Baz;
+<br/>
+use parent qw(Foo Bar);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Allows you to
+both load one or more modules, while setting up inheritance
+from those modules at the same time. Mostly similar in
+effect to</p>
+<p style="margin-left:9%; margin-top: 1em">package Baz;
+<br/>
+BEGIN { <br/>
+require Foo; <br/>
+require Bar; <br/>
+push @ISA, qw(Foo Bar); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">By default,
+every base class needs to live in a file of its own. If you
+want to have a subclass and its parent class in the same
+file, you can tell "parent" not to load any
+modules by using the "−norequire"
+switch:</p>
+<p style="margin-left:9%; margin-top: 1em">package Foo;
+<br/>
+sub exclaim { "I CAN HAS PERL" } <br/>
+package DoesNotLoadFooBar; <br/>
+use parent −norequire, 'Foo', 'Bar'; <br/>
+# will not go looking for Foo.pm or Bar.pm</p>
+<p style="margin-left:9%; margin-top: 1em">This is
+equivalent to the following code:</p>
+<p style="margin-left:9%; margin-top: 1em">package Foo;
+<br/>
+sub exclaim { "I CAN HAS PERL" } <br/>
+package DoesNotLoadFooBar; <br/>
+push @DoesNotLoadFooBar::ISA, 'Foo', 'Bar';</p>
+<p style="margin-left:9%; margin-top: 1em">This is also
+helpful for the case where a package lives within a
+differently named file:</p>
+<p style="margin-left:9%; margin-top: 1em">package MyHash;
+<br/>
+use Tie::Hash; <br/>
+use parent −norequire, 'Tie::StdHash';</p>
+<p style="margin-left:9%; margin-top: 1em">This is
+equivalent to the following code:</p>
+<p style="margin-left:9%; margin-top: 1em">package MyHash;
+<br/>
+require Tie::Hash; <br/>
+push @ISA, 'Tie::StdHash';</p>
+<p style="margin-left:9%; margin-top: 1em">If you want to
+load a subclass from a file that "require" would
+not consider an eligible filename (that is, it does not end
+in either ".pm" or ".pmc"), use the
+following code:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+MySecondPlugin; <br/>
+require './plugins/custom.plugin'; # contains Plugin::Custom
+<br/>
+use parent −norequire, 'Plugin::Custom';</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module was
+forked from base to remove the cruft that had accumulated in
+it.</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">base <br/>
+parent::versioned</p>
+<p style="margin-left:14%;">A fork of parent that provides
+version checking in parent class modules.</p>
+<h2>AUTHORS AND CONTRIBUTORS
+<a name="AUTHORS AND CONTRIBUTORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Rafaël
+Garcia−Suarez, Bart Lateur, Max Maischein, Anno
+Siegel, Michael Schwern</p>
+<h2>MAINTAINER
+<a name="MAINTAINER"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Max Maischein
+" corion@cpan.org "</p>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+2007−2017 Max Maischein
+"&lt;corion@cpan.org&gt;" Based on the idea of
+"base.pm", which was introduced with Perl
+5.004_04.</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+released under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

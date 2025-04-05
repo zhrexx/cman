@@ -1,0 +1,194 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:24 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>MIME::QuotedPrint</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">MIME::QuotedPrint</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">MIME::QuotedPrint
+− Encoding and decoding of quoted−printable
+strings</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+MIME::QuotedPrint; <br/>
+$encoded = encode_qp($decoded); <br/>
+$decoded = decode_qp($encoded);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides functions to encode and decode strings into and
+from the quoted−printable encoding specified in RFC
+2045 − <i>MIME (Multipurpose Internet Mail
+Extensions)</i>. The quoted−printable encoding is
+intended to represent data that largely consists of bytes
+that correspond to printable characters in the ASCII
+character set. Each non−printable character (as
+defined by English Americans) is represented by a triplet
+consisting of the character "=" followed by two
+hexadecimal digits.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions are provided: <br/>
+encode_qp( $str) <br/>
+encode_qp( $str, $eol) <br/>
+encode_qp( $str, $eol, $binmode )</p>
+<p style="margin-left:14%;">This function returns an
+encoded version of the string ($str) given as argument.</p>
+<p style="margin-left:14%; margin-top: 1em">The second
+argument ($eol) is the line−ending sequence to use. It
+is optional and defaults to "\n". Every occurrence
+of "\n" is replaced with this string, and it is
+also used for additional "soft line breaks" to
+ensure that no line end up longer than 76 characters. Pass
+it as "\015\012" to produce data suitable for
+external consumption. The string "\r\n" produces
+the same result on many platforms, but not all.</p>
+<p style="margin-left:14%; margin-top: 1em">The third
+argument ($binmode) will select binary mode if passed as a
+TRUE value. In binary mode "\n" will be encoded in
+the same way as any other non−printable character.
+This ensures that a decoder will end up with exactly the
+same string whatever line ending sequence it uses. In
+general it is preferable to use the base64 encoding for
+binary data; see MIME::Base64.</p>
+<p style="margin-left:14%; margin-top: 1em">An $eol of
+"" (the empty string) is special. In this case, no
+"soft line breaks" are introduced and binary mode
+is effectively enabled so that any "\n" in the
+original data is encoded as well.</p>
+<p style="margin-left:9%;">decode_qp( $str )</p>
+<p style="margin-left:14%;">This function returns the plain
+text version of the string given as argument. The lines of
+the result are "\n" terminated, even if the $str
+argument contains "\r\n" terminated lines.</p>
+<p style="margin-left:9%; margin-top: 1em">If you prefer
+not to import these routines into your namespace, you can
+call them as:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+MIME::QuotedPrint (); <br/>
+$encoded = MIME::QuotedPrint::encode($decoded); <br/>
+$decoded = MIME::QuotedPrint::decode($encoded);</p>
+<p style="margin-left:9%; margin-top: 1em">Perl v5.8 and
+better allow extended Unicode characters in strings. Such
+strings cannot be encoded directly, as the
+quoted−printable encoding is only defined for
+single−byte characters. The solution is to use the
+Encode module to select the byte encoding you want. For
+example:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+MIME::QuotedPrint qw(encode_qp); <br/>
+use Encode qw(encode); <br/>
+$encoded = encode_qp(encode("UTF−8",
+"\x{FFFF}\n")); <br/>
+print $encoded;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+1995−1997,2002−2004 Gisle Aas.</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">MIME::Base64</p>
+<hr/>
+</body>
+</html>

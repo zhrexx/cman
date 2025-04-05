@@ -1,0 +1,244 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:37 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLMOPT_SOCKETFUNCTION</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLMOPT_SOCKETFUNCTION</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CALLBACK ARGUMENTS">CALLBACK ARGUMENTS</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLMOPT_SOCKETFUNCTION
+− callback informed about what to wait for</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">int
+socket_callback(CURL *easy, /* easy handle */ <br/>
+curl_socket_t s, /* socket */ <br/>
+int what, /* describes the socket */ <br/>
+void *clientp, /* private callback pointer */ <br/>
+void *socketp); /* private socket pointer */</p>
+<p style="margin-left:9%; margin-top: 1em">CURLMcode
+curl_multi_setopt(CURLM *handle, CURLMOPT_SOCKETFUNCTION,
+socket_callback);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a pointer
+to your callback function, which should match the prototype
+shown above.</p>
+<p style="margin-left:9%; margin-top: 1em">When the
+<i>curl_multi_socket_action(3)</i> function is called, it
+uses this callback to inform the application about updates
+in the socket (file descriptor) status by doing none, one,
+or multiple calls to the <b>socket_callback</b>. The
+callback function gets status updates with changes since the
+previous time the callback was called. If the given callback
+pointer is set to NULL, no callback is called.</p>
+<p style="margin-left:9%; margin-top: 1em">libcurl then
+expects the application to monitor the sockets for the
+specific activities and tell libcurl again when something
+happens on one of them. Tell libcurl by calling
+<i>curl_multi_socket_action(3)</i>.</p>
+<h2>CALLBACK ARGUMENTS
+<a name="CALLBACK ARGUMENTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>easy</i>
+identifies the specific transfer for which this update is
+related.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>s</i> is the
+specific socket this function invocation concerns. If the
+<b>what</b> argument is not CURL_POLL_REMOVE then it holds
+information about what activity on this socket the
+application is supposed to monitor. Subsequent calls to this
+callback might update the <b>what</b> bits for a socket that
+is already monitored.</p>
+<p style="margin-left:9%; margin-top: 1em">The socket
+callback should return 0 on success, and −1 on error.
+If this callback returns error, <b>all</b> transfers
+currently in progress in this multi handle are aborted and
+made to fail.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>clientp</b>
+is set with <i>CURLMOPT_SOCKETDATA(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>socketp</b>
+is set with <i>curl_multi_assign(3)</i> or NULL.</p>
+<p style="margin-left:9%; margin-top: 1em">The <b>what</b>
+parameter informs the callback on the status of the given
+socket. It can hold one of these values: <br/>
+CURL_POLL_IN</p>
+<p style="margin-left:18%;">Wait for incoming data. For the
+socket to become readable.</p>
+<p style="margin-left:9%;">CURL_POLL_OUT</p>
+<p style="margin-left:18%;">Wait for outgoing data. For the
+socket to become writable.</p>
+<p style="margin-left:9%;">CURL_POLL_INOUT</p>
+<p style="margin-left:18%;">Wait for incoming and outgoing
+data. For the socket to become readable or writable.</p>
+<p style="margin-left:9%;">CURL_POLL_REMOVE</p>
+<p style="margin-left:18%;">The specified socket/file
+descriptor is no longer used by libcurl for any active
+transfer. It might soon be added again.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL (no
+callback)</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">struct priv {
+<br/>
+void *ours; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">static int
+sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void
+*sockp) <br/>
+{ <br/>
+struct priv *p = sockp; <br/>
+printf("our ptr: %p\n", p-&gt;ours);</p>
+<p style="margin-left:9%; margin-top: 1em">if(what ==
+CURL_POLL_REMOVE) { <br/>
+/* remove the socket from our collection */ <br/>
+} <br/>
+if(what &amp; CURL_POLL_IN) { <br/>
+/* wait for read on this socket */ <br/>
+} <br/>
+if(what &amp; CURL_POLL_OUT) { <br/>
+/* wait for write on this socket */ <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">return 0; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+struct priv setup; <br/>
+CURLM *multi = curl_multi_init(); <br/>
+/* ... use socket callback and custom pointer */ <br/>
+curl_multi_setopt(multi, CURLMOPT_SOCKETFUNCTION, sock_cb);
+<br/>
+curl_multi_setopt(multi, CURLMOPT_SOCKETDATA, &amp;setup);
+<br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.15.4</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns
+CURLM_OK.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLMOPT_SOCKETDATA</b>(3),
+<b>CURLMOPT_TIMERFUNCTION</b>(3),
+<b>curl_multi_socket_action</b>(3)</p>
+<hr/>
+</body>
+</html>

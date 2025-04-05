@@ -1,0 +1,1774 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:54 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>JSON::PP</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">JSON::PP</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTIONAL INTERFACE">FUNCTIONAL INTERFACE</a><br/>
+<a href="#encode_json">encode_json</a><br/>
+<a href="#decode_json">decode_json</a><br/>
+<a href="#JSON::PP::is_bool">JSON::PP::is_bool</a><br/>
+<a href="#OBJECT−ORIENTED INTERFACE">OBJECT−ORIENTED INTERFACE</a><br/>
+<a href="#new">new</a><br/>
+<a href="#ascii">ascii</a><br/>
+<a href="#latin1">latin1</a><br/>
+<a href="#utf8">utf8</a><br/>
+<a href="#pretty">pretty</a><br/>
+<a href="#indent">indent</a><br/>
+<a href="#space_before">space_before</a><br/>
+<a href="#space_after">space_after</a><br/>
+<a href="#relaxed">relaxed</a><br/>
+<a href="#canonical">canonical</a><br/>
+<a href="#allow_nonref">allow_nonref</a><br/>
+<a href="#allow_unknown">allow_unknown</a><br/>
+<a href="#allow_blessed">allow_blessed</a><br/>
+<a href="#convert_blessed">convert_blessed</a><br/>
+<a href="#allow_tags">allow_tags</a><br/>
+<a href="#boolean_values">boolean_values</a><br/>
+<a href="#core_bools">core_bools</a><br/>
+<a href="#filter_json_object">filter_json_object</a><br/>
+<a href="#filter_json_single_key_object">filter_json_single_key_object</a><br/>
+<a href="#shrink">shrink</a><br/>
+<a href="#max_depth">max_depth</a><br/>
+<a href="#max_size">max_size</a><br/>
+<a href="#encode">encode</a><br/>
+<a href="#decode">decode</a><br/>
+<a href="#decode_prefix">decode_prefix</a><br/>
+<a href="#FLAGS FOR JSON::PP ONLY">FLAGS FOR JSON::PP ONLY</a><br/>
+<a href="#allow_singlequote">allow_singlequote</a><br/>
+<a href="#allow_barekey">allow_barekey</a><br/>
+<a href="#allow_bignum">allow_bignum</a><br/>
+<a href="#loose">loose</a><br/>
+<a href="#escape_slash">escape_slash</a><br/>
+<a href="#indent_length">indent_length</a><br/>
+<a href="#sort_by">sort_by</a><br/>
+<a href="#INCREMENTAL PARSING">INCREMENTAL PARSING</a><br/>
+<a href="#incr_parse">incr_parse</a><br/>
+<a href="#incr_text">incr_text</a><br/>
+<a href="#incr_skip">incr_skip</a><br/>
+<a href="#incr_reset">incr_reset</a><br/>
+<a href="#MAPPING">MAPPING</a><br/>
+<a href="#JSON −&gt; PERL">JSON −&gt; PERL</a><br/>
+<a href="#PERL −&gt; JSON">PERL −&gt; JSON</a><br/>
+<a href="#OBJECT SERIALISATION">OBJECT SERIALISATION</a><br/>
+<a href="#ENCODING/CODESET FLAG NOTES">ENCODING/CODESET FLAG NOTES</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#CURRENT MAINTAINER">CURRENT MAINTAINER</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">JSON::PP −
+JSON::XS compatible pure−Perl module.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use JSON::PP;
+<br/>
+# exported functions, they croak on error <br/>
+# and expect/generate UTF−8 <br/>
+$utf8_encoded_json_text = encode_json
+$perl_hash_or_arrayref; <br/>
+$perl_hash_or_arrayref = decode_json
+$utf8_encoded_json_text; <br/>
+# OO−interface <br/>
+$json =
+JSON::PP−&gt;new−&gt;ascii−&gt;pretty−&gt;allow_nonref;
+<br/>
+$pretty_printed_json_text = $json−&gt;encode(
+$perl_scalar ); <br/>
+$perl_scalar = $json−&gt;decode( $json_text ); <br/>
+# Note that JSON version 2.0 and above will automatically
+use <br/>
+# JSON::XS or JSON::PP, so you should be able to just: <br/>
+use JSON;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">JSON::PP is a
+pure perl JSON decoder/encoder, and (almost) compatible to
+much faster JSON::XS written by Marc Lehmann in C. JSON::PP
+works as a fallback module when you use JSON module without
+having installed JSON::XS.</p>
+<p style="margin-left:9%; margin-top: 1em">Because of this
+fallback feature of JSON.pm, JSON::PP tries not to be more
+JavaScript−friendly than JSON::XS (i.e. not to escape
+extra characters such as U+2028 and U+2029, etc), in order
+for you not to lose such JavaScript−friendliness
+silently when you use JSON.pm and install JSON::XS for speed
+or by accident. If you need JavaScript−friendly
+RFC7159−compliant pure perl module, try JSON::Tiny,
+which is derived from Mojolicious web framework and is also
+smaller and faster than JSON::PP.</p>
+<p style="margin-left:9%; margin-top: 1em">JSON::PP has
+been in the Perl core since Perl 5.14, mainly for CPAN
+toolchain modules to parse META.json.</p>
+<h2>FUNCTIONAL INTERFACE
+<a name="FUNCTIONAL INTERFACE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This section is
+taken from JSON::XS almost verbatim. "encode_json"
+and "decode_json" are exported by default.</p>
+<h3>encode_json
+<a name="encode_json"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json_text =
+encode_json $perl_scalar</p>
+<p style="margin-left:9%; margin-top: 1em">Converts the
+given Perl data structure to a UTF−8 encoded, binary
+string (that is, the string contains octets only). Croaks on
+error.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+call is functionally identical to:</p>
+<p style="margin-left:9%; margin-top: 1em">$json_text =
+JSON::PP−&gt;new−&gt;utf8−&gt;encode($perl_scalar)</p>
+<p style="margin-left:9%; margin-top: 1em">Except being
+faster.</p>
+<h3>decode_json
+<a name="decode_json"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$perl_scalar =
+decode_json $json_text</p>
+<p style="margin-left:9%; margin-top: 1em">The opposite of
+"encode_json": expects an UTF−8 (binary)
+string and tries to parse that as an UTF−8 encoded
+JSON text, returning the resulting reference. Croaks on
+error.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+call is functionally identical to:</p>
+<p style="margin-left:9%; margin-top: 1em">$perl_scalar =
+JSON::PP−&gt;new−&gt;utf8−&gt;decode($json_text)</p>
+<p style="margin-left:9%; margin-top: 1em">Except being
+faster.</p>
+<h3>JSON::PP::is_bool
+<a name="JSON::PP::is_bool"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$is_boolean =
+JSON::PP::is_bool($scalar)</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+the passed scalar represents either JSON::PP::true or
+JSON::PP::false, two constants that act like 1 and 0
+respectively and are also used to represent JSON
+"true" and "false" in Perl strings.</p>
+<p style="margin-left:9%; margin-top: 1em">On perl 5.36 and
+above, will also return true when given one of perl's
+standard boolean values, such as the result of a
+comparison.</p>
+<p style="margin-left:9%; margin-top: 1em">See MAPPING,
+below, for more information on how JSON values are mapped to
+Perl.</p>
+<h2>OBJECT−ORIENTED INTERFACE
+<a name="OBJECT−ORIENTED INTERFACE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This section is
+also taken from JSON::XS.</p>
+<p style="margin-left:9%; margin-top: 1em">The object
+oriented interface lets you configure your own encoding or
+decoding style, within the limits of supported formats.</p>
+<h3>new
+<a name="new"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+JSON::PP−&gt;new</p>
+<p style="margin-left:9%; margin-top: 1em">Creates a new
+JSON::PP object that can be used to de/encode JSON strings.
+All boolean flags described below are by default
+<i>disabled</i> (with the exception of
+"allow_nonref", which defaults to <i>enabled</i>
+since version 4.0).</p>
+<p style="margin-left:9%; margin-top: 1em">The mutators for
+flags all return the JSON::PP object again and thus calls
+can be chained:</p>
+<p style="margin-left:9%; margin-top: 1em">my $json =
+JSON::PP−&gt;new−&gt;utf8−&gt;space_after−&gt;encode({a
+=&gt; [1,2]}) <br/>
+=&gt; {"a": [1, 2]}</p>
+<h3>ascii
+<a name="ascii"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;ascii([$enable]) <br/>
+$enabled = $json−&gt;get_ascii</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then the "encode" method will
+not generate characters outside the code range 0..127 (which
+is ASCII). Any Unicode characters outside that range will be
+escaped using either a single \uXXXX (BMP characters) or a
+double \uHHHH\uLLLLL escape sequence, as per RFC4627. The
+resulting encoded JSON text can be treated as a native
+Unicode string, an ascii−encoded, latin1−encoded
+or UTF−8 encoded string, or any other superset of
+ASCII.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false, then the "encode" method will not escape
+Unicode characters unless required by the JSON syntax or
+other flags. This results in a faster and more compact
+format.</p>
+<p style="margin-left:9%; margin-top: 1em">See also the
+section <i>ENCODING/CODESET FLAG NOTES</i> later in this
+document.</p>
+<p style="margin-left:9%; margin-top: 1em">The main use for
+this flag is to produce JSON texts that can be transmitted
+over a 7−bit channel, as the encoded JSON texts will
+not contain any 8 bit characters.</p>
+<p style="margin-left:9%; margin-top: 1em">JSON::PP−&gt;new−&gt;ascii(1)−&gt;encode([chr
+0x10401]) <br/>
+=&gt; ["\ud801\udc01"]</p>
+<h3>latin1
+<a name="latin1"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;latin1([$enable]) <br/>
+$enabled = $json−&gt;get_latin1</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then the "encode" method will
+encode the resulting JSON text as latin1 (or
+iso−8859−1), escaping any characters outside the
+code range 0..255. The resulting string can be treated as a
+latin1−encoded JSON text or a native Unicode string.
+The "decode" method will not be affected in any
+way by this flag, as "decode" by default expects
+Unicode, which is a strict superset of latin1.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false, then the "encode" method will not escape
+Unicode characters unless required by the JSON syntax or
+other flags.</p>
+<p style="margin-left:9%; margin-top: 1em">See also the
+section <i>ENCODING/CODESET FLAG NOTES</i> later in this
+document.</p>
+<p style="margin-left:9%; margin-top: 1em">The main use for
+this flag is efficiently encoding binary data as JSON text,
+as most octets will not be escaped, resulting in a smaller
+encoded size. The disadvantage is that the resulting JSON
+text is encoded in latin1 (and must correctly be treated as
+such when storing and transferring), a rare encoding for
+JSON. It is therefore most useful when you want to store
+data structures known to contain binary data efficiently in
+files or databases, not when talking to other JSON
+encoders/decoders.</p>
+<p style="margin-left:9%; margin-top: 1em">JSON::PP−&gt;new−&gt;latin1−&gt;encode
+(["\x{89}\x{abc}"] <br/>
+=&gt; ["\x{89}\\u0abc"] # (perl syntax, U+abc
+escaped, U+89 not)</p>
+<h3>utf8
+<a name="utf8"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;utf8([$enable]) <br/>
+$enabled = $json−&gt;get_utf8</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then the "encode" method will
+encode the JSON result into UTF−8, as required by many
+protocols, while the "decode" method expects to be
+handled an UTF−8−encoded string. Please note
+that UTF−8−encoded strings do not contain any
+characters outside the range 0..255, they are thus useful
+for bytewise/binary I/O. In future versions, enabling this
+option might enable autodetection of the UTF−16 and
+UTF−32 encoding families, as described in RFC4627.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false, then the "encode" method will return the
+JSON string as a (non−encoded) Unicode string, while
+"decode" expects thus a Unicode string. Any
+decoding or encoding (e.g. to UTF−8 or UTF−16)
+needs to be done yourself, e.g. using the Encode module.</p>
+<p style="margin-left:9%; margin-top: 1em">See also the
+section <i>ENCODING/CODESET FLAG NOTES</i> later in this
+document.</p>
+<p style="margin-left:9%; margin-top: 1em">Example, output
+UTF−16BE−encoded JSON:</p>
+<p style="margin-left:9%; margin-top: 1em">use Encode; <br/>
+$jsontext = encode "UTF−16BE",
+JSON::PP−&gt;new−&gt;encode ($object);</p>
+<p style="margin-left:9%; margin-top: 1em">Example, decode
+UTF−32LE−encoded JSON:</p>
+<p style="margin-left:9%; margin-top: 1em">use Encode; <br/>
+$object = JSON::PP−&gt;new−&gt;decode (decode
+"UTF−32LE", $jsontext);</p>
+<h3>pretty
+<a name="pretty"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;pretty([$enable])</p>
+<p style="margin-left:9%; margin-top: 1em">This enables (or
+disables) all of the "indent",
+"space_before" and "space_after" (and in
+the future possibly more) flags in one call to generate the
+most readable (or most compact) form possible.</p>
+<h3>indent
+<a name="indent"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;indent([$enable]) <br/>
+$enabled = $json−&gt;get_indent</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then the "encode" method will
+use a multiline format as output, putting every array member
+or object/hash key−value pair into its own line,
+indenting them properly.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false, no newlines or indenting will be produced, and the
+resulting JSON text is guaranteed not to contain any
+"newlines".</p>
+<p style="margin-left:9%; margin-top: 1em">This setting has
+no effect when decoding JSON texts.</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+indent space length is three. You can use
+"indent_length" to change the length.</p>
+<h3>space_before
+<a name="space_before"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;space_before([$enable]) <br/>
+$enabled = $json−&gt;get_space_before</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then the "encode" method will
+add an extra optional space before the ":"
+separating keys from values in JSON objects.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false, then the "encode" method will not add any
+extra space at those places.</p>
+<p style="margin-left:9%; margin-top: 1em">This setting has
+no effect when decoding JSON texts. You will also most
+likely combine this setting with
+"space_after".</p>
+<p style="margin-left:9%; margin-top: 1em">Example,
+space_before enabled, space_after and indent disabled:</p>
+<p style="margin-left:9%; margin-top: 1em">{"key"
+:"value"}</p>
+<h3>space_after
+<a name="space_after"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;space_after([$enable]) <br/>
+$enabled = $json−&gt;get_space_after</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then the "encode" method will
+add an extra optional space after the ":"
+separating keys from values in JSON objects and extra
+whitespace after the "," separating
+key−value pairs and array members.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false, then the "encode" method will not add any
+extra space at those places.</p>
+<p style="margin-left:9%; margin-top: 1em">This setting has
+no effect when decoding JSON texts.</p>
+<p style="margin-left:9%; margin-top: 1em">Example,
+space_before and indent disabled, space_after enabled:</p>
+<p style="margin-left:9%; margin-top: 1em">{"key":
+"value"}</p>
+<h3>relaxed
+<a name="relaxed"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;relaxed([$enable]) <br/>
+$enabled = $json−&gt;get_relaxed</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then "decode" will accept some
+extensions to normal JSON syntax (see below).
+"encode" will not be affected in anyway. <i>Be
+aware that this option makes you accept invalid JSON texts
+as if they were valid!</i>. I suggest only to use this
+option to parse application−specific files written by
+humans (configuration files, resource files etc.)</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false (the default), then "decode" will only
+accept valid JSON texts.</p>
+<p style="margin-left:9%; margin-top: 1em">Currently
+accepted extensions are:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p>list items can have an end−comma</p></td>
+<td width="45%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">JSON
+<i>separates</i> array elements and key−value pairs
+with commas. This can be annoying if you write JSON texts
+manually and want to be able to quickly append elements, so
+this extension accepts comma at the end of such items not
+just between them:</p>
+<p style="margin-left:14%; margin-top: 1em">[ <br/>
+1, <br/>
+2, &lt;− this comma not normally allowed <br/>
+] <br/>
+{ <br/>
+"k1": "v1", <br/>
+"k2": "v2", &lt;− this comma not
+normally allowed <br/>
+}</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="31%">
+<p style="margin-top: 1em">shell−style
+'#'−comments</p> </td>
+<td width="55%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Whenever JSON
+allows whitespace, shell−style comments are
+additionally allowed. They are terminated by the first
+carriage−return or line−feed character, after
+which more white−space and comments are allowed.</p>
+<p style="margin-left:14%; margin-top: 1em">[ <br/>
+1, # this comment not allowed in JSON <br/>
+# neither this one... <br/>
+]</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="69%">
+<p style="margin-top: 1em">C−style
+multiple−line '/* */'−comments (JSON::PP
+only)</p> </td>
+<td width="17%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Whenever JSON
+allows whitespace, C−style multiple−line
+comments are additionally allowed. Everything between
+"/*" and "*/" is a comment, after which
+more white−space and comments are allowed.</p>
+<p style="margin-left:14%; margin-top: 1em">[ <br/>
+1, /* this comment not allowed in JSON */ <br/>
+/* neither this one... */ <br/>
+]</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p style="margin-top: 1em">C++−style one−line
+'//'−comments (JSON::PP only)</p></td>
+<td width="24%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Whenever JSON
+allows whitespace, C++−style one−line comments
+are additionally allowed. They are terminated by the first
+carriage−return or line−feed character, after
+which more white−space and comments are allowed.</p>
+<p style="margin-left:14%; margin-top: 1em">[ <br/>
+1, // this comment not allowed in JSON <br/>
+// neither this one... <br/>
+]</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="50%">
+<p style="margin-top: 1em">literal ASCII TAB characters in
+strings</p> </td>
+<td width="36%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Literal ASCII
+TAB characters are now allowed in strings (and treated as
+"\t").</p>
+<p style="margin-left:14%; margin-top: 1em">[ <br/>
+"Hello\tWorld", <br/>
+"Hello&lt;TAB&gt;World", # literal &lt;TAB&gt;
+would not normally be allowed <br/>
+]</p>
+<h3>canonical
+<a name="canonical"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;canonical([$enable]) <br/>
+$enabled = $json−&gt;get_canonical</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then the "encode" method will
+output JSON objects by sorting their keys. This is adding a
+comparatively high overhead.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false, then the "encode" method will output
+key−value pairs in the order Perl stores them (which
+will likely change between runs of the same script, and can
+change even within the same run from 5.18 onwards).</p>
+<p style="margin-left:9%; margin-top: 1em">This option is
+useful if you want the same data structure to be encoded as
+the same JSON text (given the same overall settings). If it
+is disabled, the same hash might be encoded differently even
+if contains the same data, as key−value pairs have no
+inherent ordering in Perl.</p>
+<p style="margin-left:9%; margin-top: 1em">This setting has
+no effect when decoding JSON texts.</p>
+<p style="margin-left:9%; margin-top: 1em">This setting has
+currently no effect on tied hashes.</p>
+<h3>allow_nonref
+<a name="allow_nonref"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;allow_nonref([$enable]) <br/>
+$enabled = $json−&gt;get_allow_nonref</p>
+<p style="margin-left:9%; margin-top: 1em">Unlike other
+boolean options, this opotion is enabled by default
+beginning with version 4.0.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then the "encode" method can
+convert a non−reference into its corresponding string,
+number or null JSON value, which is an extension to RFC4627.
+Likewise, "decode" will accept those JSON values
+instead of croaking.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false, then the "encode" method will croak if it
+isn't passed an arrayref or hashref, as JSON texts must
+either be an object or array. Likewise, "decode"
+will croak if given something that is not a JSON object or
+array.</p>
+<p style="margin-left:9%; margin-top: 1em">Example, encode
+a Perl scalar as JSON value without enabled
+"allow_nonref", resulting in an error:</p>
+<p style="margin-left:9%; margin-top: 1em">JSON::PP−&gt;new−&gt;allow_nonref(0)−&gt;encode
+("Hello, World!") <br/>
+=&gt; hash− or arrayref expected...</p>
+<h3>allow_unknown
+<a name="allow_unknown"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;allow_unknown([$enable]) <br/>
+$enabled = $json−&gt;get_allow_unknown</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then "encode" will <i>not</i>
+throw an exception when it encounters values it cannot
+represent in JSON (for example, filehandles) but instead
+will encode a JSON "null" value. Note that blessed
+objects are not included here and are handled separately by
+c&lt;allow_blessed&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false (the default), then "encode" will throw an
+exception when it encounters anything it cannot encode as
+JSON.</p>
+<p style="margin-left:9%; margin-top: 1em">This option does
+not affect "decode" in any way, and it is
+recommended to leave it off unless you know your
+communications partner.</p>
+<h3>allow_blessed
+<a name="allow_blessed"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;allow_blessed([$enable]) <br/>
+$enabled = $json−&gt;get_allow_blessed</p>
+<p style="margin-left:9%; margin-top: 1em">See "OBJECT
+SERIALISATION" for details.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then the "encode" method will
+not barf when it encounters a blessed reference that it
+cannot convert otherwise. Instead, a JSON "null"
+value is encoded instead of the object.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false (the default), then "encode" will throw an
+exception when it encounters a blessed object that it cannot
+convert otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em">This setting has
+no effect on "decode".</p>
+<h3>convert_blessed
+<a name="convert_blessed"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;convert_blessed([$enable]) <br/>
+$enabled = $json−&gt;get_convert_blessed</p>
+<p style="margin-left:9%; margin-top: 1em">See "OBJECT
+SERIALISATION" for details.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then "encode", upon
+encountering a blessed object, will check for the
+availability of the "TO_JSON" method on the
+object's class. If found, it will be called in scalar
+context and the resulting scalar will be encoded instead of
+the object.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"TO_JSON" method may safely call die if it wants.
+If "TO_JSON" returns other blessed objects, those
+will be handled in the same way. "TO_JSON" must
+take care of not causing an endless recursion cycle (==
+crash) in this case. The name of "TO_JSON" was
+chosen because other methods called by the Perl core (== not
+by the user of the object) are usually in upper case letters
+and to avoid collisions with any "to_json"
+function or method.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false (the default), then "encode" will not
+consider this type of conversion.</p>
+<p style="margin-left:9%; margin-top: 1em">This setting has
+no effect on "decode".</p>
+<h3>allow_tags
+<a name="allow_tags"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;allow_tags([$enable]) <br/>
+$enabled = $json−&gt;get_allow_tags</p>
+<p style="margin-left:9%; margin-top: 1em">See "OBJECT
+SERIALISATION" for details.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then "encode", upon
+encountering a blessed object, will check for the
+availability of the "FREEZE" method on the
+object's class. If found, it will be used to serialise the
+object into a nonstandard tagged JSON value (that JSON
+decoders cannot decode).</p>
+<p style="margin-left:9%; margin-top: 1em">It also causes
+"decode" to parse such tagged JSON values and
+deserialise them via a call to the "THAW"
+method.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false (the default), then "encode" will not
+consider this type of conversion, and tagged JSON values
+will cause a parse error in "decode", as if tags
+were not part of the grammar.</p>
+<h3>boolean_values
+<a name="boolean_values"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json−&gt;boolean_values([$false,
+$true]) <br/>
+($false, $true) = $json−&gt;get_boolean_values</p>
+<p style="margin-left:9%; margin-top: 1em">By default, JSON
+booleans will be decoded as overloaded $JSON::PP::false and
+$JSON::PP::true objects.</p>
+<p style="margin-left:9%; margin-top: 1em">With this method
+you can specify your own boolean values for decoding −
+on decode, JSON "false" will be decoded as a copy
+of $false, and JSON "true" will be decoded as
+$true ("copy" here is the same thing as assigning
+a value to another variable, i.e. "$copy =
+$false").</p>
+<p style="margin-left:9%; margin-top: 1em">This is useful
+when you want to pass a decoded data structure directly to
+other serialisers like YAML, Data::MessagePack and so
+on.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that this
+works only when you "decode". You can set
+incompatible boolean objects (like boolean), but when you
+"encode" a data structure with such boolean
+objects, you still need to enable
+"convert_blessed" (and add a "TO_JSON"
+method if necessary).</p>
+<p style="margin-left:9%; margin-top: 1em">Calling this
+method without any arguments will reset the booleans to
+their default values.</p>
+<p style="margin-left:9%; margin-top: 1em">"get_boolean_values"
+will return both $false and $true values, or the empty list
+when they are set to the default.</p>
+<h3>core_bools
+<a name="core_bools"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json−&gt;core_bools([$enable]);</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then "decode", will produce
+standard perl boolean values. Equivalent to calling:</p>
+<p style="margin-left:9%; margin-top: 1em">$json−&gt;boolean_values(!!1,
+!!0)</p>
+<p style="margin-left:9%; margin-top: 1em">"get_core_bools"
+will return true if this has been set. On perl 5.36, it will
+also return true if the boolean values have been set to
+perl's core booleans using the "boolean_values"
+method.</p>
+<p style="margin-left:9%; margin-top: 1em">The methods
+"unblessed_bool" and
+"get_unblessed_bool" are provided as aliases for
+compatibility with Cpanel::JSON::XS.</p>
+<h3>filter_json_object
+<a name="filter_json_object"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;filter_json_object([$coderef])</p>
+<p style="margin-left:9%; margin-top: 1em">When $coderef is
+specified, it will be called from "decode" each
+time it decodes a JSON object. The only argument is a
+reference to the newly−created hash. If the code
+references returns a single scalar (which need not be a
+reference), this value (or rather a copy of it) is inserted
+into the deserialised data structure. If it returns an empty
+list (NOTE: <i>not</i> "undef", which is a valid
+scalar), the original deserialised hash will be inserted.
+This setting can slow down decoding considerably.</p>
+<p style="margin-left:9%; margin-top: 1em">When $coderef is
+omitted or undefined, any existing callback will be removed
+and "decode" will not change the deserialised hash
+in any way.</p>
+<p style="margin-left:9%; margin-top: 1em">Example, convert
+all JSON objects into the integer 5:</p>
+<p style="margin-left:9%; margin-top: 1em">my $js =
+JSON::PP−&gt;new−&gt;filter_json_object(sub { 5
+}); <br/>
+# returns [5] <br/>
+$js−&gt;decode('[{}]'); <br/>
+# returns 5 <br/>
+$js−&gt;decode('{"a":1,
+"b":2}');</p>
+<h3>filter_json_single_key_object
+<a name="filter_json_single_key_object"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;filter_json_single_key_object($key [=&gt;
+$coderef])</p>
+<p style="margin-left:9%; margin-top: 1em">Works remotely
+similar to "filter_json_object", but is only
+called for JSON objects having a single key named $key.</p>
+<p style="margin-left:9%; margin-top: 1em">This $coderef is
+called before the one specified via
+"filter_json_object", if any. It gets passed the
+single value in the JSON object. If it returns a single
+value, it will be inserted into the data structure. If it
+returns nothing (not even "undef" but the empty
+list), the callback from "filter_json_object" will
+be called next, as if no single−key callback were
+specified.</p>
+<p style="margin-left:9%; margin-top: 1em">If $coderef is
+omitted or undefined, the corresponding callback will be
+disabled. There can only ever be one callback for a given
+key.</p>
+<p style="margin-left:9%; margin-top: 1em">As this callback
+gets called less often then the
+"filter_json_object" one, decoding speed will not
+usually suffer as much. Therefore, single−key objects
+make excellent targets to serialise Perl objects into,
+especially as single−key JSON objects are as close to
+the type−tagged value concept as JSON gets (it's
+basically an ID/VALUE tuple). Of course, JSON does not
+support this in any way, so you need to make sure your data
+never looks like a serialised Perl hash.</p>
+<p style="margin-left:9%; margin-top: 1em">Typical names
+for the single object key are
+"__class_whatever__", or
+"$__dollars_are_rarely_used__$" or
+"}ugly_brace_placement", or even things like
+"__class_md5sum(classname)__", to reduce the risk
+of clashing with real hashes.</p>
+<p style="margin-left:9%; margin-top: 1em">Example, decode
+JSON objects of the form "{ "__widget__"
+=&gt; &lt;id&gt; }" into the corresponding
+$WIDGET{&lt;id&gt;} object:</p>
+<p style="margin-left:9%; margin-top: 1em"># return
+whatever is in $WIDGET{5}: <br/>
+JSON::PP <br/>
+−&gt;new <br/>
+−&gt;filter_json_single_key_object (__widget__ =&gt;
+sub { <br/>
+$WIDGET{ $_[0] } <br/>
+}) <br/>
+−&gt;decode ('{"__widget__": 5') <br/>
+# this can be used with a TO_JSON method in some
+"widget" class <br/>
+# for serialisation to json: <br/>
+sub WidgetBase::TO_JSON { <br/>
+my ($self) = @_; <br/>
+unless ($self−&gt;{id}) { <br/>
+$self−&gt;{id} = ..get..some..id..; <br/>
+$WIDGET{$self−&gt;{id}} = $self; <br/>
+} <br/>
+{ __widget__ =&gt; $self−&gt;{id} } <br/>
+}</p>
+<h3>shrink
+<a name="shrink"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;shrink([$enable]) <br/>
+$enabled = $json−&gt;get_shrink</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), the string returned by "encode"
+will be shrunk (i.e. downgraded if possible).</p>
+<p style="margin-left:9%; margin-top: 1em">The actual
+definition of what shrink does might change in future
+versions, but it will always try to save space at the
+expense of time.</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false, then JSON::PP does nothing.</p>
+<h3>max_depth
+<a name="max_depth"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;max_depth([$maximum_nesting_depth]) <br/>
+$max_depth = $json−&gt;get_max_depth</p>
+<p style="margin-left:9%; margin-top: 1em">Sets the maximum
+nesting level (default 512) accepted while encoding or
+decoding. If a higher nesting level is detected in JSON text
+or a Perl data structure, then the encoder and decoder will
+stop and croak at that point.</p>
+<p style="margin-left:9%; margin-top: 1em">Nesting level is
+defined by number of hash− or arrayrefs that the
+encoder needs to traverse to reach a given point or the
+number of "{" or "[" characters without
+their matching closing parenthesis crossed to reach a given
+character in a string.</p>
+<p style="margin-left:9%; margin-top: 1em">Setting the
+maximum depth to one disallows any nesting, so that ensures
+that the object is only a single hash/object or array.</p>
+<p style="margin-left:9%; margin-top: 1em">If no argument
+is given, the highest possible setting will be used, which
+is rarely useful.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+"SECURITY CONSIDERATIONS" in JSON::XS for more
+info on why this is useful.</p>
+<h3>max_size
+<a name="max_size"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;max_size([$maximum_string_size]) <br/>
+$max_size = $json−&gt;get_max_size</p>
+<p style="margin-left:9%; margin-top: 1em">Set the maximum
+length a JSON text may have (in bytes) where decoding is
+being attempted. The default is 0, meaning no limit. When
+"decode" is called on a string that is longer then
+this many bytes, it will not attempt to decode the string
+but throw an exception. This setting has no effect on
+"encode" (yet).</p>
+<p style="margin-left:9%; margin-top: 1em">If no argument
+is given, the limit check will be deactivated (same as when
+0 is specified).</p>
+<p style="margin-left:9%; margin-top: 1em">See
+"SECURITY CONSIDERATIONS" in JSON::XS for more
+info on why this is useful.</p>
+<h3>encode
+<a name="encode"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json_text =
+$json−&gt;encode($perl_scalar)</p>
+<p style="margin-left:9%; margin-top: 1em">Converts the
+given Perl value or data structure to its JSON
+representation. Croaks on error.</p>
+<h3>decode
+<a name="decode"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$perl_scalar =
+$json−&gt;decode($json_text)</p>
+<p style="margin-left:9%; margin-top: 1em">The opposite of
+"encode": expects a JSON text and tries to parse
+it, returning the resulting simple scalar or reference.
+Croaks on error.</p>
+<h3>decode_prefix
+<a name="decode_prefix"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">($perl_scalar,
+$characters) = $json−&gt;decode_prefix($json_text)</p>
+<p style="margin-left:9%; margin-top: 1em">This works like
+the "decode" method, but instead of raising an
+exception when there is trailing garbage after the first
+JSON object, it will silently stop parsing there and return
+the number of characters consumed so far.</p>
+<p style="margin-left:9%; margin-top: 1em">This is useful
+if your JSON texts are not delimited by an outer protocol
+and you need to know where the JSON text ends.</p>
+<p style="margin-left:9%; margin-top: 1em">JSON::PP−&gt;new−&gt;decode_prefix
+("[1] the tail") <br/>
+=&gt; ([1], 3)</p>
+<h2>FLAGS FOR JSON::PP ONLY
+<a name="FLAGS FOR JSON::PP ONLY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+flags and properties are for JSON::PP only. If you use any
+of these, you can't make your application run faster by
+replacing JSON::PP with JSON::XS. If you need these and also
+speed boost, you might want to try Cpanel::JSON::XS, a fork
+of JSON::XS by Reini Urban, which supports some of these
+(with a different set of incompatibilities). Most of these
+historical flags are only kept for backward compatibility,
+and should not be used in a new application.</p>
+<h3>allow_singlequote
+<a name="allow_singlequote"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;allow_singlequote([$enable]) <br/>
+$enabled = $json−&gt;get_allow_singlequote</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then "decode" will accept
+invalid JSON texts that contain strings that begin and end
+with single quotation marks. "encode" will not be
+affected in any way. <i>Be aware that this option makes you
+accept invalid JSON texts as if they were valid!</i>. I
+suggest only to use this option to parse
+application−specific files written by humans
+(configuration files, resource files etc.)</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false (the default), then "decode" will only
+accept valid JSON texts.</p>
+<p style="margin-left:9%; margin-top: 1em">$json−&gt;allow_singlequote−&gt;decode(qq|{"foo":'bar'}|);
+<br/>
+
+$json−&gt;allow_singlequote−&gt;decode(qq|{'foo':"bar"}|);
+<br/>
+
+$json−&gt;allow_singlequote−&gt;decode(qq|{'foo':'bar'}|);</p>
+<h3>allow_barekey
+<a name="allow_barekey"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;allow_barekey([$enable]) <br/>
+$enabled = $json−&gt;get_allow_barekey</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then "decode" will accept
+invalid JSON texts that contain JSON objects whose names
+don't begin and end with quotation marks. "encode"
+will not be affected in any way. <i>Be aware that this
+option makes you accept invalid JSON texts as if they were
+valid!</i>. I suggest only to use this option to parse
+application−specific files written by humans
+(configuration files, resource files etc.)</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false (the default), then "decode" will only
+accept valid JSON texts.</p>
+<p style="margin-left:9%; margin-top: 1em">$json−&gt;allow_barekey−&gt;decode(qq|{foo:"bar"}|);</p>
+<h3>allow_bignum
+<a name="allow_bignum"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;allow_bignum([$enable]) <br/>
+$enabled = $json−&gt;get_allow_bignum</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then "decode" will convert big
+integers Perl cannot handle as integer into Math::BigInt
+objects and convert floating numbers into Math::BigFloat
+objects. "encode" will convert
+"Math::BigInt" and "Math::BigFloat"
+objects into JSON numbers.</p>
+<p style="margin-left:9%; margin-top: 1em">$json−&gt;allow_nonref−&gt;allow_bignum;
+<br/>
+$bigfloat =
+$json−&gt;decode('2.000000000000000000000000001');
+<br/>
+print $json−&gt;encode($bigfloat); <br/>
+# =&gt; 2.000000000000000000000000001</p>
+<p style="margin-left:9%; margin-top: 1em">See also
+MAPPING.</p>
+<h3>loose
+<a name="loose"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;loose([$enable]) <br/>
+$enabled = $json−&gt;get_loose</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then "decode" will accept
+invalid JSON texts that contain unescaped
+[\x00−\x1f\x22\x5c] characters. "encode"
+will not be affected in any way. <i>Be aware that this
+option makes you accept invalid JSON texts as if they were
+valid!</i>. I suggest only to use this option to parse
+application−specific files written by humans
+(configuration files, resource files etc.)</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+false (the default), then "decode" will only
+accept valid JSON texts.</p>
+<p style="margin-left:9%; margin-top: 1em">$json−&gt;loose−&gt;decode(qq|["abc
+<br/>
+def"]|);</p>
+<h3>escape_slash
+<a name="escape_slash"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;escape_slash([$enable]) <br/>
+$enabled = $json−&gt;get_escape_slash</p>
+<p style="margin-left:9%; margin-top: 1em">If $enable is
+true (or missing), then "encode" will explicitly
+escape <i>slash</i> (solidus; "U+002F") characters
+to reduce the risk of XSS (cross site scripting) that may be
+caused by "&lt;/script&gt;" in a JSON text, with
+the cost of bloating the size of JSON texts.</p>
+<p style="margin-left:9%; margin-top: 1em">This option may
+be useful when you embed JSON in HTML, but embedding
+arbitrary JSON in HTML (by some HTML template toolkit or by
+string interpolation) is risky in general. You must escape
+necessary characters in correct order, depending on the
+context.</p>
+<p style="margin-left:9%; margin-top: 1em">"decode"
+will not be affected in any way.</p>
+<h3>indent_length
+<a name="indent_length"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;indent_length($number_of_spaces) <br/>
+$length = $json−&gt;get_indent_length</p>
+<p style="margin-left:9%; margin-top: 1em">This option is
+only useful when you also enable "indent" or
+"pretty".</p>
+<p style="margin-left:9%; margin-top: 1em">JSON::XS indents
+with three spaces when you "encode" (if requested
+by "indent" or "pretty"), and the number
+cannot be changed. JSON::PP allows you to change/get the
+number of indent spaces with these mutator/accessor. The
+default number of spaces is three (the same as JSON::XS),
+and the acceptable range is from 0 (no indentation; it'd be
+better to disable indentation by indent(0)) to 15.</p>
+<h3>sort_by
+<a name="sort_by"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json =
+$json−&gt;sort_by($code_ref) <br/>
+$json = $json−&gt;sort_by($subroutine_name)</p>
+<p style="margin-left:9%; margin-top: 1em">If you just want
+to sort keys (names) in JSON objects when you
+"encode", enable "canonical" option (see
+above) that allows you to sort object keys
+alphabetically.</p>
+<p style="margin-left:9%; margin-top: 1em">If you do need
+to sort non−alphabetically for whatever reasons, you
+can give a code reference (or a subroutine name) to
+"sort_by", then the argument will be passed to
+Perl's "sort" built−in function.</p>
+<p style="margin-left:9%; margin-top: 1em">As the sorting
+is done in the JSON::PP scope, you usually need to prepend
+"JSON::PP::" to the subroutine name, and the
+special variables $a and $b used in the subrontine used by
+"sort" function.</p>
+<p style="margin-left:9%; margin-top: 1em">Example:</p>
+<p style="margin-left:9%; margin-top: 1em">my %ORDER = (id
+=&gt; 1, class =&gt; 2, name =&gt; 3); <br/>
+$json−&gt;sort_by(sub { <br/>
+($ORDER{$JSON::PP::a} // 999) &lt;=&gt;
+($ORDER{$JSON::PP::b} // 999) <br/>
+or $JSON::PP::a cmp $JSON::PP::b <br/>
+}); <br/>
+print $json−&gt;encode([ <br/>
+{name =&gt; 'CPAN', id =&gt; 1, href =&gt;
+'http://cpan.org'} <br/>
+]); <br/>
+#
+[{"id":1,"name":"CPAN","href":"http://cpan.org"}]</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+"sort_by" affects all the plain hashes in the data
+structure. If you need finer control, "tie"
+necessary hashes with a module that implements ordered hash
+(such as Hash::Ordered and Tie::IxHash).
+"canonical" and "sort_by" don't affect
+the key order in "tie"d hashes.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Hash::Ordered; <br/>
+tie my %hash, 'Hash::Ordered', <br/>
+(name =&gt; 'CPAN', id =&gt; 1, href =&gt;
+'http://cpan.org'); <br/>
+print $json−&gt;encode([\%hash]); <br/>
+#
+[{"name":"CPAN","id":1,"href":"http://cpan.org"}]
+# order is kept</p>
+<h2>INCREMENTAL PARSING
+<a name="INCREMENTAL PARSING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This section is
+also taken from JSON::XS.</p>
+<p style="margin-left:9%; margin-top: 1em">In some cases,
+there is the need for incremental parsing of JSON texts.
+While this module always has to keep both JSON text and
+resulting Perl data structure in memory at one time, it does
+allow you to parse a JSON stream incrementally. It does so
+by accumulating text until it has a full JSON object, which
+it then can decode. This process is similar to using
+"decode_prefix" to see if a full JSON object is
+available, but is much more efficient (and can be
+implemented with a minimum of method calls).</p>
+<p style="margin-left:9%; margin-top: 1em">JSON::PP will
+only attempt to parse the JSON text once it is sure it has
+enough text to get a decisive result, using a very simple
+but truly incremental parser. This means that it sometimes
+won't stop as early as the full parser, for example, it
+doesn't detect mismatched parentheses. The only thing it
+guarantees is that it starts decoding as soon as a
+syntactically valid JSON text has been seen. This means you
+need to set resource limits (e.g. "max_size") to
+ensure the parser will stop parsing in the presence if
+syntax errors.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+methods implement this incremental parser.</p>
+<h3>incr_parse
+<a name="incr_parse"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json−&gt;incr_parse(
+[$string] ) # void context <br/>
+$obj_or_undef = $json−&gt;incr_parse( [$string] ) #
+scalar context <br/>
+@obj_or_empty = $json−&gt;incr_parse( [$string] ) #
+list context</p>
+<p style="margin-left:9%; margin-top: 1em">This is the
+central parsing function. It can both append new text and
+extract objects from the stream accumulated so far (both of
+these functions are optional).</p>
+<p style="margin-left:9%; margin-top: 1em">If $string is
+given, then this string is appended to the already existing
+JSON fragment stored in the $json object.</p>
+<p style="margin-left:9%; margin-top: 1em">After that, if
+the function is called in void context, it will simply
+return without doing anything further. This can be used to
+add more text in as many chunks as you want.</p>
+<p style="margin-left:9%; margin-top: 1em">If the method is
+called in scalar context, then it will try to extract
+exactly <i>one</i> JSON object. If that is successful, it
+will return this object, otherwise it will return
+"undef". If there is a parse error, this method
+will croak just as "decode" would do (one can then
+use "incr_skip" to skip the erroneous part). This
+is the most common way of using the method.</p>
+<p style="margin-left:9%; margin-top: 1em">And finally, in
+list context, it will try to extract as many objects from
+the stream as it can find and return them, or the empty list
+otherwise. For this to work, there must be no separators
+(other than whitespace) between the JSON objects or arrays,
+instead they must be concatenated back−to−back.
+If an error occurs, an exception will be raised as in the
+scalar context case. Note that in this case, any
+previously−parsed JSON texts will be lost.</p>
+<p style="margin-left:9%; margin-top: 1em">Example: Parse
+some JSON arrays/objects in a given string and return
+them.</p>
+<p style="margin-left:9%; margin-top: 1em">my @objs =
+JSON::PP−&gt;new−&gt;incr_parse
+("[5][7][1,2]");</p>
+<h3>incr_text
+<a name="incr_text"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$lvalue_string =
+$json−&gt;incr_text</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns the currently stored JSON fragment as an lvalue,
+that is, you can manipulate it. This <i>only</i> works when
+a preceding call to "incr_parse" in <i>scalar
+context</i> successfully returned an object. Under all other
+circumstances you must not call this function (I mean it.
+although in simple tests it might actually work, it
+<i>will</i> fail under real world conditions). As a special
+exception, you can also call this method before having
+parsed anything.</p>
+<p style="margin-left:9%; margin-top: 1em">That means you
+can only use this function to look at or manipulate text
+before or after complete JSON objects, not while the parser
+is in the middle of parsing a JSON object.</p>
+<p style="margin-left:9%; margin-top: 1em">This function is
+useful in two cases: a) finding the trailing text after a
+JSON object or b) parsing multiple JSON objects separated by
+non−JSON text (such as commas).</p>
+<h3>incr_skip
+<a name="incr_skip"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json−&gt;incr_skip</p>
+<p style="margin-left:9%; margin-top: 1em">This will reset
+the state of the incremental parser and will remove the
+parsed text from the input buffer so far. This is useful
+after "incr_parse" died, in which case the input
+buffer and incremental parser state is left unchanged, to
+skip the text parsed so far and to reset the parse
+state.</p>
+<p style="margin-left:9%; margin-top: 1em">The difference
+to "incr_reset" is that only text until the parse
+error occurred is removed.</p>
+<h3>incr_reset
+<a name="incr_reset"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$json−&gt;incr_reset</p>
+<p style="margin-left:9%; margin-top: 1em">This completely
+resets the incremental parser, that is, after this call, it
+will be as if the parser had never parsed anything.</p>
+<p style="margin-left:9%; margin-top: 1em">This is useful
+if you want to repeatedly parse JSON objects and want to
+ignore any trailing data, which means you have to reset the
+parser after each successful decode.</p>
+<h2>MAPPING
+<a name="MAPPING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Most of this
+section is also taken from JSON::XS.</p>
+<p style="margin-left:9%; margin-top: 1em">This section
+describes how JSON::PP maps Perl values to JSON values and
+vice versa. These mappings are designed to "do the
+right thing" in most circumstances automatically,
+preserving round−tripping characteristics (what you
+put in comes out as something equivalent).</p>
+<p style="margin-left:9%; margin-top: 1em">For the more
+enlightened: note that in the following descriptions,
+lowercase <i>perl</i> refers to the Perl interpreter, while
+uppercase <i>Perl</i> refers to the abstract Perl language
+itself.</p>
+<h3>JSON −&gt; PERL
+<a name="JSON −&gt; PERL"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">object</p>
+<p style="margin-left:14%;">A JSON object becomes a
+reference to a hash in Perl. No ordering of object keys is
+preserved (JSON does not preserve object key ordering
+itself).</p>
+<p style="margin-left:9%;">array</p>
+<p style="margin-left:14%;">A JSON array becomes a
+reference to an array in Perl.</p>
+<p style="margin-left:9%;">string</p>
+<p style="margin-left:14%;">A JSON string becomes a string
+scalar in Perl − Unicode codepoints in JSON are
+represented by the same codepoints in the Perl string, so no
+manual decoding is necessary.</p>
+<p style="margin-left:9%;">number</p>
+<p style="margin-left:14%;">A JSON number becomes either an
+integer, numeric (floating point) or string scalar in perl,
+depending on its range and any fractional parts. On the Perl
+level, there is no difference between those as Perl handles
+all the conversion details, but an integer may take slightly
+less memory and might represent more values exactly than
+floating point numbers.</p>
+<p style="margin-left:14%; margin-top: 1em">If the number
+consists of digits only, JSON::PP will try to represent it
+as an integer value. If that fails, it will try to represent
+it as a numeric (floating point) value if that is possible
+without loss of precision. Otherwise it will preserve the
+number as a string value (in which case you lose
+roundtripping ability, as the JSON number will be
+re−encoded to a JSON string).</p>
+<p style="margin-left:14%; margin-top: 1em">Numbers
+containing a fractional or exponential part will always be
+represented as numeric (floating point) values, possibly at
+a loss of precision (in which case you might lose perfect
+roundtripping ability, but the JSON number will still be
+re−encoded as a JSON number).</p>
+<p style="margin-left:14%; margin-top: 1em">Note that
+precision is not accuracy − binary floating point
+values cannot represent most decimal fractions exactly, and
+when converting from and to floating point, JSON::PP only
+guarantees precision up to but not including the least
+significant bit.</p>
+<p style="margin-left:14%; margin-top: 1em">When
+"allow_bignum" is enabled, big integer values and
+any numeric values will be converted into Math::BigInt and
+Math::BigFloat objects respectively, without becoming string
+scalars or losing precision.</p>
+<p style="margin-left:9%;">true, false</p>
+<p style="margin-left:14%;">These JSON atoms become
+"JSON::PP::true" and "JSON::PP::false",
+respectively. They are overloaded to act almost exactly like
+the numbers 1 and 0. You can check whether a scalar is a
+JSON boolean by using the "JSON::PP::is_bool"
+function.</p>
+<p style="margin-left:9%;">null</p>
+<p style="margin-left:14%;">A JSON null atom becomes
+"undef" in Perl.</p>
+<p style="margin-left:9%;">shell−style comments
+("# <i>text</i>")</p>
+<p style="margin-left:14%;">As a nonstandard extension to
+the JSON syntax that is enabled by the "relaxed"
+setting, shell−style comments are allowed. They can
+start anywhere outside strings and go till the end of the
+line.</p>
+<p style="margin-left:9%;">tagged values
+("(<i>tag</i>)<i>value</i>").</p>
+<p style="margin-left:14%;">Another nonstandard extension
+to the JSON syntax, enabled with the "allow_tags"
+setting, are tagged values. In this implementation, the
+<i>tag</i> must be a perl package/class name encoded as a
+JSON string, and the <i>value</i> must be a JSON array
+encoding optional constructor arguments.</p>
+<p style="margin-left:14%; margin-top: 1em">See
+"OBJECT SERIALISATION", below, for details.</p>
+<h3>PERL −&gt; JSON
+<a name="PERL −&gt; JSON"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The mapping from
+Perl to JSON is slightly more difficult, as Perl is a truly
+typeless language, so we can only guess which JSON type is
+meant by a Perl value. <br/>
+hash references</p>
+<p style="margin-left:14%;">Perl hash references become
+JSON objects. As there is no inherent ordering in hash keys
+(or JSON objects), they will usually be encoded in a
+pseudo−random order. JSON::PP can optionally sort the
+hash keys (determined by the <i>canonical</i> flag and/or
+<i>sort_by</i> property), so the same data structure will
+serialise to the same JSON text (given same settings and
+version of JSON::PP), but this incurs a runtime overhead and
+is only rarely useful, e.g. when you want to compare some
+JSON text against another for equality.</p>
+<p style="margin-left:9%;">array references</p>
+<p style="margin-left:14%;">Perl array references become
+JSON arrays.</p>
+<p style="margin-left:9%;">other references</p>
+<p style="margin-left:14%;">Other unblessed references are
+generally not allowed and will cause an exception to be
+thrown, except for references to the integers 0 and 1, which
+get turned into "false" and "true" atoms
+in JSON. You can also use "JSON::PP::false" and
+"JSON::PP::true" to improve readability.</p>
+<p style="margin-left:14%; margin-top: 1em">to_json [\0,
+JSON::PP::true] # yields [false,true]</p>
+<p style="margin-left:9%;">JSON::PP::true,
+JSON::PP::false</p>
+<p style="margin-left:14%;">These special values become
+JSON true and JSON false values, respectively. You can also
+use "\1" and "\0" directly if you
+want.</p>
+<p style="margin-left:9%;">JSON::PP::null</p>
+<p style="margin-left:14%;">This special value becomes JSON
+null.</p>
+<p style="margin-left:9%;">blessed objects</p>
+<p style="margin-left:14%;">Blessed objects are not
+directly representable in JSON, but "JSON::PP"
+allows various ways of handling objects. See "OBJECT
+SERIALISATION", below, for details.</p>
+<p style="margin-left:9%;">simple scalars</p>
+<p style="margin-left:14%;">Simple Perl scalars (any scalar
+that is not a reference) are the most difficult objects to
+encode: JSON::PP will encode undefined scalars as JSON
+"null" values, scalars that have last been used in
+a string context before encoding as JSON strings, and
+anything else as number value:</p>
+<p style="margin-left:14%; margin-top: 1em"># dump as
+number <br/>
+encode_json [2] # yields [2] <br/>
+encode_json [−3.0e17] # yields [−3e+17] <br/>
+my $value = 5; encode_json [$value] # yields [5] <br/>
+# used as string, so dump as string <br/>
+print $value; <br/>
+encode_json [$value] # yields ["5"] <br/>
+# undef becomes null <br/>
+encode_json [undef] # yields [null]</p>
+<p style="margin-left:14%; margin-top: 1em">You can force
+the type to be a JSON string by stringifying it:</p>
+<p style="margin-left:14%; margin-top: 1em">my $x = 3.1; #
+some variable containing a number <br/>
+"$x"; # stringified <br/>
+$x .= ""; # another, more awkward way to stringify
+<br/>
+print $x; # perl does it for you, too, quite often <br/>
+# (but for older perls)</p>
+<p style="margin-left:14%; margin-top: 1em">You can force
+the type to be a JSON number by numifying it:</p>
+<p style="margin-left:14%; margin-top: 1em">my $x =
+"3"; # some variable containing a string <br/>
+$x += 0; # numify it, ensuring it will be dumped as a number
+<br/>
+$x *= 1; # same thing, the choice is yours.</p>
+<p style="margin-left:14%; margin-top: 1em">You can not
+currently force the type in other, less obscure, ways.</p>
+<p style="margin-left:14%; margin-top: 1em">Since version
+2.91_01, JSON::PP uses a different number detection logic
+that converts a scalar that is possible to turn into a
+number safely. The new logic is slightly faster, and tends
+to help people who use older perl or who want to encode
+complicated data structure. However, this may results in a
+different JSON text from the one JSON::XS encodes (and thus
+may break tests that compare entire JSON texts). If you do
+need the previous behavior for compatibility or for finer
+control, set PERL_JSON_PP_USE_B environmental variable to
+true before you "use" JSON::PP (or JSON.pm).</p>
+<p style="margin-left:14%; margin-top: 1em">Note that
+numerical precision has the same meaning as under Perl (so
+binary to decimal conversion follows the same rules as in
+Perl, which can differ to other languages). Also, your perl
+interpreter might expose extensions to the floating point
+numbers of your platform, such as infinities or NaN's
+− these cannot be represented in JSON, and it is an
+error to pass those in.</p>
+<p style="margin-left:14%; margin-top: 1em">JSON::PP (and
+JSON::XS) trusts what you pass to "encode" method
+(or "encode_json" function) is a clean, validated
+data structure with values that can be represented as valid
+JSON values only, because it's not from an external data
+source (as opposed to JSON texts you pass to
+"decode" or "decode_json", which
+JSON::PP considers tainted and doesn't trust). As JSON::PP
+doesn't know exactly what you and consumers of your JSON
+texts want the unexpected values to be (you may want to
+convert them into null, or to stringify them with or without
+normalisation (string representation of infinities/NaN may
+vary depending on platforms), or to croak without
+conversion), you're advised to do what you and your
+consumers need before you encode, and also not to numify
+values that may start with values that look like a number
+(including infinities/NaN), without validating.</p>
+<h3>OBJECT SERIALISATION
+<a name="OBJECT SERIALISATION"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">As JSON cannot
+directly represent Perl objects, you have to choose between
+a pure JSON representation (without the ability to
+deserialise the object automatically again), and a
+nonstandard extension to the JSON syntax, tagged values.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>SERIALISATION</i></p>
+<p style="margin-left:9%; margin-top: 1em">What happens
+when "JSON::PP" encounters a Perl object depends
+on the "allow_blessed",
+"convert_blessed", "allow_tags" and
+"allow_bignum" settings, which are used in this
+order: <br/>
+1. "allow_tags" is enabled and the object has a
+"FREEZE" method.</p>
+<p style="margin-left:14%;">In this case,
+"JSON::PP" creates a tagged JSON value, using a
+nonstandard extension to the JSON syntax.</p>
+<p style="margin-left:14%; margin-top: 1em">This works by
+invoking the "FREEZE" method on the object, with
+the first argument being the object to serialise, and the
+second argument being the constant string "JSON"
+to distinguish it from other serialisers.</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"FREEZE" method can return any number of values
+(i.e. zero or more). These values and the paclkage/classname
+of the object will then be encoded as a tagged JSON value in
+the following format:</p>
+<p style="margin-left:14%; margin-top: 1em">("classname")[FREEZE
+return values...]</p>
+<p style="margin-left:14%; margin-top: 1em">e.g.:</p>
+<p style="margin-left:14%; margin-top: 1em">("URI")["http://www.google.com/"]
+<br/>
+("MyDate")[2013,10,29] <br/>
+("ImageData::JPEG")["Z3...VlCg=="]</p>
+<p style="margin-left:14%; margin-top: 1em">For example,
+the hypothetical "My::Object" "FREEZE"
+method might use the objects "type" and
+"id" members to encode the object:</p>
+<p style="margin-left:14%; margin-top: 1em">sub
+My::Object::FREEZE { <br/>
+my ($self, $serialiser) = @_; <br/>
+($self−&gt;{type}, $self−&gt;{id}) <br/>
+}</p>
+<p style="margin-left:9%;">2. "convert_blessed"
+is enabled and the object has a "TO_JSON"
+method.</p>
+<p style="margin-left:14%;">In this case, the
+"TO_JSON" method of the object is invoked in
+scalar context. It must return a single scalar that can be
+directly encoded into JSON. This scalar replaces the object
+in the JSON text.</p>
+<p style="margin-left:14%; margin-top: 1em">For example,
+the following "TO_JSON" method will convert all
+URI objects to JSON strings when serialised. The fact that
+these values originally were URI objects is lost.</p>
+<p style="margin-left:14%; margin-top: 1em">sub
+URI::TO_JSON { <br/>
+my ($uri) = @_; <br/>
+$uri−&gt;as_string <br/>
+}</p>
+<p style="margin-left:9%;">3. "allow_bignum" is
+enabled and the object is a "Math::BigInt" or <br/>
+"Math::BigFloat".</p>
+<p style="margin-left:14%;">The object will be serialised
+as a JSON number value.</p>
+<p style="margin-left:9%;">4. "allow_blessed" is
+enabled.</p>
+<p style="margin-left:14%;">The object will be serialised
+as a JSON null value.</p>
+<p style="margin-left:9%;">5. none of the above</p>
+<p style="margin-left:14%;">If none of the settings are
+enabled or the respective methods are missing,
+"JSON::PP" throws an exception.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>DESERIALISATION</i></p>
+<p style="margin-left:9%; margin-top: 1em">For
+deserialisation there are only two cases to consider: either
+nonstandard tagging was used, in which case
+"allow_tags" decides, or objects cannot be
+automatically be deserialised, in which case you can use
+postprocessing or the "filter_json_object" or
+"filter_json_single_key_object" callbacks to get
+some real objects our of your JSON.</p>
+<p style="margin-left:9%; margin-top: 1em">This section
+only considers the tagged value case: a tagged JSON object
+is encountered during decoding and "allow_tags" is
+disabled, a parse error will result (as if tagged values
+were not part of the grammar).</p>
+<p style="margin-left:9%; margin-top: 1em">If
+"allow_tags" is enabled, "JSON::PP" will
+look up the "THAW" method of the package/classname
+used during serialisation (it will not attempt to load the
+package as a Perl module). If there is no such method, the
+decoding will fail with an error.</p>
+<p style="margin-left:9%; margin-top: 1em">Otherwise, the
+"THAW" method is invoked with the classname as
+first argument, the constant string "JSON" as
+second argument, and all the values from the JSON array (the
+values originally returned by the "FREEZE" method)
+as remaining arguments.</p>
+<p style="margin-left:9%; margin-top: 1em">The method must
+then return the object. While technically you can return any
+Perl scalar, you might have to enable the
+"allow_nonref" setting to make that work in all
+cases, so better return an actual blessed reference.</p>
+<p style="margin-left:9%; margin-top: 1em">As an example,
+let's implement a "THAW" function that regenerates
+the "My::Object" from the "FREEZE"
+example earlier:</p>
+<p style="margin-left:9%; margin-top: 1em">sub
+My::Object::THAW { <br/>
+my ($class, $serialiser, $type, $id) = @_; <br/>
+$class−&gt;new (type =&gt; $type, id =&gt; $id) <br/>
+}</p>
+<h2>ENCODING/CODESET FLAG NOTES
+<a name="ENCODING/CODESET FLAG NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This section is
+taken from JSON::XS.</p>
+<p style="margin-left:9%; margin-top: 1em">The interested
+reader might have seen a number of flags that signify
+encodings or codesets − "utf8",
+"latin1" and "ascii". There seems to be
+some confusion on what these do, so here is a short
+comparison:</p>
+<p style="margin-left:9%; margin-top: 1em">"utf8"
+controls whether the JSON text created by "encode"
+(and expected by "decode") is UTF−8 encoded
+or not, while "latin1" and "ascii" only
+control whether "encode" escapes character values
+outside their respective codeset range. Neither of these
+flags conflict with each other, although some combinations
+make less sense than others.</p>
+<p style="margin-left:9%; margin-top: 1em">Care has been
+taken to make all flags symmetrical with respect to
+"encode" and "decode", that is, texts
+encoded with any combination of these flag values will be
+correctly decoded when the same flags are used − in
+general, if you use different flag settings while encoding
+vs. when decoding you likely have a bug somewhere.</p>
+<p style="margin-left:9%; margin-top: 1em">Below comes a
+verbose discussion of these flags. Note that a
+"codeset" is simply an abstract set of
+character−codepoint pairs, while an encoding takes
+those codepoint numbers and <i>encodes</i> them, in our case
+into octets. Unicode is (among other things) a codeset,
+UTF−8 is an encoding, and ISO−8859−1 (=
+latin 1) and ASCII are both codesets <i>and</i> encodings at
+the same time, which can be confusing. <br/>
+"utf8" flag disabled</p>
+<p style="margin-left:14%;">When "utf8" is
+disabled (the default), then
+"encode"/"decode" generate and expect
+Unicode strings, that is, characters with high ordinal
+Unicode values (&gt; 255) will be encoded as such
+characters, and likewise such characters are decoded
+as−is, no changes to them will be done, except
+"(re−)interpreting" them as Unicode
+codepoints or Unicode characters, respectively (to Perl,
+these are the same thing in strings unless you do
+funny/weird/dumb stuff).</p>
+<p style="margin-left:14%; margin-top: 1em">This is useful
+when you want to do the encoding yourself (e.g. when you
+want to have UTF−16 encoded JSON texts) or when some
+other layer does the encoding for you (for example, when
+printing to a terminal using a filehandle that transparently
+encodes to UTF−8 you certainly do NOT want to
+UTF−8 encode your data first and have Perl encode it
+another time).</p>
+<p style="margin-left:9%;">"utf8" flag
+enabled</p>
+<p style="margin-left:14%;">If the
+"utf8"−flag is enabled,
+"encode"/"decode" will encode all
+characters using the corresponding UTF−8
+multi−byte sequence, and will expect your input
+strings to be encoded as UTF−8, that is, no
+"character" of the input string must have any
+value &gt; 255, as UTF−8 does not allow that.</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"utf8" flag therefore switches between two modes:
+disabled means you will get a Unicode string in Perl,
+enabled means you get an UTF−8 encoded octet/binary
+string in Perl.</p>
+<p style="margin-left:9%;">"latin1" or
+"ascii" flags enabled</p>
+<p style="margin-left:14%;">With "latin1" (or
+"ascii") enabled, "encode" will escape
+characters with ordinal values &gt; 255 (&gt; 127 with
+"ascii") and encode the remaining characters as
+specified by the "utf8" flag.</p>
+<p style="margin-left:14%; margin-top: 1em">If
+"utf8" is disabled, then the result is also
+correctly encoded in those character sets (as both are
+proper subsets of Unicode, meaning that a Unicode string
+with all character values &lt; 256 is the same thing as a
+ISO−8859−1 string, and a Unicode string with all
+character values &lt; 128 is the same thing as an ASCII
+string in Perl).</p>
+<p style="margin-left:14%; margin-top: 1em">If
+"utf8" is enabled, you still get a correct
+UTF−8−encoded string, regardless of these flags,
+just some more characters will be escaped using
+"\uXXXX" then before.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that
+ISO−8859−1−<i>encoded</i> strings are not
+compatible with UTF−8 encoding, while
+ASCII−encoded strings are. That is because the
+ISO−8859−1 encoding is NOT a subset of
+UTF−8 (despite the ISO−8859−1
+<i>codeset</i> being a subset of Unicode), while ASCII
+is.</p>
+<p style="margin-left:14%; margin-top: 1em">Surprisingly,
+"decode" will ignore these flags and so treat all
+input values as governed by the "utf8" flag. If it
+is disabled, this allows you to decode
+ISO−8859−1− and ASCII−encoded
+strings, as both strict subsets of Unicode. If it is
+enabled, you can correctly decode UTF−8 encoded
+strings.</p>
+<p style="margin-left:14%; margin-top: 1em">So neither
+"latin1" nor "ascii" are incompatible
+with the "utf8" flag − they only govern when
+the JSON output engine escapes a character or not.</p>
+<p style="margin-left:14%; margin-top: 1em">The main use
+for "latin1" is to relatively efficiently store
+binary data as JSON, at the expense of breaking
+compatibility with most JSON decoders.</p>
+<p style="margin-left:14%; margin-top: 1em">The main use
+for "ascii" is to force the output to not contain
+characters with values &gt; 127, which means you can
+interpret the resulting string as UTF−8,
+ISO−8859−1, ASCII, KOI8−R or most about
+any character set and 8−bit−encoding, and still
+get the same data structure back. This is useful when your
+channel for JSON transfer is not 8−bit clean or the
+encoding might be mangled in between (e.g. in mail), and
+works because ASCII is a proper subset of most 8−bit
+and multibyte encodings in use in the world.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please report
+bugs on a specific behavior of this module to RT or GitHub
+issues (preferred):</p>
+<p style="margin-left:9%; margin-top: 1em">&lt;https://github.com/makamaka/JSON−PP/issues&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">&lt;https://rt.cpan.org/Public/Dist/Display.html?Queue=JSON−PP&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">As for new
+features and requests to change common behaviors, please ask
+the author of JSON::XS (Marc Lehmann,
+&lt;schmorp[at]schmorp.de&gt;) first, by email (important!),
+to keep compatibility among JSON.pm backends.</p>
+<p style="margin-left:9%; margin-top: 1em">Generally
+speaking, if you need something special for you, you are
+advised to create a new module, maybe based on JSON::Tiny,
+which is smaller and written in a much cleaner way than this
+module.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>json_pp</i> command line utility for quick
+experiments.</p>
+<p style="margin-left:9%; margin-top: 1em">JSON::XS,
+Cpanel::JSON::XS, and JSON::Tiny for faster alternatives.
+JSON and JSON::MaybeXS for easy migration.</p>
+<p style="margin-left:9%; margin-top: 1em">JSON::PP::Compat5005
+and JSON::PP::Compat5006 for older perl users.</p>
+<p style="margin-left:9%; margin-top: 1em">RFC4627
+(&lt;http://www.ietf.org/rfc/rfc4627.txt&gt;)</p>
+<p style="margin-left:9%; margin-top: 1em">RFC7159
+(&lt;http://www.ietf.org/rfc/rfc7159.txt&gt;)</p>
+<p style="margin-left:9%; margin-top: 1em">RFC8259
+(&lt;http://www.ietf.org/rfc/rfc8259.txt&gt;)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Makamaka
+Hannyaharamitu, &lt;makamaka[at]cpan.org&gt;</p>
+<h2>CURRENT MAINTAINER
+<a name="CURRENT MAINTAINER"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Kenichi
+Ishigaki, &lt;ishigaki[at]cpan.org&gt;</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2007−2016 by Makamaka Hannyaharamitu</p>
+<p style="margin-left:9%; margin-top: 1em">Most of the
+documentation is taken from JSON::XS by Marc Lehmann</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

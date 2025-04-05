@@ -1,0 +1,323 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:28 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ATTR_LIST</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">ATTR_LIST</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#C SYNOPSIS">C SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">attr_list,
+attr_listf − list the names of the user attributes of
+a filesystem object</p>
+<h2>C SYNOPSIS
+<a name="C SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;attr/attributes.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int attr_list
+(const char ∗path, char ∗buffer, <br/>
+const int buffersize, int flags, <br/>
+attrlist_cursor_t ∗cursor);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+attr_listf (int fd, char ∗buffer, <br/>
+const int buffersize, int flags, <br/>
+attrlist_cursor_t ∗cursor);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>attr_list</b> and <b>attr_listf</b> functions provide a
+way to list the existing attributes of a filesystem
+object.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Path</i>
+points to a path name for a filesystem object, and <i>fd</i>
+refers to the file descriptor associated with a file. The
+<i>buffer</i> will be filled with a structure describing at
+least a portion of the attributes associated with the given
+filesystem object. <i>Buffer</i> will be overwritten with an
+<b><i>attrlist_t</i></b> structure containing a list of the
+attributes associated with that filesystem object, up to a
+maximum of <i>buffersize</i> bytes. The <i>buffer</i> must
+be sufficiently large to hold the appropriate data
+structures plus at least one maximally sized attribute name,
+but cannot be more than ATTR_MAX_VALUELEN (currently 64KB)
+bytes in length.</p>
+<p style="margin-left:9%; margin-top: 1em">The contents of
+an <b><i>attrlist_t</i></b> structure include the following
+members:</p>
+<p style="margin-left:13%; margin-top: 1em"><b><i>int32_t
+al_count; /∗ number of entries in attrlist ∗/
+<br/>
+int32_t al_more; /∗ T/F: more attrs (do syscall
+again) ∗/ <br/>
+int32_t al_offset[1]; /∗ byte offsets of attrs
+[var-sized] ∗/</i></b></p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>al_count</i> field shows the number of attributes
+represented in this buffer, which is also the number of
+elements in the <i>al_offset</i> array. The <i>al_more</i>
+field will be non-zero if another <b>attr_list</b> call
+would result in more attributes. The <i>al_offset</i> array
+contains the byte offset within the <i>buffer</i> of the
+structure describing each of the attributes, an
+<b><i>attrlist_ent_t</i></b> structure. The
+<b><i>ATTR_ENTRY(buffer, index)</i></b> macro will help with
+decoding the list. It takes a pointer to the <i>buffer</i>
+and an <i>index</i> into the <i>al_offset</i> array and
+returns a pointer to the corresponding
+<b><i>attrlist_ent_t</i></b> structure.</p>
+<p style="margin-left:9%; margin-top: 1em">The contents of
+an <b><i>attrlist_ent_t</i></b> structure include the
+following members:</p>
+<p style="margin-left:13%; margin-top: 1em"><b><i>uint32_t
+a_valuelen; /∗ number bytes in value of attr
+∗/ <br/>
+char a_name[]; /∗ attr name (NULL terminated)
+∗/</i></b></p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>a_valuelen</i> field shows the size in bytes of the value
+associated with the attribute whose name is stored in the
+<i>a_name</i> field. The name is a NULL terminated
+string.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that the
+value of the attribute cannot be obtained through this
+interface, the <b>attr_get</b> call should be used to get
+the value. The <b>attr_list</b> interface tells the calling
+process how large of a buffer it must have in order to get
+the attribute’s value.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>flags</i>
+argument can contain the following symbols bitwise
+OR’ed together: <small><br/>
+ATTR_ROOT</small></p>
+<p style="margin-left:18%;">List the attributes that are in
+the <b>root</b> address space, not in the <b>user</b>
+address space. (limited to use by super-user only)</p>
+<p style="margin-left:9%;"><small>ATTR_DONTFOLLOW</small></p>
+<p style="margin-left:18%;">Do not follow symbolic links
+when resolving a <i>path</i> on an <b>attr_list</b> function
+call. The default is to follow symbolic links.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>cursor</i> argument is a pointer to an opaque data
+structure that the kernel uses to track the calling
+process’s position in the attribute list. The only
+valid operations on a <i>cursor</i> are to pass it into an
+<b>attr_list</b> function call or to zero it out. It should
+be zero’ed out before the first <b>attr_list</b> call.
+Note that multi-threaded applications may keep more than one
+<i>cursor</i> in order to serve multiple contexts, ie: the
+<b>attr_list</b> call is "thread-safe".</p>
+<p style="margin-left:9%; margin-top: 1em"><b>attr_list</b>
+will fail if one or more of the following are true:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="18%">
+<p><small>[ENOENT]</small></p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>The named file does not exist.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="18%">
+<p><small>[EPERM]</small></p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>The effective user <small>ID</small> does not match the
+owner of the file and the effective user <small>ID</small>
+is not super-user.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="18%">
+<p><small>[ENOTDIR]</small></p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>A component of the path prefix is not a directory.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="18%">
+<p><small>[EACCES]</small></p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>Search permission is denied on a component of the path
+prefix.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="18%">
+<p><small>[EINVAL]</small></p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>A bit was set in the <i>flag</i> argument that is not
+defined for this system call, or the buffer was too small or
+too large.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="18%">
+<p><small>[EFAULT]</small></p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>Either <i>Path</i> or <i>buffer</i> points outside the
+allocated address space of the process, or <i>buffer</i> or
+<i>bufsize</i> are not 32bit aligned.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="18%">
+<p><small>[ELOOP]</small></p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>A path name lookup involved too many symbolic links.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="18%">
+<p><small>[ENAMETOOLONG]</small></p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>The length of <i>path</i> exceeds
+<small>{<i>MAXPATHLEN</i>},</small> or a pathname component
+is longer than <small>{<i>MAXNAMELEN</i>}.</small></p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="18%">
+<p><small>[ENOATTR]</small></p></td>
+<td width="4%"></td>
+<td width="69%">
+<p><i>attribute</i> does not exist for this file.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>attr_listf</b>
+will fail if:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p style="margin-top: 1em"><small>[EINVAL]</small></p></td>
+<td width="9%"></td>
+<td width="72%">
+<p style="margin-top: 1em">A bit was set in the <i>flag</i>
+argument that is not defined for this system call, or
+<i>fd</i> refers to a socket, not a file, or the buffer was
+too small or too large.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><small>[EFAULT]</small></p></td>
+<td width="9%"></td>
+<td width="72%">
+<p>Either <i>Path</i> or <i>buffer</i> points outside the
+allocated address space of the process, or <i>buffer</i> or
+<i>bufsize</i> are not 32bit aligned.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><small>[EBADF]</small></p></td>
+<td width="9%"></td>
+<td width="72%">
+<p><i>Fd</i> does not refer to a valid descriptor.</p></td></tr>
+</table>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Upon successful
+completion, a value of 0 is returned. Otherwise, a value of
+−1 is returned and <i>errno</i> is set to indicate the
+error.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>attr</b>(1),
+<b>attr_multi</b>(3), <b>attr_remove</b>(3),
+<b>attr_set</b>(3)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:13 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TIFFCUSTOMDIRECTORY</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">TIFFCUSTOMDIRECTORY</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#HINTS AND DETAILED INSTRUCTIONS">HINTS AND DETAILED INSTRUCTIONS</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TIFFCustomDirectory
+− routines to create a custom directory</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<pre style="margin-left:13%; margin-top: 1em">#include &lt;tiffio.h&gt;</pre>
+<p style="margin-left:9%;"><b>int
+TIFFCreateCustomDirectory(TIFF *tif, const TIFFFieldArray
+<br/>
+*infoarray) <br/>
+int TIFFCreateEXIFDirectory(TIFF *tif) <br/>
+int TIFFCreateGPSDirectory(TIFF *tif) <br/>
+int TIFFWriteCustomDirectory(TIFF *tif, uint64 *pdiroff)
+<br/>
+int TIFFReadCustomDirectory(TIFF *tif, toff_t diroff, const
+<br/>
+TIFFFieldArray *infoarray) <br/>
+int TIFFReadEXIFDirectory(TIFF *tif, toff_t diroff) <br/>
+int TIFFReadGPSDirectory(TIFF *tif, toff_t diroff) <br/>
+const TIFFFieldArray *_TIFFGetExifFields(void) <br/>
+const TIFFFieldArray *_TIFFGetGpsFields(void)</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+routines create a custom directory and retrieve information
+about directories in an open TIFF file.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFCreateCustomDirectory()</i>,
+<i>TIFFCreateEXIFDirectory()</i>,
+<i>TIFFCreateGPSDirectory()</i> will setup a custom
+directory or one of the predefined EXIF or GPS directories
+and set the context of the TIFF−handle <b>tif</b> to
+that custom directory for functions like
+<i>TIFFSetField()</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFWriteCustomDirectory()</i>
+will write the contents of the current custom directory to
+the file and return the offset to that directory in
+<b>pdiroff</b>. That offset has to be written to the
+main−IFD:</p>
+<pre style="margin-left:13%; margin-top: 1em"> /* Go back to the first directory, and add the EXIFIFD pointer. */
+TIFFSetDirectory(tif, 0);
+TIFFSetField(tif, TIFFTAG_EXIFIFD, pdiroff);</pre>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFReadCustomDirectory()</i>
+will read the custom directory from the arbitrary offset
+into the <b>infoarray</b> and sets the context of the
+TIFF−handle <b>tif</b> to that custom directory for
+functions like <b>TIFFReadField()</b>. The <b>TIFFFieldArray
+infoarray</b> has to be according the layout of the custom
+directory. For the predefined EXIF and GPS directories, the
+relevant <b>TIFFFieldArray</b> definitions are hidden within
+the functions <i>TIFFReadEXIFDirectory()</i> and
+<i>TIFFReadGPSDirectory()</i> The code is very similar to
+<i>TIFFReadDirectory()</i>. The offset to the custom
+directory diroff has to be read from the relative TIFF tag
+first.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>_TIFFGetExifFields()</i>
+and <i>_TIFFGetGpsFields()</i> will return a pointer to the
+<b>libtiff</b> internal definition list of the EXIF and GPS
+tags, respectively.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Be aware</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>that until a directory is not written to file AND read
+back, the query functions won’t retrieve the correct
+information!</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>that the newly created directory will not exist on the
+file till <i>TIFFWriteDirectory()</i>,
+<i>TIFFCheckpointDirectory()</i>, <i>TIFFFlush()</i> or
+<i>TIFFClose()</i> has been called.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>that <i>TIFFCreateDirectory()</i> and
+<i>TIFFWriteDirectory()</i> create a new directory, free the
+<b>*tif</b> structure and set up a new one.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>that unlike <i>TIFFWriteDirectory()</i>,
+<i>TIFFCheckpointDirectory()</i> does not free up the
+directory data structures in memory.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>that LibTiff does not support custom directory chains
+(NextIFD pointing to another IFD). NextIFD of custom
+directories is always set to zero and should be zero when
+reading.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Unfortunately to
+create or read custom directories with predefined fields it
+is necessary to include the private tif_dir.h. However, for
+EXIF and GPS directories, which have a predefined schema
+within <b>libtiff</b>, this is not necessary. There are some
+test programmes that briefly demonstrate the creation and
+reading of EXIF, GPS and custom directories. See
+test/custom_dir.c and test/custom_dir_EXIF_231.c</p>
+<h2>HINTS AND DETAILED INSTRUCTIONS
+<a name="HINTS AND DETAILED INSTRUCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Writing TIFF
+files with more than one directory (IFD) is not easy because
+some side effects need to be known.</p>
+<p style="margin-left:9%; margin-top: 1em">The main point
+here is that there can only be one <b>tif</b> structure in
+the main memory for a file, which can only hold the tags of
+one directory at a time. It is useless to work with two
+different tiffOut1, tiffOut2 pointers, because there is only
+ONE TIFF object (TIFF directory) within the <b>libtiff</b>.
+If you want to address a second directory in the file, the
+tags of the current directory must first be saved in the
+file, otherwise they will be lost (overwritten or mixed).
+Then the <b>tif</b> structure in the main memory must be
+tidied up, otherwise the old tags will beincluded in the new
+directory. This can be done either by creating a new, empty
+<b>tif</b> structure or by reading in an directory
+previously saved in the file.</p>
+<p style="margin-left:9%; margin-top: 1em">A sequence to
+handle a second (or third) TIFF directory − in this
+case the GPS IFD − is as follows:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">1.</p></td>
+<td width="1%"></td>
+<td width="87%">
+<p style="margin-top: 1em">Create TIFF file</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>2.</p></td>
+<td width="1%"></td>
+<td width="87%">
+<p>Complete the “normal” metadata</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>3.</p></td>
+<td width="1%"></td>
+<td width="87%">
+<p>Set the tag for the custom directory with a
+“dummy” value in order to get the tag reserved.
+The final value will be inserted lateron. This prevents the
+main directory from being written to the file again at an
+additional area, leaving the first memory area unused:</p></td></tr>
+</table>
+<pre style="margin-left:13%; margin-top: 1em">TIFFSetField(tiffOut, TIFFTAG_GPSIFD, dir_offset);</pre>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">4.</p></td>
+<td width="1%"></td>
+<td width="87%">
+<p style="margin-top: 1em">Save current
+TIFF−directory to file. Otherwise, it will be lost.
+Remember also the number of the current directory:</p></td></tr>
+</table>
+<pre style="margin-left:13%; margin-top: 1em">TIFFWriteDirectory(tiffOut);
+dirNum = TIFFCurrentDirectory(tiffOut);</pre>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">5.</p></td>
+<td width="1%"></td>
+<td width="87%">
+<p style="margin-top: 1em">Create the second
+TIFF−directory (e.g. custom directory) and set its
+fields. The TIFFFieldArray infoarray has to be specified
+beforehand somewhere in your private include files. An
+example is given for the EXIF directory in tif_dirinfo.c</p></td></tr>
+</table>
+<pre style="margin-left:13%; margin-top: 1em">TIFFCreateCustomDirectory(tiffOut, infoarray);        /* for a real custom directory */
+/* or alternatively, use GPS or EXIF with pre−defined TIFFFieldArray IFD field structure */
+TIFFCreateGPSDirectory(tiffOut);
+TIFFSetField(tiffOut, GPSTAG_VERSIONID, gpsVersion);  /* set fields of the custom directory */</pre>
+<p style="margin-left:9%; margin-top: 1em">Be aware that
+every <i>TIFFCreateDirectory()</i> or
+<i>TIFFWriteDirectory()</i> apparently frees the <b>*tif</b>
+structure and sets up a new one!</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">6.</p></td>
+<td width="1%"></td>
+<td width="87%">
+<p style="margin-top: 1em">Write custom directory to file.
+The offset to that directory in the file is returned in
+<b>dir_offset</b>.</p> </td></tr>
+</table>
+<pre style="margin-left:13%; margin-top: 1em">TIFFWriteCustomDirectory(tiffOut, &amp;dir_offset);</pre>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">7.</p></td>
+<td width="1%"></td>
+<td width="87%">
+<p style="margin-top: 1em">Reload the first directory (i.e.
+the original TIFF directory). Apparently, this reads the
+data back from file.</p></td></tr>
+</table>
+<pre style="margin-left:13%; margin-top: 1em">TIFFSetDirectory(tiffOut, dirNum);</pre>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">8.</p></td>
+<td width="1%"></td>
+<td width="87%">
+<p style="margin-top: 1em">Set the correct offset value of
+the custom directory IFD tag and save that changes to
+file.</p> </td></tr>
+</table>
+<pre style="margin-left:13%; margin-top: 1em">TIFFSetField(tiffOut, TIFFTAG_GPSIFD, dir_offset);
+TIFFWriteDirectory(tiffOut);</pre>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">1 is returned
+when the contents are successfully written to the file.
+Otherwise, 0 is returned if an error was encountered when
+writing the directory contents.</p>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All error
+messages are directed to the <i>TIFFErrorExtR()</i> routine.
+Likewise, warning messages are directed to the
+<i>TIFFWarningExtR()</i> routine.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>libtiff</i>
+(3tiff), <i>TIFFCreateDirectory</i> (3tiff),
+<i>TIFFquery</i> (3tiff), <i>TIFFSetDirectory</i> (3tiff),
+<i>TIFFWriteDirectory</i> (3tiff)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">LibTIFF
+contributors</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">1988-2022,
+LibTIFF contributors</p>
+<hr/>
+</body>
+</html>

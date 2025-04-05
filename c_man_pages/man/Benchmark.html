@@ -1,0 +1,586 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:34 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Benchmark</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Benchmark</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Methods">Methods</a><br/>
+<a href="#Standard Exports">Standard Exports</a><br/>
+<a href="#Optional Exports">Optional Exports</a><br/>
+<a href="#:hireswallclock">:hireswallclock</a><br/>
+<a href="#Benchmark Object">Benchmark Object</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#INHERITANCE">INHERITANCE</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#MODIFICATION HISTORY">MODIFICATION HISTORY</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Benchmark
+− benchmark running times of Perl code</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Benchmark
+qw(:all) ; <br/>
+timethis ($count, "code"); <br/>
+# Use Perl code in strings... <br/>
+timethese($count, { <br/>
+'Name1' =&gt; '...code1...', <br/>
+'Name2' =&gt; '...code2...', <br/>
+}); <br/>
+# ... or use subroutine references. <br/>
+timethese($count, { <br/>
+'Name1' =&gt; sub { ...code1... }, <br/>
+'Name2' =&gt; sub { ...code2... }, <br/>
+}); <br/>
+# cmpthese can be used both ways as well <br/>
+cmpthese($count, { <br/>
+'Name1' =&gt; '...code1...', <br/>
+'Name2' =&gt; '...code2...', <br/>
+}); <br/>
+cmpthese($count, { <br/>
+'Name1' =&gt; sub { ...code1... }, <br/>
+'Name2' =&gt; sub { ...code2... }, <br/>
+}); <br/>
+# ...or in two stages <br/>
+$results = timethese($count, <br/>
+{ <br/>
+'Name1' =&gt; sub { ...code1... }, <br/>
+'Name2' =&gt; sub { ...code2... }, <br/>
+}, <br/>
+'none' <br/>
+); <br/>
+cmpthese( $results ) ; <br/>
+$t = timeit($count, '...other code...') <br/>
+print "$count loops of other code
+took:",timestr($t),"\n"; <br/>
+$t = countit($time, '...other code...') <br/>
+$count = $t−&gt;iters ; <br/>
+print "$count loops of other code
+took:",timestr($t),"\n"; <br/>
+# enable hires wallclock timing if possible <br/>
+use Benchmark ':hireswallclock';</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The Benchmark
+module encapsulates a number of routines to help you figure
+out how long it takes to execute some code.</p>
+<p style="margin-left:9%; margin-top: 1em">timethis −
+run a chunk of code several times</p>
+<p style="margin-left:9%; margin-top: 1em">timethese
+− run several chunks of code several times</p>
+<p style="margin-left:9%; margin-top: 1em">cmpthese −
+print results of timethese as a comparison chart</p>
+<p style="margin-left:9%; margin-top: 1em">timeit −
+run a chunk of code and see how long it goes</p>
+<p style="margin-left:9%; margin-top: 1em">countit −
+see how many times a chunk of code runs in a given time</p>
+<h3>Methods
+<a name="Methods"></a>
+</h3>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p style="margin-top: 1em">new</p></td>
+<td width="9%"></td>
+<td width="46%">
+<p style="margin-top: 1em">Returns the current time.
+Example:</p> </td>
+<td width="32%">
+</td></tr>
+</table>
+<p style="margin-left:22%; margin-top: 1em">use Benchmark;
+<br/>
+$t0 = Benchmark−&gt;new; <br/>
+# ... your code here ... <br/>
+$t1 = Benchmark−&gt;new; <br/>
+$td = timediff($t1, $t0); <br/>
+print "the code
+took:",timestr($td),"\n";</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">debug</p></td>
+<td width="7%"></td>
+<td width="78%">
+<p style="margin-top: 1em">Enables or disable debugging by
+setting the $Benchmark::Debug flag:</p></td></tr>
+</table>
+<p style="margin-left:22%; margin-top: 1em">Benchmark−&gt;debug(1);
+<br/>
+$t = timeit(10, ' 5 ** $Global '); <br/>
+Benchmark−&gt;debug(0);</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em">iters</p></td>
+<td width="7%"></td>
+<td width="42%">
+<p style="margin-top: 1em">Returns the number of
+iterations.</p> </td>
+<td width="36%">
+</td></tr>
+</table>
+<h3>Standard Exports
+<a name="Standard Exports"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+routines will be exported into your namespace if you use the
+Benchmark module: <br/>
+timeit(COUNT, CODE)</p>
+<p style="margin-left:22%;">Arguments: COUNT is the number
+of times to run the loop, and CODE is the code to run. CODE
+may be either a code reference or a string to be
+eval’d; either way it will be run in the
+caller’s package.</p>
+<p style="margin-left:22%; margin-top: 1em">Returns: a
+Benchmark object.</p>
+<p style="margin-left:9%;">timethis ( COUNT, CODE, [ TITLE,
+[ STYLE ]] )</p>
+<p style="margin-left:22%;">Time COUNT iterations of CODE.
+CODE may be a string to eval or a code reference; either way
+the CODE will run in the caller’s package. Results
+will be printed to STDOUT as TITLE followed by the times.
+TITLE defaults to "timethis COUNT" if none is
+provided. STYLE determines the format of the output, as
+described for <b>timestr()</b> below.</p>
+<p style="margin-left:22%; margin-top: 1em">The COUNT can
+be zero or negative: this means the <i>minimum number of CPU
+seconds</i> to run. A zero signifies the default of 3
+seconds. For example to run at least for 10 seconds:</p>
+<p style="margin-left:22%; margin-top: 1em">timethis(−10,
+$code)</p>
+<p style="margin-left:22%; margin-top: 1em">or to run two
+pieces of code tests for at least 3 seconds:</p>
+<p style="margin-left:22%; margin-top: 1em">timethese(0, {
+test1 =&gt; '...', test2 =&gt; '...'})</p>
+<p style="margin-left:22%; margin-top: 1em">CPU seconds is,
+in UNIX terms, the user time plus the system time of the
+process itself, as opposed to the real (wallclock) time and
+the time spent by the child processes. Less than 0.1 seconds
+is not accepted (−0.01 as the count, for example, will
+cause a fatal runtime exception).</p>
+<p style="margin-left:22%; margin-top: 1em">Note that the
+CPU seconds is the <b>minimum</b> time: CPU scheduling and
+other operating system factors may complicate the attempt so
+that a little bit more time is spent. The benchmark output
+will, however, also tell the number of $code runs/second,
+which should be a more interesting number than the actually
+spent seconds.</p>
+<p style="margin-left:22%; margin-top: 1em">Returns a
+Benchmark object.</p>
+<p style="margin-left:9%;">timethese ( COUNT, CODEHASHREF,
+[ STYLE ] )</p>
+<p style="margin-left:22%;">The CODEHASHREF is a reference
+to a hash containing names as keys and either a string to
+eval or a code reference for each value. For each (KEY,
+VALUE) pair in the CODEHASHREF, this routine will call</p>
+<p style="margin-left:22%; margin-top: 1em">timethis(COUNT,
+VALUE, KEY, STYLE)</p>
+<p style="margin-left:22%; margin-top: 1em">The routines
+are called in string comparison order of KEY.</p>
+<p style="margin-left:22%; margin-top: 1em">The COUNT can
+be zero or negative, see <b>timethis()</b>.</p>
+<p style="margin-left:22%; margin-top: 1em">Returns a hash
+reference of Benchmark objects, keyed by name.</p>
+<p style="margin-left:9%;">timediff ( T1, T2 )</p>
+<p style="margin-left:22%;">Returns the difference between
+two Benchmark times as a Benchmark object suitable for
+passing to <b>timestr()</b>.</p>
+<p style="margin-left:9%;">timestr ( TIMEDIFF, [ STYLE, [
+FORMAT ] ] )</p>
+<p style="margin-left:22%;">Returns a string that formats
+the times in the TIMEDIFF object in the requested STYLE.
+TIMEDIFF is expected to be a Benchmark object similar to
+that returned by <b>timediff()</b>.</p>
+<p style="margin-left:22%; margin-top: 1em">STYLE can be
+any of ’all’, ’none’,
+’noc’, ’nop’ or ’auto’.
+’all’ shows each of the 5 times available
+(’wallclock’ time, user time, system time, user
+time of children, and system time of children).
+’noc’ shows all except the two children times.
+’nop’ shows only wallclock and the two children
+times. ’auto’ (the default) will act as
+’all’ unless the children times are both zero,
+in which case it acts as ’noc’.
+’none’ prevents output.</p>
+<p style="margin-left:22%; margin-top: 1em">FORMAT is the
+<b>printf</b>(3)−style format specifier (without the
+leading ’%’) to use to print the times. It
+defaults to ’5.2f’.</p>
+<h3>Optional Exports
+<a name="Optional Exports"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+routines will be exported into your namespace if you
+specifically ask that they be imported: <br/>
+clearcache ( COUNT )</p>
+<p style="margin-left:22%;">Clear the cached time for COUNT
+rounds of the null loop.</p>
+<p style="margin-left:9%;">clearallcache ( )</p>
+<p style="margin-left:22%;">Clear all cached times.</p>
+<p style="margin-left:9%;">cmpthese ( COUNT, CODEHASHREF, [
+STYLE ] ) <br/>
+cmpthese ( RESULTSHASHREF, [ STYLE ] )</p>
+<p style="margin-left:22%;">Optionally calls
+<b>timethese()</b>, then outputs comparison chart. This:</p>
+<p style="margin-left:22%; margin-top: 1em">cmpthese(
+−1, { a =&gt; "++\$i", b =&gt; "\$i *=
+2" } ) ;</p>
+<p style="margin-left:22%; margin-top: 1em">outputs a chart
+like:</p>
+<p style="margin-left:22%; margin-top: 1em">Rate b a <br/>
+b 2831802/s −− −61% <br/>
+a 7208959/s 155% −−</p>
+<p style="margin-left:22%; margin-top: 1em">This chart is
+sorted from slowest to fastest, and shows the percent speed
+difference between each pair of tests.</p>
+<p style="margin-left:22%; margin-top: 1em">"cmpthese"
+can also be passed the data structure that
+<b>timethese()</b> returns:</p>
+<p style="margin-left:22%; margin-top: 1em">$results =
+timethese( −1, <br/>
+{ a =&gt; "++\$i", b =&gt; "\$i *= 2" }
+) ; <br/>
+cmpthese( $results );</p>
+<p style="margin-left:22%; margin-top: 1em">in case you
+want to see both sets of results. If the first argument is
+an unblessed hash reference, that is RESULTSHASHREF;
+otherwise that is COUNT.</p>
+<p style="margin-left:22%; margin-top: 1em">Returns a
+reference to an ARRAY of rows, each row is an ARRAY of cells
+from the above chart, including labels. This:</p>
+<p style="margin-left:22%; margin-top: 1em">my $rows =
+cmpthese( −1, <br/>
+{ a =&gt; '++$i', b =&gt; '$i *= 2' }, "none"
+);</p>
+<p style="margin-left:22%; margin-top: 1em">returns a data
+structure like:</p>
+<p style="margin-left:22%; margin-top: 1em">[ <br/>
+[ '', 'Rate', 'b', 'a' ], <br/>
+[ 'b', '2885232/s', '−−', '−59%' ], <br/>
+[ 'a', '7099126/s', '146%', '−−' ], <br/>
+]</p>
+<p style="margin-left:22%; margin-top: 1em"><b>NOTE</b>:
+This result value differs from previous versions, which
+returned the timethese() result structure. If you want that,
+just use the two statement
+"timethese"..."cmpthese" idiom shown
+above.</p>
+<p style="margin-left:22%; margin-top: 1em">Incidentally,
+note the variance in the result values between the two
+examples; this is typical of benchmarking. If this were a
+real benchmark, you would probably want to run a lot more
+iterations.</p>
+<p style="margin-left:9%;">countit(TIME, CODE)</p>
+<p style="margin-left:22%;">Arguments: TIME is the minimum
+length of time to run CODE for, and CODE is the code to run.
+CODE may be either a code reference or a string to be
+eval’d; either way it will be run in the
+caller’s package.</p>
+<p style="margin-left:22%; margin-top: 1em">TIME is
+<i>not</i> negative. <b>countit()</b> will run the loop many
+times to calculate the speed of CODE before running it for
+TIME. The actual time run for will usually be greater than
+TIME due to system clock resolution, so it’s best to
+look at the number of iterations divided by the times that
+you are concerned with, not just the iterations.</p>
+<p style="margin-left:22%; margin-top: 1em">Returns: a
+Benchmark object.</p>
+<p style="margin-left:9%;">disablecache ( )</p>
+<p style="margin-left:22%;">Disable caching of timings for
+the null loop. This will force Benchmark to recalculate
+these timings for each new piece of code timed.</p>
+<p style="margin-left:9%;">enablecache ( )</p>
+<p style="margin-left:22%;">Enable caching of timings for
+the null loop. The time taken for COUNT rounds of the null
+loop will be calculated only once for each different COUNT
+used.</p>
+<p style="margin-left:9%;">timesum ( T1, T2 )</p>
+<p style="margin-left:22%;">Returns the sum of two
+Benchmark times as a Benchmark object suitable for passing
+to <b>timestr()</b>.</p>
+<h3>:hireswallclock
+<a name=":hireswallclock"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If the
+Time::HiRes module has been installed, you can specify the
+special tag ":hireswallclock" for Benchmark (if
+Time::HiRes is not available, the tag will be silently
+ignored). This tag will cause the wallclock time to be
+measured in microseconds, instead of integer seconds. Note
+though that the speed computations are still conducted in
+CPU time, not wallclock time.</p>
+<h2>Benchmark Object
+<a name="Benchmark Object"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Many of the
+functions in this module return a Benchmark object, or in
+the case of timethese(), a reference to a hash, the values
+of which are Benchmark objects. This is useful if you want
+to store or further process results from Benchmark
+functions.</p>
+<p style="margin-left:9%; margin-top: 1em">Internally the
+Benchmark object holds timing values, described in
+"NOTES" below. The following methods can be used
+to access them: <br/>
+cpu_p</p>
+<p style="margin-left:14%;">Total CPU (User + System) of
+the main (parent) process.</p>
+<p style="margin-left:9%;">cpu_c</p>
+<p style="margin-left:14%;">Total CPU (User + System) of
+any children processes.</p>
+<p style="margin-left:9%;">cpu_a</p>
+<p style="margin-left:14%;">Total CPU of parent and any
+children processes.</p>
+<p style="margin-left:9%;">real</p>
+<p style="margin-left:14%;">Real elapsed time
+"wallclock seconds".</p>
+<p style="margin-left:9%;">iters</p>
+<p style="margin-left:14%;">Number of iterations run.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+illustrates use of the Benchmark object:</p>
+<p style="margin-left:9%; margin-top: 1em">$result =
+timethis(100000, sub { ... }); <br/>
+print "total CPU = ", $result−&gt;cpu_a,
+"\n";</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The data is
+stored as a list of values from the time and times
+functions:</p>
+<p style="margin-left:9%; margin-top: 1em">($real, $user,
+$system, $children_user, $children_system, $iters)</p>
+<p style="margin-left:9%; margin-top: 1em">in seconds for
+the whole loop (not divided by the number of rounds).</p>
+<p style="margin-left:9%; margin-top: 1em">The timing is
+done using <b>time</b>(3) and <b>times</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">Code is executed
+in the caller’s package.</p>
+<p style="margin-left:9%; margin-top: 1em">The time of the
+null loop (a loop with the same number of rounds but empty
+loop body) is subtracted from the time of the real loop.</p>
+<p style="margin-left:9%; margin-top: 1em">The null loop
+times can be cached, the key being the number of rounds. The
+caching can be controlled using calls like these:</p>
+<p style="margin-left:9%; margin-top: 1em">clearcache($key);
+<br/>
+clearallcache(); <br/>
+disablecache(); <br/>
+enablecache();</p>
+<p style="margin-left:9%; margin-top: 1em">Caching is off
+by default, as it can (usually slightly) decrease accuracy
+and does not usually noticeably affect runtimes.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For example,</p>
+<p style="margin-left:9%; margin-top: 1em">use Benchmark
+qw( cmpthese ) ; <br/>
+$x = 3; <br/>
+cmpthese( −5, { <br/>
+a =&gt; sub{$x*$x}, <br/>
+b =&gt; sub{$x**2}, <br/>
+} );</p>
+<p style="margin-left:9%; margin-top: 1em">outputs
+something like this:</p>
+<p style="margin-left:9%; margin-top: 1em">Benchmark:
+running a, b, each for at least 5 CPU seconds... <br/>
+Rate b a <br/>
+b 1559428/s −− −62% <br/>
+a 4152037/s 166% −−</p>
+<p style="margin-left:9%; margin-top: 1em">while</p>
+<p style="margin-left:9%; margin-top: 1em">use Benchmark
+qw( timethese cmpthese ) ; <br/>
+$x = 3; <br/>
+$r = timethese( −5, { <br/>
+a =&gt; sub{$x*$x}, <br/>
+b =&gt; sub{$x**2}, <br/>
+} ); <br/>
+cmpthese $r;</p>
+<p style="margin-left:9%; margin-top: 1em">outputs
+something like this:</p>
+<p style="margin-left:9%; margin-top: 1em">Benchmark:
+running a, b, each for at least 5 CPU seconds... <br/>
+a: 10 wallclock secs ( 5.14 usr + 0.13 sys = 5.27 CPU) @
+3835055.60/s (n=20210743) <br/>
+b: 5 wallclock secs ( 5.41 usr + 0.00 sys = 5.41 CPU) @
+1574944.92/s (n=8520452) <br/>
+Rate b a <br/>
+b 1574945/s −− −59% <br/>
+a 3835056/s 144% −−</p>
+<h2>INHERITANCE
+<a name="INHERITANCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Benchmark
+inherits from no other class, except of course from
+Exporter.</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Comparing
+eval’d strings with code references will give you
+inaccurate results: a code reference will show a slightly
+slower execution time than the equivalent eval’d
+string.</p>
+<p style="margin-left:9%; margin-top: 1em">The real time
+timing is done using <b>time</b>(2) and the granularity is
+therefore only one second.</p>
+<p style="margin-left:9%; margin-top: 1em">Short tests may
+produce negative figures because perl can appear to take
+longer to execute the empty loop than a short test; try:</p>
+<p style="margin-left:9%; margin-top: 1em">timethis(100,'1');</p>
+<p style="margin-left:9%; margin-top: 1em">The system time
+of the null loop might be slightly more than the system time
+of the loop with the actual code and therefore the
+difference might end up being &lt; 0.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Devel::NYTProf
+− a Perl code profiler</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Jarkko
+Hietaniemi &lt;<i>jhi@iki.fi</i>&gt;, Tim Bunce
+&lt;<i>Tim.Bunce@ig.co.uk</i>&gt;</p>
+<h2>MODIFICATION HISTORY
+<a name="MODIFICATION HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">September 8th,
+1994; by Tim Bunce.</p>
+<p style="margin-left:9%; margin-top: 1em">March 28th,
+1997; by Hugo van der Sanden: added support for code
+references and the already documented ’debug’
+method; revamped documentation.</p>
+<p style="margin-left:9%; margin-top: 1em">April
+04−07th, 1997: by Jarkko Hietaniemi, added the
+run-for-some-time functionality.</p>
+<p style="margin-left:9%; margin-top: 1em">September, 1999;
+by Barrie Slaymaker: math fixes and accuracy and efficiency
+tweaks. Added <b>cmpthese()</b>. A result is now returned
+from <b>timethese()</b>. Exposed <b>countit()</b> (was
+<b>runfor()</b>).</p>
+<p style="margin-left:9%; margin-top: 1em">December, 2001;
+by Nicholas Clark: make <b>timestr()</b> recognise the style
+’none’ and return an empty string. If cmpthese
+is calling timethese, make it pass the style in. (so that
+’none’ will suppress output). Make sub new dump
+its debugging output to STDERR, to be consistent with
+everything else. All bugs found while writing a regression
+test.</p>
+<p style="margin-left:9%; margin-top: 1em">September, 2002;
+by Jarkko Hietaniemi: add ’:hireswallclock’
+special tag.</p>
+<p style="margin-left:9%; margin-top: 1em">February, 2004;
+by Chia-liang Kao: make cmpthese and timestr use time
+statistics for children instead of parent when the style is
+’nop’.</p>
+<p style="margin-left:9%; margin-top: 1em">November, 2007;
+by Christophe Grosjean: make cmpthese and timestr compute
+time consistently with style argument, default is
+’all’ not ’noc’ any more.</p>
+<hr/>
+</body>
+</html>

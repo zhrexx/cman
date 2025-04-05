@@ -1,0 +1,425 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:09 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Tools::Spec</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Tools::Spec</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#ESSENTIALS">ESSENTIALS</a><br/>
+<a href="#SHORTCUTS">SHORTCUTS</a><br/>
+<a href="#CUSTOM ATTRIBUTE DEFAULTS">CUSTOM ATTRIBUTE DEFAULTS</a><br/>
+<a href="#EXECUTION ORDER">EXECUTION ORDER</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Tools::Spec
+− RSPEC implementation on top of Test2::Workflow</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This uses
+Test2::Workflow to implement an RSPEC variant. This variant
+supports isolation and/or concurrency via forking or
+threads.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::Bundle::Extended; <br/>
+use Test2::Tools::Spec; <br/>
+describe foo =&gt; sub { <br/>
+before_all once =&gt; sub { ... }; <br/>
+before_each many =&gt; sub { ... }; <br/>
+after_all once =&gt; sub { ... }; <br/>
+after_each many =&gt; sub { ... }; <br/>
+case condition_a =&gt; sub { ... }; <br/>
+case condition_b =&gt; sub { ... }; <br/>
+tests foo =&gt; sub { ... }; <br/>
+tests bar =&gt; sub { ... }; <br/>
+}; <br/>
+done_testing;</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All of these use
+the same argument pattern. The first argument must always be
+a name for the block. The last argument must always be a
+code reference. Optionally a configuration hash can be
+inserted between the name and the code reference.</p>
+<p style="margin-left:9%; margin-top: 1em">FUNCTION
+"name" =&gt; sub { ... }; <br/>
+FUNCTION "name" =&gt; {...}, sub { ... }; <br/>
+NAME</p>
+<p style="margin-left:14%;">The first argument to a
+Test2::Tools::Spec function MUST be a name. The name does
+not need to be unique.</p>
+<p style="margin-left:9%;">PARAMS</p>
+<p style="margin-left:14%;">This argument is optional. If
+present this should be a hashref.</p>
+<p style="margin-left:14%; margin-top: 1em">Here are the
+valid keys for the hashref: <br/>
+flat =&gt; $bool</p>
+<p style="margin-left:24%;">If this is set to true then the
+block will not render as a subtest, instead the events will
+be inline with the parent subtest (or main test).</p>
+<p style="margin-left:14%;">async =&gt; $bool</p>
+<p style="margin-left:24%;">Set this to true to mark a
+block as being capable of running concurrently with other
+test blocks. This does not mean the block WILL be run
+concurrently, just that it can be.</p>
+<p style="margin-left:14%;">iso =&gt; $bool</p>
+<p style="margin-left:24%;">Set this to true if the block
+MUST be run in isolation. If this is true then the block
+will run in its own forked process.</p>
+<p style="margin-left:24%; margin-top: 1em">These tests
+will be skipped on any platform that does not have true
+forking, or working/enabled threads.</p>
+<p style="margin-left:24%; margin-top: 1em">Threads will
+ONLY be used if the T2_WORKFLOW_USE_THREADS env var is set.
+Thread tests are only run if the T2_DO_THREAD_TESTS env var
+is set.</p>
+<p style="margin-left:14%;">todo =&gt; $reason</p>
+<p style="margin-left:24%;">Use this to mark an entire
+block as TODO.</p>
+<p style="margin-left:14%;">skip =&gt; $reason</p>
+<p style="margin-left:24%;">Use this to prevent a block
+from running at all.</p>
+<p style="margin-left:9%;">CODEREF</p>
+<p style="margin-left:14%;">This argument is required. This
+should be a code reference that will run some
+assertions.</p>
+<h3>ESSENTIALS
+<a name="ESSENTIALS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">tests NAME =&gt;
+sub { ... } <br/>
+tests NAME =&gt; \%params, sub { ... } <br/>
+tests($NAME, \%PARAMS, \&amp;CODE) <br/>
+it NAME =&gt; sub { ... } <br/>
+it NAME =&gt; \%params, sub { ... } <br/>
+it($NAME, \%PARAMS, \&amp;CODE)</p>
+<p style="margin-left:14%;">This defines a test block. Test
+blocks are essentially subtests. All test blocks will be
+run, and are expected to produce events. Test blocks can run
+multiple times if the case() function is also used.</p>
+<p style="margin-left:14%; margin-top: 1em">it() is an
+alias to tests().</p>
+<p style="margin-left:14%; margin-top: 1em">These ARE NOT
+inherited by nested describe blocks.</p>
+<p style="margin-left:9%;">case NAME =&gt; sub { ... } <br/>
+case NAME =&gt; \%params, sub { ... } <br/>
+case($NAME, \%PARAMS, \&amp;CODE)</p>
+<p style="margin-left:14%;">This lets you specify multiple
+conditions in which the test blocks should be run. Every
+test block within the same group ("describe") will
+be run once per case.</p>
+<p style="margin-left:14%; margin-top: 1em">These ARE NOT
+inherited by nested describe blocks, but nested describe
+blocks will be executed once per case.</p>
+<p style="margin-left:9%;">before_each NAME =&gt; sub { ...
+} <br/>
+before_each NAME =&gt; \%params, sub { ... } <br/>
+before_each($NAME, \%PARAMS, \&amp;CODE)</p>
+<p style="margin-left:14%;">Specify a codeblock that should
+be run multiple times, once before each tests() block is
+run. These will run AFTER case() blocks but before tests()
+blocks.</p>
+<p style="margin-left:14%; margin-top: 1em">These ARE
+inherited by nested describe blocks.</p>
+<p style="margin-left:9%;">before_case NAME =&gt; sub { ...
+} <br/>
+before_case NAME =&gt; \%params, sub { ... } <br/>
+before_case($NAME, \%PARAMS, \&amp;CODE)</p>
+<p style="margin-left:14%;">Same as before_each(), except
+these blocks run BEFORE case() blocks.</p>
+<p style="margin-left:14%; margin-top: 1em">These ARE NOT
+inherited by nested describe blocks.</p>
+<p style="margin-left:9%;">before_all NAME =&gt; sub { ...
+} <br/>
+before_all NAME =&gt; \%params, sub { ... } <br/>
+before_all($NAME, \%PARAMS, \&amp;CODE)</p>
+<p style="margin-left:14%;">Specify a codeblock that should
+be run once, before all the test blocks run.</p>
+<p style="margin-left:14%; margin-top: 1em">These ARE NOT
+inherited by nested describe blocks.</p>
+<p style="margin-left:9%;">around_each NAME =&gt; sub { ...
+} <br/>
+around_each NAME =&gt; \%params, sub { ... } <br/>
+around_each($NAME, \%PARAMS, \&amp;CODE)</p>
+<p style="margin-left:14%;">Specify a codeblock that should
+wrap around each test block. These blocks are run AFTER case
+blocks, but before test blocks.</p>
+<p style="margin-left:14%; margin-top: 1em">around_each
+wrapit =&gt; sub { <br/>
+my $cont = shift; <br/>
+local %ENV = ( ... ); <br/>
+$cont−&gt;(); <br/>
+... <br/>
+};</p>
+<p style="margin-left:14%; margin-top: 1em">The first
+argument to the codeblock will be a callback that MUST be
+called somewhere inside the sub in order for nested items to
+run.</p>
+<p style="margin-left:14%; margin-top: 1em">These ARE
+inherited by nested describe blocks.</p>
+<p style="margin-left:9%;">around_case NAME =&gt; sub { ...
+} <br/>
+around_case NAME =&gt; \%params, sub { ... } <br/>
+around_case($NAME, \%PARAMS, \&amp;CODE)</p>
+<p style="margin-left:14%;">Same as "around_each"
+except these run BEFORE case blocks.</p>
+<p style="margin-left:14%; margin-top: 1em">These ARE NOT
+inherited by nested describe blocks.</p>
+<p style="margin-left:9%;">around_all NAME =&gt; sub { ...
+} <br/>
+around_all NAME =&gt; \%params, sub { ... } <br/>
+around_all($NAME, \%PARAMS, \&amp;CODE)</p>
+<p style="margin-left:14%;">Same as "around_each"
+except that it only runs once to wrap ALL test blocks.</p>
+<p style="margin-left:14%; margin-top: 1em">These ARE NOT
+inherited by nested describe blocks.</p>
+<p style="margin-left:9%;">after_each NAME =&gt; sub { ...
+} <br/>
+after_each NAME =&gt; \%params, sub { ... } <br/>
+after_each($NAME, \%PARAMS, \&amp;CODE)</p>
+<p style="margin-left:14%;">Same as "before_each"
+except it runs right after each test block.</p>
+<p style="margin-left:14%; margin-top: 1em">These ARE
+inherited by nested describe blocks.</p>
+<p style="margin-left:9%;">after_case NAME =&gt; sub { ...
+} <br/>
+after_case NAME =&gt; \%params, sub { ... } <br/>
+after_case($NAME, \%PARAMS, \&amp;CODE)</p>
+<p style="margin-left:14%;">Same as "after_each"
+except it runs right after the case block, and before the
+test block.</p>
+<p style="margin-left:14%; margin-top: 1em">These ARE NOT
+inherited by nested describe blocks.</p>
+<p style="margin-left:9%;">after_all NAME =&gt; sub { ... }
+<br/>
+after_all NAME =&gt; \%params, sub { ... } <br/>
+after_all($NAME, \%PARAMS, \&amp;CODE)</p>
+<p style="margin-left:14%;">Same as "before_all"
+except it runs after all test blocks have been run.</p>
+<p style="margin-left:14%; margin-top: 1em">These ARE NOT
+inherited by nested describe blocks.</p>
+<h3>SHORTCUTS
+<a name="SHORTCUTS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These are
+shortcuts. Each of these is the same as tests() except some
+parameters are added for you.</p>
+<p style="margin-left:9%; margin-top: 1em">These are NOT
+exported by default/. <br/>
+mini NAME =&gt; sub { ... }</p>
+<p style="margin-left:14%;">Same as:</p>
+<p style="margin-left:14%; margin-top: 1em">tests NAME
+=&gt; { flat =&gt; 1 }, sub { ... }</p>
+<p style="margin-left:9%;">iso NAME =&gt; sub { ... }</p>
+<p style="margin-left:14%;">Same as:</p>
+<p style="margin-left:14%; margin-top: 1em">tests NAME
+=&gt; { iso =&gt; 1 }, sub { ... }</p>
+<p style="margin-left:9%;">miso NAME =&gt; sub { ... }</p>
+<p style="margin-left:14%;">Same as:</p>
+<p style="margin-left:14%; margin-top: 1em">tests NAME
+=&gt; { mini =&gt; 1, iso =&gt; 1 }, sub { ... }</p>
+<p style="margin-left:9%;">async NAME =&gt; sub { ... }</p>
+<p style="margin-left:14%;">Same as:</p>
+<p style="margin-left:14%; margin-top: 1em">tests NAME
+=&gt; { async =&gt; 1 }, sub { ... }</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+This conflicts with the async() exported from threads. Don't
+import both.</p>
+<p style="margin-left:9%;">masync NAME =&gt; sub { ...
+}</p>
+<p style="margin-left:14%;">Same as:</p>
+<p style="margin-left:14%; margin-top: 1em">tests NAME
+=&gt; { minit =&gt; 1, async =&gt; 1 }, sub { ... }</p>
+<h3>CUSTOM ATTRIBUTE DEFAULTS
+<a name="CUSTOM ATTRIBUTE DEFAULTS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Sometimes you
+want to apply default attributes to all tests() or case()
+blocks. This can be done, and is lexical to your describe or
+package root!</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::Bundle::Extended; <br/>
+use Test2::Tools::Spec ':ALL'; <br/>
+# All 'tests' blocks after this declaration will have
+C&lt;&lt;iso =&gt; 1&gt;&gt; by default <br/>
+spec_defaults tests =&gt; (iso =&gt; 1); <br/>
+tests foo =&gt; sub { ... }; # isolated <br/>
+tests foo, {iso =&gt; 0}, sub { ... }; # Not isolated <br/>
+spec_defaults tests =&gt; (iso =&gt; 0); # Turn it off
+again</p>
+<p style="margin-left:9%; margin-top: 1em">Defaults are
+inherited by nested describe blocks. You can also override
+the defaults for the scope of the describe:</p>
+<p style="margin-left:9%; margin-top: 1em">spec_defaults
+tests =&gt; (iso =&gt; 1); <br/>
+describe foo =&gt; sub { <br/>
+spec_defaults tests =&gt; (async =&gt; 1); # Scoped to this
+describe and any child describes <br/>
+tests bar =&gt; sub { ... }; # both iso and async <br/>
+}; <br/>
+tests baz =&gt; sub { ... }; # Just iso, no async.</p>
+<p style="margin-left:9%; margin-top: 1em">You can apply
+defaults to any type of blocks:</p>
+<p style="margin-left:9%; margin-top: 1em">spec_defaults
+case =&gt; (iso =&gt; 1); # All cases are 'iso';</p>
+<p style="margin-left:9%; margin-top: 1em">Defaults are not
+inherited when a builder's return is captured.</p>
+<p style="margin-left:9%; margin-top: 1em">spec_defaults
+tests =&gt; (iso =&gt; 1); <br/>
+# Note we are not calling this in void context, that is the
+key here. <br/>
+my $d = describe foo =&gt; { <br/>
+tests bar =&gt; sub { ... }; # Not iso <br/>
+};</p>
+<h2>EXECUTION ORDER
+<a name="EXECUTION ORDER"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">As each function
+is encountered it executes, just like any other function.
+The describe() function will immediately execute the
+codeblock it is given. All other functions will stash their
+codeblocks to be run later. When done_testing() is run the
+workflow will be compiled, at which point all other blocks
+will run.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is an
+overview of the order in which blocks get called once
+compiled (at done_testing()).</p>
+<p style="margin-left:9%; margin-top: 1em">before_all <br/>
+for−each−case { <br/>
+before_case <br/>
+case <br/>
+after_case <br/>
+# AND/OR nested describes <br/>
+before_each <br/>
+tests <br/>
+after_each <br/>
+} <br/>
+after_all</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2−Workflow can be found at
+<i>https://github.com/Test−More/test−more/</i>.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist7@gmail.com&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<i>http://dev.perl.org/licenses/</i></p>
+<hr/>
+</body>
+</html>

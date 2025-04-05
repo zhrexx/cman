@@ -1,0 +1,609 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:15 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curs_initscr</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curs_initscr</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#initscr">initscr</a><br/>
+<a href="#newterm">newterm</a><br/>
+<a href="#endwin">endwin</a><br/>
+<a href="#isendwin">isendwin</a><br/>
+<a href="#set_term">set_term</a><br/>
+<a href="#delscreen">delscreen</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#PORTABILITY">PORTABILITY</a><br/>
+<a href="#Differences">Differences</a><br/>
+<a href="#High-level versus Low-level">High-level versus Low-level</a><br/>
+<a href="#Unset TERM Variable">Unset TERM Variable</a><br/>
+<a href="#Signal Handlers">Signal Handlers</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>initscr</b>,
+<b>newterm</b>, <b>endwin</b>, <b>isendwin</b>,
+<b>set_term</b>, <b>delscreen</b> − initialize,
+manipulate, or tear down <i>curses</i> terminal
+interface</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;curses.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>WINDOW
+*initscr(void); <br/>
+int endwin(void);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>bool
+isendwin(void);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCREEN
+*newterm(const char *</b><i>type</i><b>, FILE
+*</b><i>outf</i><b>, FILE *</b><i>inf</i><b>); <br/>
+SCREEN *set_term(SCREEN *</b><i>new</i><b>); <br/>
+void delscreen(SCREEN*</b> <i>sp</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<h3>initscr
+<a name="initscr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>initscr</b>
+is normally the first <b>curses</b> routine to call when
+initializing a program. A few special routines sometimes
+need to be called before it; these are <b>slk_init</b>(3X),
+<b>filter</b>, <b>ripoffline</b>, <b>use_env</b>. For
+multiple-terminal applications, <b>newterm</b> may be called
+before <b>initscr</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The initscr code
+determines the terminal type and initializes all
+<b>curses</b> data structures. <b>initscr</b> also causes
+the first call to <b>refresh</b>(3X) to clear the screen. If
+errors occur, <b>initscr</b> writes an appropriate error
+message to standard error and exits; otherwise, a pointer is
+returned to <b>stdscr</b>.</p>
+<h3>newterm
+<a name="newterm"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A program that
+outputs to more than one terminal should use the
+<b>newterm</b> routine for each terminal instead of
+<b>initscr</b>. A program that needs to inspect
+capabilities, so it can continue to run in a line-oriented
+mode if the terminal cannot support a screen-oriented
+program, would also use <b>newterm</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The routine
+<b>newterm</b> should be called once for each terminal. It
+returns a variable of type <i>SCREEN *</i> which should be
+saved as a reference to that terminal.
+<b>newterm</b>’s arguments are</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>the <i>type</i> of the terminal to be used in place of
+<b>$TERM</b>,</p> </td>
+<td width="17%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>an output stream connected to the terminal, and</p></td>
+<td width="17%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="69%">
+<p>an input stream connected to the terminal</p></td>
+<td width="17%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">If the
+<i>type</i> parameter is <b>NULL</b>, <b>$TERM</b> will be
+used.</p>
+<p style="margin-left:9%; margin-top: 1em">The file
+descriptor of the output stream is passed to
+<b>setupterm</b>(3X), which returns a pointer to a
+<i>TERMINAL</i> structure. <b>newterm</b>’s return
+value holds a pointer to the <i>TERMINAL</i> structure.</p>
+<h3>endwin
+<a name="endwin"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The program must
+also call <b>endwin</b> for each terminal being used before
+exiting from <b>curses</b>. If <b>newterm</b> is called more
+than once for the same terminal, the first terminal referred
+to must be the last one for which <b>endwin</b> is
+called.</p>
+<p style="margin-left:9%; margin-top: 1em">A program should
+always call <b>endwin</b> before exiting or escaping from
+<b>curses</b> mode temporarily. This routine</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">resets colors to correspond with
+the default color pair 0,</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>moves the cursor to the lower left-hand corner of the
+screen,</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>clears the remainder of the line so that it uses the
+default colors,</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>sets the cursor to normal visibility (see
+<b>curs_set</b>(3X)),</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>stops cursor-addressing mode using the
+<i>exit_ca_mode</i> terminal capability,</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>restores tty modes (see
+<b>reset_shell_mode</b>(3X)).</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Calling
+<b>refresh</b>(3X) or <b>doupdate</b>(3X) after a temporary
+escape causes the program to resume visual mode.</p>
+<h3>isendwin
+<a name="isendwin"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>isendwin</b> routine returns <b>TRUE</b> if <b>endwin</b>
+has been called without any subsequent calls to
+<b>wrefresh</b>, and <b>FALSE</b> otherwise.</p>
+<h3>set_term
+<a name="set_term"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>set_term</b> routine is used to switch between different
+terminals. The screen reference <i>new</i> becomes the new
+current terminal. The previous terminal is returned by the
+routine. This is the only routine which manipulates
+<i>SCREEN</i> pointers; all other routines affect only the
+current terminal.</p>
+<h3>delscreen
+<a name="delscreen"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>delscreen</b> routine frees storage associated with the
+<i>SCREEN</i> data structure. The <b>endwin</b> routine does
+not do this, so <b>delscreen</b> should be called after
+<b>endwin</b> if a particular <i>SCREEN</i> is no longer
+needed.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>endwin</b>
+returns the integer <b>ERR</b> upon failure and <b>OK</b>
+upon successful completion.</p>
+<p style="margin-left:9%; margin-top: 1em">Routines that
+return pointers always return <b>NULL</b> on error.</p>
+<p style="margin-left:9%; margin-top: 1em">X/Open defines
+no error conditions. In this implementation</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="27%">
+<p style="margin-top: 1em"><b>endwin</b> returns <b>ERR</b>
+if</p> </td>
+<td width="59%">
+</td></tr>
+</table>
+<p style="margin-left:14%;">•</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%"></td>
+<td width="4%"></td>
+<td width="81%">
+<p style="margin-top: 1em">the terminal was not
+initialized, or</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p><b>endwin</b> is called more than once without updating
+the screen, or</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p><b>reset_shell_mode</b>(3X) return <b>ERR</b>.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="81%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em"><b>newterm</b>
+returns <b>ERR</b> if it cannot allocate the data structures
+for the screen, or for the top-level windows within the
+screen, i.e., <b>curscr</b>, <b>newscr</b>, or
+<b>stdscr</b>.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="33%">
+<p style="margin-top: 1em"><b>set_term</b> returns no
+error.</p> </td>
+<td width="53%">
+</td></tr>
+</table>
+<h2>PORTABILITY
+<a name="PORTABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+were described in X/Open Curses, Issue 4. As of 2015, the
+current document is X/Open Curses, Issue 7.</p>
+<h3>Differences
+<a name="Differences"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">X/Open Curses
+specifies that portable applications must not call
+<b>initscr</b> more than once:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">The portable way to use
+<b>initscr</b> is once only, using <b>refresh</b>(3X) to
+restore the screen after <b>endwin</b>.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>This implementation allows using <b>initscr</b> after
+<b>endwin</b>.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Old versions of
+curses, e.g., BSD 4.4, would return a null pointer from
+<b>initscr</b> when an error is detected, rather than
+exiting. It is safe but redundant to check the return value
+of <b>initscr</b> in X/Open Curses.</p>
+<p style="margin-left:9%; margin-top: 1em">Calling
+<b>endwin</b> does not dispose of the memory allocated in
+<b>initscr</b> or <b>newterm</b>. Deleting a <i>SCREEN</i>
+provides a way to do this:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">X/Open Curses does not say what
+happens to <i>WINDOW</i>s when <b>delscreen</b> “frees
+storage associated with the <i>SCREEN</i>” nor does
+the SVr4 documentation help, adding that it should be called
+after <b>endwin</b> if a <i>SCREEN</i> is no longer
+needed.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>However, <i>WINDOW</i>s are implicitly associated with a
+<i>SCREEN</i>. so that it is reasonable to expect
+<b>delscreen</b> to deal with these.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>SVr4 curses deletes the standard <i>WINDOW</i>
+structures <b>stdscr</b> and <b>curscr</b> as well as a work
+area <b>newscr</b>. SVr4 curses ignores other windows.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Since version 4.0 (1996), <i>ncurses</i> has maintained
+a list of all windows for each screen, using that
+information to delete those windows when <b>delscreen</b> is
+called.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>NetBSD copied this feature of <i>ncurses</i> in 2001.
+PDCurses follows the SVr4 model, deleting only the standard
+<i>WINDOW</i> structures.</p></td></tr>
+</table>
+<h3>High-level versus Low-level
+<a name="High-level versus Low-level"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Different
+implementations may disagree regarding the level of some
+functions. For example, <i>SCREEN</i> (returned by
+<b>newterm</b>) and <i>TERMINAL</i> (returned by
+<b>setupterm</b>(3X)) hold file descriptors for the output
+stream. If an application switches screens using
+<b>set_term</b>, or switches terminals using
+<b>set_curterm</b>(3X), applications which use the output
+file descriptor can have different behavior depending on
+which structure holds the corresponding descriptor.</p>
+<p style="margin-left:9%; margin-top: 1em">For example</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">NetBSD’s
+<b>baudrate</b>(3X) function uses the descriptor in
+<i>TERMINAL</i>. <i>ncurses</i> and SVr4 use the descriptor
+in <i>SCREEN</i>.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>NetBSD and <i>ncurses</i> use the descriptor in
+<i>TERMINAL</i> for terminal I/O modes, e.g.,
+<b>def_shell_mode</b>(3X), <b>def_prog_mode</b>(3X). SVr4
+curses uses the descriptor in <i>SCREEN</i>.</p></td></tr>
+</table>
+<h3>Unset TERM Variable
+<a name="Unset TERM Variable"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If the
+<i>TERM</i> variable is missing or empty, <b>initscr</b>
+uses the value “unknown”, which normally
+corresponds to a terminal entry with the <i>generic</i>
+(<i>gn</i>) capability. Generic entries are detected by
+<b>setupterm</b>(3X) and cannot be used for full-screen
+operation. Other implementations may handle a missing/empty
+<i>TERM</i> variable differently.</p>
+<h3>Signal Handlers
+<a name="Signal Handlers"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Quoting from
+X/Open Curses Issue 7, section 3.1.1:</p>
+<p style="margin-left:15%; margin-top: 1em">Curses
+implementations may provide for special handling of the
+SIGINT, SIGQUIT, and SIGTSTP signals if their disposition is
+SIG_DFL at the time <i>initscr</i> is called...</p>
+<p style="margin-left:15%; margin-top: 1em">Any special
+handling for these signals may remain in effect for the life
+of the process or until the process changes the disposition
+of the signal.</p>
+<p style="margin-left:15%; margin-top: 1em">None of the
+Curses functions are required to be safe with respect to
+signals...</p>
+<p style="margin-left:9%; margin-top: 1em">This
+implementation establishes signal handlers during
+initialization, e.g., <b>initscr</b> or <b>newterm</b>.
+Applications which must handle these signals should set up
+the corresponding handlers <i>after</i> initializing the
+library: <b><br/>
+SIGINT</b></p>
+<p style="margin-left:15%;">The handler <i>attempts</i> to
+clean up the screen on exit. Although it <i>usually</i>
+works as expected, there are limitations:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="15%"></td>
+<td width="2%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="79%">
+<p>Walking the <i>SCREEN</i> list is unsafe, since all list
+management is done without any signal blocking.</p></td></tr>
+<tr align="left" valign="top">
+<td width="15%"></td>
+<td width="2%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="79%">
+<p>On systems which have <b>REENTRANT</b> turned on,
+<b>set_term</b> uses functions which could deadlock or
+misbehave in other ways.</p></td></tr>
+<tr align="left" valign="top">
+<td width="15%"></td>
+<td width="2%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="79%">
+<p><b>endwin</b> calls other functions, many of which use
+<i>stdio</i>(3) or other library functions which are clearly
+unsafe.</p> </td></tr>
+</table>
+<p style="margin-left:9%;"><b>SIGTERM</b></p>
+<p style="margin-left:15%;">This uses the same handler as
+<b>SIGINT</b>, with the same limitations. It is not
+mentioned in X/Open Curses, but is more suitable for this
+purpose than <b>SIGQUIT</b> (which is used in
+debugging).</p>
+<p style="margin-left:9%;"><b>SIGTSTP</b></p>
+<p style="margin-left:15%;">This handles the <i>stop</i>
+signal, used in job control. When resuming the process, this
+implementation discards pending input with
+<b>flushinp</b>(3X), and repaints the screen assuming that
+it has been completely altered. It also updates the saved
+terminal modes with <b>def_shell_mode</b>(3X).</p>
+<p style="margin-left:9%;"><b>SIGWINCH</b></p>
+<p style="margin-left:15%;">This handles the window-size
+changes which were ignored in the standardization efforts.
+The handler sets a (signal-safe) variable that is later
+tested by <b>wgetch</b>(3X) and <b>wget_wch</b>(3X).</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="15%"></td>
+<td width="2%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="79%">
+<p><b>wgetch</b> returns the key code
+<b>KEY_RESIZE</b>.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="15%"></td>
+<td width="2%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="79%">
+<p><b>wget_wch</b> returns <b>KEY_CODE_YES</b> and sets its
+<i>wch</i> parameter to <b>KEY_RESIZE</b>.</p></td></tr>
+</table>
+<p style="margin-left:15%; margin-top: 1em">At the same
+time, <i>ncurses</i> calls <b>resizeterm</b> to adjust the
+standard screen <b>stdscr</b>, and update other data such as
+<b>LINES</b> and <b>COLS</b>.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curses</b>(3X),
+<b>curs_kernel</b>(3X), <b>curs_refresh</b>(3X),
+<b>curs_slk</b>(3X), <b>curs_terminfo</b>(3X),
+<b>curs_util</b>(3X), <b>curs_variables</b>(3X)</p>
+<hr/>
+</body>
+</html>

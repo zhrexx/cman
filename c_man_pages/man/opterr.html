@@ -1,0 +1,580 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:54 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>getopt</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">getopt</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#getopt_long() and getopt_long_only()">getopt_long() and getopt_long_only()</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ENVIRONMENT">ENVIRONMENT</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#VERSIONS">VERSIONS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#getopt()">getopt()</a><br/>
+<a href="#getopt_long()">getopt_long()</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">getopt,
+getopt_long, getopt_long_only, optarg, optind, opterr,
+optopt − Parse command-line options</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;unistd.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+getopt(int</b> <i>argc</i><b>, char *</b><i>argv</i><b>[],
+<br/>
+const char *</b><i>optstring</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>extern char
+*</b><i>optarg</i><b>; <br/>
+extern int</b> <i>optind</i><b>,</b> <i>opterr</i><b>,</b>
+<i>optopt</i><b>;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;getopt.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+getopt_long(int</b> <i>argc</i><b>, char
+*</b><i>argv</i><b>[], <br/>
+const char *</b><i>optstring</i><b>, <br/>
+const struct option *</b><i>longopts</i><b>, int
+*</b><i>longindex</i><b>); <br/>
+int getopt_long_only(int</b> <i>argc</i><b>, char
+*</b><i>argv</i><b>[], <br/>
+const char *</b><i>optstring</i><b>, <br/>
+const struct option *</b><i>longopts</i><b>, int
+*</b><i>longindex</i><b>);</b></p>
+<p style="margin-left:4%; margin-top: 1em">Feature Test
+Macro Requirements for glibc (see
+<b>feature_test_macros</b>(7)):</p>
+<p style="margin-left:9%; margin-top: 1em"><b>getopt</b>():
+<br/>
+_POSIX_C_SOURCE &gt;= 2 || _XOPEN_SOURCE</p>
+<p style="margin-left:9%; margin-top: 1em"><b>getopt_long</b>(),
+<b>getopt_long_only</b>(): <br/>
+_GNU_SOURCE</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>getopt</b>() function parses the command-line arguments.
+Its arguments <i>argc</i> and <i>argv</i> are the argument
+count and array as passed to the <i>main</i>() function on
+program invocation. An element of <i>argv</i> that starts
+with '−' (and is not exactly "−" or
+"−−") is an option element. The
+characters of this element (aside from the initial
+'−') are option characters. If <b>getopt</b>() is
+called repeatedly, it returns successively each of the
+option characters from each of the option elements.</p>
+<p style="margin-left:9%; margin-top: 1em">The variable
+<i>optind</i> is the index of the next element to be
+processed in <i>argv</i>. The system initializes this value
+to 1. The caller can reset it to 1 to restart scanning of
+the same <i>argv</i>, or when scanning a new argument
+vector.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>getopt</b>() finds another option character, it returns
+that character, updating the external variable <i>optind</i>
+and a static variable <i>nextchar</i> so that the next call
+to <b>getopt</b>() can resume the scan with the following
+option character or <i>argv</i>-element.</p>
+<p style="margin-left:9%; margin-top: 1em">If there are no
+more option characters, <b>getopt</b>() returns −1.
+Then <i>optind</i> is the index in <i>argv</i> of the first
+<i>argv</i>-element that is not an option.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>optstring</i>
+is a string containing the legitimate option characters. A
+legitimate option character is any visible one byte
+<b>ascii</b>(7) character (for which <b>isgraph</b>(3) would
+return nonzero) that is not '−', ':', or ';'. If such
+a character is followed by a colon, the option requires an
+argument, so <b>getopt</b>() places a pointer to the
+following text in the same <i>argv</i>-element, or the text
+of the following <i>argv</i>-element, in <i>optarg</i>. Two
+colons mean an option takes an optional arg; if there is
+text in the current <i>argv</i>-element (i.e., in the same
+word as the option name itself, for example,
+"−oarg"), then it is returned in
+<i>optarg</i>, otherwise <i>optarg</i> is set to zero. This
+is a GNU extension. If <i>optstring</i> contains <b>W</b>
+followed by a semicolon, then <b>−W foo</b> is treated
+as the long option <b>−−foo</b>. (The
+<b>−W</b> option is reserved by POSIX.2 for
+implementation extensions.) This behavior is a GNU
+extension, not available with libraries before glibc 2.</p>
+<p style="margin-left:9%; margin-top: 1em">By default,
+<b>getopt</b>() permutes the contents of <i>argv</i> as it
+scans, so that eventually all the nonoptions are at the end.
+Two other scanning modes are also implemented. If the first
+character of <i>optstring</i> is '+' or the environment
+variable <b>POSIXLY_CORRECT</b> is set, then option
+processing stops as soon as a nonoption argument is
+encountered. If '+' is not the first character of
+<i>optstring</i>, it is treated as a normal option. If
+<b>POSIXLY_CORRECT</b> behaviour is required in this case
+<i>optstring</i> will contain two '+' symbols. If the first
+character of <i>optstring</i> is '−', then each
+nonoption <i>argv</i>-element is handled as if it were the
+argument of an option with character code 1. (This is used
+by programs that were written to expect options and other
+<i>argv</i>-elements in any order and that care about the
+ordering of the two.) The special argument
+"−−" forces an end of option-scanning
+regardless of the scanning mode.</p>
+<p style="margin-left:9%; margin-top: 1em">While processing
+the option list, <b>getopt</b>() can detect two kinds of
+errors: (1) an option character that was not specified in
+<i>optstring</i> and (2) a missing option argument (i.e., an
+option at the end of the command line without an expected
+argument). Such errors are handled and reported as
+follows:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p>By default, <b>getopt</b>() prints an error message on
+standard error, places the erroneous option character in
+<i>optopt</i>, and returns '?' as the function result.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p>If the caller has set the global variable <i>opterr</i>
+to zero, then <b>getopt</b>() does not print an error
+message. The caller can determine that there was an error by
+testing whether the function return value is '?'. (By
+default, <i>opterr</i> has a nonzero value.)</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p>If the first character (following any optional '+' or
+'−' described above) of <i>optstring</i> is a colon
+(':'), then <b>getopt</b>() likewise does not print an error
+message. In addition, it returns ':' instead of '?' to
+indicate a missing option argument. This allows the caller
+to distinguish the two different types of errors.</p></td></tr>
+</table>
+<h3>getopt_long() and getopt_long_only()
+<a name="getopt_long() and getopt_long_only()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>getopt_long</b>() function works like <b>getopt</b>()
+except that it also accepts long options, started with two
+dashes. (If the program accepts only long options, then
+<i>optstring</i> should be specified as an empty string
+(""), not NULL.) Long option names may be
+abbreviated if the abbreviation is unique or is an exact
+match for some defined option. A long option may take a
+parameter, of the form <b>−−arg=param</b> or
+<b>−−arg param</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>longopts</i>
+is a pointer to the first element of an array of <i>struct
+option</i> declared in <i>&lt;getopt.h&gt;</i> as</p>
+<p style="margin-left:14%; margin-top: 1em">struct option {
+<br/>
+const char *name; <br/>
+int has_arg; <br/>
+int *flag; <br/>
+int val; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">The meanings of
+the different fields are:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p style="margin-top: 1em"><i>name</i></p></td>
+<td width="4%"></td>
+<td width="40%">
+<p style="margin-top: 1em">is the name of the long
+option.</p> </td>
+<td width="42%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><i>has_arg</i></p>
+<p style="margin-left:18%;">is: <b>no_argument</b> (or 0)
+if the option does not take an argument;
+<b>required_argument</b> (or 1) if the option requires an
+argument; or <b>optional_argument</b> (or 2) if the option
+takes an optional argument.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><i>flag</i></p></td>
+<td width="4%"></td>
+<td width="82%">
+<p>specifies how results are returned for a long option. If
+<i>flag</i> is NULL, then <b>getopt_long</b>() returns
+<i>val</i>. (For example, the calling program may set
+<i>val</i> to the equivalent short option character.)
+Otherwise, <b>getopt_long</b>() returns 0, and <i>flag</i>
+points to a variable which is set to <i>val</i> if the
+option is found, but left unchanged if the option is not
+found.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><i>val</i></p></td>
+<td width="4%"></td>
+<td width="82%">
+<p>is the value to return, or to load into the variable
+pointed to by <i>flag</i>.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The last element
+of the array has to be filled with zeros.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<i>longindex</i> is not NULL, it points to a variable which
+is set to the index of the long option relative to
+<i>longopts</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>getopt_long_only</b>()
+is like <b>getopt_long</b>(), but '−' as well as
+"−−" can indicate a long option. If an
+option that starts with '−' (not
+"−−") doesn’t match a long
+option, but does match a short option, it is parsed as a
+short option instead.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If an option was
+successfully found, then <b>getopt</b>() returns the option
+character. If all command-line options have been parsed,
+then <b>getopt</b>() returns −1. If <b>getopt</b>()
+encounters an option character that was not in
+<i>optstring</i>, then '?' is returned. If <b>getopt</b>()
+encounters an option with a missing argument, then the
+return value depends on the first character in
+<i>optstring</i>: if it is ':', then ':' is returned;
+otherwise '?' is returned.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>getopt_long</b>()
+and <b>getopt_long_only</b>() also return the option
+character when a short option is recognized. For a long
+option, they return <i>val</i> if <i>flag</i> is NULL, and 0
+otherwise. Error and −1 returns are the same as for
+<b>getopt</b>(), plus '?' for an ambiguous match or an
+extraneous parameter.</p>
+<h2>ENVIRONMENT
+<a name="ENVIRONMENT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>POSIXLY_CORRECT</b></p>
+<p style="margin-left:18%;">If this is set, then option
+processing stops as soon as a nonoption argument is
+encountered.</p>
+<p style="margin-left:9%;"><b>_&lt;PID&gt;_GNU_nonoption_argv_flags_</b></p>
+<p style="margin-left:18%;">This variable was used by
+<b>bash</b>(1) 2.0 to communicate to glibc which arguments
+are the results of wildcard expansion and so should not be
+considered as options. This behavior was removed in
+<b>bash</b>(1) 2.01, but the support remains in glibc.</p>
+<h2>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For an
+explanation of the terms used in this section, see
+<b>attributes</b>(7).</p>
+<h2>VERSIONS
+<a name="VERSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX specifies
+that the <i>argv</i> array argument should be <i>const</i>,
+but these functions permute its elements unless the
+environment variable <b>POSIXLY_CORRECT</b> is set.
+<i>const</i> is used in the actual prototype to be
+compatible with other systems; however, this page
+doesn’t show the qualifier, to avoid confusing
+readers.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>getopt</b>()</p>
+<p style="margin-left:18%;">POSIX.1-2008.</p>
+<p style="margin-left:9%;"><b>getopt_long</b>() <b><br/>
+getopt_long_only</b>()</p>
+<p style="margin-left:18%;">GNU.</p>
+<p style="margin-left:18%; margin-top: 1em">The use of '+'
+and '−' in <i>optstring</i> is a GNU extension.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>getopt</b>()</p>
+<p style="margin-left:18%;">POSIX.1-2001, and POSIX.2.</p>
+<p style="margin-left:9%; margin-top: 1em">On some older
+implementations, <b>getopt</b>() was declared in
+<i>&lt;stdio.h&gt;</i>. SUSv1 permitted the declaration to
+appear in either <i>&lt;unistd.h&gt;</i> or
+<i>&lt;stdio.h&gt;</i>. POSIX.1-1996 marked the use of
+<i>&lt;stdio.h&gt;</i> for this purpose as LEGACY.
+POSIX.1-2001 does not require the declaration to appear in
+<i>&lt;stdio.h&gt;</i>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A program that
+scans multiple argument vectors, or rescans the same vector
+more than once, and wants to make use of GNU extensions such
+as '+' and '−' at the start of <i>optstring</i>, or
+changes the value of <b>POSIXLY_CORRECT</b> between scans,
+must reinitialize <b>getopt</b>() by resetting <i>optind</i>
+to 0, rather than the traditional value of 1. (Resetting to
+0 forces the invocation of an internal initialization
+routine that rechecks <b>POSIXLY_CORRECT</b> and checks for
+GNU extensions in <i>optstring</i>.)</p>
+<p style="margin-left:9%; margin-top: 1em">Command-line
+arguments are parsed in strict order meaning that an option
+requiring an argument will consume the next argument,
+regardless of whether that argument is the correctly
+specified option argument or simply the next option (in the
+scenario the user mis-specifies the command line). For
+example, if <i>optstring</i> is specified as "1n:"
+and the user specifies the command line arguments
+incorrectly as <i>prog −n −1</i>, the
+<i>−n</i> option will be given the <b>optarg</b> value
+"−1", and the <i>−1</i> option will be
+considered to have not been specified.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<h3>getopt()
+<a name="getopt()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+trivial example program uses <b>getopt</b>() to handle two
+program options: <i>−n</i>, with no associated value;
+and <i>−t val</i>, which expects an associated
+value.</p>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;unistd.h&gt; <br/>
+int <br/>
+main(int argc, char *argv[]) <br/>
+{ <br/>
+int flags, opt; <br/>
+int nsecs, tfnd; <br/>
+nsecs = 0; <br/>
+tfnd = 0; <br/>
+flags = 0; <br/>
+while ((opt = getopt(argc, argv, "nt:")) !=
+−1) { <br/>
+switch (opt) { <br/>
+case 'n': <br/>
+flags = 1; <br/>
+break; <br/>
+case 't': <br/>
+nsecs = atoi(optarg); <br/>
+tfnd = 1; <br/>
+break; <br/>
+default: /* '?' */ <br/>
+fprintf(stderr, "Usage: %s [−t nsecs] [−n]
+name\n", <br/>
+argv[0]); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+} <br/>
+printf("flags=%d; tfnd=%d; nsecs=%d; optind=%d\n",
+<br/>
+flags, tfnd, nsecs, optind); <br/>
+if (optind &gt;= argc) { <br/>
+fprintf(stderr, "Expected argument after
+options\n"); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+printf("name argument = %s\n", argv[optind]); <br/>
+/* Other code omitted */ <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h3>getopt_long()
+<a name="getopt_long()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+example program illustrates the use of <b>getopt_long</b>()
+with most of its features.</p>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;getopt.h&gt; <br/>
+#include &lt;stdio.h&gt; /* for printf */ <br/>
+#include &lt;stdlib.h&gt; /* for exit */ <br/>
+int <br/>
+main(int argc, char *argv[]) <br/>
+{ <br/>
+int c; <br/>
+int digit_optind = 0; <br/>
+while (1) { <br/>
+int this_option_optind = optind ? optind : 1; <br/>
+int option_index = 0; <br/>
+static struct option long_options[] = { <br/>
+{"add", required_argument, 0, 0 }, <br/>
+{"append", no_argument, 0, 0 }, <br/>
+{"delete", required_argument, 0, 0 }, <br/>
+{"verbose", no_argument, 0, 0 }, <br/>
+{"create", required_argument, 0, 'c'}, <br/>
+{"file", required_argument, 0, 0 }, <br/>
+{0, 0, 0, 0 } <br/>
+}; <br/>
+c = getopt_long(argc, argv, "abc:d:012", <br/>
+long_options, &amp;option_index); <br/>
+if (c == −1) <br/>
+break; <br/>
+switch (c) { <br/>
+case 0: <br/>
+printf("option %s",
+long_options[option_index].name); <br/>
+if (optarg) <br/>
+printf(" with arg %s", optarg); <br/>
+printf("\n"); <br/>
+break; <br/>
+case '0': <br/>
+case '1': <br/>
+case '2': <br/>
+if (digit_optind != 0 &amp;&amp; digit_optind !=
+this_option_optind) <br/>
+printf("digits occur in two different
+argv−elements.\n"); <br/>
+digit_optind = this_option_optind; <br/>
+printf("option %c\n", c); <br/>
+break; <br/>
+case 'a': <br/>
+printf("option a\n"); <br/>
+break; <br/>
+case 'b': <br/>
+printf("option b\n"); <br/>
+break; <br/>
+case 'c': <br/>
+printf("option c with value '%s'\n", optarg); <br/>
+break; <br/>
+case 'd': <br/>
+printf("option d with value '%s'\n", optarg); <br/>
+break; <br/>
+case '?': <br/>
+break; <br/>
+default: <br/>
+printf("?? getopt returned character code 0%o
+??\n", c); <br/>
+} <br/>
+} <br/>
+if (optind &lt; argc) { <br/>
+printf("non−option ARGV−elements: ");
+<br/>
+while (optind &lt; argc) <br/>
+printf("%s ", argv[optind++]); <br/>
+printf("\n"); <br/>
+} <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>getopt</b>(1),
+<b>getsubopt</b>(3)</p>
+<hr/>
+</body>
+</html>

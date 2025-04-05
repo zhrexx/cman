@@ -1,0 +1,222 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Net::netent</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Net::netent</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#NOTE">NOTE</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Net::netent
+− by−name interface to Perl’s
+built−in getnet*() functions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Net::netent
+qw(:FIELDS); <br/>
+getnetbyname("loopback") or die "bad
+net"; <br/>
+printf "%s is %08X\n", $n_name, $n_net; <br/>
+use Net::netent; <br/>
+$n = getnetbyname("loopback") or die "bad
+net"; <br/>
+{ # there's gotta be a better way, eh? <br/>
+@bytes = unpack("C4", pack("N",
+$n−&gt;net)); <br/>
+shift @bytes while @bytes &amp;&amp; $bytes[0] == 0; <br/>
+} <br/>
+printf "%s is %08X [%d.%d.%d.%d]\n",
+$n−&gt;name, $n−&gt;net, @bytes;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+module’s default exports override the core
+<b>getnetbyname()</b> and <b>getnetbyaddr()</b> functions,
+replacing them with versions that return
+"Net::netent" objects. This object has methods
+that return the similarly named structure field name from
+the C’s netent structure from <i>netdb.h</i>; namely
+name, aliases, addrtype, and net. The aliases method returns
+an array reference, the rest scalars.</p>
+<p style="margin-left:9%; margin-top: 1em">You may also
+import all the structure fields directly into your namespace
+as regular variables using the :FIELDS import tag. (Note
+that this still overrides your core functions.) Access these
+fields as variables named with a preceding "n_".
+Thus, "$net_obj−&gt;name()" corresponds to
+$n_name if you import the fields. Array references are
+available as regular array variables, so for example
+"@{ $net_obj−&gt;aliases() }" would be
+simply @n_aliases.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>getnet()</b> function is a simple front-end that forwards
+a numeric argument to <b>getnetbyaddr()</b>, and the rest to
+<b>getnetbyname()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">To access this
+functionality without the core overrides, pass the
+"use" an empty import list, and then access
+function functions with their full qualified names. On the
+other hand, the built-ins are still available via the
+"CORE::" pseudo-package.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>getnet()</b> functions do this in the Perl core:</p>
+<p style="margin-left:9%; margin-top: 1em">sv_setiv(sv,
+(I32)nent−&gt;n_net);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>gethost()</b> functions do this in the Perl core:</p>
+<p style="margin-left:9%; margin-top: 1em">sv_setpvn(sv,
+hent−&gt;h_addr, len);</p>
+<p style="margin-left:9%; margin-top: 1em">That means that
+the address comes back in binary for the host functions, and
+as a regular perl integer for the net ones. This seems a
+bug, but here’s how to deal with it:</p>
+<p style="margin-left:9%; margin-top: 1em">use strict; <br/>
+use Socket; <br/>
+use Net::netent; <br/>
+@ARGV = ('loopback') unless @ARGV; <br/>
+my($n, $net); <br/>
+for $net ( @ARGV ) { <br/>
+unless ($n = getnetbyname($net)) { <br/>
+warn "$0: no such net: $net\n"; <br/>
+next; <br/>
+} <br/>
+printf "\n%s is %s%s\n", <br/>
+$net, <br/>
+lc($n−&gt;name) eq lc($net) ? "" :
+"*really* ", <br/>
+$n−&gt;name; <br/>
+print "\taliases are ", join(", ",
+@{$n−&gt;aliases}), "\n" <br/>
+if @{$n−&gt;aliases}; <br/>
+# this is stupid; first, why is this not in binary? <br/>
+# second, why am i going through these convolutions <br/>
+# to make it looks right <br/>
+{ <br/>
+my @a = unpack("C4", pack("N",
+$n−&gt;net)); <br/>
+shift @a while @a &amp;&amp; $a[0] == 0; <br/>
+printf "\taddr is %s [%d.%d.%d.%d]\n",
+$n−&gt;net, @a; <br/>
+} <br/>
+if ($n = getnetbyaddr($n−&gt;net)) { <br/>
+if (lc($n−&gt;name) ne lc($net)) { <br/>
+printf "\tThat addr reverses to net %s!\n",
+$n−&gt;name; <br/>
+$net = $n−&gt;name; <br/>
+redo; <br/>
+} <br/>
+} <br/>
+}</p>
+<h2>NOTE
+<a name="NOTE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">While this class
+is currently implemented using the Class::Struct module to
+build a struct-like class, you shouldn’t rely upon
+this.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Tom
+Christiansen</p>
+<hr/>
+</body>
+</html>

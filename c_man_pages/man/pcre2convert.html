@@ -1,0 +1,284 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PCRE2CONVERT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">PCRE2CONVERT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#EXPERIMENTAL PATTERN CONVERSION FUNCTIONS">EXPERIMENTAL PATTERN CONVERSION FUNCTIONS</a><br/>
+<a href="#THE CONVERT CONTEXT">THE CONVERT CONTEXT</a><br/>
+<a href="#THE CONVERSION FUNCTION">THE CONVERSION FUNCTION</a><br/>
+<a href="#CONVERTING GLOBS">CONVERTING GLOBS</a><br/>
+<a href="#CONVERTING POSIX PATTERNS">CONVERTING POSIX PATTERNS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#REVISION">REVISION</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">PCRE2 -
+Perl-compatible regular expressions (revised API)</p>
+<h2>EXPERIMENTAL PATTERN CONVERSION FUNCTIONS
+<a name="EXPERIMENTAL PATTERN CONVERSION FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This document
+describes a set of functions that can be used to convert
+"foreign" patterns into PCRE2 regular expressions.
+This facility is currently experimental, and may be changed
+in future releases. Two kinds of pattern, globs and POSIX
+patterns, are supported.</p>
+<h2>THE CONVERT CONTEXT
+<a name="THE CONVERT CONTEXT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>pcre2_convert_context
+*pcre2_convert_context_create( <br/>
+pcre2_general_context *</b><i>gcontext</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>pcre2_convert_context
+*pcre2_convert_context_copy( <br/>
+pcre2_convert_context *</b><i>cvcontext</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+pcre2_convert_context_free(pcre2_convert_context
+*</b><i>cvcontext</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+pcre2_set_glob_escape(pcre2_convert_context
+*</b><i>cvcontext</i><b>, <br/>
+uint32_t</b> <i>escape_char</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+pcre2_set_glob_separator(pcre2_convert_context
+*</b><i>cvcontext</i><b>, <br/>
+uint32_t</b> <i>separator_char</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em">A convert
+context is used to hold parameters that affect the way that
+pattern conversion works. Like all PCRE2 contexts, you need
+to use a context only if you want to override the defaults.
+There are the usual create, copy, and free functions. If
+custom memory management functions are set in a general
+context that is passed to
+<b>pcre2_convert_context_create()</b>, they are used for all
+memory management within the conversion functions.</p>
+<p style="margin-left:9%; margin-top: 1em">There are only
+two parameters in the convert context at present. Both apply
+only to glob conversions. The escape character defaults to
+grave accent under Windows, otherwise backslash. It can be
+set to zero, meaning no escape character, or to any
+punctuation character with a code point less than 256. The
+separator character defaults to backslash under Windows,
+otherwise forward slash. It can be set to forward slash,
+backslash, or dot.</p>
+<p style="margin-left:9%; margin-top: 1em">The two setting
+functions return zero on success, or PCRE2_ERROR_BADDATA if
+their second argument is invalid.</p>
+<h2>THE CONVERSION FUNCTION
+<a name="THE CONVERSION FUNCTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+pcre2_pattern_convert(PCRE2_SPTR</b> <i>pattern</i><b>,
+PCRE2_SIZE</b> <i>length</i><b>, <br/>
+uint32_t</b> <i>options</i><b>, PCRE2_UCHAR
+**</b><i>buffer</i><b>, <br/>
+PCRE2_SIZE *</b><i>blength</i><b>, pcre2_convert_context
+*</b><i>cvcontext</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+pcre2_converted_pattern_free(PCRE2_UCHAR
+*</b><i>converted_pattern</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em">The first two
+arguments of <b>pcre2_pattern_convert()</b> define the
+foreign pattern that is to be converted. The length may be
+given as PCRE2_ZERO_TERMINATED. The <b>options</b> argument
+defines how the pattern is to be processed. If the input is
+UTF, the PCRE2_CONVERT_UTF option should be set.
+PCRE2_CONVERT_NO_UTF_CHECK may also be set if you are sure
+the input is valid. One or more of the glob options, or one
+of the following POSIX options must be set to define the
+type of conversion that is required:</p>
+<p style="margin-left:9%; margin-top: 1em">PCRE2_CONVERT_GLOB
+<br/>
+PCRE2_CONVERT_GLOB_NO_WILD_SEPARATOR <br/>
+PCRE2_CONVERT_GLOB_NO_STARSTAR <br/>
+PCRE2_CONVERT_POSIX_BASIC <br/>
+PCRE2_CONVERT_POSIX_EXTENDED</p>
+<p style="margin-left:9%; margin-top: 1em">Details of the
+conversions are given below. The <b>buffer</b> and
+<b>blength</b> arguments define how the output is
+handled:</p>
+<p style="margin-left:9%; margin-top: 1em">If <b>buffer</b>
+is NULL, the function just returns the length of the
+converted pattern via <b>blength</b>. This is one less than
+the length of buffer needed, because a terminating zero is
+always added to the output.</p>
+<p style="margin-left:9%; margin-top: 1em">If <b>buffer</b>
+points to a NULL pointer, an output buffer is obtained using
+the allocator in the context or <b>malloc()</b> if no
+context is supplied. A pointer to this buffer is placed in
+the variable to which <b>buffer</b> points. When no longer
+needed the output buffer must be freed by calling
+<b>pcre2_converted_pattern_free()</b>. If this function is
+called with a NULL argument, it returns immediately without
+doing anything.</p>
+<p style="margin-left:9%; margin-top: 1em">If <b>buffer</b>
+points to a non-NULL pointer, <b>blength</b> must be set to
+the actual length of the buffer provided (in code
+units).</p>
+<p style="margin-left:9%; margin-top: 1em">In all cases,
+after successful conversion, the variable pointed to by
+<b>blength</b> is updated to the length actually used (in
+code units), excluding the terminating zero that is always
+added.</p>
+<p style="margin-left:9%; margin-top: 1em">If an error
+occurs, the length (via <b>blength</b>) is set to the offset
+within the input pattern where the error was detected. Only
+gross syntax errors are caught; there are plenty of errors
+that will get passed on for <b>pcre2_compile()</b> to
+discover.</p>
+<p style="margin-left:9%; margin-top: 1em">The return from
+<b>pcre2_pattern_convert()</b> is zero on success or a
+non-zero PCRE2 error code. Note that PCRE2 error codes may
+be positive or negative: <b>pcre2_compile()</b> uses mostly
+positive codes and <b>pcre2_match()</b> negative ones;
+<b>pcre2_convert()</b> uses existing codes of both kinds. A
+textual error message can be obtained by calling
+<b>pcre2_get_error_message()</b>.</p>
+<h2>CONVERTING GLOBS
+<a name="CONVERTING GLOBS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Globs are used
+to match file names, and consequently have the concept of a
+"path separator", which defaults to backslash
+under Windows and forward slash otherwise. If
+PCRE2_CONVERT_GLOB is set, the wildcards * and ? are not
+permitted to match separator characters, but the double-star
+(**) feature (which does match separators) is supported.</p>
+<p style="margin-left:9%; margin-top: 1em">PCRE2_CONVERT_GLOB_NO_WILD_SEPARATOR
+matches globs with wildcards allowed to match separator
+characters. PCRE2_CONVERT_GLOB_NO_STARSTAR matches globs
+with the double-star feature disabled. These options may be
+given together.</p>
+<h2>CONVERTING POSIX PATTERNS
+<a name="CONVERTING POSIX PATTERNS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX defines
+two kinds of regular expression pattern: basic and extended.
+These can be processed by setting PCRE2_CONVERT_POSIX_BASIC
+or PCRE2_CONVERT_POSIX_EXTENDED, respectively.</p>
+<p style="margin-left:9%; margin-top: 1em">In POSIX
+patterns, backslash is not special in a character class.
+Unmatched closing parentheses are treated as literals.</p>
+<p style="margin-left:9%; margin-top: 1em">In basic
+patterns, ? + | {} and () must be escaped to be recognized
+as metacharacters outside a character class. If the first
+character in the pattern is * it is treated as a literal.
+ˆ is a metacharacter only at the start of a branch.</p>
+<p style="margin-left:9%; margin-top: 1em">In extended
+patterns, a backslash not in a character class always makes
+the next character literal, whatever it is. There are no
+backreferences.</p>
+<p style="margin-left:9%; margin-top: 1em">Note: POSIX
+mandates that the longest possible match at the first
+matching position must be found. This is not what
+<b>pcre2_match()</b> does; it yields the first match that is
+found. An application can use <b>pcre2_dfa_match()</b> to
+find the longest match, but that does not support
+backreferences (but then neither do POSIX extended
+patterns).</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Philip Hazel
+<br/>
+Retired from University Computing Service <br/>
+Cambridge, England.</p>
+<h2>REVISION
+<a name="REVISION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Last updated: 28
+June 2018 <br/>
+Copyright (c) 1997-2018 University of Cambridge.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:02 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Software::License::Custom</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Software::License::Custom</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#PERL VERSION">PERL VERSION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#new">new</a><br/>
+<a href="#load_sections_from">load_sections_from</a><br/>
+<a href="#section_data">section_data</a><br/>
+<a href="#MORE METHODS">MORE METHODS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Software::License::Custom
+− custom license handler</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version
+0.104006</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+extends Software::License to give the possibility of
+specifying all aspects related to a software license in a
+custom file. This allows for setting custom dates, notices,
+etc. while still preserving compatibility with all places
+where Software::License is used, e.g. Dist::Zilla.</p>
+<p style="margin-left:9%; margin-top: 1em">In this way, you
+should be able to customise some aspects of the licensing
+messages that would otherwise be difficult to tinker, e.g.
+adding a note in the notice, setting multiple years for the
+copyright notice or set multiple authors and/or copyright
+holders.</p>
+<p style="margin-left:9%; margin-top: 1em">The license
+details should be put inside a file that contains different
+sections. Each section has the following format: <br/>
+header line</p>
+<p style="margin-left:14%;">This is a line that begins and
+ends with two underscores "__". The string between
+the begin and the end of the line is first depured of any
+non−word character, then used as the name of the
+section;</p>
+<p style="margin-left:9%;">body</p>
+<p style="margin-left:14%;">a Text::Template (possibly a
+plain text file) where items to be expanded are enclosed
+between double braces</p>
+<p style="margin-left:9%; margin-top: 1em">Each section is
+terminated by the header of the following section or by the
+end of the file. Example:</p>
+<p style="margin-left:9%; margin-top: 1em">__[ NAME ]__
+<br/>
+The Foo−Bar License <br/>
+__URL__ <br/>
+http://www.example.com/foo−bar.txt <br/>
+__[ META_NAME ]__ <br/>
+foo_bar_meta <br/>
+__{ META2_NAME }__ <br/>
+foo_bar_meta2 <br/>
+__{ SPDX_EXPRESSION }__ <br/>
+foo_bar_spdx_expression <br/>
+__[ NOTICE ]__ <br/>
+Copyright (C) 2000−2002 by P.R. Evious <br/>
+Copyright (C) {{$self−&gt;year}} by
+{{$self−&gt;holder}}. <br/>
+This is free software, licensed under
+{{$self−&gt;name}}. <br/>
+__[ LICENSE ]__ <br/>
+The Foo−Bar License <br/>
+Well... this is only some sample text. Verily... only sample
+text!!! <br/>
+Yes, spanning more lines and more paragraphs.</p>
+<p style="margin-left:9%; margin-top: 1em">The different
+formats for specifying the section name in the example above
+are only examples, you're invited to use a consistent
+approach.</p>
+<h2>PERL VERSION
+<a name="PERL VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+part of CPAN toolchain, or is treated as such. As such, it
+follows the agreement of the Perl Toolchain Gang to require
+no newer version of perl than one released in the last ten
+years. This version may change by agreement of the Toolchain
+Gang, but for now is governed by the Lancaster Consensus
+&lt;https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/lancaster-consensus.md&gt;
+of 2013 and the Lyon Amendment of 2023 (described at the
+linked−to document).</p>
+<p style="margin-left:9%; margin-top: 1em">Although it may
+work on older versions of perl, no guarantee is made that
+the minimum required version will not be increased. The
+version may be increased for any reason, and there is no
+promise that patches will be accepted to lower the minimum
+required perl.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>new
+<a name="new"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $slc =
+Software::License::Custom−&gt;new({filename =&gt;
+'LEGAL'});</p>
+<p style="margin-left:9%; margin-top: 1em">Create a new
+object. Arguments are passed through an anonymous hash, the
+following keys are allowed:</p>
+<p style="margin-left:9%; margin-top: 1em">filename −
+the file where the custom software license details are
+stored</p>
+<h3>load_sections_from
+<a name="load_sections_from"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$slc−&gt;load_sections_from('MY−LEGAL−ASPECTS');</p>
+<p style="margin-left:9%; margin-top: 1em">Loads the
+different sections of the license from the provided
+filename.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+input object.</p>
+<h3>section_data
+<a name="section_data"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my
+$notice_template_reference =
+$slc−&gt;section_data('NOTICE');</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a
+reference to a textual template that can be fed to
+Text::Template (it could be simple text), according to what
+is currently loaded in the object.</p>
+<h2>MORE METHODS
+<a name="MORE METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+methods, found in all software license classes, look up and
+render the template with the capitalized form of their name.
+In other words, the "license" method looks in the
+"LICENSE" template.</p>
+<p style="margin-left:9%; margin-top: 1em">For now, the
+"meta_name" and "meta2_name" methods
+return "custom" if called on the class. This may
+become fatal in the future.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p>name</p></td>
+<td width="73%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p>url</p></td>
+<td width="73%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p>meta_name</p></td>
+<td width="73%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p>meta2_name</p></td>
+<td width="73%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p>license</p></td>
+<td width="73%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p>notice</p></td>
+<td width="73%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p>fulltext</p></td>
+<td width="73%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p>version</p></td>
+<td width="73%">
+</td></tr>
+</table>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Ricardo Signes
+&lt;cpan@semiotic.systems&gt;</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2024 by Ricardo Signes.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

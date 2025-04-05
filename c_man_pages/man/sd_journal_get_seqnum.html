@@ -1,0 +1,212 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:51:08 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SD_JOURNAL_GET_SEQNUM</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SD_JOURNAL_GET_SEQNUM</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">sd_journal_get_seqnum
+− Read sequence number from the current journal
+entry</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;systemd/sd−journal.h&gt;</b></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="79%">
+<p style="margin-top: 1em"><b>int
+sd_journal_get_seqnum(sd_journal *</b><i>j</i><b>,
+uint64_t *</b><i>ret_seqnum</i><b>,
+sd_id128_t *</b><i>ret_seqnum_id</i><b>);</b></p> </td>
+<td width="12%">
+</td></tr>
+</table>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>sd_journal_get_seqnum()</b>
+returns the sequence number of the current journal entry. It
+takes three arguments: the journal context object, a pointer
+to a 64−bit unsigned integer to store the sequence
+number in, and a buffer to return the 128−bit sequence
+number ID in.</p>
+<p style="margin-left:9%; margin-top: 1em">When writing
+journal entries to disk each <b>systemd−journald</b>
+instance will number them sequentially, starting from 1 for
+the first entry written after subsystem initialization. Each
+such series of sequence numbers is associated with a
+128−bit sequence number ID which is initialized
+randomly, once at <b>systemd−journal</b>
+initialization. Thus, while multiple instances of
+<b>systemd−journald</b> will assign the same sequence
+numbers to their written journal entries, they will have a
+distinct sequence number IDs. The sequence number is
+assigned at the moment of writing the entry to disk. If log
+entries are rewritten (for example because the volatile logs
+from /run/log/ are flushed to /var/log/ via
+systemd−journald−flush.service) they will get
+new sequence numbers assigned.</p>
+<p style="margin-left:9%; margin-top: 1em">Sequence numbers
+may be used to order entries (entries associated with the
+same sequence number ID and lower sequence numbers should be
+ordered chronologically before those with higher sequence
+numbers), and to detect lost entries. Note that journal
+service instances typically write to multiple journal files
+in parallel (for example because <i>SplitMode=</i> is used),
+in which case each journal file will only contain a subset
+of the sequence numbers. To recover the full stream of
+journal entries the files must be combined
+("interleaved"), a process that primarily relies
+on the sequence numbers. When journal files are rotated (due
+to size or time limits), the series of sequence numbers is
+continued in the replacement files. All journal files
+generated from the same journal instance will carry the same
+sequence number ID.</p>
+<p style="margin-left:9%; margin-top: 1em">As the sequence
+numbers are assigned at the moment of writing the journal
+entries to disk they do not exist if storage is disabled via
+<i>SplitMode=</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>ret_seqnum</i> and <i>ret_seqnum_id</i> parameters may be
+specified as <b>NULL</b> in which case the relevant data is
+not returned (but the call will otherwise succeed).</p>
+<p style="margin-left:9%; margin-top: 1em">Note that these
+functions will not work before <b>sd_journal_next</b>(3) (or
+related call) has been called at least once, in order to
+position the read pointer at a valid entry.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>sd_journal_get_seqnum()</b>
+returns 0 on success or a negative errno−style error
+code..</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All functions
+listed here are thread−agnostic and only a single
+specific thread may operate on a given object during its
+entire lifetime. It's safe to allocate multiple independent
+objects and use each from a specific thread in parallel.
+However, it's not safe to allocate such an object in one
+thread, and operate or free it from any other, even if
+locking is used to ensure these threads don't operate on it
+at the very same time.</p>
+<p style="margin-left:9%; margin-top: 1em">Functions
+described here are available as a shared library, which can
+be compiled against and linked to with the
+<b>libsystemd pkg-config</b>(1) file.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>sd_journal_get_seqnum()</b>
+was added in version 254.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>systemd</b>(1),
+<b>sd-journal</b>(3), <b>sd_journal_open</b>(3),
+<b>sd_journal_next</b>(3), <b>sd_journal_get_data</b>(3),
+<b>sd_journal_get_monotonic_usec</b>(3)</p>
+<hr/>
+</body>
+</html>

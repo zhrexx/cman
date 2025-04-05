@@ -1,0 +1,196 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:06 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_ACCEPT_STREAM</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_ACCEPT_STREAM</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_accept_stream,
+SSL_get_accept_stream_queue_len, SSL_ACCEPT_STREAM_NO_BLOCK
+− accept an incoming QUIC stream from a QUIC peer</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+#define SSL_ACCEPT_STREAM_NO_BLOCK <br/>
+SSL *SSL_accept_stream(SSL *ssl, uint64_t flags); <br/>
+size_t SSL_get_accept_stream_queue_len(SSL *ssl);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_accept_stream()</b> function attempts to dequeue an
+incoming stream from the given QUIC connection SSL object
+and returns the newly allocated QUIC stream SSL object.</p>
+<p style="margin-left:9%; margin-top: 1em">If the queue of
+incoming streams is empty, this function returns NULL (in
+nonblocking mode) or waits for an incoming stream (in
+blocking mode). This function may still return NULL in
+blocking mode, for example if the underlying connection is
+terminated.</p>
+<p style="margin-left:9%; margin-top: 1em">The caller is
+responsible for managing the lifetime of the returned QUIC
+stream SSL object; for more information, see
+<b>SSL_free</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+will block if the QUIC connection SSL object is configured
+in blocking mode (see <b>SSL_set_blocking_mode</b>(3)), but
+this may be bypassed by passing the flag
+<b>SSL_ACCEPT_STREAM_NO_BLOCK</b> in <i>flags</i>. If this
+flag is set, this function never blocks.</p>
+<p style="margin-left:9%; margin-top: 1em">Calling
+<b>SSL_accept_stream()</b> if there is no default stream
+already present inhibits the future creation of a default
+stream. See <b>openssl−quic</b>(7).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_accept_stream_queue_len()</b>
+returns the number of incoming streams currently waiting in
+the accept queue.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+can be used from multiple threads for the same QUIC
+connection.</p>
+<p style="margin-left:9%; margin-top: 1em">Depending on
+whether default stream functionality is being used, it may
+be necessary to explicitly configure the incoming stream
+policy before streams can be accepted; see
+<b>SSL_set_incoming_stream_policy</b>(3). See also
+"MODES OF OPERATION" in
+<b>openssl−quic</b>(7) for more information on default
+stream functionality.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_accept_stream()</b>
+returns a newly allocated QUIC stream SSL object, or NULL if
+no new incoming streams are available, or if the connection
+has been terminated, or if called on a SSL object other than
+a QUIC connection SSL object. <b>SSL_get_error</b>(3) can be
+used to obtain further information in this case.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_accept_stream_queue_len()</b>
+returns the number of incoming streams currently waiting in
+the accept queue, or 0 if called on a SSL object other than
+a QUIC connection SSL object.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"MODES OF
+OPERATION" in <b>openssl−quic</b>(7),
+<b>SSL_new_stream</b>(3), <b>SSL_set_blocking_mode</b>(3),
+<b>SSL_free</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_accept_stream()</b>
+and <b>SSL_get_accept_stream_queue_len()</b> were added in
+OpenSSL 3.2.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2002−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

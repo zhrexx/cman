@@ -1,0 +1,210 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:53 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>EVP_SEALINIT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">EVP_SEALINIT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">EVP_SealInit,
+EVP_SealUpdate, EVP_SealFinal − EVP envelope
+encryption</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+int EVP_SealInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER
+*type, <br/>
+unsigned char **ek, int *ekl, unsigned char *iv, <br/>
+EVP_PKEY **pubk, int npubk); <br/>
+int EVP_SealUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
+<br/>
+int *outl, unsigned char *in, int inl); <br/>
+int EVP_SealFinal(EVP_CIPHER_CTX *ctx, unsigned char *out,
+int *outl);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The EVP envelope
+routines are a high−level interface to envelope
+encryption. They generate a random key and IV (if required)
+then "envelope" it by using public key encryption.
+Data can then be encrypted using this key.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_SealInit()</b>
+initializes a cipher context <b>ctx</b> for encryption with
+cipher <b>type</b> using a random secret key and IV.
+<b>type</b> is normally supplied by a function such as
+<b>EVP_aes_256_cbc()</b>. The secret key is encrypted using
+one or more public keys, this allows the same encrypted data
+to be decrypted using any of the corresponding private keys.
+<b>ek</b> is an array of buffers where the public key
+encrypted secret key will be written, each buffer must
+contain enough room for the corresponding encrypted key:
+that is <b>ek[i]</b> must have room for
+<b>EVP_PKEY_get_size(pubk[i])</b> bytes. The actual size of
+each encrypted secret key is written to the array
+<b>ekl</b>. <b>pubk</b> is an array of <b>npubk</b> public
+keys.</p>
+<p style="margin-left:9%; margin-top: 1em">The <b>iv</b>
+parameter is a buffer where the generated IV is written to.
+It must contain enough room for the corresponding cipher's
+IV, as determined by (for example)
+EVP_CIPHER_get_iv_length(type).</p>
+<p style="margin-left:9%; margin-top: 1em">If the cipher
+does not require an IV then the <b>iv</b> parameter is
+ignored and can be <b>NULL</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_SealUpdate()</b>
+and <b>EVP_SealFinal()</b> have exactly the same properties
+as the <b>EVP_EncryptUpdate()</b> and
+<b>EVP_EncryptFinal()</b> routines, as documented on the
+<b>EVP_EncryptInit</b>(3) manual page.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_SealInit()</b>
+returns 0 on error or <b>npubk</b> if successful.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_SealUpdate()</b>
+and <b>EVP_SealFinal()</b> return 1 for success and 0 for
+failure.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Because a random
+secret key is generated the random number generator must be
+seeded when <b>EVP_SealInit()</b> is called. If the
+automatic seeding or reseeding of the OpenSSL CSPRNG fails
+due to external circumstances (see <b>RAND</b>(7)), the
+operation will fail.</p>
+<p style="margin-left:9%; margin-top: 1em">The public key
+must be RSA because it is the only OpenSSL public key
+algorithm that supports key transport.</p>
+<p style="margin-left:9%; margin-top: 1em">Envelope
+encryption is the usual method of using public key
+encryption on large amounts of data, this is because public
+key encryption is slow but symmetric encryption is fast. So
+symmetric encryption is used for bulk encryption and the
+small random symmetric key used is transferred using public
+key encryption.</p>
+<p style="margin-left:9%; margin-top: 1em">It is possible
+to call <b>EVP_SealInit()</b> twice in the same way as
+<b>EVP_EncryptInit()</b>. The first call should have
+<b>npubk</b> set to 0 and (after setting any cipher
+parameters) it should be called again with <b>type</b> set
+to NULL.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>evp</b>(7),
+<b>RAND_bytes</b>(3), <b>EVP_EncryptInit</b>(3),
+<b>EVP_OpenInit</b>(3), <b>RAND</b>(7)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2000−2021 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

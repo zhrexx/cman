@@ -1,0 +1,336 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:58 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ExtUtils::Constant</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">ExtUtils::Constant</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#USAGE">USAGE</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">ExtUtils::Constant
+− generate XS code to import C header constants</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+ExtUtils::Constant qw (WriteConstants); <br/>
+WriteConstants( <br/>
+NAME =&gt; 'Foo', <br/>
+NAMES =&gt; [qw(FOO BAR BAZ)], <br/>
+); <br/>
+# Generates wrapper code to make the values of the constants
+FOO BAR BAZ <br/>
+# available to perl</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">ExtUtils::Constant
+facilitates generating C and XS wrapper code to allow perl
+modules to AUTOLOAD constants defined in C library header
+files. It is principally used by the "h2xs"
+utility, on which this code is based. It doesn’t
+contain the routines to scan header files to extract these
+constants.</p>
+<h2>USAGE
+<a name="USAGE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Generally one
+only needs to call the "WriteConstants" function,
+and then</p>
+<p style="margin-left:9%; margin-top: 1em">#include
+"const−c.inc"</p>
+<p style="margin-left:9%; margin-top: 1em">in the C section
+of "Foo.xs"</p>
+<p style="margin-left:9%; margin-top: 1em">INCLUDE:
+const−xs.inc</p>
+<p style="margin-left:9%; margin-top: 1em">in the XS
+section of "Foo.xs".</p>
+<p style="margin-left:9%; margin-top: 1em">For greater
+flexibility use constant_types(), "C_constant" and
+"XS_constant", with which
+"WriteConstants" is implemented.</p>
+<p style="margin-left:9%; margin-top: 1em">Currently this
+module understands the following types. h2xs may only know a
+subset. The sizes of the numeric types are chosen by the
+"Configure" script at compile time.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>IV</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p>signed integer, at least 32 bits.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>UV</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p>unsigned integer, the same size as <i>IV</i></p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>NV</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p>floating point type, probably "double",
+possibly "long double"</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>PV</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p>NUL terminated string, length will be determined with
+"strlen"</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>PVN</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p>A fixed length thing, given as a [pointer, length] pair.
+If you know the length of a string at compile time you may
+use this instead of <i>PV</i></p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>SV</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p>A <b>mortal</b> SV.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>YES</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p>Truth. ("PL_sv_yes") The value is not needed
+(and ignored).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>NO</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p>Defined Falsehood. ("PL_sv_no") The value is
+not needed (and ignored).</p></td></tr>
+</table>
+<p style="margin-left:9%;">UNDEF</p>
+<p style="margin-left:14%;">"undef". The value of
+the macro is not needed.</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">constant_types</p>
+<p style="margin-left:14%;">A function returning a single
+scalar with "#define" definitions for the
+constants used internally between the generated C and XS
+functions.</p>
+<p style="margin-left:9%;">XS_constant PACKAGE, TYPES,
+XS_SUBNAME, C_SUBNAME</p>
+<p style="margin-left:14%;">A function to generate the XS
+code to implement the perl subroutine
+<i>PACKAGE</i>::constant used by <i>PACKAGE</i>::AUTOLOAD to
+load constants. This XS code is a wrapper around a C
+subroutine usually generated by "C_constant", and
+usually named "constant".</p>
+<p style="margin-left:14%; margin-top: 1em"><i>TYPES</i>
+should be given either as a comma separated list of types
+that the C subroutine "constant" will generate or
+as a reference to a hash. It should be the same list of
+types as "C_constant" was given. [Otherwise
+"XS_constant" and "C_constant" may have
+different ideas about the number of parameters passed to the
+C function "constant"]</p>
+<p style="margin-left:14%; margin-top: 1em">You can call
+the perl visible subroutine something other than
+"constant" if you give the parameter
+<i>XS_SUBNAME</i>. The C subroutine it calls defaults to the
+name of the perl visible subroutine, unless you give the
+parameter <i>C_SUBNAME</i>.</p>
+<p style="margin-left:9%;">autoload PACKAGE, VERSION,
+AUTOLOADER</p>
+<p style="margin-left:14%;">A function to generate the
+AUTOLOAD subroutine for the module <i>PACKAGE VERSION</i> is
+the perl version the code should be backwards compatible
+with. It defaults to the version of perl running the
+subroutine. If <i>AUTOLOADER</i> is true, the AUTOLOAD
+subroutine falls back on AutoLoader::AUTOLOAD for all names
+that the <b>constant()</b> routine doesn’t
+recognise.</p>
+<p style="margin-left:9%;">WriteMakefileSnippet</p>
+<p style="margin-left:14%;">WriteMakefileSnippet ATTRIBUTE
+=&gt; VALUE [, ...]</p>
+<p style="margin-left:14%; margin-top: 1em">A function to
+generate perl code for Makefile.PL that will regenerate the
+constant subroutines. Parameters are named as passed to
+"WriteConstants", with the addition of
+"INDENT" to specify the number of leading spaces
+(default 2).</p>
+<p style="margin-left:14%; margin-top: 1em">Currently only
+"INDENT", "NAME",
+"DEFAULT_TYPE", "NAMES",
+"C_FILE" and "XS_FILE" are
+recognised.</p>
+<p style="margin-left:9%;">WriteConstants ATTRIBUTE =&gt;
+VALUE [, ...]</p>
+<p style="margin-left:14%;">Writes a file of C code and a
+file of XS code which you should "#include" and
+"INCLUDE" in the C and XS sections respectively of
+your module’s XS code. You probably want to do this in
+your "Makefile.PL", so that you can easily edit
+the list of constants without touching the rest of your
+module. The attributes supported are <br/>
+NAME</p>
+<p style="margin-left:19%;">Name of the module. This must
+be specified</p>
+<p style="margin-left:14%;">DEFAULT_TYPE</p>
+<p style="margin-left:19%;">The default type for the
+constants. If not specified "IV" is assumed.</p>
+<p style="margin-left:14%;">BREAKOUT_AT</p>
+<p style="margin-left:19%;">The names of the constants are
+grouped by length. Generate child subroutines for each group
+with this number or more names in.</p>
+<p style="margin-left:14%;">NAMES</p>
+<p style="margin-left:19%;">An array of constants’
+names, either scalars containing names, or hashrefs as
+detailed in "C_constant".</p>
+<p style="margin-left:14%;">PROXYSUBS</p>
+<p style="margin-left:19%;">If true, uses proxy subs. See
+ExtUtils::Constant::ProxySubs.</p>
+<p style="margin-left:14%;">C_FH</p>
+<p style="margin-left:19%;">A filehandle to write the C
+code to. If not given, then <i>C_FILE</i> is opened for
+writing.</p>
+<p style="margin-left:14%;">C_FILE</p>
+<p style="margin-left:19%;">The name of the file to write
+containing the C code. The default is
+"const−c.inc". The "−" in
+the name ensures that the file can’t be mistaken for
+anything related to a legitimate perl package name, and not
+naming the file ".c" avoids having to override
+Makefile.PL’s ".xs" to ".c"
+rules.</p>
+<p style="margin-left:14%;">XS_FH</p>
+<p style="margin-left:19%;">A filehandle to write the XS
+code to. If not given, then <i>XS_FILE</i> is opened for
+writing.</p>
+<p style="margin-left:14%;">XS_FILE</p>
+<p style="margin-left:19%;">The name of the file to write
+containing the XS code. The default is
+"const−xs.inc".</p>
+<p style="margin-left:14%;">XS_SUBNAME</p>
+<p style="margin-left:19%;">The perl visible name of the XS
+subroutine generated which will return the constants. The
+default is "constant".</p>
+<p style="margin-left:14%;">C_SUBNAME</p>
+<p style="margin-left:19%;">The name of the C subroutine
+generated which will return the constants. The default is
+<i>XS_SUBNAME</i>. Child subroutines have "_" and
+the name length appended, so constants with 10 character
+names would be in "constant_10" with the default
+<i>XS_SUBNAME</i>.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Nicholas Clark
+&lt;nick@ccl4.org&gt; based on the code in "h2xs"
+by Larry Wall and others</p>
+<hr/>
+</body>
+</html>

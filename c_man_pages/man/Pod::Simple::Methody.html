@@ -1,0 +1,243 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:58 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Pod::Simple::Methody</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Pod::Simple::Methody</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHOD CALLING">METHOD CALLING</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#SUPPORT">SUPPORT</a><br/>
+<a href="#COPYRIGHT AND DISCLAIMERS">COPYRIGHT AND DISCLAIMERS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pod::Simple::Methody
+−− turn Pod::Simple events into method calls</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">require 5; <br/>
+use strict; <br/>
+package SomePodFormatter; <br/>
+use base qw(Pod::Simple::Methody); <br/>
+sub handle_text { <br/>
+my($self, $text) = @_; <br/>
+... <br/>
+} <br/>
+sub start_head1 { <br/>
+my($self, $attrs) = @_; <br/>
+... <br/>
+} <br/>
+sub end_head1 { <br/>
+my($self) = @_; <br/>
+... <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">...and
+start_/end_ methods for whatever other events you want to
+catch.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This class is of
+interest to people writing Pod formatters based on
+Pod::Simple.</p>
+<p style="margin-left:9%; margin-top: 1em">This class
+(which is very small −− read the source)
+overrides Pod::Simple's _handle_element_start, _handle_text,
+and _handle_element_end methods so that parser events are
+turned into method calls. (Otherwise, this is a subclass of
+Pod::Simple and inherits all its methods.)</p>
+<p style="margin-left:9%; margin-top: 1em">You can use this
+class as the base class for a Pod formatter/processor.</p>
+<h2>METHOD CALLING
+<a name="METHOD CALLING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">When Pod::Simple
+sees a "=head1 Hi there", for example, it
+basically does this:</p>
+<p style="margin-left:9%; margin-top: 1em">$parser−&gt;_handle_element_start(
+"head1", \%attributes ); <br/>
+$parser−&gt;_handle_text( "Hi there" ); <br/>
+$parser−&gt;_handle_element_end( "head1"
+);</p>
+<p style="margin-left:9%; margin-top: 1em">But if you
+subclass Pod::Simple::Methody, it will instead do this when
+it sees a "=head1 Hi there":</p>
+<p style="margin-left:9%; margin-top: 1em">$parser−&gt;start_head1(
+\%attributes ) if $parser−&gt;can('start_head1'); <br/>
+$parser−&gt;handle_text( "Hi there" ) if
+$parser−&gt;can('handle_text'); <br/>
+$parser−&gt;end_head1() if
+$parser−&gt;can('end_head1');</p>
+<p style="margin-left:9%; margin-top: 1em">If Pod::Simple
+sends an event where the element name has a dash, period, or
+colon, the corresponding method name will have a underscore
+in its place. For example, "foo.bar:baz" becomes
+start_foo_bar_baz and end_foo_bar_baz.</p>
+<p style="margin-left:9%; margin-top: 1em">See the source
+for Pod::Simple::Text for an example of using this
+class.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pod::Simple,
+Pod::Simple::Subclassing</p>
+<h2>SUPPORT
+<a name="SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Questions or
+discussion about POD and Pod::Simple should be sent to the
+pod−people@perl.org mail list. Send an empty email to
+pod−people−subscribe@perl.org to subscribe.</p>
+<p style="margin-left:9%; margin-top: 1em">This module is
+managed in an open GitHub repository,
+&lt;https://github.com/perl−pod/pod−simple/&gt;.
+Feel free to fork and contribute, or to clone
+&lt;https://github.com/perl−pod/pod−simple.git&gt;
+and send patches!</p>
+<p style="margin-left:9%; margin-top: 1em">Patches against
+Pod::Simple are welcome. Please send bug reports to
+&lt;bug−pod−simple@rt.cpan.org&gt;.</p>
+<h2>COPYRIGHT AND DISCLAIMERS
+<a name="COPYRIGHT AND DISCLAIMERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+2002 Sean M. Burke.</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+distributed in the hope that it will be useful, but without
+any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pod::Simple was
+created by Sean M. Burke &lt;sburke@cpan.org&gt;. But don't
+bother him, he's retired.</p>
+<p style="margin-left:9%; margin-top: 1em">Pod::Simple is
+maintained by:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p>Allison Randal "allison@perl.org"</p></td>
+<td width="40%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p>Hans Dieter Pearcey "hdp@cpan.org"</p></td>
+<td width="40%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="46%">
+<p>David E. Wheeler "dwheeler@cpan.org"</p></td>
+<td width="40%">
+</td></tr>
+</table>
+<hr/>
+</body>
+</html>

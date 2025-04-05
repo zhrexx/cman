@@ -1,0 +1,191 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:29 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>getexeccon</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">getexeccon</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">getexeccon,
+setexeccon − get or set the SELinux security context
+used for executing a new process</p>
+<p style="margin-left:9%; margin-top: 1em">rpm_execcon
+− run a helper for rpm in an appropriate security
+context</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;selinux/selinux.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+getexeccon(char **</b><i>context</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+getexeccon_raw(char **</b><i>context</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+setexeccon(const char *</b><i>context</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+setexeccon_raw(const char *</b><i>context</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+setexecfilecon(const char *</b><i>filename</i><b>, const
+char *</b><i>fallback_type</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+rpm_execcon(unsigned int</b> <i>verified</i><b>, const char
+*</b><i>filename</i><b>, char *const</b> <i>argv</i><b>[] ,
+char *const</b> <i>envp</i><b>[]);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>getexeccon</b>()
+retrieves the context used for executing a new process. This
+returned context should be freed with <b>freecon</b>(3) if
+non-NULL. <b>getexeccon</b>() sets <b>*</b><i>context</i> to
+NULL if no exec context has been explicitly set by the
+program (i.e. using the default policy behavior).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>setexeccon</b>()
+sets the context used for the next <b>execve</b>(2) call.
+NULL can be passed to <b>setexeccon</b>() to reset to the
+default policy behavior. The exec context is automatically
+reset after the next <b>execve</b>(2), so a program
+doesn’t need to explicitly sanitize it upon
+startup.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>setexeccon</b>()
+can be applied prior to library functions that internally
+perform an <b>execve</b>(2), e.g. <b>execl</b>*(3),
+<b>execv</b>*(3), <b>popen</b>(3), in order to set an exec
+context for that operation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>getexeccon_raw</b>()
+and <b>setexeccon_raw</b>() behave identically to their
+non-raw counterparts but do not perform context
+translation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note:</b>
+Signal handlers that perform an <b>execve</b>(2) must take
+care to save, reset, and restore the exec context to avoid
+unexpected behavior.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>setexecfilecon</b>()
+sets the context used for the next <b>execve</b>(2) call,
+based on the policy for the <i>filename</i>, and falling
+back to a new context with a <i>fallback_type</i> in case
+there is no transition.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>rpm_execcon</b>()
+is deprecated; please use <b>setexecfilecon</b>() in
+conjunction with <b>execve</b>(2) in all new code. This
+function runs a helper for rpm in an appropriate security
+context. The verified parameter should contain the return
+code from the signature verification (0 == ok, 1 ==
+notfound, 2 == verifyfail, 3 == nottrusted, 4 == nokey),
+although this information is not yet used by the function.
+The function determines the proper security context for the
+helper based on policy, sets the exec context accordingly,
+and then executes the specified filename with the provided
+argument and environment arrays.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On failure,
+−1 is returned and <i>errno</i> is set
+appropriately.</p>
+<p style="margin-left:9%; margin-top: 1em">On success
+<b>getexeccon</b>(), <b>setexeccon</b>() and
+<b>setexecfilecon</b>() return 0. <b>rpm_execcon</b>() only
+returns upon errors, as it calls <b>execve</b>(2).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux</b>(8),
+<b>freecon</b>(3), <b>getcon</b>(3)</p>
+<hr/>
+</body>
+</html>

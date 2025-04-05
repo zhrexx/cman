@@ -1,0 +1,487 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:14 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>File::Fetch</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">File::Fetch</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#ACCESSORS">ACCESSORS</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#$ff = File::Fetch−&gt;new( uri =&gt; 'http://some.where.com/dir/file.txt' );">$ff = File::Fetch−&gt;new( uri =&gt; 'http://some.where.com/dir/file.txt' );</a><br/>
+<a href="#$where = $ff−&gt;fetch( [to =&gt; /my/output/dir/ | \$scalar] )">$where = $ff−&gt;fetch( [to =&gt; /my/output/dir/ | \$scalar] )</a><br/>
+<a href="#$ff−&gt;error([BOOL])">$ff−&gt;error([BOOL])</a><br/>
+<a href="#HOW IT WORKS">HOW IT WORKS</a><br/>
+<a href="#GLOBAL VARIABLES">GLOBAL VARIABLES</a><br/>
+<a href="#$File::Fetch::FROM_EMAIL">$File::Fetch::FROM_EMAIL</a><br/>
+<a href="#$File::Fetch::USER_AGENT">$File::Fetch::USER_AGENT</a><br/>
+<a href="#$File::Fetch::FTP_PASSIVE">$File::Fetch::FTP_PASSIVE</a><br/>
+<a href="#$File::Fetch::TIMEOUT">$File::Fetch::TIMEOUT</a><br/>
+<a href="#$File::Fetch::WARN">$File::Fetch::WARN</a><br/>
+<a href="#$File::Fetch::DEBUG">$File::Fetch::DEBUG</a><br/>
+<a href="#$File::Fetch::BLACKLIST">$File::Fetch::BLACKLIST</a><br/>
+<a href="#$File::Fetch::METHOD_FAIL">$File::Fetch::METHOD_FAIL</a><br/>
+<a href="#MAPPING">MAPPING</a><br/>
+<a href="#FREQUENTLY ASKED QUESTIONS">FREQUENTLY ASKED QUESTIONS</a><br/>
+<a href="#So how do I use a proxy with File::Fetch?">So how do I use a proxy with File::Fetch?</a><br/>
+<a href="#I used 'lynx' to fetch a file, but its contents is all wrong!">I used 'lynx' to fetch a file, but its contents is all wrong!</a><br/>
+<a href="#Files I'm trying to fetch have reserved characters or non−ASCII charactersin them. What do I do?">Files I'm trying to fetch have reserved characters or non−ASCII charactersin them. What do I do?</a><br/>
+<a href="#TODO">TODO</a><br/>
+<a href="#BUG REPORTS">BUG REPORTS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::Fetch
+− A generic file fetching mechanism</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use File::Fetch;
+<br/>
+### build a File::Fetch object ### <br/>
+my $ff = File::Fetch−&gt;new(uri =&gt;
+'http://some.where.com/dir/a.txt'); <br/>
+### fetch the uri to cwd() ### <br/>
+my $where = $ff−&gt;fetch() or die
+$ff−&gt;error; <br/>
+### fetch the uri to /tmp ### <br/>
+my $where = $ff−&gt;fetch( to =&gt; '/tmp' ); <br/>
+### parsed bits from the uri ### <br/>
+$ff−&gt;uri; <br/>
+$ff−&gt;scheme; <br/>
+$ff−&gt;host; <br/>
+$ff−&gt;path; <br/>
+$ff−&gt;file;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::Fetch is a
+generic file fetching mechanism.</p>
+<p style="margin-left:9%; margin-top: 1em">It allows you to
+fetch any file pointed to by a "ftp",
+"http", "file", "git" or
+"rsync" uri by a number of different means.</p>
+<p style="margin-left:9%; margin-top: 1em">See the
+"HOW IT WORKS" section further down for
+details.</p>
+<h2>ACCESSORS
+<a name="ACCESSORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A
+"File::Fetch" object has the following accessors
+<br/>
+$ff−&gt;uri</p>
+<p style="margin-left:14%;">The uri you passed to the
+constructor</p>
+<p style="margin-left:9%;">$ff−&gt;scheme</p>
+<p style="margin-left:14%;">The scheme from the uri (like
+'file', 'http', etc)</p>
+<p style="margin-left:9%;">$ff−&gt;host</p>
+<p style="margin-left:14%;">The hostname in the uri. Will
+be empty if host was originally 'localhost' for a 'file://'
+url.</p>
+<p style="margin-left:9%;">$ff−&gt;vol</p>
+<p style="margin-left:14%;">On operating systems with the
+concept of a volume the second element of a file:// is
+considered to the be volume specification for the file. Thus
+on Win32 this routine returns the volume, on other operating
+systems this returns nothing.</p>
+<p style="margin-left:14%; margin-top: 1em">On Windows this
+value may be empty if the uri is to a network share, in
+which case the 'share' property will be defined.
+Additionally, volume specifications that use '|' as ':' will
+be converted on read to use ':'.</p>
+<p style="margin-left:14%; margin-top: 1em">On VMS, which
+has a volume concept, this field will be empty because VMS
+file specifications are converted to absolute UNIX format
+and the volume information is transparently included.</p>
+<p style="margin-left:9%;">$ff−&gt;share</p>
+<p style="margin-left:14%;">On systems with the concept of
+a network share (currently only Windows) returns the
+sharename from a file://// url. On other operating systems
+returns empty.</p>
+<p style="margin-left:9%;">$ff−&gt;path</p>
+<p style="margin-left:14%;">The path from the uri, will be
+at least a single '/'.</p>
+<p style="margin-left:9%;">$ff−&gt;file</p>
+<p style="margin-left:14%;">The name of the remote file.
+For the local file name, the result of
+$ff−&gt;output_file will be used.</p>
+<p style="margin-left:9%;">$ff−&gt;file_default</p>
+<p style="margin-left:14%;">The name of the default local
+file, that $ff−&gt;output_file falls back to if it
+would otherwise return no filename. For example when
+fetching a URI like http://www.abc.net.au/ the contents
+retrieved may be from a remote file called 'index.html'. The
+default value of this attribute is literally
+'file_default'.</p>
+<p style="margin-left:9%;">$ff−&gt;output_file</p>
+<p style="margin-left:14%;">The name of the output file.
+This is the same as $ff−&gt;file, but any query
+parameters are stripped off. For example:</p>
+<p style="margin-left:14%; margin-top: 1em">http://example.com/index.html?x=y</p>
+<p style="margin-left:14%; margin-top: 1em">would make the
+output file be "index.html" rather than
+"index.html?x=y".</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>$ff = File::Fetch−&gt;new( uri =&gt; 'http://some.where.com/dir/file.txt' );
+<a name="$ff = File::Fetch−&gt;new( uri =&gt; 'http://some.where.com/dir/file.txt' );"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Parses the uri
+and creates a corresponding File::Fetch::Item object, that
+is ready to be "fetch"ed and returns it.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns false on
+failure.</p>
+<h3>$where = $ff−&gt;fetch( [to =&gt; /my/output/dir/ | \$scalar] )
+<a name="$where = $ff−&gt;fetch( [to =&gt; /my/output/dir/ | \$scalar] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Fetches the file
+you requested and returns the full path to the file.</p>
+<p style="margin-left:9%; margin-top: 1em">By default it
+writes to cwd(), but you can override that by specifying the
+"to" argument:</p>
+<p style="margin-left:9%; margin-top: 1em">### file fetch
+to /tmp, full path to the file in $where <br/>
+$where = $ff−&gt;fetch( to =&gt; '/tmp' ); <br/>
+### file slurped into $scalar, full path to the file in
+$where <br/>
+### file is downloaded to a temp directory and cleaned up at
+exit time <br/>
+$where = $ff−&gt;fetch( to =&gt; \$scalar );</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the full
+path to the downloaded file on success, and false on
+failure.</p>
+<h3>$ff−&gt;error([BOOL])
+<a name="$ff−&gt;error([BOOL])"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the last
+encountered error as string. Pass it a true value to get the
+Carp::longmess() output instead.</p>
+<h2>HOW IT WORKS
+<a name="HOW IT WORKS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::Fetch is
+able to fetch a variety of uris, by using several external
+programs and modules.</p>
+<p style="margin-left:9%; margin-top: 1em">Below is a
+mapping of what utilities will be used in what order for
+what schemes, if available:</p>
+<p style="margin-left:9%; margin-top: 1em">file =&gt; LWP,
+lftp, file <br/>
+http =&gt; LWP, HTTP::Tiny, wget, curl, lftp, fetch,
+HTTP::Lite, lynx, iosock <br/>
+ftp =&gt; LWP, Net::FTP, wget, curl, lftp, fetch, ncftp, ftp
+<br/>
+rsync =&gt; rsync <br/>
+git =&gt; git</p>
+<p style="margin-left:9%; margin-top: 1em">If you'd like to
+disable the use of one or more of these utilities and/or
+modules, see the $BLACKLIST variable further down.</p>
+<p style="margin-left:9%; margin-top: 1em">If a utility or
+module isn't available, it will be marked in a cache (see
+the $METHOD_FAIL variable further down), so it will not be
+tried again. The "fetch" method will only fail
+when all options are exhausted, and it was not able to
+retrieve the file.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"fetch" utility is available on FreeBSD. NetBSD
+and Dragonfly BSD may also have it from "pkgsrc".
+We only check for "fetch" on those three
+platforms.</p>
+<p style="margin-left:9%; margin-top: 1em">"iosock"
+is a very limited IO::Socket::INET based mechanism for
+retrieving "http" schemed urls. It doesn't follow
+redirects for instance.</p>
+<p style="margin-left:9%; margin-top: 1em">"git"
+only supports "git://" style urls.</p>
+<p style="margin-left:9%; margin-top: 1em">A special note
+about fetching files from an ftp uri:</p>
+<p style="margin-left:9%; margin-top: 1em">By default, all
+ftp connections are done in passive mode. To change that,
+see the $FTP_PASSIVE variable further down.</p>
+<p style="margin-left:9%; margin-top: 1em">Furthermore, ftp
+uris only support anonymous connections, so no named
+user/password pair can be passed along.</p>
+<p style="margin-left:9%; margin-top: 1em">"/bin/ftp"
+is blacklisted by default; see the $BLACKLIST variable
+further down.</p>
+<h2>GLOBAL VARIABLES
+<a name="GLOBAL VARIABLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The behaviour of
+File::Fetch can be altered by changing the following global
+variables:</p>
+<h3>$File::Fetch::FROM_EMAIL
+<a name="$File::Fetch::FROM_EMAIL"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is the
+email address that will be sent as your anonymous ftp
+password.</p>
+<p style="margin-left:9%; margin-top: 1em">Default is
+"File−Fetch@example.com".</p>
+<h3>$File::Fetch::USER_AGENT
+<a name="$File::Fetch::USER_AGENT"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is the
+useragent as "LWP" will report it.</p>
+<p style="margin-left:9%; margin-top: 1em">Default is
+"File::Fetch/$VERSION".</p>
+<h3>$File::Fetch::FTP_PASSIVE
+<a name="$File::Fetch::FTP_PASSIVE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This variable
+controls whether the environment variable
+"FTP_PASSIVE" and any passive switches to
+commandline tools will be set to true.</p>
+<p style="margin-left:9%; margin-top: 1em">Default value is
+1.</p>
+<p style="margin-left:9%; margin-top: 1em">Note: When
+$FTP_PASSIVE is true, "ncftp" will not be used to
+fetch files, since passive mode can only be set
+interactively for this binary</p>
+<h3>$File::Fetch::TIMEOUT
+<a name="$File::Fetch::TIMEOUT"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">When set,
+controls the network timeout (counted in seconds).</p>
+<p style="margin-left:9%; margin-top: 1em">Default value is
+0.</p>
+<h3>$File::Fetch::WARN
+<a name="$File::Fetch::WARN"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This variable
+controls whether errors encountered internally by
+"File::Fetch" should be "carp"'d or
+not.</p>
+<p style="margin-left:9%; margin-top: 1em">Set to false to
+silence warnings. Inspect the output of the error() method
+manually to see what went wrong.</p>
+<p style="margin-left:9%; margin-top: 1em">Defaults to
+"true".</p>
+<h3>$File::Fetch::DEBUG
+<a name="$File::Fetch::DEBUG"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This enables
+debugging output when calling commandline utilities to fetch
+files. This also enables "Carp::longmess" errors,
+instead of the regular "carp" errors.</p>
+<p style="margin-left:9%; margin-top: 1em">Good for
+tracking down why things don't work with your particular
+setup.</p>
+<p style="margin-left:9%; margin-top: 1em">Default is
+0.</p>
+<h3>$File::Fetch::BLACKLIST
+<a name="$File::Fetch::BLACKLIST"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is an array
+ref holding blacklisted modules/utilities for fetching files
+with.</p>
+<p style="margin-left:9%; margin-top: 1em">To disallow the
+use of, for example, "LWP" and
+"Net::FTP", you could set $File::Fetch::BLACKLIST
+to:</p>
+<p style="margin-left:9%; margin-top: 1em">$File::Fetch::BLACKLIST
+= [qw|lwp netftp|]</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+blacklist is [qw|ftp|], as "/bin/ftp" is rather
+unreliable.</p>
+<p style="margin-left:9%; margin-top: 1em">See the note on
+"MAPPING" below.</p>
+<h3>$File::Fetch::METHOD_FAIL
+<a name="$File::Fetch::METHOD_FAIL"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is a
+hashref registering what modules/utilities were known to
+fail for fetching files (mostly because they weren't
+installed).</p>
+<p style="margin-left:9%; margin-top: 1em">You can reset
+this cache by assigning an empty hashref to it, or
+individually remove keys.</p>
+<p style="margin-left:9%; margin-top: 1em">See the note on
+"MAPPING" below.</p>
+<h2>MAPPING
+<a name="MAPPING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Here's a quick
+mapping for the utilities/modules, and their names for the
+$BLACKLIST, $METHOD_FAIL and other internal functions.</p>
+<p style="margin-left:9%; margin-top: 1em">LWP =&gt; lwp
+<br/>
+HTTP::Lite =&gt; httplite <br/>
+HTTP::Tiny =&gt; httptiny <br/>
+Net::FTP =&gt; netftp <br/>
+wget =&gt; wget <br/>
+lynx =&gt; lynx <br/>
+ncftp =&gt; ncftp <br/>
+ftp =&gt; ftp <br/>
+curl =&gt; curl <br/>
+rsync =&gt; rsync <br/>
+lftp =&gt; lftp <br/>
+fetch =&gt; fetch <br/>
+IO::Socket =&gt; iosock</p>
+<h2>FREQUENTLY ASKED QUESTIONS
+<a name="FREQUENTLY ASKED QUESTIONS"></a>
+</h2>
+<h3>So how do I use a proxy with File::Fetch?
+<a name="So how do I use a proxy with File::Fetch?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"File::Fetch"
+currently only supports proxies with LWP::UserAgent. You
+will need to set your environment variables accordingly. For
+example, to use an ftp proxy:</p>
+<p style="margin-left:9%; margin-top: 1em">$ENV{ftp_proxy}
+= 'foo.com';</p>
+<p style="margin-left:9%; margin-top: 1em">Refer to the
+LWP::UserAgent manpage for more details.</p>
+<h3>I used 'lynx' to fetch a file, but its contents is all wrong!
+<a name="I used 'lynx' to fetch a file, but its contents is all wrong!"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"lynx"
+can only fetch remote files by dumping its contents to
+"STDOUT", which we in turn capture. If that
+content is a 'custom' error file (like, say, a "404
+handler"), you will get that contents instead.</p>
+<p style="margin-left:9%; margin-top: 1em">Sadly,
+"lynx" doesn't support any options to return a
+different exit code on non−"200 OK" status,
+giving us no way to tell the difference between a
+'successful' fetch and a custom error page.</p>
+<p style="margin-left:9%; margin-top: 1em">Therefor, we
+recommend to only use "lynx" as a last resort.
+This is why it is at the back of our list of methods to try
+as well.</p>
+<h3>Files I'm trying to fetch have reserved characters or non−ASCII charactersin them. What do I do?
+<a name="Files I'm trying to fetch have reserved characters or non−ASCII charactersin them. What do I do?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"File::Fetch"
+is relatively smart about things. When trying to write a
+file to disk, it removes the "query parameters"
+(see the "output_file" method for details) from
+the file name before creating it. In most cases this
+suffices.</p>
+<p style="margin-left:9%; margin-top: 1em">If you have any
+other characters you need to escape, please install the
+"URI::Escape" module from CPAN, and
+pre−encode your URI before passing it to
+"File::Fetch". You can read about the details of
+URIs and URI encoding here:</p>
+<p style="margin-left:9%; margin-top: 1em">&lt;https://datatracker.ietf.org/doc/html/rfc2396&gt;</p>
+<h2>TODO
+<a name="TODO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Implement
+$PREFER_BIN</p>
+<p style="margin-left:14%;">To indicate to rather use
+commandline tools than modules</p>
+<h2>BUG REPORTS
+<a name="BUG REPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please report
+bugs or other issues to
+&lt;bug−file−fetch@rt.cpan.org&lt;gt&gt;.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module by
+Jos Boumans &lt;kane@cpan.org&gt;.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you may redistribute and/or modify it under
+the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

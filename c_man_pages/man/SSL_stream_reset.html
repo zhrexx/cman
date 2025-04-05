@@ -1,0 +1,196 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_STREAM_RESET</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_STREAM_RESET</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_stream_reset
+− reset a QUIC stream</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+typedef struct ssl_stream_reset_args_st { <br/>
+uint64_t quic_error_code; <br/>
+} SSL_STREAM_RESET_ARGS; <br/>
+int SSL_stream_reset(SSL *ssl, <br/>
+const SSL_STREAM_RESET_ARGS *args, <br/>
+size_t args_len);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_stream_reset()</b> function resets the send part of a
+QUIC stream when called on a QUIC stream SSL object, or on a
+QUIC connection SSL object with a default stream
+attached.</p>
+<p style="margin-left:9%; margin-top: 1em">If <i>args</i>
+is non−NULL, <i>args_len</i> must be set to
+sizeof(*args).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>quic_error_code</i>
+is an application−specified error code, which must be
+in the range [0, 2**62−1]. If <i>args</i> is NULL, a
+value of 0 is used.</p>
+<p style="margin-left:9%; margin-top: 1em">Resetting a
+stream indicates to an application that the sending part of
+the stream is terminating abnormally. When a stream is
+reset, the implementation does not guarantee that any data
+already passed to <b>SSL_write</b>(3) will be received by
+the peer, and data already passed to <b>SSL_write</b>(3) but
+not yet transmitted may or may not be discarded. As such,
+you should only reset a stream when the information
+transmitted on the stream no longer matters, for example due
+to an error condition.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+cannot be called on a unidirectional stream initiated by the
+peer, as only the sending side of a stream can initiate a
+stream reset.</p>
+<p style="margin-left:9%; margin-top: 1em">It is also
+possible to trigger a stream reset by calling
+<b>SSL_free</b>(3); see the documentation for
+<b>SSL_free</b>(3) for details.</p>
+<p style="margin-left:9%; margin-top: 1em">The receiving
+part of the stream (for bidirectional streams) continues to
+function normally.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function
+corresponds to the QUIC <b>RESET_STREAM</b> frame.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns 1 on
+success and 0 on failure.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+fails if called on a QUIC connection SSL object without a
+default stream attached, or on a non−QUIC SSL
+object.</p>
+<p style="margin-left:9%; margin-top: 1em">After the first
+call to this function succeeds for a given stream,
+subsequent calls succeed but are ignored. The application
+error code used is that passed to the first successful call
+to this function.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_free</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_stream_reset()</b>
+was added in OpenSSL 3.2.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2002−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

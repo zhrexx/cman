@@ -1,0 +1,222 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_CONV_FROM_UTF8_FUNCTION</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_CONV_FROM_UTF8_FUNCTION</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#DEPRECATED">DEPRECATED</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_CONV_FROM_UTF8_FUNCTION
+− convert data from UTF8 to host encoding</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+conv_callback(char *ptr, size_t length);</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle,
+CURLOPT_CONV_FROM_UTF8_FUNCTION, <br/>
+conv_callback);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a pointer
+to your callback function, which should match the prototype
+shown above.</p>
+<p style="margin-left:9%; margin-top: 1em">Applies to
+non−ASCII platforms. <i>curl_version_info(3)</i>
+returns the CURL_VERSION_CONV feature bit set if this option
+is provided.</p>
+<p style="margin-left:9%; margin-top: 1em">The data to be
+converted is in a buffer pointed to by the <i>ptr</i>
+parameter. The amount of data to convert is indicated by the
+<i>length</i> parameter. The converted data overlays the
+input data in the buffer pointed to by the ptr parameter.
+<i>CURLE_OK</i> must be returned upon successful conversion.
+A CURLcode return value defined by curl.h, such as
+<i>CURLE_CONV_FAILED</i>, should be returned if an error was
+encountered.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>CURLOPT_CONV_FROM_UTF8_FUNCTION(3)</i>
+converts to host encoding from UTF8 encoding. It is required
+only for SSL processing.</p>
+<p style="margin-left:9%; margin-top: 1em">If you set a
+callback pointer to NULL, or do not set it at all, the
+built−in libcurl iconv functions are used. If
+HAVE_ICONV was not defined when libcurl was built, and no
+callback has been established, the conversion returns the
+CURLE_CONV_REQD error code.</p>
+<p style="margin-left:9%; margin-top: 1em">If HAVE_ICONV is
+defined, CURL_ICONV_CODESET_OF_HOST must also be defined.
+For example: <br/>
+#define CURL_ICONV_CODESET_OF_HOST "IBM-1047"</p>
+<p style="margin-left:9%; margin-top: 1em">The iconv code
+in libcurl defaults the network and UTF8 codeset names as
+follows: <br/>
+#define CURL_ICONV_CODESET_OF_NETWORK
+"ISO8859-1"</p>
+<p style="margin-left:9%; margin-top: 1em">#define
+CURL_ICONV_CODESET_FOR_UTF8 "UTF-8"</p>
+<p style="margin-left:9%; margin-top: 1em">You need to
+override these definitions if they are different on your
+system.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">static CURLcode
+my_conv_from_utf8_to_ebcdic(char *buffer, size_t length)
+<br/>
+{ <br/>
+int rc = 0; <br/>
+/* in-place convert ’buffer’ from UTF-8 to
+EBCDIC */ <br/>
+if(rc == 0) { <br/>
+/* success */ <br/>
+return CURLE_OK; <br/>
+} <br/>
+else { <br/>
+return CURLE_CONV_FAILED; <br/>
+} <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl = curl_easy_init(); <br/>
+curl_easy_setopt(curl, CURLOPT_CONV_FROM_UTF8_FUNCTION, <br/>
+my_conv_from_utf8_to_ebcdic); <br/>
+}</p>
+<h2>DEPRECATED
+<a name="DEPRECATED"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Not available
+and deprecated since 7.82.0.</p>
+<p style="margin-left:9%; margin-top: 1em">Available only
+if <b>CURL_DOES_CONVERSIONS</b> was defined when libcurl was
+built.</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.15.4</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLE_OK
+if the option is supported, and CURLE_UNKNOWN_OPTION if
+not.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_CONV_FROM_NETWORK_FUNCTION</b>(3),
+<b>CURLOPT_CONV_TO_NETWORK_FUNCTION</b>(3)</p>
+<hr/>
+</body>
+</html>

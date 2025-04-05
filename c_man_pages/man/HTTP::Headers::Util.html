@@ -1,0 +1,218 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:13 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>HTTP::Headers::Util</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">HTTP::Headers::Util</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">HTTP::Headers::Util
+− Header value parsing utility functions</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version 6.46</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+HTTP::Headers::Util qw(split_header_words); <br/>
+@values =
+split_header_words($h−&gt;header("Content−Type"));</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides a few functions that helps parsing and construction
+of valid HTTP header values. None of the functions are
+exported by default.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions are available: <br/>
+split_header_words( @header_values )</p>
+<p style="margin-left:14%;">This function will parse the
+header values given as argument into a list of anonymous
+arrays containing key/value pairs. The function knows how to
+deal with ",", ";" and "=" as
+well as quoted values after "=". A list of space
+separated tokens are parsed as if they were separated by
+";".</p>
+<p style="margin-left:14%; margin-top: 1em">If the
+@header_values passed as argument contains multiple values,
+then they are treated as if they were a single value
+separated by comma ",".</p>
+<p style="margin-left:14%; margin-top: 1em">This means that
+this function is useful for parsing header fields that
+follow this syntax (BNF as from the HTTP/1.1 specification,
+but we relax the requirement for tokens).</p>
+<p style="margin-left:14%; margin-top: 1em">headers =
+#header <br/>
+header = (token | parameter) *( [";"] (token |
+parameter)) <br/>
+token = 1*&lt;any CHAR except CTLs or separators&gt; <br/>
+separators = "(" | ")" |
+"&lt;" | "&gt;" | "@" <br/>
+| "," | ";" | ":" |
+"\" | &lt;"&gt; <br/>
+| "/" | "[" | "]" |
+"?" | "=" <br/>
+| "{" | "}" | SP | HT <br/>
+quoted−string = ( &lt;"&gt; *(qdtext |
+quoted−pair ) &lt;"&gt; ) <br/>
+qdtext = &lt;any TEXT except &lt;"&gt;&gt; <br/>
+quoted−pair = "\" CHAR <br/>
+parameter = attribute "=" value <br/>
+attribute = token <br/>
+value = token | quoted−string</p>
+<p style="margin-left:14%; margin-top: 1em">Each
+<i>header</i> is represented by an anonymous array of
+key/value pairs. The keys will be all be forced to lower
+case. The value for a simple token (not part of a parameter)
+is "undef". Syntactically incorrect headers will
+not necessarily be parsed as you would want.</p>
+<p style="margin-left:14%; margin-top: 1em">This is easier
+to describe with some examples:</p>
+<p style="margin-left:14%; margin-top: 1em">split_header_words('foo="bar";
+port="80,81"; DISCARD, BAR=baz'); <br/>
+split_header_words('text/html;
+charset="iso−8859−1"'); <br/>
+split_header_words('Basic
+realm="\\"foo\\\\bar\\""');</p>
+<p style="margin-left:14%; margin-top: 1em">will return</p>
+<p style="margin-left:14%; margin-top: 1em">[foo=&gt;'bar',
+port=&gt;'80,81', discard=&gt; undef], [bar=&gt;'baz' ] <br/>
+['text/html' =&gt; undef, charset =&gt;
+'iso−8859−1'] <br/>
+[basic =&gt; undef, realm =&gt;
+"\"foo\\bar\""]</p>
+<p style="margin-left:14%; margin-top: 1em">If you don't
+want the function to convert tokens and attribute keys to
+lower case you can call it as
+"_split_header_words" instead (with a leading
+underscore).</p>
+<p style="margin-left:9%;">join_header_words( @arrays )</p>
+<p style="margin-left:14%;">This will do the opposite of
+the conversion done by <b>split_header_words()</b>. It takes
+a list of anonymous arrays as arguments (or a list of
+key/value pairs) and produces a single header value.
+Attribute values are quoted if needed.</p>
+<p style="margin-left:14%; margin-top: 1em">Example:</p>
+<p style="margin-left:14%; margin-top: 1em">join_header_words(["text/plain"
+=&gt; undef, charset =&gt; "iso−8859/1"]);
+<br/>
+join_header_words("text/plain" =&gt; undef,
+charset =&gt; "iso−8859/1");</p>
+<p style="margin-left:14%; margin-top: 1em">will both
+return the string:</p>
+<p style="margin-left:14%; margin-top: 1em">text/plain;
+charset="iso−8859/1"</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Gisle Aas
+&lt;gisle@activestate.com&gt;</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 1994 by Gisle Aas.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

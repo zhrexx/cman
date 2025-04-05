@@ -1,0 +1,368 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:04 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::AsyncSubtest</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::AsyncSubtest</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#CONSTRUCTION">CONSTRUCTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#SIMPLE ACCESSORS">SIMPLE ACCESSORS</a><br/>
+<a href="#INTERFACE">INTERFACE</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::AsyncSubtest
+− Object representing an async subtest.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Regular subtests
+have a limited scope, they start, events are generated, then
+they close and send an Test2::Event::Subtest event. This is
+a problem if you want the subtest to keep receiving events
+while other events are also being generated. This class
+implements subtests that stay open until you decide to close
+them.</p>
+<p style="margin-left:9%; margin-top: 1em">This is mainly
+useful for tools that start a subtest in one process and
+then spawn children. In many cases it is nice to let the
+parent process continue instead of waiting on the
+children.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::AsyncSubtest; <br/>
+my $ast = Test2::AsyncSubtest−&gt;new(name =&gt; foo);
+<br/>
+$ast−&gt;run(sub { <br/>
+ok(1, "Event in parent" ); <br/>
+}); <br/>
+ok(1, "Event outside of subtest"); <br/>
+$ast−&gt;run_fork(sub { <br/>
+ok(1, "Event in child process"); <br/>
+}); <br/>
+... <br/>
+$ast−&gt;finish; <br/>
+done_testing;</p>
+<h2>CONSTRUCTION
+<a name="CONSTRUCTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">my $ast =
+Test2::AsyncSubtest−&gt;new( ... ); <br/>
+name =&gt; $name (required)</p>
+<p style="margin-left:14%;">Name of the subtest. This
+construction argument is required.</p>
+<p style="margin-left:9%;">send_to =&gt; $hub
+(optional)</p>
+<p style="margin-left:14%;">Hub to which the final subtest
+event should be sent. This must be an instance of Test2::Hub
+or a subclass. If none is specified then the current top hub
+will be used.</p>
+<p style="margin-left:9%;">trace =&gt; $trace
+(optional)</p>
+<p style="margin-left:14%;">File/Line to which errors
+should be attributed. This must be an instance of
+Test2::Util::Trace. If none is specified then the file/line
+where the constructor was called will be used.</p>
+<p style="margin-left:9%;">hub =&gt; $hub (optional)</p>
+<p style="margin-left:14%;">Use this to specify a hub the
+subtest should use. By default a new hub is generated. This
+must be an instance of Test2::AsyncSubtest::Hub.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>SIMPLE ACCESSORS
+<a name="SIMPLE ACCESSORS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$bool =
+$ast−&gt;active</p>
+<p style="margin-left:14%;">True if the subtest is active.
+The subtest is active if its hub appears in the global hub
+stack. This is true when "$ast−&gt;run(...)"
+us running.</p>
+<p style="margin-left:9%;">$arrayref =
+$ast−&gt;children</p>
+<p style="margin-left:14%;">Get an arrayref of child
+processes/threads. Numerical items are PIDs, blessed items
+are threads instances.</p>
+<p style="margin-left:9%;">$arrayref =
+$ast−&gt;events</p>
+<p style="margin-left:14%;">Get an arrayref of events that
+have been sent to the subtests hub.</p>
+<p style="margin-left:9%;">$bool =
+$ast−&gt;finished</p>
+<p style="margin-left:14%;">True if finished() has already
+been called.</p>
+<p style="margin-left:9%;">$hub = $ast−&gt;hub</p>
+<p style="margin-left:14%;">The hub created for the
+subtest.</p>
+<p style="margin-left:9%;">$int = $ast−&gt;id</p>
+<p style="margin-left:14%;">Attach/Detach counter. Used
+internally, not useful to users.</p>
+<p style="margin-left:9%;">$str = $ast−&gt;name</p>
+<p style="margin-left:14%;">Name of the subtest.</p>
+<p style="margin-left:9%;">$pid = $ast−&gt;pid</p>
+<p style="margin-left:14%;">PID in which the subtest was
+created.</p>
+<p style="margin-left:9%;">$tid = $ast−&gt;tid</p>
+<p style="margin-left:14%;">Thread ID in which the subtest
+was created.</p>
+<p style="margin-left:9%;">$hub =
+$ast−&gt;send_to</p>
+<p style="margin-left:14%;">Hub to which the final subtest
+event should be sent.</p>
+<p style="margin-left:9%;">$arrayref =
+$ast−&gt;stack</p>
+<p style="margin-left:14%;">Stack of async subtests at the
+time this one was created. This is mainly for internal
+use.</p>
+<p style="margin-left:9%;">$trace =
+$ast−&gt;trace</p>
+<p style="margin-left:14%;">Test2::Util::Trace instance
+used for error reporting.</p>
+<h3>INTERFACE
+<a name="INTERFACE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$ast−&gt;attach($id)</p>
+<p style="margin-left:14%;">Attach a subtest in a
+child/process to the original.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+"my $id = $ast−&gt;cleave" must have been
+called in the parent process/thread before the child was
+started, the id it returns must be used in the call to
+"$ast−&gt;attach($id)"</p>
+<p style="margin-left:9%;">$id = $ast−&gt;cleave</p>
+<p style="margin-left:14%;">Prepare a slot for a child
+process/thread to attach. This must be called BEFORE the
+child process or thread is started. The ID returned is used
+by attach().</p>
+<p style="margin-left:14%; margin-top: 1em">This must only
+be called in the original process/thread.</p>
+<p style="margin-left:9%;">$ctx =
+$ast−&gt;context</p>
+<p style="margin-left:14%;">Get an Test2::API::Context
+instance that can be used to send events to the context in
+which the hub was created. This is not a canonical context,
+you should not call "$ctx−&gt;release" on
+it.</p>
+<p style="margin-left:9%;">$ast−&gt;detach</p>
+<p style="margin-left:14%;">Detach from the parent in a
+child process/thread. This should be called just before the
+child exits.</p>
+<p style="margin-left:9%;">$ast−&gt;finish <br/>
+$ast−&gt;finish(%options)</p>
+<p style="margin-left:14%;">Finish the subtest, wait on
+children, and send the final subtest event.</p>
+<p style="margin-left:14%; margin-top: 1em">This must only
+be called in the original process/thread.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+This calls "$ast−&gt;wait".</p>
+<p style="margin-left:14%; margin-top: 1em">These are the
+options: <br/>
+collapse =&gt; 1</p>
+<p style="margin-left:19%;">This intelligently allows a
+subtest to be empty.</p>
+<p style="margin-left:19%; margin-top: 1em">If no events
+bump the test count then the subtest no final plan will be
+added. The subtest will not be considered a failure
+(normally an empty subtest is a failure).</p>
+<p style="margin-left:19%; margin-top: 1em">If there are no
+events at all the subtest will be collapsed into an
+Test2::Event::Ok event.</p>
+<p style="margin-left:14%;">silent =&gt; 1</p>
+<p style="margin-left:19%;">This will prevent finish from
+generating a final Test2::Event::Subtest event. This
+effectively ends the subtest without it effecting the parent
+subtest (or top level test).</p>
+<p style="margin-left:14%;">no_plan =&gt; 1</p>
+<p style="margin-left:19%;">This will prevent a final plan
+from being added to the subtest for you when none is
+directly specified.</p>
+<p style="margin-left:14%;">skip =&gt;
+"reason"</p>
+<p style="margin-left:19%;">This will issue an
+Test2::Event::Skip instead of a subtest. This will throw an
+exception if any events have been seen, or if state implies
+events have occurred.</p>
+<p style="margin-left:9%;">$out = $ast−&gt;fork</p>
+<p style="margin-left:14%;">This is a slightly higher level
+interface to fork. Running it will fork your code
+in−place just like fork(). It will return a pid in the
+parent, and an Test2::Util::Guard instance in the child. An
+exception will be thrown if fork fails.</p>
+<p style="margin-left:14%; margin-top: 1em">It is
+recommended that you use "$ast−&gt;run_fork(sub {
+... })" instead.</p>
+<p style="margin-left:9%;">$bool =
+$ast−&gt;pending</p>
+<p style="margin-left:14%;">True if there are child
+processes, threads, or subtests that depend on this one.</p>
+<p style="margin-left:9%;">$bool = $ast−&gt;ready</p>
+<p style="margin-left:14%;">This is essentially
+"!$ast−&gt;pending".</p>
+<p style="margin-left:9%;">$ast−&gt;run(sub { ...
+})</p>
+<p style="margin-left:14%;">Run the provided codeblock
+inside the subtest. This will push the subtest hub onto the
+stack, run the code, then pop the hub off the stack.</p>
+<p style="margin-left:9%;">$pid =
+$ast−&gt;run_fork(sub { ... })</p>
+<p style="margin-left:14%;">Same as
+"$ast−&gt;run()", except that the codeblock
+is run in a child process.</p>
+<p style="margin-left:14%; margin-top: 1em">You do not need
+to directly call wait($pid), that will be done for you when
+"$ast−&gt;wait", or
+"$ast−&gt;finish" are called.</p>
+<p style="margin-left:9%;">my $thr =
+$ast−&gt;run_thread(sub { ... });</p>
+<p style="margin-left:14%;"><b>** DISCOURAGED **</b>
+Threads cause problems. This method remains for anyone who
+REALLY wants it, but it is no longer supported. Tests for
+this functionality do not even run unless the AUTHOR_TESTING
+or T2_DO_THREAD_TESTS env vars are enabled.</p>
+<p style="margin-left:14%; margin-top: 1em">Same as
+"$ast−&gt;run()", except that the codeblock
+is run in a child thread.</p>
+<p style="margin-left:14%; margin-top: 1em">You do not need
+to directly call "$thr−&gt;join", that is
+done for you when "$ast−&gt;wait", or
+"$ast−&gt;finish" are called.</p>
+<p style="margin-left:9%;">$passing =
+$ast−&gt;start</p>
+<p style="margin-left:14%;">Push the subtest hub onto the
+stack. Returns the current pass/fail status of the
+subtest.</p>
+<p style="margin-left:9%;">$ast−&gt;stop</p>
+<p style="margin-left:14%;">Pop the subtest hub off the
+stack. Returns the current pass/fail status of the
+subtest.</p>
+<p style="margin-left:9%;">$ast−&gt;wait</p>
+<p style="margin-left:14%;">Wait on all threads/processes
+that were started using "$ast−&gt;fork",
+"$ast−&gt;run_fork", or
+"$ast−&gt;run_thread".</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2−AsyncSubtest can be found at
+<i>https://github.com/Test−More/test−more/</i>.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist7@gmail.com&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<i>http://dev.perl.org/licenses/</i></p>
+<hr/>
+</body>
+</html>

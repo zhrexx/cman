@@ -1,0 +1,366 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:28 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>resizeterm</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">resizeterm</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#resizeterm">resizeterm</a><br/>
+<a href="#resize_term">resize_term</a><br/>
+<a href="#is_term_resized">is_term_resized</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#PORTABILITY">PORTABILITY</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>is_term_resized</b>,
+<b>resize_term</b>, <b>resizeterm</b> − manage the
+terminal dimensions understood by <i>curses</i></p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i><b>#include
+&lt;curses.h&gt;</b></i></p>
+<p style="margin-left:9%; margin-top: 1em"><i><b>bool
+is_term_resized(int</b> lines</i><b>, int</b>
+<i>columns</i><b>); <br/>
+int resize_term(int</b> <i>lines</i><b>, int</b>
+<i>columns</i><b>); <br/>
+int resizeterm(int</b> <i>lines</i><b>, int</b>
+<i>columns</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This is an
+extension to the <i>curses</i> library. It provides callers
+with a hook into the <i>ncurses</i> data to resize windows,
+primarily for use by programs running in an X Window
+terminal (e.g., xterm) when the terminal’s screen size
+is changed by the user:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p><i>curses</i> windows cannot extend outside the screen.
+If the terminal is shrunk, <i>curses</i> windows must be
+shrunk to fit.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>If the terminal is stretched, rows and/or columns can be
+added to existing windows. The added cells should match the
+current attributes of the windows.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">If the calling
+program has not set up a handler for <b>SIGWINCH</b> when it
+initializes <i>ncurses</i> (e.g., using <b>initscr</b>(3X)
+or <b>newterm</b>(3X)), then <i>ncurses</i> sets a handler
+for <b>SIGWINCH</b> which notifies the library when a
+window-size event has occurred. The library checks for this
+notification</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">when reading input data,</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>when implicitly resuming program mode (e.g., between
+<b>endwin</b>(3X) and <b>wrefresh</b>(3X)), and</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>when explicitly resuming program mode in
+<b>restartterm</b>(3X).</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">When the library
+has found that the terminal’s window-size has changed,
+it calls <b>resizeterm</b> to update its data
+structures.</p>
+<p style="margin-left:9%; margin-top: 1em">An application
+which establishes its own <b>SIGWINCH</b> handler can call
+<b>resizeterm</b>, but in that case, the library will not
+see <b>SIGWINCH</b>, and proper layout will rely upon the
+application.</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<h3>resizeterm
+<a name="resizeterm"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The function
+<b>resizeterm</b> resizes the standard and current windows
+(i.e., <b>stdscr</b> and <b>curscr</b>) to the specified
+dimensions, and adjusts other bookkeeping data used by the
+<i>ncurses</i> library that record the window dimensions
+such as the <b>LINES</b> and <b>COLS</b> variables.</p>
+<h3>resize_term
+<a name="resize_term"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Most of the work
+for <b>resizeterm</b> is done by the inner function
+<b>resize_term</b>. The outer function <b>resizeterm</b>
+adds bookkeeping for the <b>SIGWINCH</b> handler, as well as
+repainting the soft-key area (see <b>slk_touch</b>(3X)).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>resize_term</b> function attempts to resize all windows.
+This helps with simple applications. However:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">It is not possible to
+automatically resize pads.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Applications which have complicated layouts should check
+for <b>KEY_RESIZE</b> returned from <b>wgetch</b>, and
+adjust their layout, e.g., using <b>wresize</b> and
+<b>mvwin</b>, or by recreating the windows.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">When resizing
+windows, <b>resize_term</b> recursively adjusts subwindows,
+keeping them within the updated parent window’s
+limits. If a top-level window happens to extend to the
+screen’s limits, then on resizing the window,
+<b>resize_term</b> will keep the window extending to the
+corresponding limit, regardless of whether the screen has
+shrunk or grown.</p>
+<h3>is_term_resized
+<a name="is_term_resized"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A support
+function <b>is_term_resized</b> is provided so that
+applications can check if the <b>resize_term</b> function
+would modify the window structures. It returns <b>TRUE</b>
+if the windows would be modified, and <b>FALSE</b>
+otherwise.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Except as noted,
+these functions return the integer <b>ERR</b> upon failure
+and <b>OK</b> on success. They will fail if either of the
+dimensions are less than or equal to zero, or if an error
+occurs while (re)allocating memory for the windows.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">While these
+functions are intended to be used to support a signal
+handler (i.e., for <b>SIGWINCH</b>), care should be taken to
+avoid invoking them in a context where <b>malloc</b> or
+<b>realloc</b> may have been interrupted, since it uses
+those functions.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<i>ncurses</i> is configured to supply its own
+<b>SIGWINCH</b> handler,</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">on receipt of a <b>SIGWINCH</b>,
+the handler sets a flag</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>which is tested in <b>wgetch</b>(3X),
+<b>doupdate</b>(3X) and <b>restartterm</b>(3X),</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>in turn, calling the <b>resizeterm</b> function,</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>which <b>ungetch</b>’s a <b>KEY_RESIZE</b> which
+will be read on the next call to <b>wgetch</b>.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+<b>KEY_RESIZE</b> alerts an application that the screen size
+has changed, and that it should repaint special features
+such as pads that cannot be done automatically.</p>
+<p style="margin-left:14%; margin-top: 1em">Calling
+<b>resizeterm</b> or <b>resize_term</b> directly from a
+signal handler is unsafe. This indirect method is used to
+provide a safe way to resize the <i>ncurses</i> data
+structures.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+environment variables <i>LINES</i> or <i>COLUMNS</i> are
+set, this overrides the library’s use of the window
+size obtained from the operating system. Thus, even if a
+<b>SIGWINCH</b> is received, no screen size change may be
+recorded.</p>
+<h2>PORTABILITY
+<a name="PORTABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">It is possible
+to resize the screen with SVr4 <i>curses</i>, by</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="44%">
+<p style="margin-top: 1em">exiting <i>curses</i> with
+<b>endwin</b>(3X) and</p></td>
+<td width="42%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="44%">
+<p>resuming using <b>refresh</b>(3X).</p></td>
+<td width="42%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Doing that
+clears the screen and is visually distracting.</p>
+<p style="margin-left:9%; margin-top: 1em">This extension
+of <i>ncurses</i> was introduced in mid-1995. It was adopted
+in NetBSD <i>curses</i> (2001) and PDCurses (2003).</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Thomas Dickey
+(from an equivalent function written in 1988 for BSD
+<i>curses</i>)</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curs_getch</b>(3X),
+<b>curs_variables</b>(3X), <b>wresize</b>(3X)</p>
+<hr/>
+</body>
+</html>

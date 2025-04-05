@@ -1,0 +1,362 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:09 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>HACKING</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">HACKING</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#ABOUT">ABOUT</a><br/>
+<a href="#Getting Started">Getting Started</a><br/>
+<a href="#Formatting">Formatting</a><br/>
+<a href="#perltidy">perltidy</a><br/>
+<a href="#Tests and Coverage">Tests and Coverage</a><br/>
+<a href="#Writing for Compatibility">Writing for Compatibility</a><br/>
+<a href="#Use TAP::Object">Use TAP::Object</a><br/>
+<a href="#Exception Handling">Exception Handling</a><br/>
+<a href="#Deprecation cycle">Deprecation cycle</a><br/>
+<a href="#Documentation">Documentation</a><br/>
+<a href="#Pod Commands">Pod Commands</a><br/>
+<a href="#Pod Formatting Codes">Pod Formatting Codes</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#DEVELOPER DOCS/NOTES">DEVELOPER DOCS/NOTES</a><br/>
+<a href="#Committing to Subversion">Committing to Subversion</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">HACKING.pod
+− contributing to TAP::Harness</p>
+<h2>ABOUT
+<a name="ABOUT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This is the
+guide for TAP::Harness internals contributors (developers,
+testers, documenters.)</p>
+<p style="margin-left:9%; margin-top: 1em">If you are
+looking for more information on how to <i>use</i>
+TAP::Harness, you probably want
+&lt;http://testanything.org/testing−with−tap/perl/tap−parser−cookbook.html&gt;
+instead.</p>
+<h2>Getting Started
+<a name="Getting Started"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the
+resources section in <i>META.yml</i> or <i>Build.PL</i> for
+links to the project mailing list, bug tracker, svn
+repository, etc.</p>
+<p style="margin-left:9%; margin-top: 1em">For ease of
+reference, at the time of writing the SVN repository was
+at:</p>
+<p style="margin-left:9%; margin-top: 1em">http://svn.hexten.net/tapx</p>
+<p style="margin-left:9%; margin-top: 1em">To get the
+latest version of trunk:</p>
+<p style="margin-left:9%; margin-top: 1em">git clone
+git://github.com/Perl−Toolchain−Gang/Test−Harness.git</p>
+<p style="margin-left:9%; margin-top: 1em">For best
+results, read the rest of this file, check RT for bugs which
+scratch your itch, join the mailing list, etc.</p>
+<h2>Formatting
+<a name="Formatting"></a>
+</h2>
+<h3>perltidy
+<a name="perltidy"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The project
+comes with a ".perltidyrc", which perltidy will
+automatically use if the project root is your working
+directory. This is setup by default to read and write the
+perl code on a pipe. To configure your editor:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="4%">
+<p>vim</p></td>
+<td width="82%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">In
+".vimrc", you can add the following lines:</p>
+<p style="margin-left:14%; margin-top: 1em">nnoremap
+&lt;Leader&gt;pt :%!perltidy −q&lt;cr&gt; " only
+work in 'normal' mode <br/>
+vnoremap &lt;Leader&gt;pt :!perltidy −q&lt;cr&gt;
+" only work in 'visual' mode</p>
+<p style="margin-left:14%; margin-top: 1em">In other words,
+if your "Leader" is a backslash, you can type
+"\pt" to reformat the file using the
+".perltidyrc". If you are in visual mode
+(selecting lines with shift−v), then only the code you
+have currently have selected will be reformatted.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="7%">
+<p style="margin-top: 1em">emacs</p></td>
+<td width="79%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">For emacs, you
+can use this snippet from Sam Tregar
+(&lt;http://use.perl.org/˜samtregar/journal/30185&gt;):</p>
+<p style="margin-left:14%; margin-top: 1em">(defun
+perltidy−region () <br/>
+"Run perltidy on the current region." <br/>
+(interactive) <br/>
+(save−excursion <br/>
+(shell−command−on−region (point) (mark)
+"perltidy −q" nil t) <br/>
+(cperl−mode))) <br/>
+(defun perltidy−all () <br/>
+"Run perltidy on the current region." <br/>
+(interactive) <br/>
+(let ((p (point))) <br/>
+(save−excursion <br/>
+(shell−command−on−region (point−min)
+(point−max) "perltidy −q" nil t) <br/>
+) <br/>
+(goto−char p) <br/>
+(cperl−mode))) <br/>
+(global−set−key "\M−t"
+`perltidy−region) <br/>
+(global−set−key "\M−T"
+`perltidy−all)</p>
+<h2>Tests and Coverage
+<a name="Tests and Coverage"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">...</p>
+<h2>Writing for Compatibility
+<a name="Writing for Compatibility"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">...</p>
+<h2>Use TAP::Object
+<a name="Use TAP::Object"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TAP::Object is
+the common base class to all TAP::* modules, and should be
+for any that you write.</p>
+<h2>Exception Handling
+<a name="Exception Handling"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Exceptions
+should be raised with Carp:</p>
+<p style="margin-left:9%; margin-top: 1em">require Carp;
+<br/>
+Carp::croak("Unsupported syntax version:
+$version"); <br/>
+require Carp; <br/>
+Carp::confess("Unsupported syntax version:
+$version");</p>
+<h2>Deprecation cycle
+<a name="Deprecation cycle"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Any
+<i>documented</i> sub that needs to be changed or removed
+(and would therefore cause a backwards−compat issue)
+must go through a deprecation cycle to give developers a
+chance to adjust:</p>
+<p style="margin-left:9%; margin-top: 1em">1. Document the
+deprecation <br/>
+2. Carp a suitable message <br/>
+3. Release <br/>
+4. Change the code <br/>
+5. Release</p>
+<h2>Documentation
+<a name="Documentation"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+end−user and API documentation is all in the 'lib/'
+directory. In .pm files, the pod is "inline" to
+the code. See perlpod for more about pod.</p>
+<h3>Pod Commands
+<a name="Pod Commands"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">For
+compatibility's sake, we do not use the =head3 and =head4
+commands. <br/>
+"=head1 SECTION"</p>
+<p style="margin-left:14%;">Sections begin with an
+"=head1" command and are all−caps.</p>
+<p style="margin-left:14%; margin-top: 1em">NAME <br/>
+VERSION <br/>
+SYNOPSIS <br/>
+CONSTRUCTOR <br/>
+METHODS <br/>
+CLASS METHODS <br/>
+SOME OTHER SORT OF METHODS <br/>
+SEE ALSO</p>
+<p style="margin-left:9%;">"=head2 method"</p>
+<p style="margin-left:14%;">The "=head2" command
+documents a method. The name of the method should have no
+adornment (e.g. don't C&lt;method&gt; or C&lt;method($list,
+$of, $params)&gt;.)</p>
+<p style="margin-left:14%; margin-top: 1em">These sections
+should begin with a short description of what the method
+does, followed by one or more examples of usage. If needed,
+elaborate on the subtleties of the parameters and context
+after (and/or between) the example(s).</p>
+<p style="margin-left:14%; margin-top: 1em">=head2
+this_method <br/>
+This method does some blah blah blah. <br/>
+my @answer = $thing−&gt;this_method(@arguments); <br/>
+=head2 that_thing <br/>
+Returns true if the thing is true. <br/>
+if($thing−&gt;that_thing) { <br/>
+... <br/>
+}</p>
+<p style="margin-left:9%;">"=item parameter"</p>
+<p style="margin-left:14%;">Use "=item" commands
+for method arguments and parameters (and etc.) In most html
+pod formatters, these <i>do not</i> get added to the
+table−of−contents at the top of the page.</p>
+<h3>Pod Formatting Codes
+<a name="Pod Formatting Codes"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">L&lt;Some::Module&gt;</p>
+<p style="margin-left:14%;">Be careful of the wording of
+"L&lt;Some::Module&gt;". Older pod formatters
+would render this as "the Some::Module manpage",
+so it is best to either word your links as ""(see
+&lt;Some::Module&gt; for details.)"" or use the
+"explicit rendering" form of
+""&lt;Some::Module|Some::Module&gt;"".</p>
+<h3>VERSION
+<a name="VERSION"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The version
+numbers are updated by Perl::Version.</p>
+<h3>DEVELOPER DOCS/NOTES
+<a name="DEVELOPER DOCS/NOTES"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+"formats" are used with
+"=begin"/"=end" and "=for"
+commands for pod which is not part of the public
+end−user/API documentation. <br/>
+note</p>
+<p style="margin-left:14%;">Use this if you are uncertain
+about a change to some pod or think it needs work.</p>
+<p style="margin-left:14%; margin-top: 1em">=head2
+some_method <br/>
+... <br/>
+=for note <br/>
+This is either falsely documented or a bug −−
+see ...</p>
+<p style="margin-left:9%;">developer</p>
+<p style="margin-left:14%;">=begin developer <br/>
+Long−winded explanation of why some code is the way it
+is or various <br/>
+other subtleties which might incite head−scratching
+and WTF'ing. <br/>
+=end developer</p>
+<p style="margin-left:9%;">deprecated</p>
+<p style="margin-left:14%;">=for deprecated <br/>
+removed in 0.09, kill by ˜0.25</p>
+<h2>Committing to Subversion
+<a name="Committing to Subversion"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If you have
+commit access, please bear this in mind.</p>
+<p style="margin-left:9%; margin-top: 1em">Development is
+done either on trunk or a branch, as appropriate:</p>
+<p style="margin-left:9%; margin-top: 1em">If it's
+something that might be controversial, break the build or
+take a long time (more than a couple of weeks) to complete
+then it'd probably be appropriate to branch. Otherwise it
+can go in trunk.</p>
+<p style="margin-left:9%; margin-top: 1em">If in doubt
+discuss it on the mailing list before you commit.</p>
+<hr/>
+</body>
+</html>

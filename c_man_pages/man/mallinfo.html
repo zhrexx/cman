@@ -1,0 +1,438 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:17 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>mallinfo</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">mallinfo</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Program source">Program source</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">mallinfo,
+mallinfo2 − obtain memory allocation information</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;malloc.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>struct
+mallinfo mallinfo(void); <br/>
+struct mallinfo2 mallinfo2(void);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+return a copy of a structure containing information about
+memory allocations performed by <b>malloc</b>(3) and related
+functions. The structure returned by each function contains
+the same fields. However, the older function,
+<b>mallinfo</b>(), is deprecated since the type used for the
+fields is too small (see BUGS).</p>
+<p style="margin-left:9%; margin-top: 1em">Note that not
+all allocations are visible to these functions; see BUGS and
+consider using <b>malloc_info</b>(3) instead.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>mallinfo2</i> structure returned by <b>mallinfo2</b>() is
+defined as follows:</p>
+<p style="margin-left:14%; margin-top: 1em">struct
+mallinfo2 { <br/>
+size_t arena; /* Non−mmapped space allocated (bytes)
+*/ <br/>
+size_t ordblks; /* Number of free chunks */ <br/>
+size_t smblks; /* Number of free fastbin blocks */ <br/>
+size_t hblks; /* Number of mmapped regions */ <br/>
+size_t hblkhd; /* Space allocated in mmapped regions <br/>
+(bytes) */ <br/>
+size_t usmblks; /* See below */ <br/>
+size_t fsmblks; /* Space in freed fastbin blocks (bytes) */
+<br/>
+size_t uordblks; /* Total allocated space (bytes) */ <br/>
+size_t fordblks; /* Total free space (bytes) */ <br/>
+size_t keepcost; /* Top−most, releasable space (bytes)
+*/ <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>mallinfo</i> structure returned by the deprecated
+<b>mallinfo</b>() function is exactly the same, except that
+the fields are typed as <i>int</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The structure
+fields contain the following information:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><i>arena</i></p></td>
+<td width="3%"></td>
+<td width="78%">
+<p>The total amount of memory allocated by means other than
+<b>mmap</b>(2) (i.e., memory allocated on the heap). This
+figure includes both in-use blocks and blocks on the free
+list.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><i>ordblks</i></p></td>
+<td width="3%"></td>
+<td width="78%">
+<p>The number of ordinary (i.e., non-fastbin) free
+blocks.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><i>smblks</i></p></td>
+<td width="3%"></td>
+<td width="78%">
+<p>The number of fastbin free blocks (see
+<b>mallopt</b>(3)).</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><i>hblks</i></p></td>
+<td width="3%"></td>
+<td width="78%">
+<p>The number of blocks currently allocated using
+<b>mmap</b>(2). (See the discussion of
+<b>M_MMAP_THRESHOLD</b> in <b>mallopt</b>(3).)</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><i>hblkhd</i></p></td>
+<td width="3%"></td>
+<td width="78%">
+<p>The number of bytes in blocks currently allocated using
+<b>mmap</b>(2).</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><i>usmblks</i></p></td>
+<td width="3%"></td>
+<td width="78%">
+<p>This field is unused, and is always 0. Historically, it
+was the "highwater mark" for allocated
+space—that is, the maximum amount of space that was
+ever allocated (in bytes); this field was maintained only in
+nonthreading environments.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><i>fsmblks</i></p></td>
+<td width="3%"></td>
+<td width="78%">
+<p>The total number of bytes in fastbin free blocks.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><i>uordblks</i></p></td>
+<td width="3%"></td>
+<td width="78%">
+<p>The total number of bytes used by in-use
+allocations.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><i>fordblks</i></p></td>
+<td width="3%"></td>
+<td width="78%">
+<p>The total number of bytes in free blocks.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><i>keepcost</i></p></td>
+<td width="3%"></td>
+<td width="78%">
+<p>The total amount of releasable free space at the top of
+the heap. This is the maximum number of bytes that could
+ideally (i.e., ignoring page alignment restrictions, and so
+on) be released by <b>malloc_trim</b>(3).</p></td></tr>
+</table>
+<h2>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For an
+explanation of the terms used in this section, see
+<b>attributes</b>(7). <b><br/>
+mallinfo</b>()/ <b>mallinfo2</b>() would access some global
+internal objects. If modify them with non-atomically, may
+get inconsistent results. The identifier <i>mallopt</i> in
+<i>const:mallopt</i> mean that <b>mallopt</b>() would modify
+the global internal objects with atomics, that make sure
+<b>mallinfo</b>()/ <b>mallinfo2</b>() is safe enough, others
+modify with non-atomically maybe not.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">None.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>mallinfo</b>()</p>
+<p style="margin-left:18%;">glibc 2.0. SVID.</p>
+<p style="margin-left:9%;"><b>mallinfo2</b>()</p>
+<p style="margin-left:18%;">glibc 2.33.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Information
+is returned for only the main memory allocation area.</b>
+Allocations in other arenas are excluded. See
+<b>malloc_stats</b>(3) and <b>malloc_info</b>(3) for
+alternatives that include information about other
+arenas.</p>
+<p style="margin-left:9%; margin-top: 1em">The fields of
+the <i>mallinfo</i> structure that is returned by the older
+<b>mallinfo</b>() function are typed as <i>int</i>. However,
+because some internal bookkeeping values may be of type
+<i>long</i>, the reported values may wrap around zero and
+thus be inaccurate.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The program
+below employs <b>mallinfo2</b>() to retrieve memory
+allocation statistics before and after allocating and
+freeing some blocks of memory. The statistics are displayed
+on standard output.</p>
+<p style="margin-left:9%; margin-top: 1em">The first two
+command-line arguments specify the number and size of blocks
+to be allocated with <b>malloc</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The remaining
+three arguments specify which of the allocated blocks should
+be freed with <b>free</b>(3). These three arguments are
+optional, and specify (in order): the step size to be used
+in the loop that frees blocks (the default is 1, meaning
+free all blocks in the range); the ordinal position of the
+first block to be freed (default 0, meaning the first
+allocated block); and a number one greater than the ordinal
+position of the last block to be freed (default is one
+greater than the maximum block number). If these three
+arguments are omitted, then the defaults cause all allocated
+blocks to be freed.</p>
+<p style="margin-left:9%; margin-top: 1em">In the following
+example run of the program, 1000 allocations of 100 bytes
+are performed, and then every second allocated block is
+freed:</p>
+<p style="margin-left:14%; margin-top: 1em">$ <b>./a.out
+1000 100 2</b> <br/>
+============== Before allocating blocks ============== <br/>
+Total non−mmapped bytes (arena): 0 <br/>
+# of free chunks (ordblks): 1 <br/>
+# of free fastbin blocks (smblks): 0 <br/>
+# of mapped regions (hblks): 0 <br/>
+Bytes in mapped regions (hblkhd): 0 <br/>
+Max. total allocated space (usmblks): 0 <br/>
+Free bytes held in fastbins (fsmblks): 0 <br/>
+Total allocated space (uordblks): 0 <br/>
+Total free space (fordblks): 0 <br/>
+Topmost releasable block (keepcost): 0 <br/>
+============== After allocating blocks ============== <br/>
+Total non−mmapped bytes (arena): 135168 <br/>
+# of free chunks (ordblks): 1 <br/>
+# of free fastbin blocks (smblks): 0 <br/>
+# of mapped regions (hblks): 0 <br/>
+Bytes in mapped regions (hblkhd): 0 <br/>
+Max. total allocated space (usmblks): 0 <br/>
+Free bytes held in fastbins (fsmblks): 0 <br/>
+Total allocated space (uordblks): 104000 <br/>
+Total free space (fordblks): 31168 <br/>
+Topmost releasable block (keepcost): 31168 <br/>
+============== After freeing blocks ============== <br/>
+Total non−mmapped bytes (arena): 135168 <br/>
+# of free chunks (ordblks): 501 <br/>
+# of free fastbin blocks (smblks): 0 <br/>
+# of mapped regions (hblks): 0 <br/>
+Bytes in mapped regions (hblkhd): 0 <br/>
+Max. total allocated space (usmblks): 0 <br/>
+Free bytes held in fastbins (fsmblks): 0 <br/>
+Total allocated space (uordblks): 52000 <br/>
+Total free space (fordblks): 83168 <br/>
+Topmost releasable block (keepcost): 31168</p>
+<h3>Program source
+<a name="Program source"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;malloc.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;string.h&gt; <br/>
+static void <br/>
+display_mallinfo2(void) <br/>
+{ <br/>
+struct mallinfo2 mi; <br/>
+mi = mallinfo2(); <br/>
+printf("Total non−mmapped bytes (arena):
+%zu\n", mi.arena); <br/>
+printf("# of free chunks (ordblks): %zu\n",
+mi.ordblks); <br/>
+printf("# of free fastbin blocks (smblks): %zu\n",
+mi.smblks); <br/>
+printf("# of mapped regions (hblks): %zu\n",
+mi.hblks); <br/>
+printf("Bytes in mapped regions (hblkhd): %zu\n",
+mi.hblkhd); <br/>
+printf("Max. total allocated space (usmblks):
+%zu\n", mi.usmblks); <br/>
+printf("Free bytes held in fastbins (fsmblks):
+%zu\n", mi.fsmblks); <br/>
+printf("Total allocated space (uordblks): %zu\n",
+mi.uordblks); <br/>
+printf("Total free space (fordblks): %zu\n",
+mi.fordblks); <br/>
+printf("Topmost releasable block (keepcost):
+%zu\n", mi.keepcost); <br/>
+} <br/>
+int <br/>
+main(int argc, char *argv[]) <br/>
+{ <br/>
+#define MAX_ALLOCS 2000000 <br/>
+char *alloc[MAX_ALLOCS]; <br/>
+size_t blockSize, numBlocks, freeBegin, freeEnd, freeStep;
+<br/>
+if (argc &lt; 3 || strcmp(argv[1],
+"−−help") == 0) { <br/>
+fprintf(stderr, "%s num−blocks block−size
+[free−step " <br/>
+"[start−free [end−free]]]\n",
+argv[0]); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+numBlocks = atoi(argv[1]); <br/>
+blockSize = atoi(argv[2]); <br/>
+freeStep = (argc &gt; 3) ? atoi(argv[3]) : 1; <br/>
+freeBegin = (argc &gt; 4) ? atoi(argv[4]) : 0; <br/>
+freeEnd = (argc &gt; 5) ? atoi(argv[5]) : numBlocks; <br/>
+printf("============== Before allocating blocks
+==============\n"); <br/>
+display_mallinfo2(); <br/>
+for (size_t j = 0; j &lt; numBlocks; j++) { <br/>
+if (numBlocks &gt;= MAX_ALLOCS) { <br/>
+fprintf(stderr, "Too many allocations\n"); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+alloc[j] = malloc(blockSize); <br/>
+if (alloc[j] == NULL) { <br/>
+perror("malloc"); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+} <br/>
+printf("\n============== After allocating blocks
+==============\n"); <br/>
+display_mallinfo2(); <br/>
+for (size_t j = freeBegin; j &lt; freeEnd; j += freeStep)
+<br/>
+free(alloc[j]); <br/>
+printf("\n============== After freeing blocks
+==============\n"); <br/>
+display_mallinfo2(); <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>mmap</b>(2),
+<b>malloc</b>(3), <b>malloc_info</b>(3),
+<b>malloc_stats</b>(3), <b>malloc_trim</b>(3),
+<b>mallopt</b>(3)</p>
+<hr/>
+</body>
+</html>

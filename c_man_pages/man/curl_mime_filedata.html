@@ -1,0 +1,197 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:31 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_mime_filedata</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_mime_filedata</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_mime_filedata
+− set a mime part's body data from a file contents</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_mime_filedata(curl_mimepart *part, <br/>
+const char *filename);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>curl_mime_filedata(3)</i>
+sets a mime part's body content from the named file's
+contents. This is an alternative to <i>curl_mime_data(3)</i>
+for setting data to a mime part.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>part</i> is
+the part's to assign contents to.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>filename</i>
+points to the null−terminated file's path name. The
+pointer can be NULL to detach the previous part contents
+settings. Filename storage can be safely be reused after
+this call.</p>
+<p style="margin-left:9%; margin-top: 1em">As a side
+effect, the part's remote filename is set to the base name
+of the given <i>filename</i> if it is a valid named file.
+This can be undone or overridden by a subsequent call to
+<i>curl_mime_filename(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The contents of
+the file is read during the file transfer in a streaming
+manner to allow huge files to get transferred without using
+much memory. It therefore requires that the file is kept
+intact during the entire request.</p>
+<p style="margin-left:9%; margin-top: 1em">If the file size
+cannot be determined before actually reading it (such as for
+a character device or named pipe), the whole mime structure
+containing the part is transferred using chunks by HTTP but
+is rejected by IMAP.</p>
+<p style="margin-left:9%; margin-top: 1em">Setting a part's
+contents multiple times is valid: only the value set by the
+last call is retained.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects http, imap and smtp</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+curl_mime *mime; <br/>
+curl_mimepart *part;</p>
+<p style="margin-left:9%; margin-top: 1em">CURL *curl =
+curl_easy_init(); <br/>
+if(curl) { <br/>
+/* create a mime handle */ <br/>
+mime = curl_mime_init(curl);</p>
+<p style="margin-left:9%; margin-top: 1em">/* add a part */
+<br/>
+part = curl_mime_addpart(mime);</p>
+<p style="margin-left:9%; margin-top: 1em">/* send data
+from this file */ <br/>
+curl_mime_filedata(part, "image.png");</p>
+<p style="margin-left:9%; margin-top: 1em">/* set name */
+<br/>
+curl_mime_name(part, "data"); <br/>
+} <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.56.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLE_OK or a
+CURL error code upon failure. CURLE_READ_ERROR is only an
+indication that the file is not yet readable: it can be
+safely ignored at this time, but the file must be made
+readable before the pertaining easy handle is performed.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curl_mime_addpart</b>(3),
+<b>curl_mime_data</b>(3), <b>curl_mime_filename</b>(3),
+<b>curl_mime_name</b>(3)</p>
+<hr/>
+</body>
+</html>

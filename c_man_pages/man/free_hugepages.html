@@ -1,0 +1,220 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:44 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>alloc_hugepages</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">alloc_hugepages</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#FILES">FILES</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">alloc_hugepages,
+free_hugepages − allocate or free huge pages</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+*syscall(SYS_alloc_hugepages, int</b> <i>key</i><b>,
+void</b> <i>addr</i><b>[.</b><i>len</i><b>], size_t</b>
+<i>len</i><b>, <br/>
+int</b> <i>prot</i><b>, int</b> <i>flag</i><b>); <br/>
+int syscall(SYS_free_hugepages, void
+*</b><i>addr</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>Note</i>:
+glibc provides no wrappers for these system calls,
+necessitating the use of <b>syscall</b>(2).</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The system calls
+<b>alloc_hugepages</b>() and <b>free_hugepages</b>() were
+introduced in Linux 2.5.36 and removed again in Linux
+2.5.54. They existed only on i386 and ia64 (when built with
+<b>CONFIG_HUGETLB_PAGE</b>). In Linux 2.4.20, the syscall
+numbers exist, but the calls fail with the error
+<b>ENOSYS</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">On i386 the
+memory management hardware knows about ordinary pages
+(4 KiB) and huge pages (2 or 4 MiB). Similarly
+ia64 knows about huge pages of several sizes. These system
+calls serve to map huge pages into the process’s
+memory or to free them again. Huge pages are locked into
+memory, and are not swapped.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>key</i>
+argument is an identifier. When zero the pages are private,
+and not inherited by children. When positive the pages are
+shared with other applications using the same <i>key</i>,
+and inherited by child processes.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>addr</i>
+argument of <b>free_hugepages</b>() tells which page is
+being freed: it was the return value of a call to
+<b>alloc_hugepages</b>(). (The memory is first actually
+freed when all users have released it.) The <i>addr</i>
+argument of <b>alloc_hugepages</b>() is a hint, that the
+kernel may or may not follow. Addresses must be properly
+aligned.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>len</i>
+argument is the length of the required segment. It must be a
+multiple of the huge page size.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>prot</i>
+argument specifies the memory protection of the segment. It
+is one of <b>PROT_READ</b>, <b>PROT_WRITE</b>,
+<b>PROT_EXEC</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>flag</i>
+argument is ignored, unless <i>key</i> is positive. In that
+case, if <i>flag</i> is <b>IPC_CREAT</b>, then a new huge
+page segment is created when none with the given key
+existed. If this flag is not set, then <b>ENOENT</b> is
+returned when no segment with the given key exists.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>alloc_hugepages</b>() returns the allocated virtual
+address, and <b>free_hugepages</b>() returns zero. On error,
+−1 is returned, and <i>errno</i> is set to indicate
+the error.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>ENOSYS</b></p></td>
+<td width="1%"></td>
+<td width="61%">
+<p style="margin-top: 1em">The system call is not supported
+on this kernel.</p></td>
+<td width="21%">
+</td></tr>
+</table>
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>/proc/sys/vm/nr_hugepages</i></p>
+<p style="margin-left:18%;">Number of configured hugetlb
+pages. This can be read and written.</p>
+<p style="margin-left:9%;"><i>/proc/meminfo</i></p>
+<p style="margin-left:18%;">Gives info on the number of
+configured hugetlb pages and on their size in the three
+variables HugePages_Total, HugePages_Free, Hugepagesize.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux on Intel
+processors.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These system
+calls are gone; they existed only in Linux 2.5.36 through to
+Linux 2.5.54.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Now the
+hugetlbfs filesystem can be used instead. Memory backed by
+huge pages (if the CPU supports them) is obtained by using
+<b>mmap</b>(2) to map files in this virtual filesystem.</p>
+<p style="margin-left:9%; margin-top: 1em">The maximal
+number of huge pages can be specified using the
+<b>hugepages=</b> boot parameter.</p>
+<hr/>
+</body>
+</html>

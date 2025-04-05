@@ -1,0 +1,253 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:43 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PEM_READ</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">PEM_READ</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">PEM_write,
+PEM_write_bio, PEM_read, PEM_read_bio, PEM_do_header,
+PEM_get_EVP_CIPHER_INFO − PEM encoding routines</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/pem.h&gt; <br/>
+int PEM_write(FILE *fp, const char *name, const char
+*header, <br/>
+const unsigned char *data, long len); <br/>
+int PEM_write_bio(BIO *bp, const char *name, const char
+*header, <br/>
+const unsigned char *data, long len); <br/>
+int PEM_read(FILE *fp, char **name, char **header, <br/>
+unsigned char **data, long *len); <br/>
+int PEM_read_bio(BIO *bp, char **name, char **header, <br/>
+unsigned char **data, long *len); <br/>
+int PEM_get_EVP_CIPHER_INFO(char *header, EVP_CIPHER_INFO
+*cinfo); <br/>
+int PEM_do_header(EVP_CIPHER_INFO *cinfo, unsigned char
+*data, long *len, <br/>
+pem_password_cb *cb, void *u);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+read and write PEM−encoded objects, using the PEM type
+<b>name</b>, any additional <b>header</b> information, and
+the raw <b>data</b> of length <b>len</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">PEM is the term
+used for binary content encoding first defined in IETF RFC
+1421. The content is a series of base64−encoded lines,
+surrounded by begin/end markers each on their own line. For
+example:</p>
+<p style="margin-left:9%; margin-top: 1em">−−−−−BEGIN
+PRIVATE KEY−−−−− <br/>
+MIICdg.... <br/>
+... bhTQ== <br/>
+−−−−−END PRIVATE
+KEY−−−−−</p>
+<p style="margin-left:9%; margin-top: 1em">Optional header
+line(s) may appear after the begin line, and their existence
+depends on the type of object being written or read.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PEM_write()</b>
+writes to the file <b>fp</b>, while <b>PEM_write_bio()</b>
+writes to the BIO <b>bp</b>. The <b>name</b> is the name to
+use in the marker, the <b>header</b> is the header value or
+NULL, and <b>data</b> and <b>len</b> specify the data and
+its length.</p>
+<p style="margin-left:9%; margin-top: 1em">The final
+<b>data</b> buffer is typically an ASN.1 object which can be
+decoded with the <b>d2i</b> function appropriate to the type
+<b>name</b>; see <b>d2i_X509</b>(3) for examples.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PEM_read()</b>
+reads from the file <b>fp</b>, while <b>PEM_read_bio()</b>
+reads from the BIO <b>bp</b>. Both skip any non−PEM
+data that precedes the start of the next PEM object. When an
+object is successfully retrieved, the type name from the
+"−−−−BEGIN
+&lt;type&gt;−−−−−" is
+returned via the <b>name</b> argument, any encapsulation
+headers are returned in <b>header</b> and the
+base64−decoded content and its length are returned via
+<b>data</b> and <b>len</b> respectively. The <b>name</b>,
+<b>header</b> and <b>data</b> pointers are allocated via
+<b>OPENSSL_malloc()</b> and should be freed by the caller
+via <b>OPENSSL_free()</b> when no longer needed.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PEM_get_EVP_CIPHER_INFO()</b>
+can be used to determine the <b>data</b> returned by
+<b>PEM_read()</b> or <b>PEM_read_bio()</b> is encrypted and
+to retrieve the associated cipher and IV. The caller passes
+a pointer to structure of type <b>EVP_CIPHER_INFO</b> via
+the <b>cinfo</b> argument and the <b>header</b> returned via
+<b>PEM_read()</b> or <b>PEM_read_bio()</b>. If the call is
+successful 1 is returned and the cipher and IV are stored at
+the address pointed to by <b>cinfo</b>. When the header is
+malformed, or not supported or when the cipher is unknown or
+some internal error happens 0 is returned. This function is
+deprecated, see <b>NOTES</b> below.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PEM_do_header()</b>
+can then be used to decrypt the data if the header indicates
+encryption. The <b>cinfo</b> argument is a pointer to the
+structure initialized by the previous call to
+<b>PEM_get_EVP_CIPHER_INFO()</b>. The <b>data</b> and
+<b>len</b> arguments are those returned by the previous call
+to <b>PEM_read()</b> or <b>PEM_read_bio()</b>. The <b>cb</b>
+and <b>u</b> arguments make it possible to override the
+default password prompt function as described in
+<b>PEM_read_PrivateKey</b>(3). On successful completion the
+<b>data</b> is decrypted in place, and <b>len</b> is updated
+to indicate the plaintext length. This function is
+deprecated, see <b>NOTES</b> below.</p>
+<p style="margin-left:9%; margin-top: 1em">If the data is a
+priori known to not be encrypted, then neither
+<b>PEM_do_header()</b> nor <b>PEM_get_EVP_CIPHER_INFO()</b>
+need be called.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>PEM_read()</b>
+and <b>PEM_read_bio()</b> return 1 on success and 0 on
+failure, the latter includes the case when no more PEM
+objects remain in the input file. To distinguish end of file
+from more serious errors the caller must peek at the error
+stack and check for <b>PEM_R_NO_START_LINE</b>, which
+indicates that no more PEM objects were found. See
+<b>ERR_peek_last_error</b>(3), <b>ERR_GET_REASON</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PEM_get_EVP_CIPHER_INFO()</b>
+and <b>PEM_do_header()</b> return 1 on success, and 0 on
+failure. The <b>data</b> is likely meaningless if these
+functions fail.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>PEM_get_EVP_CIPHER_INFO()</b> and <b>PEM_do_header()</b>
+functions are deprecated. This is because the underlying PEM
+encryption format is obsolete, and should be avoided. It
+uses an encryption format with an OpenSSL−specific
+key−derivation function, which employs MD5 with an
+iteration count of 1! Instead, private keys should be stored
+in PKCS#8 form, with a strong PKCS#5 v2.0 PBE. See
+<b>PEM_write_PrivateKey</b>(3) and
+<b>d2i_PKCS8PrivateKey_bio</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>PEM_do_header()</b>
+makes no assumption regarding the pass phrase received from
+the password callback. It will simply be treated as a byte
+sequence.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ERR_peek_last_error</b>(3),
+<b>ERR_GET_LIB</b>(3), <b>d2i_PKCS8PrivateKey_bio</b>(3),
+<b>passphrase−encoding</b>(7)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+1998−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

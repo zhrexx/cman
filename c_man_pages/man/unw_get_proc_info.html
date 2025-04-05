@@ -1,0 +1,236 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:35 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>UNW_GET_PROC_INFO</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">UNW_GET_PROC_INFO</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#THREAD AND SIGNAL SAFETY">THREAD AND SIGNAL SAFETY</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">unw_get_proc_info
+−− get info on current procedure</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;libunwind.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">int
+unw_get_proc_info(unw_cursor_t *cp, unw_proc_info_t
+*pip);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+unw_get_proc_info() routine returns auxiliary information
+about the procedure that created the stack frame identified
+by argument cp. The pip argument is a pointer to a structure
+of type unw_proc_info_t which is used to return the
+information. The unw_proc_info_t has the following members:
+<br/>
+unw_word_t start_ip</p>
+<p style="margin-left:18%;">The address of the first
+instruction of the procedure. If this address cannot be
+determined (e.g., due to lack of unwind information), the
+start_ip member is cleared to 0.</p>
+<p style="margin-left:9%;">unw_word_t end_ip</p>
+<p style="margin-left:18%;">The address of the first
+instruction <i>beyond</i> the end of the procedure. If this
+address cannot be determined (e.g., due to lack of unwind
+information), the end_ip member is cleared to 0.</p>
+<p style="margin-left:9%;">unw_word_t lsda</p>
+<p style="margin-left:18%;">The address of the
+language−specific data area (LSDA). This area normally
+contains language−specific information needed during
+exception handling. If the procedure has no such area, this
+member is cleared to 0.</p>
+<p style="margin-left:9%;">unw_word_t handler</p>
+<p style="margin-left:18%;">The address of the exception
+handler routine. This is sometimes called the
+<i>personality</i> routine. If the procedure does not define
+a personality routine, the handler member is cleared to
+0.</p>
+<p style="margin-left:9%;">unw_word_t gp</p>
+<p style="margin-left:18%;">The global pointer of the
+procedure. On platforms that do not use a global pointer,
+this member may contain an undefined value. On all other
+platforms, it must be set either to the correct global
+pointer value of the procedure or to 0 if the proper global
+pointer cannot be obtained for some reason.</p>
+<p style="margin-left:9%;">unw_word_t flags</p>
+<p style="margin-left:18%;">A set of flags. There are
+currently no target−independent flags. For the
+IA−64 target, the flag UNW_PI_FLAG_IA64_RBS_SWITCH is
+set if the procedure may switch the register backing
+store.</p>
+<p style="margin-left:9%;">int format</p>
+<p style="margin-left:18%;">The format of the unwind info
+for this procedure. If the unwind info consists of dynamic
+procedure info, format is equal to UNW_INFO_FORMAT_DYNAMIC.
+If the unwind info consists of a (target−specific)
+unwind table, it is equal to UNW_INFO_FORMAT_TABLE. All
+other values are reserved for future use by libunwind. This
+member exists for use by the find_proc_info() callback (see
+unw_create_addr_space(3libunwind)). The unw_get_proc_info()
+routine may return an undefined value in this member.</p>
+<p style="margin-left:9%;">int unwind_info_size</p>
+<p style="margin-left:18%;">The size of the unwind info in
+bytes. This member exists for use by the find_proc_info()
+callback (see unw_create_addr_space(3libunwind)). The
+unw_get_proc_info() routine may return an undefined value in
+this member.</p>
+<p style="margin-left:9%;">void *unwind_info</p>
+<p style="margin-left:18%;">The pointer to the unwind info.
+If no unwind info is available, this member must be set to
+NULL. This member exists for use by the find_proc_info()
+callback (see unw_create_addr_space(3libunwind)). The
+unw_get_proc_info() routine may return an undefined value in
+this member.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that for
+the purposes of libunwind, the code of a procedure is
+assumed to occupy a single, contiguous range of addresses.
+For this reason, it is always possible to describe the
+extent of a procedure with the start_ip and end_ip members.
+If a single function/routine is split into multiple,
+discontiguous pieces, libunwind will treat each piece as a
+separate procedure.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On successful
+completion, unw_get_proc_info() returns 0. Otherwise the
+negative value of one of the error codes below is
+returned.</p>
+<h2>THREAD AND SIGNAL SAFETY
+<a name="THREAD AND SIGNAL SAFETY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">unw_get_proc_info()
+is thread safe. If cursor cp is in the local address space,
+this routine is also safe to use from a signal handler.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">UNW_EUNSPEC</p>
+<p style="margin-left:18%;">An unspecified error
+occurred.</p>
+<p style="margin-left:9%;">UNW_ENOINFO</p>
+<p style="margin-left:18%;">Libunwind was unable to locate
+unwind info for the procedure.</p>
+<p style="margin-left:9%;">UNW_EBADVERSION</p>
+<p style="margin-left:18%;">The unwind info for the
+procedure has version or format that is not understood by
+libunwind.</p>
+<p style="margin-left:9%; margin-top: 1em">In addition,
+unw_get_proc_info() may return any error returned by the
+access_mem() callback (see
+unw_create_addr_space(3libunwind)).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind(3libunwind),
+unw_create_addr_space(3libunwind),
+unw_get_proc_name(3libunwind)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">David
+Mosberger−Tang <br/>
+Email: <b>dmosberger@gmail.com</b> <br/>
+WWW: <b>http://www.nongnu.org/libunwind/</b>.</p>
+<hr/>
+</body>
+</html>

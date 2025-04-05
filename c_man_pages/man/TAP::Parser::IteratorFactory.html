@@ -1,0 +1,267 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:54 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TAP::Parser::IteratorFactory</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">TAP::Parser::IteratorFactory</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#Class Methods">Class Methods</a><br/>
+<a href="#Instance Methods">Instance Methods</a><br/>
+<a href="#SUBCLASSING">SUBCLASSING</a><br/>
+<a href="#Example">Example</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#ATTRIBUTION">ATTRIBUTION</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TAP::Parser::IteratorFactory
+− Figures out which SourceHandler objects to use for a
+given Source</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Version 3.50</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+TAP::Parser::IteratorFactory; <br/>
+my $factory = TAP::Parser::IteratorFactory−&gt;new({
+%config }); <br/>
+my $iterator = $factory−&gt;make_iterator( $filename
+);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This is a
+factory class that takes a TAP::Parser::Source and runs it
+through all the registered TAP::Parser::SourceHandlers to
+see which one should handle the source.</p>
+<p style="margin-left:9%; margin-top: 1em">If you're a
+plugin author, you'll be interested in how to
+"register_handler"s, how "detect_source"
+works.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>Class Methods
+<a name="Class Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>"new"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Creates a new
+factory class:</p>
+<p style="margin-left:9%; margin-top: 1em">my $sf =
+TAP::Parser::IteratorFactory−&gt;new( $config );</p>
+<p style="margin-left:9%; margin-top: 1em">$config is
+optional. If given, sets "config" and calls
+"load_handlers".</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"register_handler"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Registers a new
+TAP::Parser::SourceHandler with this factory.</p>
+<p style="margin-left:9%; margin-top: 1em">__PACKAGE__−&gt;register_handler(
+$handler_class );</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"handlers"</i></p>
+<p style="margin-left:9%; margin-top: 1em">List of handlers
+that have been registered.</p>
+<h3>Instance Methods
+<a name="Instance Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>"config"</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $cfg =
+$sf−&gt;config; <br/>
+$sf−&gt;config({ Perl =&gt; { %config } });</p>
+<p style="margin-left:9%; margin-top: 1em">Chaining
+getter/setter for the configuration of the available source
+handlers. This is a hashref keyed on handler class whose
+values contain config to be passed onto the handlers during
+detection &amp; creation. Class names may be fully qualified
+or abbreviated, eg:</p>
+<p style="margin-left:9%; margin-top: 1em"># these are
+equivalent <br/>
+$sf−&gt;config({ 'TAP::Parser::SourceHandler::Perl'
+=&gt; { %config } }); <br/>
+$sf−&gt;config({ 'Perl' =&gt; { %config } });</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"load_handlers"</i></p>
+<p style="margin-left:9%; margin-top: 1em">$sf−&gt;load_handlers;</p>
+<p style="margin-left:9%; margin-top: 1em">Loads the
+handler classes defined in "config". For example,
+given a config:</p>
+<p style="margin-left:9%; margin-top: 1em">$sf−&gt;config({
+<br/>
+MySourceHandler =&gt; { some =&gt; 'config' }, <br/>
+});</p>
+<p style="margin-left:9%; margin-top: 1em">"load_handlers"
+will attempt to load the "MySourceHandler" class
+by looking in @INC for it in this order:</p>
+<p style="margin-left:9%; margin-top: 1em">TAP::Parser::SourceHandler::MySourceHandler
+<br/>
+MySourceHandler</p>
+<p style="margin-left:9%; margin-top: 1em">"croak"s
+on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"make_iterator"</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $iterator =
+$src_factory−&gt;make_iterator( $source );</p>
+<p style="margin-left:9%; margin-top: 1em">Given a
+TAP::Parser::Source, finds the most suitable
+TAP::Parser::SourceHandler to use to create a
+TAP::Parser::Iterator (see "detect_source"). Dies
+on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"detect_source"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Given a
+TAP::Parser::Source, detects what kind of source it is and
+returns <i>one</i> TAP::Parser::SourceHandler (the most
+confident one). Dies on error.</p>
+<p style="margin-left:9%; margin-top: 1em">The detection
+algorithm works something like this:</p>
+<p style="margin-left:9%; margin-top: 1em">for
+(@registered_handlers) { <br/>
+# ask them how confident they are about handling this source
+<br/>
+$confidence{$handler} = $handler−&gt;can_handle(
+$source ) <br/>
+} <br/>
+# choose the most confident handler</p>
+<p style="margin-left:9%; margin-top: 1em">Ties are handled
+by choosing the first handler.</p>
+<h2>SUBCLASSING
+<a name="SUBCLASSING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please see
+"SUBCLASSING" in TAP::Parser for a subclassing
+overview.</p>
+<h3>Example
+<a name="Example"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If we've done
+things right, you'll probably want to write a new source,
+rather than sub−classing this (see
+TAP::Parser::SourceHandler for that).</p>
+<p style="margin-left:9%; margin-top: 1em">But in case you
+find the need to...</p>
+<p style="margin-left:9%; margin-top: 1em">package
+MyIteratorFactory; <br/>
+use strict; <br/>
+use base 'TAP::Parser::IteratorFactory'; <br/>
+# override source detection algorithm <br/>
+sub detect_source { <br/>
+my ($self, $raw_source_ref, $meta) = @_; <br/>
+# do detective work, using $meta and whatever else... <br/>
+} <br/>
+1;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Steve Purkis</p>
+<h2>ATTRIBUTION
+<a name="ATTRIBUTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Originally
+ripped off from Test::Harness.</p>
+<p style="margin-left:9%; margin-top: 1em">Moved out of
+TAP::Parser &amp; converted to a factory class to support
+extensible TAP source detective work by Steve Purkis.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TAP::Object,
+TAP::Parser, TAP::Parser::SourceHandler,
+TAP::Parser::SourceHandler::File,
+TAP::Parser::SourceHandler::Perl,
+TAP::Parser::SourceHandler::RawTAP,
+TAP::Parser::SourceHandler::Handle,
+TAP::Parser::SourceHandler::Executable</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,869 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:15 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Compress::Raw::Lzma</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Compress::Raw::Lzma</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Compression">Compression</a><br/>
+<a href="#($z, $status) = new Compress::Raw::Lzma::EasyEncoder [OPTS];">($z, $status) = new Compress::Raw::Lzma::EasyEncoder [OPTS];</a><br/>
+<a href="#($z, $status) = new Compress::Raw::Lzma::AloneEncoder [OPTS];">($z, $status) = new Compress::Raw::Lzma::AloneEncoder [OPTS];</a><br/>
+<a href="#($z, $status) = new Compress::Raw::Lzma::StreamEncoder [OPTS];">($z, $status) = new Compress::Raw::Lzma::StreamEncoder [OPTS];</a><br/>
+<a href="#($z, $status) = new Compress::Raw::Lzma::RawEncoder [OPTS];">($z, $status) = new Compress::Raw::Lzma::RawEncoder [OPTS];</a><br/>
+<a href="#$status = $lz−&gt;code($input, $output)">$status = $lz−&gt;code($input, $output)</a><br/>
+<a href="#$status = $lz−&gt;flush($output, LZMA_FINISH);">$status = $lz−&gt;flush($output, LZMA_FINISH);</a><br/>
+<a href="#Example">Example</a><br/>
+<a href="#Uncompression">Uncompression</a><br/>
+<a href="#($z, $status) = new Compress::Raw::Lzma::AutoDecoder [OPTS] ;">($z, $status) = new Compress::Raw::Lzma::AutoDecoder [OPTS] ;</a><br/>
+<a href="#($z, $status) = new Compress::Raw::Lzma::AloneDecoder [OPTS] ;">($z, $status) = new Compress::Raw::Lzma::AloneDecoder [OPTS] ;</a><br/>
+<a href="#$status = $z−&gt;code($input, $output);">$status = $z−&gt;code($input, $output);</a><br/>
+<a href="#Filters">Filters</a><br/>
+<a href="#Lzma::Filter::Lzma">Lzma::Filter::Lzma</a><br/>
+<a href="#Lzma::Filter::BCJ">Lzma::Filter::BCJ</a><br/>
+<a href="#Lzma::Filter::Delta">Lzma::Filter::Delta</a><br/>
+<a href="#Misc">Misc</a><br/>
+<a href="#my $version = Compress::Raw::Lzma::lzma_version_number();">my $version = Compress::Raw::Lzma::lzma_version_number();</a><br/>
+<a href="#my $version = Compress::Raw::Lzma::lzma_version_string();">my $version = Compress::Raw::Lzma::lzma_version_string();</a><br/>
+<a href="#my $version = Compress::Raw::Lzma::LZMA_VERSION();">my $version = Compress::Raw::Lzma::LZMA_VERSION();</a><br/>
+<a href="#my $version = Compress::Raw::Lzma::LZMA_VERSION_STRING();">my $version = Compress::Raw::Lzma::LZMA_VERSION_STRING();</a><br/>
+<a href="#Constants">Constants</a><br/>
+<a href="#SUPPORT">SUPPORT</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#MODIFICATION HISTORY">MODIFICATION HISTORY</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Compress::Raw::Lzma
+− Low−Level Perl Interface to lzma compression
+library</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Compress::Raw::Lzma ; <br/>
+# Encoders <br/>
+my ($lz, $status) = new Compress::Raw::Lzma::EasyEncoder
+[OPTS] <br/>
+or die "Cannot create lzma object: $status\n";
+<br/>
+my ($lz, $status) = new Compress::Raw::Lzma::AloneEncoder
+[OPTS] <br/>
+or die "Cannot create lzma object: $status\n";
+<br/>
+my ($lz, $status) = new Compress::Raw::Lzma::StreamEncoder
+[OPTS] <br/>
+or die "Cannot create lzma object: $status\n";
+<br/>
+my ($lz, $status) = new Compress::Raw::Lzma::RawEncoder
+[OPTS] <br/>
+or die "Cannot create lzma object: $status\n";
+<br/>
+$status = $lz−&gt;code($input, $output); <br/>
+$status = $lz−&gt;flush($output); <br/>
+# Decoders <br/>
+my ($lz, $status) = new Compress::Raw::Lzma::AloneDecoder
+[OPTS] <br/>
+or die "Cannot create lzma object: $status\n";
+<br/>
+my ($lz, $status) = new Compress::Raw::Lzma::AutoDecoder
+[OPTS] <br/>
+or die "Cannot create lzma object: $status\n";
+<br/>
+my ($lz, $status) = new Compress::Raw::Lzma::StreamDecoder
+[OPTS] <br/>
+or die "Cannot create lzma object: $status\n";
+<br/>
+my ($lz, $status) = new Compress::Raw::Lzma::RawDecoder
+[OPTS] <br/>
+or die "Cannot create lzma object: $status\n";
+<br/>
+$status = $lz−&gt;code($input, $output); <br/>
+my $version = Compress::Raw::Lzma::lzma_version_number();
+<br/>
+my $version =
+Compress::Raw::Lzma::lzma_version_string();</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Compress::Raw::Lzma"
+provides an interface to the in−memory
+compression/uncompression functions from the lzma
+compression library.</p>
+<p style="margin-left:9%; margin-top: 1em">Although the
+primary purpose for the existence of
+"Compress::Raw::Lzma" is for use by the
+"IO::Compress::Lzma",
+"IO::Uncompress::UnLzma",
+"IO::Compress::Xz" and
+"IO::Uncompress::UnXz" modules, it can be used on
+its own for simple compression/uncompression tasks.</p>
+<p style="margin-left:9%; margin-top: 1em">There are two
+functions, called "code" and "flush",
+used in all the compression and uncompression interfaces
+defined in this module. By default both of these functions
+overwrites any data stored in its output buffer parameter.
+If you want to compress/uncompress to a single buffer, and
+have "code" and "flush" append to that
+buffer, enable the "AppendOutput" option when you
+create the compression/decompression object.</p>
+<h2>Compression
+<a name="Compression"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">There are four
+compression interfaces available in this module. <br/>
+Compress::Raw::Lzma::EasyEncoder <br/>
+Compress::Raw::Lzma::AloneEncoder <br/>
+Compress::Raw::Lzma::StreamEncoder <br/>
+Compress::Raw::Lzma::RawEncoder</p>
+<h3>($z, $status) = new Compress::Raw::Lzma::EasyEncoder [OPTS];
+<a name="($z, $status) = new Compress::Raw::Lzma::EasyEncoder [OPTS];"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Creates a new
+<i>xz</i> compression object.</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+it will return the initialised compression object, $z and a
+$status of "LZMA_OK" in a list context. In scalar
+context it returns the deflation object, $z, only.</p>
+<p style="margin-left:9%; margin-top: 1em">If not
+successful, the returned compression object, $z, will be
+<i>undef</i> and $status will hold the an <i>lzma</i> error
+code.</p>
+<p style="margin-left:9%; margin-top: 1em">Below is a list
+of the valid options: <b><br/>
+Preset =&gt; $preset</b></p>
+<p style="margin-left:15%;">Used to choose the compression
+preset.</p>
+<p style="margin-left:15%; margin-top: 1em">Valid values
+are 0−9 and "LZMA_PRESET_DEFAULT".</p>
+<p style="margin-left:15%; margin-top: 1em">0 is the
+fastest compression with the lowest memory usage and the
+lowest compression.</p>
+<p style="margin-left:15%; margin-top: 1em">9 is the
+slowest compression with the highest memory usage but with
+the best compression.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+"LZMA_PRESET_DEFAULT".</p>
+<p style="margin-left:9%;"><b>Extreme =&gt; 0|1</b></p>
+<p style="margin-left:15%;">Makes the compression a lot
+slower, but a small compression gain.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+0.</p>
+<p style="margin-left:9%;"><b>Check =&gt; $check</b></p>
+<p style="margin-left:15%;">Used to specify the integrity
+check used in the xz data stream. Valid values are
+"LZMA_CHECK_NONE", "LZMA_CHECK_CRC32",
+"LZMA_CHECK_CRC64",
+"LZMA_CHECK_SHA256".</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+"LZMA_CHECK_CRC32".</p>
+<p style="margin-left:9%;"><b>AppendOutput =&gt;
+0|1</b></p>
+<p style="margin-left:15%;">Controls whether the compressed
+data is appended to the output buffer in the
+"code" and "flush" methods.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to 0.
+(Note in versions of this module prior to 2.072 the default
+value was incorrectly documented as 1).</p>
+<p style="margin-left:9%;"><b>BufSize =&gt; $number</b></p>
+<p style="margin-left:15%;">Sets the initial size for the
+output buffer used by the "$d−&gt;code"
+method. If the buffer has to be reallocated to increase the
+size, it will grow in increments of "Bufsize".</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+16k.</p>
+<h3>($z, $status) = new Compress::Raw::Lzma::AloneEncoder [OPTS];
+<a name="($z, $status) = new Compress::Raw::Lzma::AloneEncoder [OPTS];"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Creates a legacy
+<i>lzma</i> compression object. This format is also know as
+lzma_alone.</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+it will return the initialised compression object, $z and a
+$status of "LZMA_OK" in a list context. In scalar
+context it returns the deflation object, $z, only.</p>
+<p style="margin-left:9%; margin-top: 1em">If not
+successful, the returned compression object, $z, will be
+<i>undef</i> and $status will hold the an <i>lzma</i> error
+code.</p>
+<p style="margin-left:9%; margin-top: 1em">Below is a list
+of the valid options: <b><br/>
+Filter =&gt; $filter</b></p>
+<p style="margin-left:15%;">The $filter option must be an
+object of type "Lzma::Filter::Lzma1". See
+"Lzma::Filter::Lzma" in Compress::Raw::Lzma for a
+definition of "Lzma::Filter::Lzma1".</p>
+<p style="margin-left:15%; margin-top: 1em">If this option
+is not present an "Lzma::Filter::Lzma1" object
+with default values will be used.</p>
+<p style="margin-left:9%;"><b>AppendOutput =&gt;
+0|1</b></p>
+<p style="margin-left:15%;">Controls whether the compressed
+data is appended to the output buffer in the
+"code" and "flush" methods.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to 0.
+(Note in versions of this module prior to 2.072 the default
+value was incorrectly documented as 1).</p>
+<p style="margin-left:9%;"><b>BufSize =&gt; $number</b></p>
+<p style="margin-left:15%;">Sets the initial size for the
+output buffer used by the "$d−&gt;code"
+method. If the buffer has to be reallocated to increase the
+size, it will grow in increments of "Bufsize".</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+16k.</p>
+<h3>($z, $status) = new Compress::Raw::Lzma::StreamEncoder [OPTS];
+<a name="($z, $status) = new Compress::Raw::Lzma::StreamEncoder [OPTS];"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Creates a
+<i>xz</i> compression object.</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+it will return the initialised compression object, $z and a
+$status of "LZMA_OK" in a list context. In scalar
+context it returns the deflation object, $z, only.</p>
+<p style="margin-left:9%; margin-top: 1em">If not
+successful, the returned compression object, $z, will be
+<i>undef</i> and $status will hold the an <i>lzma</i> error
+code.</p>
+<p style="margin-left:9%; margin-top: 1em">Below is a list
+of the valid options: <b><br/>
+Filter =&gt; $filter <br/>
+Filter =&gt; [$filter1, $filter2,...]</b></p>
+<p style="margin-left:15%;">This option is used to change
+the bahaviour of the StreamEncoder by applying between one
+and "LZMA_FILTERS_MAX" filters to the data stream
+during compression. See "Filters" for more details
+on the available filters.</p>
+<p style="margin-left:15%; margin-top: 1em">If this option
+is present it must either contain a single
+"Lzma::Filter::Lzma" filter object or an array
+reference containing between one and
+"LZMA_FILTERS_MAX" filter objects.</p>
+<p style="margin-left:15%; margin-top: 1em">If this option
+is not present an "Lzma::Filter::Lzma2" object
+with default values will be used.</p>
+<p style="margin-left:9%;"><b>Check =&gt; $check</b></p>
+<p style="margin-left:15%;">Used to specify the integrity
+check used in the xz data stream. Valid values are
+"LZMA_CHECK_NONE", "LZMA_CHECK_CRC32",
+"LZMA_CHECK_CRC64",
+"LZMA_CHECK_SHA256".</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+"LZMA_CHECK_CRC32".</p>
+<p style="margin-left:9%;"><b>AppendOutput =&gt;
+0|1</b></p>
+<p style="margin-left:15%;">Controls whether the compressed
+data is appended to the output buffer in the
+"code" and "flush" methods.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to 0.
+(Note in versions of this module prior to 2.072 the default
+value was incorrectly documented as 1).</p>
+<p style="margin-left:9%;"><b>BufSize =&gt; $number</b></p>
+<p style="margin-left:15%;">Sets the initial size for the
+output buffer used by the "$d−&gt;code"
+method. If the buffer has to be reallocated to increase the
+size, it will grow in increments of "Bufsize".</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+16k.</p>
+<h3>($z, $status) = new Compress::Raw::Lzma::RawEncoder [OPTS];
+<a name="($z, $status) = new Compress::Raw::Lzma::RawEncoder [OPTS];"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Low level access
+to lzma.</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+it will return the initialised compression object, $z and a
+$status of "LZMA_OK" in a list context. In scalar
+context it returns the deflation object, $z, only.</p>
+<p style="margin-left:9%; margin-top: 1em">If not
+successful, the returned compression object, $z, will be
+<i>undef</i> and $status will hold the an <i>lzma</i> error
+code.</p>
+<p style="margin-left:9%; margin-top: 1em">Below is a list
+of the valid options: <b><br/>
+Filter =&gt; $filter <br/>
+Filter =&gt; [$filter1, $filter2,...]</b></p>
+<p style="margin-left:15%;">This option is used to change
+the bahaviour of the RawEncoder by applying between one and
+"LZMA_FILTERS_MAX" filters to the data stream
+during compression. See "Filters" for more details
+on the available filters.</p>
+<p style="margin-left:15%; margin-top: 1em">If this option
+is present it must either contain a single
+"Lzma::Filter::Lzma" filter object or an array
+reference containing between one and
+"LZMA_FILTERS_MAX" filter objects.</p>
+<p style="margin-left:15%; margin-top: 1em">If this option
+is not present an "Lzma::Filter::Lzma2" object
+with default values will be used.</p>
+<p style="margin-left:9%;"><b>AppendOutput =&gt;
+0|1</b></p>
+<p style="margin-left:15%;">Controls whether the compressed
+data is appended to the output buffer in the
+"code" and "flush" methods.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to 0.
+(Note in versions of this module prior to 2.072 the default
+value was incorrectly documented as 1).</p>
+<p style="margin-left:9%;"><b>BufSize =&gt; $number</b></p>
+<p style="margin-left:15%;">Sets the initial size for the
+output buffer used by the "$d−&gt;code"
+method. If the buffer has to be reallocated to increase the
+size, it will grow in increments of "Bufsize".</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+16k.</p>
+<p style="margin-left:9%;"><b>ForZip =&gt; 1/0</b></p>
+<p style="margin-left:15%;">This boolean option is used to
+enable prefixing the compressed data stream with an encoded
+copy of the filter properties.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+0.</p>
+<h3>$status = $lz−&gt;code($input, $output)
+<a name="$status = $lz−&gt;code($input, $output)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Reads the
+contents of $input, compresses it and writes the compressed
+data to $output.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns
+"LZMA_OK" on success and an "lzma" error
+code on failure.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+"appendOutput" is enabled in the constructor for
+the lzma object, the compressed data will be appended to
+$output. If not enabled, $output will be truncated before
+the compressed data is written to it.</p>
+<h3>$status = $lz−&gt;flush($output, LZMA_FINISH);
+<a name="$status = $lz−&gt;flush($output, LZMA_FINISH);"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Flushes any
+pending compressed data to $output. By default it terminates
+the compressed data stream.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns
+"LZMA_OK" on success and an "lzma" error
+code on failure.</p>
+<h3>Example
+<a name="Example"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">TODO</p>
+<h2>Uncompression
+<a name="Uncompression"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">There are four
+uncompression interfaces available in this module. <br/>
+Compress::Raw::Lzma::AutoDecoder <br/>
+Compress::Raw::Lzma::AloneDecoder <br/>
+Compress::Raw::Lzma::StreamDecoder <br/>
+Compress::Raw::Lzma::RawDecoder</p>
+<h3>($z, $status) = new Compress::Raw::Lzma::AutoDecoder [OPTS] ;
+<a name="($z, $status) = new Compress::Raw::Lzma::AutoDecoder [OPTS] ;"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Create an object
+that can uncompress any of the compressed data streams that
+can be created by this module.</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+it will return the initialised uncompression object, $z and
+a $status of "LZMA_OK" in a list context. In
+scalar context it returns the deflation object, $z,
+only.</p>
+<p style="margin-left:9%; margin-top: 1em">If not
+successful, the returned uncompression object, $z, will be
+<i>undef</i> and $status will hold the an <i>lzma</i> error
+code.</p>
+<p style="margin-left:9%; margin-top: 1em">Below is a list
+of the valid options: <b><br/>
+−MemLimit</b></p>
+<p style="margin-left:15%;">The number of bytes to use when
+uncompressing.</p>
+<p style="margin-left:15%; margin-top: 1em">Default is
+unlimited.</p>
+<p style="margin-left:9%;"><b>−Bufsize</b></p>
+<p style="margin-left:15%;">Sets the initial size for the
+output buffer used by the "$i−&gt;code"
+method. If the output buffer in this method has to be
+reallocated to increase the size, it will grow in increments
+of "Bufsize".</p>
+<p style="margin-left:15%; margin-top: 1em">Default is
+16k.</p>
+<p style="margin-left:9%;"><b>−AppendOutput</b></p>
+<p style="margin-left:15%;">This option controls how data
+is written to the output buffer by the
+"$i−&gt;code" method.</p>
+<p style="margin-left:15%; margin-top: 1em">If the option
+is set to false, the output buffer in the
+"$i−&gt;code" method will be truncated
+before uncompressed data is written to it.</p>
+<p style="margin-left:15%; margin-top: 1em">If the option
+is set to true, uncompressed data will be appended to the
+output buffer by the "$i−&gt;code"
+method.</p>
+<p style="margin-left:15%; margin-top: 1em">This option
+defaults to false.</p>
+<p style="margin-left:9%;"><b>−ConsumeInput</b></p>
+<p style="margin-left:15%;">If set to true, this option
+will remove compressed data from the input buffer of the
+"$i−&gt;code" method as the uncompression
+progresses.</p>
+<p style="margin-left:15%; margin-top: 1em">This option can
+be useful when you are processing compressed data that is
+embedded in another file/buffer. In this case the data that
+immediately follows the compressed stream will be left in
+the input buffer.</p>
+<p style="margin-left:15%; margin-top: 1em">This option
+defaults to true.</p>
+<p style="margin-left:9%;"><b>−LimitOutput</b></p>
+<p style="margin-left:15%;">The "LimitOutput"
+option changes the behavior of the
+"$i−&gt;code" method so that the amount of
+memory used by the output buffer can be limited.</p>
+<p style="margin-left:15%; margin-top: 1em">When
+"LimitOutput" is used the size of the output
+buffer used will either be the value of the
+"Bufsize" option or the amount of memory already
+allocated to $output, whichever is larger. Predicting the
+output size available is tricky, so don't rely on getting an
+exact output buffer size.</p>
+<p style="margin-left:15%; margin-top: 1em">When
+"LimitOutout" is not specified
+"$i−&gt;code" will use as much memory as it
+takes to write all the uncompressed data it creates by
+uncompressing the input buffer.</p>
+<p style="margin-left:15%; margin-top: 1em">If
+"LimitOutput" is enabled, the
+"ConsumeInput" option will also be enabled.</p>
+<p style="margin-left:15%; margin-top: 1em">This option
+defaults to false.</p>
+<p style="margin-left:15%; margin-top: 1em">See "The
+LimitOutput option" for a discussion on why
+"LimitOutput" is needed and how to use it.</p>
+<h3>($z, $status) = new Compress::Raw::Lzma::AloneDecoder [OPTS] ;
+<a name="($z, $status) = new Compress::Raw::Lzma::AloneDecoder [OPTS] ;"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Create an object
+that can uncompress an lzma_alone data stream.</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+it will return the initialised uncompression object, $z and
+a $status of "LZMA_OK" in a list context. In
+scalar context it returns the deflation object, $z,
+only.</p>
+<p style="margin-left:9%; margin-top: 1em">If not
+successful, the returned uncompression object, $z, will be
+<i>undef</i> and $status will hold the an <i>lzma</i> error
+code.</p>
+<p style="margin-left:9%; margin-top: 1em">Below is a list
+of the valid options: <b><br/>
+−MemLimit</b></p>
+<p style="margin-left:15%;">The number of bytes to use when
+uncompressing.</p>
+<p style="margin-left:15%; margin-top: 1em">Default is
+unlimited.</p>
+<p style="margin-left:9%;"><b>−Bufsize</b></p>
+<p style="margin-left:15%;">Sets the initial size for the
+output buffer used by the "$i−&gt;code"
+method. If the output buffer in this method has to be
+reallocated to increase the size, it will grow in increments
+of "Bufsize".</p>
+<p style="margin-left:15%; margin-top: 1em">Default is
+16k.</p>
+<p style="margin-left:9%;"><b>−AppendOutput</b></p>
+<p style="margin-left:15%;">This option controls how data
+is written to the output buffer by the
+"$i−&gt;code" method.</p>
+<p style="margin-left:15%; margin-top: 1em">If the option
+is set to false, the output buffer in the
+"$i−&gt;code" method will be truncated
+before uncompressed data is written to it.</p>
+<p style="margin-left:15%; margin-top: 1em">If the option
+is set to true, uncompressed data will be appended to the
+output buffer by the "$i−&gt;code"
+method.</p>
+<p style="margin-left:15%; margin-top: 1em">This option
+defaults to false.</p>
+<p style="margin-left:9%;"><b>−ConsumeInput</b></p>
+<p style="margin-left:15%;">If set to true, this option
+will remove compressed data from the input buffer of the
+"$i−&gt;code" method as the uncompression
+progresses.</p>
+<p style="margin-left:15%; margin-top: 1em">This option can
+be useful when you are processing compressed data that is
+embedded in another file/buffer. In this case the data that
+immediately follows the compressed stream will be left in
+the input buffer.</p>
+<p style="margin-left:15%; margin-top: 1em">This option
+defaults to true.</p>
+<p style="margin-left:9%;"><b>−LimitOutput</b></p>
+<p style="margin-left:15%;">The "LimitOutput"
+option changes the behavior of the
+"$i−&gt;code" method so that the amount of
+memory used by the output buffer can be limited.</p>
+<p style="margin-left:15%; margin-top: 1em">When
+"LimitOutput" is used the size of the output
+buffer used will either be the value of the
+"Bufsize" option or the amount of memory already
+allocated to $output, whichever is larger. Predicting the
+output size available is tricky, so don't rely on getting an
+exact output buffer size.</p>
+<p style="margin-left:15%; margin-top: 1em">When
+"LimitOutout" is not specified
+"$i−&gt;code" will use as much memory as it
+takes to write all the uncompressed data it creates by
+uncompressing the input buffer.</p>
+<p style="margin-left:15%; margin-top: 1em">If
+"LimitOutput" is enabled, the
+"ConsumeInput" option will also be enabled.</p>
+<p style="margin-left:15%; margin-top: 1em">This option
+defaults to false.</p>
+<p style="margin-left:15%; margin-top: 1em">See "The
+LimitOutput option" for a discussion on why
+"LimitOutput" is needed and how to use it.</p>
+<h3>$status = $z−&gt;code($input, $output);
+<a name="$status = $z−&gt;code($input, $output);"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Uncompresses
+$input and writes the uncompressed data to $output.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns
+"LZMA_OK" if the uncompression was successful, but
+the end of the compressed data stream has not been reached.
+Returns "LZMA_STREAM_END" on successful
+uncompression and the end of the compression stream has been
+reached.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+"consumeInput" is enabled in the constructor for
+the lzma object, $input will have all compressed data
+removed from it after uncompression. On "LZMA_OK"
+return this will mean that $input will be an empty string;
+when "LZMA_STREAM_END" $input will either be an
+empty string or will contain whatever data immediately
+followed the compressed data stream.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+"appendOutput" is enabled in the constructor for
+the lzma object, the uncompressed data will be appended to
+$output. If not enabled, $output will be truncated before
+the uncompressed data is written to it.</p>
+<h2>Filters
+<a name="Filters"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TODO −
+more here</p>
+<p style="margin-left:9%; margin-top: 1em">A number of the
+Lzma compression interfaces (namely
+"Compress::Raw::Lzma::StreamEncoder" &amp;
+"Compress::Raw::Lzma::AloneEncoder") and the raw
+lzma uncompression interface make use of filters. These
+filters are used to change the behaviour of compression (and
+raw uncompression).</p>
+<p style="margin-left:9%; margin-top: 1em">All Lzma Filters
+are sub−classed from the "Lzma::Filter"
+base−class.</p>
+<h3>Lzma::Filter::Lzma
+<a name="Lzma::Filter::Lzma"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+"Lzma::Filter::Lzma" class is used to... TODO
+− more here</p>
+<p style="margin-left:9%; margin-top: 1em">There are two
+subclasses of "Lzma::Filter::Lzma", namely
+"Lzma::Filter::Lzma1" and
+"Lzma::Filter::Lzma2".</p>
+<p style="margin-left:9%; margin-top: 1em">The former is
+typically used with
+"Compress::Raw::Lzma::AloneEncoder". The latter
+with "Compress::Raw::Lzma::StreamEncoder".</p>
+<p style="margin-left:9%; margin-top: 1em">When using Lzma
+filters an "Lzma::Filter::Lzma" <i>must</i> be
+included and it <i>must</i> be the last filter in the chain.
+There can only be one "Lzma::Filter::Lzma" filter
+in any filter chain.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"Lzma::Filter::Lzma" construction takes the
+following options. <br/>
+DictSize =&gt; $value</p>
+<p style="margin-left:15%;">Dictionary size in bytes. This
+controls how many bytes of the recently processed
+uncompressed data is kept in memory. The size of the
+dictionary must be at least
+"LZMA_DICT_SIZE_MIN".</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+"LZMA_DICT_SIZE_DEFAULT".</p>
+<p style="margin-left:9%;">PresetDict =&gt; $dict</p>
+<p style="margin-left:15%;">Provide an initial dictionary.
+This value is used to initialize the LZ77 history
+window.</p>
+<p style="margin-left:15%; margin-top: 1em">This feature
+only works correctly with raw encoding and decoding. You may
+not be able to decode other formats that have been encoded
+with a preset dictionary.</p>
+<p style="margin-left:15%; margin-top: 1em">$dict should
+contain typical strings that occur in the files being
+compressed, with the most probably strings near the end fo
+the preset dictionary.</p>
+<p style="margin-left:15%; margin-top: 1em">If $dict is
+larger than "DictSize", only the last
+"DictSize" bytes are processed.</p>
+<p style="margin-left:9%;">Lc =&gt; $value</p>
+<p style="margin-left:15%;">Number of literal context
+bits.</p>
+<p style="margin-left:15%; margin-top: 1em">How many of the
+highest bits of the previous uncompressed eight−bit
+byte (also known as `literal') are taken into account when
+predicting the bits of the next literal.</p>
+<p style="margin-left:15%; margin-top: 1em">$value must be
+a number between "LZMA_LCLP_MIN" and
+"LZMA_LCLP_MAX".</p>
+<p style="margin-left:15%; margin-top: 1em">Note the sum of
+the "Lc" and "Lp" options cannot exceed
+4.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+"LZMA_LC_DEFAULT".</p>
+<p style="margin-left:9%;">Lp =&gt; $value</p>
+<p style="margin-left:15%;">Number of literal position
+bits.</p>
+<p style="margin-left:15%; margin-top: 1em">How many of the
+lowest bits of the current position (number of bytes from
+the beginning of the uncompressed data) in the uncompressed
+data is taken into account when predicting the bits of the
+next literal (a single eight−bit byte).</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+"LZMA_LP_DEFAULT".</p>
+<p style="margin-left:9%;">Pb =&gt; $value</p>
+<p style="margin-left:15%;">Number of position bits</p>
+<p style="margin-left:15%; margin-top: 1em">How many of the
+lowest bits of the current position in the uncompressed data
+is taken into account when estimating probabilities of
+matches. A match is a sequence of bytes for which a matching
+sequence is found from the dictionary and thus can be stored
+as distance−length pair.</p>
+<p style="margin-left:15%; margin-top: 1em">$value must be
+a number between "LZMA_PB_MIN" and
+"LZMA_PB_MAX".</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+"LZMA_PB_DEFAULT".</p>
+<p style="margin-left:9%;">Mode =&gt; $value</p>
+<p style="margin-left:15%;">The Compression Mode. Valid
+values are "LZMA_MODE_FAST" and
+"LZMA_MODE_NORMAL".</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+"LZMA_MODE_NORMAL".</p>
+<p style="margin-left:9%;">Nice =&gt; $value</p>
+<p style="margin-left:15%;">Nice length of a match</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+64.</p>
+<p style="margin-left:9%;">Mf =&gt; $value</p>
+<p style="margin-left:15%;">Defines which Match Finder to
+use. Valid values are "LZMA_MF_HC3"
+"LZMA_MF_HC4", "LZMA_MF_BT2"
+"LZMA_MF_BT3" and "LZMA_MF_BT4".</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+"LZMA_MF_BT4".</p>
+<p style="margin-left:9%;">Depth =&gt; $value</p>
+<p style="margin-left:15%;">Maximum search depth in the
+match finder.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+0.</p>
+<h3>Lzma::Filter::BCJ
+<a name="Lzma::Filter::BCJ"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+sub−classes of "Lzma::Filter::BCJ" are the
+Branch/Call/Jump conversion filters. These filters are used
+to rewrite executable binary code for a number of processor
+architectures. None of these classes take any options. <br/>
+Lzma::Filter::X86</p>
+<p style="margin-left:15%;">Filter for x86 binaries.</p>
+<p style="margin-left:9%;">Lzma::Filter::PowerPC</p>
+<p style="margin-left:15%;">Filter for Big endian PowerPC
+binaries.</p>
+<p style="margin-left:9%;">Lzma::Filter::IA64</p>
+<p style="margin-left:15%;">Filter for IA64 (Itanium)
+binaries.</p>
+<p style="margin-left:9%;">Lzma::Filter::ARM</p>
+<p style="margin-left:15%;">Filter for ARM binaries.</p>
+<p style="margin-left:9%;">Lzma::Filter::ARMThumb</p>
+<p style="margin-left:15%;">Filter for ARMThumb
+binaries.</p>
+<p style="margin-left:9%;">Lzma::Filter::Sparc</p>
+<p style="margin-left:15%;">Filter for Sparc binaries.</p>
+<h3>Lzma::Filter::Delta
+<a name="Lzma::Filter::Delta"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Usage is</p>
+<p style="margin-left:9%; margin-top: 1em">Lzma::Filter::Delta
+[OPTS] <br/>
+Type =&gt; $type</p>
+<p style="margin-left:15%;">Defines the type of Delta
+calculation. The only available type (and therefore the
+default) is "LZMA_DELTA_TYPE_BYTE",</p>
+<p style="margin-left:9%;">Distance =&gt; $value</p>
+<p style="margin-left:15%;">Defines the Delta Distance.
+$value must be a number between
+"LZMA_DELTA_DIST_MIN" and
+"LZMA_DELTA_DIST_MAX".</p>
+<p style="margin-left:15%; margin-top: 1em">Default is
+"LZMA_DELTA_DIST_MIN".</p>
+<h2>Misc
+<a name="Misc"></a>
+</h2>
+<h3>my $version = Compress::Raw::Lzma::lzma_version_number();
+<a name="my $version = Compress::Raw::Lzma::lzma_version_number();"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+version of the underlying lzma library this module is using
+at run−time as a number.</p>
+<h3>my $version = Compress::Raw::Lzma::lzma_version_string();
+<a name="my $version = Compress::Raw::Lzma::lzma_version_string();"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+version of the underlying lzma library this module is using
+at run−time as a string.</p>
+<h3>my $version = Compress::Raw::Lzma::LZMA_VERSION();
+<a name="my $version = Compress::Raw::Lzma::LZMA_VERSION();"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+version of the underlying lzma library this module was using
+at compile−time as a number.</p>
+<h3>my $version = Compress::Raw::Lzma::LZMA_VERSION_STRING();
+<a name="my $version = Compress::Raw::Lzma::LZMA_VERSION_STRING();"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+version of the underlying lzma library this module was using
+at compile−time as a string.</p>
+<h2>Constants
+<a name="Constants"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+lzma constants are exported by this module</p>
+<p style="margin-left:9%; margin-top: 1em">TODO −
+more here</p>
+<h2>SUPPORT
+<a name="SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">General
+feedback/questions/bug reports should be sent to
+&lt;https://github.com/pmqs/Compress−Raw−Lzma/issues&gt;
+(preferred) or
+&lt;https://rt.cpan.org/Public/Dist/Display.html?Name=Compress−Raw−Lzma&gt;.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Compress::Zlib,
+IO::Compress::Gzip, IO::Uncompress::Gunzip,
+IO::Compress::Deflate, IO::Uncompress::Inflate,
+IO::Compress::RawDeflate, IO::Uncompress::RawInflate,
+IO::Compress::Bzip2, IO::Uncompress::Bunzip2,
+IO::Compress::Lzma, IO::Uncompress::UnLzma,
+IO::Compress::Xz, IO::Uncompress::UnXz, IO::Compress::Lzip,
+IO::Uncompress::UnLzip, IO::Compress::Lzop,
+IO::Uncompress::UnLzop, IO::Compress::Lzf,
+IO::Uncompress::UnLzf, IO::Compress::Zstd,
+IO::Uncompress::UnZstd, IO::Uncompress::AnyInflate,
+IO::Uncompress::AnyUncompress</p>
+<p style="margin-left:9%; margin-top: 1em">IO::Compress::FAQ</p>
+<p style="margin-left:9%; margin-top: 1em">File::GlobMapper,
+Archive::Zip, Archive::Tar, IO::Zlib</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module was
+written by Paul Marquess, "pmqs@cpan.org".</p>
+<h2>MODIFICATION HISTORY
+<a name="MODIFICATION HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the Changes
+file.</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+2005−2024 Paul Marquess. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

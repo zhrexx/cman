@@ -1,0 +1,452 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:35 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>inode</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">inode</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#The file type and mode">The file type and mode</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">inode −
+file inode information</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Each file has an
+inode containing metadata about the file. An application can
+retrieve this metadata using <b>stat</b>(2) (or related
+calls), which returns a <i>stat</i> structure, or
+<b>statx</b>(2), which returns a <i>statx</i> structure.</p>
+<p style="margin-left:9%; margin-top: 1em">The following is
+a list of the information typically found in, or associated
+with, the file inode, with the names of the corresponding
+structure fields returned by <b>stat</b>(2) and
+<b>statx</b>(2): <br/>
+Device where inode resides</p>
+<p style="margin-left:18%;"><i>stat.st_dev</i>;
+<i>statx.stx_dev_minor</i> and
+<i>statx.stx_dev_major</i></p>
+<p style="margin-left:18%; margin-top: 1em">Each inode (as
+well as the associated file) resides in a filesystem that is
+hosted on a device. That device is identified by the
+combination of its major ID (which identifies the general
+class of device) and minor ID (which identifies a specific
+instance in the general class).</p>
+<p style="margin-left:9%;">Inode number</p>
+<p style="margin-left:18%;"><i>stat.st_ino</i>;
+<i>statx.stx_ino</i></p>
+<p style="margin-left:18%; margin-top: 1em">Each file in a
+filesystem has a unique inode number. Inode numbers are
+guaranteed to be unique only within a filesystem (i.e., the
+same inode numbers may be used by different filesystems,
+which is the reason that hard links may not cross filesystem
+boundaries). This field contains the file’s inode
+number.</p>
+<p style="margin-left:9%;">File type and mode</p>
+<p style="margin-left:18%;"><i>stat.st_mode</i>;
+<i>statx.stx_mode</i></p>
+<p style="margin-left:18%; margin-top: 1em">See the
+discussion of file type and mode, below.</p>
+<p style="margin-left:9%;">Link count</p>
+<p style="margin-left:18%;"><i>stat.st_nlink</i>;
+<i>statx.stx_nlink</i></p>
+<p style="margin-left:18%; margin-top: 1em">This field
+contains the number of hard links to the file. Additional
+links to an existing file are created using
+<b>link</b>(2).</p>
+<p style="margin-left:9%;">User ID</p>
+<p style="margin-left:18%;"><i>stat.st_uid</i>;
+<i>statx.stx_uid</i></p>
+<p style="margin-left:18%; margin-top: 1em">This field
+records the user ID of the owner of the file. For newly
+created files, the file user ID is the effective user ID of
+the creating process. The user ID of a file can be changed
+using <b>chown</b>(2).</p>
+<p style="margin-left:9%;">Group ID</p>
+<p style="margin-left:18%;"><i>stat.st_gid</i>;
+<i>statx.stx_gid</i></p>
+<p style="margin-left:18%; margin-top: 1em">The inode
+records the ID of the group owner of the file. For newly
+created files, the file group ID is either the group ID of
+the parent directory or the effective group ID of the
+creating process, depending on whether or not the
+set-group-ID bit is set on the parent directory (see below).
+The group ID of a file can be changed using
+<b>chown</b>(2).</p>
+<p style="margin-left:9%;">Device represented by this
+inode</p>
+<p style="margin-left:18%;"><i>stat.st_rdev</i>;
+<i>statx.stx_rdev_minor</i> and
+<i>statx.stx_rdev_major</i></p>
+<p style="margin-left:18%; margin-top: 1em">If this file
+(inode) represents a device, then the inode records the
+major and minor ID of that device.</p>
+<p style="margin-left:9%;">File size</p>
+<p style="margin-left:18%;"><i>stat.st_size</i>;
+<i>statx.stx_size</i></p>
+<p style="margin-left:18%; margin-top: 1em">This field
+gives the size of the file (if it is a regular file or a
+symbolic link) in bytes. The size of a symbolic link is the
+length of the pathname it contains, without a terminating
+null byte.</p>
+<p style="margin-left:9%;">Preferred block size for I/O</p>
+<p style="margin-left:18%;"><i>stat.st_blksize</i>;
+<i>statx.stx_blksize</i></p>
+<p style="margin-left:18%; margin-top: 1em">This field
+gives the "preferred" blocksize for efficient
+filesystem I/O. (Writing to a file in smaller chunks may
+cause an inefficient read-modify-rewrite.)</p>
+<p style="margin-left:9%;">Number of blocks allocated to
+the file</p>
+<p style="margin-left:18%;"><i>stat.st_blocks</i>;
+<i>statx.stx_blocks</i></p>
+<p style="margin-left:18%; margin-top: 1em">This field
+indicates the number of blocks allocated to the file,
+512-byte units, (This may be smaller than <i>st_size</i>/512
+when the file has holes.)</p>
+<p style="margin-left:18%; margin-top: 1em">The POSIX.1
+standard notes that the unit for the <i>st_blocks</i> member
+of the <i>stat</i> structure is not defined by the standard.
+On many implementations it is 512 bytes; on a few systems, a
+different unit is used, such as 1024. Furthermore, the unit
+may differ on a per-filesystem basis.</p>
+<p style="margin-left:9%;">Last access timestamp
+(atime)</p>
+<p style="margin-left:18%;"><i>stat.st_atime</i>;
+<i>statx.stx_atime</i></p>
+<p style="margin-left:18%; margin-top: 1em">This is the
+file’s last access timestamp. It is changed by file
+accesses, for example, by <b>execve</b>(2), <b>mknod</b>(2),
+<b>pipe</b>(2), <b>utime</b>(2), and <b>read</b>(2) (of more
+than zero bytes). Other interfaces, such as <b>mmap</b>(2),
+may or may not update the atime timestamp</p>
+<p style="margin-left:18%; margin-top: 1em">Some filesystem
+types allow mounting in such a way that file and/or
+directory accesses do not cause an update of the atime
+timestamp. (See <i>noatime</i>, <i>nodiratime</i>, and
+<i>relatime</i> in <b>mount</b>(8), and related information
+in <b>mount</b>(2).) In addition, the atime timestamp is not
+updated if a file is opened with the <b>O_NOATIME</b> flag;
+see <b>open</b>(2).</p>
+<p style="margin-left:9%;">File creation (birth) timestamp
+(btime)</p>
+<p style="margin-left:18%;">(not returned in the
+<i>stat</i> structure); <i>statx.stx_btime</i></p>
+<p style="margin-left:18%; margin-top: 1em">The
+file’s creation timestamp. This is set on file
+creation and not changed subsequently.</p>
+<p style="margin-left:18%; margin-top: 1em">The btime
+timestamp was not historically present on UNIX systems and
+is not currently supported by most Linux filesystems.</p>
+<p style="margin-left:9%;">Last modification timestamp
+(mtime)</p>
+<p style="margin-left:18%;"><i>stat.st_mtime</i>;
+<i>statx.stx_mtime</i></p>
+<p style="margin-left:18%; margin-top: 1em">This is the
+file’s last modification timestamp. It is changed by
+file modifications, for example, by <b>mknod</b>(2),
+<b>truncate</b>(2), <b>utime</b>(2), and <b>write</b>(2) (of
+more than zero bytes). Moreover, the mtime timestamp of a
+directory is changed by the creation or deletion of files in
+that directory. The mtime timestamp is <i>not</i> changed
+for changes in owner, group, hard link count, or mode.</p>
+<p style="margin-left:9%;">Last status change timestamp
+(ctime)</p>
+<p style="margin-left:18%;"><i>stat.st_ctime</i>;
+<i>statx.stx_ctime</i></p>
+<p style="margin-left:18%; margin-top: 1em">This is the
+file’s last status change timestamp. It is changed by
+writing or by setting inode information (i.e., owner, group,
+link count, mode, etc.).</p>
+<p style="margin-left:9%; margin-top: 1em">The timestamp
+fields report time measured with a zero point at the
+<i>Epoch</i>, 1970-01-01 00:00:00 +0000, UTC (see
+<b>time</b>(7)).</p>
+<p style="margin-left:9%; margin-top: 1em">Nanosecond
+timestamps are supported on XFS, JFS, Btrfs, and ext4 (since
+Linux 2.6.23). Nanosecond timestamps are not supported in
+ext2, ext3, and Reiserfs. In order to return timestamps with
+nanosecond precision, the timestamp fields in the
+<i>stat</i> and <i>statx</i> structures are defined as
+structures that include a nanosecond component. See
+<b>stat</b>(2) and <b>statx</b>(2) for details. On
+filesystems that do not support subsecond timestamps, the
+nanosecond fields in the <i>stat</i> and <i>statx</i>
+structures are returned with the value 0.</p>
+<h3>The file type and mode
+<a name="The file type and mode"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>stat.st_mode</i> field (for <b>statx</b>(2), the
+<i>statx.stx_mode</i> field) contains the file type and
+mode.</p>
+<p style="margin-left:9%; margin-top: 1em">POSIX refers to
+the <i>stat.st_mode</i> bits corresponding to the mask
+<b>S_IFMT</b> (see below) as the <i>file type</i>, the 12
+bits corresponding to the mask 07777 as the <i>file mode
+bits</i> and the least significant 9 bits (0777) as the
+<i>file permission bits</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+mask values are defined for the file type:</p>
+<p style="margin-left:9%; margin-top: 1em">Thus, to test
+for a regular file (for example), one could write:</p>
+<p style="margin-left:14%; margin-top: 1em">stat(pathname,
+&amp;sb); <br/>
+if ((sb.st_mode &amp; S_IFMT) == S_IFREG) { <br/>
+/* Handle regular file */ <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Because tests of
+the above form are common, additional macros are defined by
+POSIX to allow the test of the file type in <i>st_mode</i>
+to be written more concisely:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="14%">
+<p><b>S_ISREG</b>(m)</p></td>
+<td width="1%"></td>
+<td width="49%">
+<p>is it a regular file?</p></td>
+<td width="22%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="14%">
+<p><b>S_ISDIR</b>(m)</p></td>
+<td width="1%"></td>
+<td width="49%">
+<p>directory?</p></td>
+<td width="22%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="14%">
+<p><b>S_ISCHR</b>(m)</p></td>
+<td width="1%"></td>
+<td width="49%">
+<p>character device?</p></td>
+<td width="22%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="14%">
+<p><b>S_ISBLK</b>(m)</p></td>
+<td width="1%"></td>
+<td width="49%">
+<p>block device?</p></td>
+<td width="22%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="14%">
+<p><b>S_ISFIFO</b>(m)</p></td>
+<td width="1%"></td>
+<td width="49%">
+<p>FIFO (named pipe)?</p></td>
+<td width="22%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="14%">
+<p><b>S_ISLNK</b>(m)</p></td>
+<td width="1%"></td>
+<td width="49%">
+<p>symbolic link? (Not in POSIX.1-1996.)</p></td>
+<td width="22%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="14%">
+<p><b>S_ISSOCK</b>(m)</p></td>
+<td width="1%"></td>
+<td width="49%">
+<p>socket? (Not in POSIX.1-1996.)</p></td>
+<td width="22%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The preceding
+code snippet could thus be rewritten as:</p>
+<p style="margin-left:14%; margin-top: 1em">stat(pathname,
+&amp;sb); <br/>
+if (S_ISREG(sb.st_mode)) { <br/>
+/* Handle regular file */ <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">The definitions
+of most of the above file type test macros are provided if
+any of the following feature test macros is defined:
+<b>_BSD_SOURCE</b> (in glibc 2.19 and earlier),
+<b>_SVID_SOURCE</b> (in glibc 2.19 and earlier), or
+<b>_DEFAULT_SOURCE</b> (in glibc 2.20 and later). In
+addition, definitions of all of the above macros except
+<b>S_IFSOCK</b> and <b>S_ISSOCK</b>() are provided if
+<b>_XOPEN_SOURCE</b> is defined.</p>
+<p style="margin-left:9%; margin-top: 1em">The definition
+of <b>S_IFSOCK</b> can also be exposed either by defining
+<b>_XOPEN_SOURCE</b> with a value of 500 or greater or
+(since glibc 2.24) by defining both <b>_XOPEN_SOURCE</b> and
+<b>_XOPEN_SOURCE_EXTENDED</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The definition
+of <b>S_ISSOCK</b>() is exposed if any of the following
+feature test macros is defined: <b>_BSD_SOURCE</b> (in glibc
+2.19 and earlier), <b>_DEFAULT_SOURCE</b> (in glibc 2.20 and
+later), <b>_XOPEN_SOURCE</b> with a value of 500 or greater,
+<b>_POSIX_C_SOURCE</b> with a value of 200112L or greater,
+or (since glibc 2.24) by defining both <b>_XOPEN_SOURCE</b>
+and <b>_XOPEN_SOURCE_EXTENDED</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+mask values are defined for the file mode component of the
+<i>st_mode</i> field:</p>
+<p style="margin-left:9%; margin-top: 1em">The set-group-ID
+bit (<b>S_ISGID</b>) has several special uses. For a
+directory, it indicates that BSD semantics are to be used
+for that directory: files created there inherit their group
+ID from the directory, not from the effective group ID of
+the creating process, and directories created there will
+also get the <b>S_ISGID</b> bit set. For an executable file,
+the set-group-ID bit causes the effective group ID of a
+process that executes the file to change as described in
+<b>execve</b>(2). For a file that does not have the group
+execution bit (<b>S_IXGRP</b>) set, the set-group-ID bit
+indicates mandatory file/record locking.</p>
+<p style="margin-left:9%; margin-top: 1em">The sticky bit
+(<b>S_ISVTX</b>) on a directory means that a file in that
+directory can be renamed or deleted only by the owner of the
+file, by the owner of the directory, and by a privileged
+process.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2008.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2001.</p>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-1990 did
+not describe the <b>S_IFMT</b>, <b>S_IFSOCK</b>,
+<b>S_IFLNK</b>, <b>S_IFREG</b>, <b>S_IFBLK</b>,
+<b>S_IFDIR</b>, <b>S_IFCHR</b>, <b>S_IFIFO</b>, and
+<b>S_ISVTX</b> constants, but instead specified the use of
+the macros <b>S_ISDIR</b>() and so on.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>S_ISLNK</b>() and <b>S_ISSOCK</b>() macros were not in
+POSIX.1-1996; the former is from SVID 4, the latter from
+SUSv2.</p>
+<p style="margin-left:9%; margin-top: 1em">UNIX V7
+(and later systems) had <b>S_IREAD</b>, <b>S_IWRITE</b>,
+<b>S_IEXEC</b>, and where POSIX prescribes the synonyms
+<b>S_IRUSR</b>, <b>S_IWUSR</b>, and <b>S_IXUSR</b>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For pseudofiles
+that are autogenerated by the kernel, the file size
+(<i>stat.st_size</i>; <i>statx.stx_size</i>) reported by the
+kernel is not accurate. For example, the value 0 is returned
+for many files under the <i>/proc</i> directory, while
+various files under <i>/sys</i> report a size of 4096 bytes,
+even though the file content is smaller. For such files, one
+should simply try to read as many bytes as possible (and
+append '\0' to the returned buffer if it is to be
+interpreted as a string).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>stat</b>(1),
+<b>stat</b>(2), <b>statx</b>(2), <b>symlink</b>(7)</p>
+<hr/>
+</body>
+</html>

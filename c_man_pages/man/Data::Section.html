@@ -1,0 +1,485 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:12 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Data::Section</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Data::Section</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#PERL VERSION">PERL VERSION</a><br/>
+<a href="#WARNING">WARNING</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#section_data">section_data</a><br/>
+<a href="#section_data_names">section_data_names</a><br/>
+<a href="#merged_section_data">merged_section_data</a><br/>
+<a href="#merged_section_data_names">merged_section_data_names</a><br/>
+<a href="#local_section_data">local_section_data</a><br/>
+<a href="#local_section_data_names">local_section_data_names</a><br/>
+<a href="#TIPS AND TRICKS">TIPS AND TRICKS</a><br/>
+<a href="#MooseX::Declare and namespace::autoclean">MooseX::Declare and namespace::autoclean</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#CONTRIBUTORS">CONTRIBUTORS</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Data::Section
+− read multiple hunks of data out of your DATA
+section</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version
+0.200008</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">package
+Letter::Resignation; <br/>
+use Data::Section −setup; <br/>
+sub quit { <br/>
+my ($class, $angry, %arg) = @_; <br/>
+my $template = $class−&gt;section_data( <br/>
+($angry ? "angry_" : "professional_") .
+"letter" <br/>
+); <br/>
+return fill_in($$template, \%arg); <br/>
+} <br/>
+__DATA__ <br/>
+__[ angry_letter ]__ <br/>
+Dear jerks, <br/>
+I quit! <br/>
+−− <br/>
+{{ $name }} <br/>
+__[ professional_letter ]__ <br/>
+Dear {{ $boss }}, <br/>
+I quit, jerks! <br/>
+−− <br/>
+{{ $name }}</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Data::Section
+provides an easy way to access multiple named chunks of
+line−oriented data in your module's DATA section. It
+was written to allow modules to store their own templates,
+but probably has other uses.</p>
+<h2>PERL VERSION
+<a name="PERL VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This library
+should run on perls released even a long time ago. It should
+work on any version of perl released in the last five
+years.</p>
+<p style="margin-left:9%; margin-top: 1em">Although it may
+work on older versions of perl, no guarantee is made that
+the minimum required version will not be increased. The
+version may be increased for any reason, and there is no
+promise that patches will be accepted to lower the minimum
+required perl.</p>
+<h2>WARNING
+<a name="WARNING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You will need to
+use "__DATA__" sections and not
+"__END__" sections. Yes, it matters. Who knew!</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">To get the
+methods exported by Data::Section, you must import like
+this:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Data::Section −setup;</p>
+<p style="margin-left:9%; margin-top: 1em">Optional
+arguments may be given to Data::Section like this:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Data::Section −setup =&gt; { ... };</p>
+<p style="margin-left:9%; margin-top: 1em">Valid arguments
+are:</p>
+<p style="margin-left:9%; margin-top: 1em">encoding −
+if given, gives the encoding needed to decode bytes in <br/>
+data sections; default; UTF−8 <br/>
+the special value "bytes" will leave the bytes in
+the string <br/>
+verbatim <br/>
+inherit − if true, allow packages to inherit the data
+of the packages <br/>
+from which they inherit; default: true <br/>
+header_re − if given, changes the regex used to find
+section headers <br/>
+in the data section; it should leave the section name in $1
+<br/>
+default_name − if given, allows the first section to
+has no header and set <br/>
+its name</p>
+<p style="margin-left:9%; margin-top: 1em">Three methods
+are exported by Data::Section:</p>
+<h3>section_data
+<a name="section_data"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $string_ref =
+$pkg−&gt;section_data($name);</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a reference to a string containing the data from the
+name section, either in the invocant's "DATA"
+section or in that of one of its ancestors. (The ancestor
+must also derive from the class that imported
+Data::Section.)</p>
+<p style="margin-left:9%; margin-top: 1em">By default,
+named sections are delimited by lines that look like
+this:</p>
+<p style="margin-left:9%; margin-top: 1em">__[ name ]__</p>
+<p style="margin-left:9%; margin-top: 1em">You can use as
+many underscores as you want, and the space around the name
+is optional. This pattern can be configured with the
+"header_re" option (see above). If present, a
+single leading "\" is removed, so that sections
+can encode lines that look like section delimiters.</p>
+<p style="margin-left:9%; margin-top: 1em">When a line
+containing only "__END__" is reached, all
+processing of sections ends.</p>
+<h3>section_data_names
+<a name="section_data_names"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @names =
+$pkg−&gt;section_data_names;</p>
+<p style="margin-left:9%; margin-top: 1em">This returns a
+list of all the names that will be recognized by the
+"section_data" method.</p>
+<h3>merged_section_data
+<a name="merged_section_data"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $data =
+$pkg−&gt;merged_section_data;</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a hashref containing all the data extracted from the
+package data for all the classes from which the invocant
+inherits −− as long as those classes also
+inherit from the package into which Data::Section was
+imported.</p>
+<p style="margin-left:9%; margin-top: 1em">In other words,
+given this inheritance tree:</p>
+<p style="margin-left:9%; margin-top: 1em">A <br/>
+\ <br/>
+B C <br/>
+\ / <br/>
+D</p>
+<p style="margin-left:9%; margin-top: 1em">...if
+Data::Section was imported by A, then when D's
+"merged_section_data" is invoked, C's data section
+will not be considered. (This prevents the read position of
+C's data handle from being altered unexpectedly.)</p>
+<p style="margin-left:9%; margin-top: 1em">The keys in the
+returned hashref are the section names, and the values are
+<b>references to</b> the strings extracted from the data
+sections.</p>
+<h3>merged_section_data_names
+<a name="merged_section_data_names"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @names =
+$pkg−&gt;merged_section_data_names;</p>
+<p style="margin-left:9%; margin-top: 1em">This returns a
+list of all the names that will be recognized by the
+"merged_section_data" method.</p>
+<h3>local_section_data
+<a name="local_section_data"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $data =
+$pkg−&gt;local_section_data;</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns a hashref containing all the data extracted from the
+package on which the method was invoked. If called on an
+object, it will operate on the package into which the object
+was blessed.</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+needs to be used carefully, because it's weird. It returns
+only the data for the package on which it was invoked. If
+the package on which it was invoked has no data sections, it
+returns an empty hashref.</p>
+<h3>local_section_data_names
+<a name="local_section_data_names"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @names =
+$pkg−&gt;local_section_data_names;</p>
+<p style="margin-left:9%; margin-top: 1em">This returns a
+list of all the names that will be recognized by the
+"local_section_data" method.</p>
+<h2>TIPS AND TRICKS
+<a name="TIPS AND TRICKS"></a>
+</h2>
+<h3>MooseX::Declare and namespace::autoclean
+<a name="MooseX::Declare and namespace::autoclean"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+namespace::autoclean library automatically cleans foreign
+routines from a class, including those imported by
+Data::Section.</p>
+<p style="margin-left:9%; margin-top: 1em">MooseX::Declare
+does the same thing, and can also cause your
+"__DATA__" section to appear outside your class's
+package.</p>
+<p style="margin-left:9%; margin-top: 1em">These are easy
+to address. The Sub::Exporter::ForMethods library provides
+an installer that will cause installed methods to appear to
+come from the class and avoid autocleaning. Using an
+explicit "package" statement will keep the data
+section in the correct package.</p>
+<p style="margin-left:9%; margin-top: 1em">package Foo;
+<br/>
+use MooseX::Declare; <br/>
+class Foo { <br/>
+# Utility to tell Sub::Exporter modules to export methods.
+<br/>
+use Sub::Exporter::ForMethods qw( method_installer ); <br/>
+# method_installer returns a sub. <br/>
+use Data::Section { installer =&gt; method_installer },
+−setup; <br/>
+method my_method { <br/>
+my $content_ref = $self−&gt;section_data('SectionA');
+<br/>
+print $$content_ref; <br/>
+} <br/>
+} <br/>
+__DATA__ <br/>
+__[ SectionA ]__ <br/>
+Hello, world.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="76%">
+<p style="margin-top: 1em">article for RJBS Advent 2009
+&lt;http://advent.rjbs.manxome.org/2009/2009-12-09.html&gt;</p> </td>
+<td width="10%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="76%">
+<p>Inline::Files does something that is at first look
+similar,</p> </td>
+<td width="10%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">but it works
+with source filters, and contains the warning:</p>
+<p style="margin-left:14%; margin-top: 1em">It is possible
+that this module may overwrite the source code in files that
+<br/>
+use it. To protect yourself against this possibility, you
+are strongly <br/>
+advised to use the −backup option described in
+"Safety first".</p>
+<p style="margin-left:14%; margin-top: 1em">Enough
+said.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Ricardo SIGNES
+&lt;cpan@semiotic.systems&gt;</p>
+<h2>CONTRIBUTORS
+<a name="CONTRIBUTORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p style="margin-top: 1em">Christian Walde
+&lt;walde.christian@googlemail.com&gt;</p> </td>
+<td width="24%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p>Dan Kogai &lt;dankogai+github@gmail.com&gt;</p></td>
+<td width="24%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p>David Golden &lt;dagolden@cpan.org&gt;</p></td>
+<td width="24%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p>David Steinbrunner &lt;dsteinbrunner@pobox.com&gt;</p></td>
+<td width="24%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p>Graham Ollis &lt;plicease@cpan.org&gt;</p></td>
+<td width="24%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p>Karen Etheridge &lt;ether@cpan.org&gt;</p></td>
+<td width="24%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p>Kenichi Ishigaki &lt;ishigaki@cpan.org&gt;</p></td>
+<td width="24%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p>kentfredric &lt;kentfredric+gravitar@gmail.com&gt;</p></td>
+<td width="24%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p>Ricardo Signes &lt;rjbs@semiotic.systems&gt;</p></td>
+<td width="24%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="62%">
+<p>Tatsuhiko Miyagawa &lt;miyagawa@bulknews.net&gt;</p></td>
+<td width="24%">
+</td></tr>
+</table>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2008 by Ricardo SIGNES.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

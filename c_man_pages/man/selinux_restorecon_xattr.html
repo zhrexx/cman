@@ -1,0 +1,278 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:52:46 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>selinux_restorecon_xattr</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">selinux_restorecon_xattr</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">selinux_restorecon_xattr
+− manage default <i>security.sehash</i> extended
+attribute entries added by <b>selinux_restorecon</b>(3),
+<b>setfiles</b>(8) or <b>restorecon</b>(8).</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;selinux/restorecon.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+selinux_restorecon_xattr(const char
+*</b><i>pathname</i><b>,</b></p>
+<p style="margin-left:38%;"><b>unsigned int</b>
+<i>xattr_flags</i><b>, <br/>
+struct dir_xattr ***</b><i>xattr_list</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux_restorecon_xattr</b>()
+returns a linked list of <b>dir_xattr</b> structures
+containing information described below based on:</p>
+<p style="margin-left:18%; margin-top: 1em"><i>pathname</i>
+containing a directory tree to be searched for
+<i>security.sehash</i> extended attribute entries.</p>
+<p style="margin-left:18%; margin-top: 1em"><i>xattr_flags</i>
+contains options as follows:</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_XATTR_RECURSE</b>
+recursively descend directories.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_XATTR_DELETE_NONMATCH_DIGESTS</b>
+delete non-matching digests from each directory in
+<i>pathname</i>.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_XATTR_DELETE_ALL_DIGESTS</b>
+delete all digests from each directory in
+<i>pathname</i>.</p>
+<p style="margin-left:27%; margin-top: 1em"><b>SELINUX_RESTORECON_XATTR_IGNORE_MOUNTS</b>
+do not read <b>/proc/mounts</b> to obtain a list of
+non-seclabel mounts to be excluded from the search. <br/>
+Setting <b>SELINUX_RESTORECON_XATTR_IGNORE_MOUNTS</b> is
+useful where there is a non-seclabel fs mounted with a
+seclabel fs mounted on a directory below this.</p>
+<p style="margin-left:18%; margin-top: 1em"><i>xattr_list</i>
+is the returned pointer to a linked list of <b>dir_xattr</b>
+structures, each containing the following information:</p>
+<p style="margin-left:27%; margin-top: 1em">struct
+dir_xattr {</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="5%"></td>
+<td width="16%"></td>
+<td width="79%">
+<p>char *directory;</p></td></tr>
+<tr align="left" valign="top">
+<td width="5%"></td>
+<td width="16%"></td>
+<td width="79%">
+<p>char *digest; /* Printable hex encoded string */</p></td></tr>
+<tr align="left" valign="top">
+<td width="5%"></td>
+<td width="16%"></td>
+<td width="79%">
+<p>enum digest_result result;</p></td></tr>
+<tr align="left" valign="top">
+<td width="5%"></td>
+<td width="16%"></td>
+<td width="79%">
+<p>struct dir_xattr *next;</p></td></tr>
+</table>
+<p style="margin-left:27%;">};</p>
+<p style="margin-left:18%; margin-top: 1em">The
+<b>result</b> entry is enumerated as follows:</p>
+<p style="margin-left:27%;">enum digest_result {</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="5%"></td>
+<td width="16%"></td>
+<td width="79%">
+<p>MATCH = 0,</p></td></tr>
+<tr align="left" valign="top">
+<td width="5%"></td>
+<td width="16%"></td>
+<td width="79%">
+<p>NOMATCH,</p></td></tr>
+<tr align="left" valign="top">
+<td width="5%"></td>
+<td width="16%"></td>
+<td width="79%">
+<p>DELETED_MATCH,</p></td></tr>
+<tr align="left" valign="top">
+<td width="5%"></td>
+<td width="16%"></td>
+<td width="79%">
+<p>DELETED_NOMATCH,</p></td></tr>
+<tr align="left" valign="top">
+<td width="5%"></td>
+<td width="16%"></td>
+<td width="79%">
+<p>ERROR</p></td></tr>
+</table>
+<p style="margin-left:27%;">};</p>
+<p style="margin-left:18%; margin-top: 1em"><i>xattr_list</i>
+must be set to <b>NULL</b> before calling
+<b>selinux_restorecon_xattr</b>(3). The caller is
+responsible for freeing the returned <i>xattr_list</i>
+entries in the linked list.</p>
+<p style="margin-left:9%; margin-top: 1em">See the
+<b>NOTES</b> section for more information.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success, zero
+is returned. On error, −1 is returned and <i>errno</i>
+is set appropriately.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">1.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p style="margin-top: 1em">By default
+<b>selinux_restorecon_xattr</b>(3) will use the default set
+of specfiles described in <b>files_contexts</b>(5) to
+calculate the SHA256 digests to be used for comparison. To
+change this default behavior <b>selabel_open</b>(3) must be
+called specifying the required <b>SELABEL_OPT_PATH</b> and
+setting the <b>SELABEL_OPT_DIGEST</b> option to a non-NULL
+value. <b>selinux_restorecon_set_sehandle</b>(3) is then
+called to set the handle to be used by
+<b>selinux_restorecon_xattr</b>(3).</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>2.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>By default <b>selinux_restorecon_xattr</b>(3) reads
+<b>/proc/mounts</b> to obtain a list of non-seclabel mounts
+to be excluded from searches unless the
+<b>SELINUX_RESTORECON_XATTR_IGNORE_MOUNTS</b> flag has been
+set.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>3.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p><b>RAMFS</b> and <b>TMPFS</b> filesystems do not support
+the <i>security.sehash</i> extended attribute and are
+automatically excluded from searches.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>4.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>By default <b>stderr</b> is used to log output messages
+and errors. This may be changed by calling
+<b>selinux_set_callback</b>(3) with the
+<b>SELINUX_CB_LOG</b> <i>type</i> option.</p></td></tr>
+</table>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux_restorecon</b>(3)
+<b><br/>
+selinux_restorecon_set_sehandle</b>(3), <b><br/>
+selinux_restorecon_default_handle</b>(3), <b><br/>
+selinux_restorecon_set_exclude_list</b>(3), <b><br/>
+selinux_restorecon_set_alt_rootpath</b>(3), <b><br/>
+ selinux_set_callback</b>(3)</p>
+<hr/>
+</body>
+</html>

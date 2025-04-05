@@ -1,0 +1,176 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:47 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Encode::GSM0338</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Encode::GSM0338</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Septets">Septets</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode::GSM0338
+−− ETSI GSM 03.38 Encoding</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Encode
+qw/encode decode/; <br/>
+$gsm0338 = encode("gsm0338", $unicode); # loads
+Encode::GSM0338 implicitly <br/>
+$unicode = decode("gsm0338", $gsm0338); #
+ditto</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">GSM0338 is for
+GSM handsets. Though it shares alphanumerals with ASCII,
+control character ranges and other parts are mapped very
+differently, mainly to store Greek characters. There are
+also escape sequences (starting with 0x1B) to cover e.g. the
+Euro sign.</p>
+<p style="margin-left:9%; margin-top: 1em">This was once
+handled by Encode::Bytes but because of all those unusual
+specifications, Encode 2.20 has relocated the support to
+this module.</p>
+<p style="margin-left:9%; margin-top: 1em">This module
+implements only <i>GSM 7 bit Default Alphabet</i> and <i>GSM
+7 bit default alphabet extension table</i> according to
+standard 3GPP TS 23.038 version 16. Therefore <i>National
+Language Single Shift</i> and <i>National Language Locking
+Shift</i> are not implemented nor supported.</p>
+<h3>Septets
+<a name="Septets"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This modules
+operates with octets (like any other Encode module) and not
+with packed septets (unlike other GSM standards). Therefore
+for processing binary SMS or parts of GSM TPDU payload (3GPP
+TS 23.040) it is needed to do conversion between octets and
+packed septets. For this purpose perl's "pack" and
+"unpack" functions may be useful:</p>
+<p style="margin-left:9%; margin-top: 1em">$bytes =
+substr(pack('(b*)*', unpack '(A7)*', unpack 'b*', $septets),
+0, $num_of_septets); <br/>
+$unicode = decode('GSM0338', $bytes); <br/>
+$bytes = encode('GSM0338', $unicode); <br/>
+$septets = pack 'b*', join '', map { substr $_, 0, 7 }
+unpack '(A8)*', unpack 'b*', $bytes; <br/>
+$num_of_septets = length $bytes;</p>
+<p style="margin-left:9%; margin-top: 1em">Please note that
+for correct decoding of packed septets it is required to
+know number of septets packed in binary buffer as binary
+buffer is always padded with zero bits and 7 zero bits
+represents character "@". Number of septets is
+also stored in TPDU payload when dealing with 3GPP TS
+23.040.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode::GSM0338
+2.7 and older versions (part of Encode 3.06) incorrectly
+handled zero bytes (character "@"). This was fixed
+in Encode::GSM0338 version 2.8 (part of Encode 3.07).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">3GPP TS 23.038
+&lt;https://www.3gpp.org/dynareport/23038.htm&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">ETSI TS 123 038
+V16.0.0 (2020−07)
+&lt;https://www.etsi.org/deliver/etsi_ts/123000_123099/123038/16.00.00_60/ts_123038v160000p.pdf&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">Encode</p>
+<hr/>
+</body>
+</html>

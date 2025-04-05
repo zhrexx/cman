@@ -1,0 +1,329 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:04 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::API::Instance</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::API::Instance</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::API::Instance
+− Object used by Test2::API under the hood</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This object
+encapsulates the global shared state tracked by Test2. A
+single global instance of this package is stored (and
+obscured) by the Test2::API package.</p>
+<p style="margin-left:9%; margin-top: 1em">There is no
+reason to directly use this package. This package is
+documented for completeness. This package can change, or go
+away completely at any time. Directly using, or
+monkeypatching this package is not supported in any way
+shape or form.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::API::Instance; <br/>
+my $obj = Test2::API::Instance−&gt;new; <br/>
+$pid = $obj−&gt;pid</p>
+<p style="margin-left:14%;">PID of this instance.</p>
+<p style="margin-left:9%;">$obj−&gt;tid</p>
+<p style="margin-left:14%;">Thread ID of this instance.</p>
+<p style="margin-left:9%;">$obj−&gt;<b>reset()</b></p>
+<p style="margin-left:14%;">Reset the object to
+defaults.</p>
+<p style="margin-left:9%;">$obj−&gt;<b>load()</b></p>
+<p style="margin-left:14%;">Set the internal state to
+loaded, and run and stored post−load callbacks.</p>
+<p style="margin-left:9%;">$bool =
+$obj−&gt;loaded</p>
+<p style="margin-left:14%;">Check if the state is set to
+loaded.</p>
+<p style="margin-left:9%;">$arrayref =
+$obj−&gt;post_load_callbacks</p>
+<p style="margin-left:14%;">Get the post−load
+callbacks.</p>
+<p style="margin-left:9%;">$obj−&gt;add_post_load_callback(sub
+{ ... })</p>
+<p style="margin-left:14%;">Add a post−load callback.
+If load() has already been called then the callback will be
+immediately executed. If load() has not been called then the
+callback will be stored and executed later when load() is
+called.</p>
+<p style="margin-left:9%;">$hashref =
+$obj−&gt;<b>contexts()</b></p>
+<p style="margin-left:14%;">Get a hashref of all active
+contexts keyed by hub id.</p>
+<p style="margin-left:9%;">$arrayref =
+$obj−&gt;context_acquire_callbacks</p>
+<p style="margin-left:14%;">Get all context acquire
+callbacks.</p>
+<p style="margin-left:9%;">$arrayref =
+$obj−&gt;context_init_callbacks</p>
+<p style="margin-left:14%;">Get all context init
+callbacks.</p>
+<p style="margin-left:9%;">$arrayref =
+$obj−&gt;context_release_callbacks</p>
+<p style="margin-left:14%;">Get all context release
+callbacks.</p>
+<p style="margin-left:9%;">$arrayref =
+$obj−&gt;pre_subtest_callbacks</p>
+<p style="margin-left:14%;">Get all pre−subtest
+callbacks.</p>
+<p style="margin-left:9%;">$obj−&gt;add_context_init_callback(sub
+{ ... })</p>
+<p style="margin-left:14%;">Add a context init callback.
+Subs are called every time a context is created. Subs get
+the newly created context as their only argument.</p>
+<p style="margin-left:9%;">$obj−&gt;add_context_release_callback(sub
+{ ... })</p>
+<p style="margin-left:14%;">Add a context release callback.
+Subs are called every time a context is released. Subs get
+the released context as their only argument. These callbacks
+should not call release on the context.</p>
+<p style="margin-left:9%;">$obj−&gt;add_pre_subtest_callback(sub
+{ ... })</p>
+<p style="margin-left:14%;">Add a pre−subtest
+callback. Subs are called every time a subtest is going to
+be run. Subs get the subtest name, coderef, and any
+arguments.</p>
+<p style="margin-left:9%;">$obj−&gt;<b>set_exit()</b></p>
+<p style="margin-left:14%;">This is intended to be called
+in an "END { ... }" block. This will look at test
+state and set $?. This will also call any end callbacks, and
+wait on child processes/threads.</p>
+<p style="margin-left:9%;">$obj−&gt;set_ipc_pending($val)</p>
+<p style="margin-left:14%;">Tell other processes and
+threads there is a pending event. $val should be a unique
+value no other thread/process will generate.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+This will also make the current process see a pending
+event.</p>
+<p style="margin-left:9%;">$pending =
+$obj−&gt;<b>get_ipc_pending()</b></p>
+<p style="margin-left:14%;">This returns −1 if it is
+not possible to know.</p>
+<p style="margin-left:14%; margin-top: 1em">This returns 0
+if there are no pending events.</p>
+<p style="margin-left:14%; margin-top: 1em">This returns 1
+if there are pending events.</p>
+<p style="margin-left:9%;">$timeout =
+$obj−&gt;ipc_timeout; <br/>
+$obj−&gt;set_ipc_timeout($timeout);</p>
+<p style="margin-left:14%;">How long to wait for child
+processes and threads before aborting.</p>
+<p style="margin-left:9%;">$drivers =
+$obj−&gt;ipc_drivers</p>
+<p style="margin-left:14%;">Get the list of IPC
+drivers.</p>
+<p style="margin-left:9%;">$obj−&gt;add_ipc_driver($DRIVER_CLASS)</p>
+<p style="margin-left:14%;">Add an IPC driver to the list.
+The most recently added IPC driver will become the global
+one during initialization. If a driver is added after
+initialization has occurred a warning will be generated:</p>
+<p style="margin-left:14%; margin-top: 1em">"IPC
+driver $driver loaded too late to be used as the global ipc
+driver"</p>
+<p style="margin-left:9%;">$bool =
+$obj−&gt;ipc_polling</p>
+<p style="margin-left:14%;">Check if polling is
+enabled.</p>
+<p style="margin-left:9%;">$obj−&gt;enable_ipc_polling</p>
+<p style="margin-left:14%;">Turn on polling. This will cull
+events from other processes and threads every time a context
+is created.</p>
+<p style="margin-left:9%;">$obj−&gt;disable_ipc_polling</p>
+<p style="margin-left:14%;">Turn off IPC polling.</p>
+<p style="margin-left:9%;">$bool = $obj−&gt;no_wait
+<br/>
+$bool = $obj−&gt;set_no_wait($bool)</p>
+<p style="margin-left:14%;">Get/Set no_wait. This option is
+used to turn off process/thread waiting at exit.</p>
+<p style="margin-left:9%;">$arrayref =
+$obj−&gt;exit_callbacks</p>
+<p style="margin-left:14%;">Get the exit callbacks.</p>
+<p style="margin-left:9%;">$obj−&gt;add_exit_callback(sub
+{ ... })</p>
+<p style="margin-left:14%;">Add an exit callback. This
+callback will be called by set_exit().</p>
+<p style="margin-left:9%;">$bool =
+$obj−&gt;finalized</p>
+<p style="margin-left:14%;">Check if the object is
+finalized. Finalization happens when either ipc(), stack(),
+or format() are called on the object. Once finalization
+happens these fields are considered unchangeable (not
+enforced here, enforced by Test2).</p>
+<p style="margin-left:9%;">$ipc = $obj−&gt;ipc</p>
+<p style="margin-left:14%;">Get the one true IPC
+instance.</p>
+<p style="margin-left:9%;">$obj−&gt;ipc_disable</p>
+<p style="margin-left:14%;">Turn IPC off</p>
+<p style="margin-left:9%;">$bool =
+$obj−&gt;ipc_disabled</p>
+<p style="margin-left:14%;">Check if IPC is disabled</p>
+<p style="margin-left:9%;">$stack =
+$obj−&gt;stack</p>
+<p style="margin-left:14%;">Get the one true hub stack.</p>
+<p style="margin-left:9%;">$formatter =
+$obj−&gt;formatter</p>
+<p style="margin-left:14%;">Get the global formatter. By
+default this is the 'Test2::Formatter::TAP' package. This
+could be any package that implements the write() method.
+This can also be an instantiated object.</p>
+<p style="margin-left:9%;">$bool =
+$obj−&gt;<b>formatter_set()</b></p>
+<p style="margin-left:14%;">Check if a formatter has been
+set.</p>
+<p style="margin-left:9%;">$obj−&gt;add_formatter($class)
+<br/>
+$obj−&gt;add_formatter($obj)</p>
+<p style="margin-left:14%;">Add a formatter. The most
+recently added formatter will become the global one during
+initialization. If a formatter is added after initialization
+has occurred a warning will be generated:</p>
+<p style="margin-left:14%; margin-top: 1em">"Formatter
+$formatter loaded too late to be used as the global
+formatter"</p>
+<p style="margin-left:9%;">$obj−&gt;set_add_uuid_via(sub
+{ ... }) <br/>
+$sub = $obj−&gt;<b>add_uuid_via()</b></p>
+<p style="margin-left:14%;">This allows you to provide a
+UUID generator. If provided UUIDs will be attached to all
+events, hubs, and contexts. This is useful for storing,
+tracking, and linking these objects.</p>
+<p style="margin-left:14%; margin-top: 1em">The sub you
+provide should always return a unique identifier. Most
+things will expect a proper UUID string, however nothing in
+Test2::API enforces this.</p>
+<p style="margin-left:14%; margin-top: 1em">The sub will
+receive exactly 1 argument, the type of thing being tagged
+'context', 'hub', or 'event'. In the future additional
+things may be tagged, in which case new strings will be
+passed in. These are purely informative, you can (and
+usually should) ignore them.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2 can be found at
+&lt;https://github.com/Test−More/test−more/&gt;.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;https://dev.perl.org/licenses/&gt;</p>
+<hr/>
+</body>
+</html>

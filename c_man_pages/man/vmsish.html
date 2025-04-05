@@ -1,0 +1,207 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:41 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>vmsish</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">vmsish</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">vmsish −
+Perl pragma to control VMS−specific language
+features</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use vmsish; <br/>
+use vmsish 'status'; # or '$?' <br/>
+use vmsish 'exit'; <br/>
+use vmsish 'time'; <br/>
+use vmsish 'hushed'; <br/>
+no vmsish 'hushed'; <br/>
+vmsish::hushed($hush); <br/>
+use vmsish; <br/>
+no vmsish 'time';</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If no import
+list is supplied, all possible VMS-specific features are
+assumed. Currently, there are four VMS-specific features
+available: ’status’ (a.k.a ’$?’),
+’exit’, ’time’ and
+’hushed’.</p>
+<p style="margin-left:9%; margin-top: 1em">If you’re
+not running VMS, this module does nothing. <br/>
+"vmsish status"</p>
+<p style="margin-left:17%;">This makes $? and
+"system" return the native VMS exit status instead
+of emulating the POSIX exit status.</p>
+<p style="margin-left:9%;">"vmsish exit"</p>
+<p style="margin-left:17%;">This makes "exit 1"
+produce a successful exit (with status SS$_NORMAL), instead
+of emulating UNIX <b>exit()</b>, which considers "exit
+1" to indicate an error. As with the CRTL’s
+<b>exit()</b> function, "exit 0" is also mapped to
+an exit status of SS$_NORMAL, and any other argument to
+<b>exit()</b> is used directly as Perl’s exit
+status.</p>
+<p style="margin-left:9%;">"vmsish time"</p>
+<p style="margin-left:17%;">This makes all times relative
+to the local time zone, instead of the default of Universal
+Time (a.k.a Greenwich Mean Time, or GMT).</p>
+<p style="margin-left:9%;">"vmsish hushed"</p>
+<p style="margin-left:17%;">This suppresses printing of VMS
+status messages to SYS$OUTPUT and SYS$ERROR if Perl
+terminates with an error status, and allows programs that
+are expecting "unix-style" Perl to avoid having to
+parse VMS error messages. It does not suppress any messages
+from Perl itself, just the messages generated by DCL after
+Perl exits. The DCL symbol $STATUS will still have the
+termination status, but with a high-order bit set:</p>
+<p style="margin-left:17%; margin-top: 1em">EXAMPLE: <br/>
+$ perl −e"exit 44;" Non-hushed error exit
+<br/>
+%SYSTEM−F−ABORT, abort DCL message <br/>
+$ show sym $STATUS <br/>
+$STATUS == "%X0000002C"</p>
+<p style="margin-left:17%; margin-top: 1em">$ perl
+−e"use vmsish qw(hushed); exit 44;" Hushed
+error exit <br/>
+$ show sym $STATUS <br/>
+$STATUS == "%X1000002C"</p>
+<p style="margin-left:17%; margin-top: 1em">The
+’hushed’ flag has a global scope during
+compilation: the <b>exit()</b> or <b>die()</b> commands that
+are compiled after ’vmsish hushed’ will be
+hushed when they are executed. Doing a "no vmsish
+’hushed’" turns off the hushed flag.</p>
+<p style="margin-left:17%; margin-top: 1em">The status of
+the hushed flag also affects output of VMS error messages
+from compilation errors. Again, you still get the Perl error
+message (and the code in $STATUS)</p>
+<p style="margin-left:17%; margin-top: 1em">EXAMPLE: <br/>
+use vmsish ’hushed’; # turn on hushed flag <br/>
+use Carp; # Carp compiled hushed <br/>
+exit 44; # will be hushed <br/>
+croak(’I die’); # will be hushed <br/>
+no vmsish ’hushed’; # turn off hushed flag <br/>
+exit 44; # will not be hushed <br/>
+croak(’I die2’): # WILL be hushed, croak was
+compiled hushed</p>
+<p style="margin-left:17%; margin-top: 1em">You can also
+control the ’hushed’ flag at run-time, using the
+built-in routine <b>vmsish::hushed()</b>. Without argument,
+it returns the hushed status. Since vmsish::hushed is
+built-in, you do not need to "use vmsish" to call
+it.</p>
+<p style="margin-left:17%; margin-top: 1em">EXAMPLE: <br/>
+if ($quiet_exit) { <b><br/>
+vmsish::hushed</b>(1); <br/>
+} <br/>
+print "Sssshhhh...I’m hushed...\n" if
+<b>vmsish::hushed()</b>; <br/>
+exit 44;</p>
+<p style="margin-left:17%; margin-top: 1em">Note that an
+<b>exit()</b> or <b>die()</b> that is compiled
+’hushed’ because of "use vmsish" is
+not un-hushed by calling <b>vmsish::hushed</b>(0) at
+runtime.</p>
+<p style="margin-left:17%; margin-top: 1em">The messages
+from error exits from inside the Perl core are generally
+more serious, and are not suppressed.</p>
+<p style="margin-left:9%; margin-top: 1em">See "Perl
+Modules" in perlmod.</p>
+<hr/>
+</body>
+</html>

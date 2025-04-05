@@ -1,0 +1,714 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:16 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Filter::Simple</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Filter::Simple</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#The Problem">The Problem</a><br/>
+<a href="#A Solution">A Solution</a><br/>
+<a href="#Disabling or changing &lt;no&gt; behaviour">Disabling or changing &lt;no&gt; behaviour</a><br/>
+<a href="#All−in−one interface">All−in−one interface</a><br/>
+<a href="#Filtering only specific components of source code">Filtering only specific components of source code</a><br/>
+<a href="#Filtering only the code parts of source code">Filtering only the code parts of source code</a><br/>
+<a href='#Using Filter::Simple with an explicit "import" subroutine'>Using Filter::Simple with an explicit "import" subroutine</a><br/>
+<a href="#Using Filter::Simple and Exporter together">Using Filter::Simple and Exporter together</a><br/>
+<a href="#How it works">How it works</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#CONTACT">CONTACT</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Filter::Simple
+− Simplified source filtering</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"># in
+MyFilter.pm: <br/>
+package MyFilter; <br/>
+use Filter::Simple; <br/>
+FILTER { ... }; <br/>
+# or just: <br/>
+# <br/>
+# use Filter::Simple sub { ... }; <br/>
+# in user's code: <br/>
+use MyFilter; <br/>
+# this code is filtered <br/>
+no MyFilter; <br/>
+# this code is not</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<h3>The Problem
+<a name="The Problem"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Source filtering
+is an immensely powerful feature of recent versions of Perl.
+It allows one to extend the language itself (e.g. the Switch
+module), to simplify the language (e.g.
+Language::Pythonesque), or to completely recast the language
+(e.g. Lingua::Romana::Perligata). Effectively, it allows one
+to use the full power of Perl as its own, recursively
+applied, macro language.</p>
+<p style="margin-left:9%; margin-top: 1em">The excellent
+Filter::Util::Call module (by Paul Marquess) provides a
+usable Perl interface to source filtering, but it is often
+too powerful and not nearly as simple as it could be.</p>
+<p style="margin-left:9%; margin-top: 1em">To use the
+module it is necessary to do the following:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>1.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>Download, build, and install the Filter::Util::Call
+module. (If you have Perl 5.7.1 or later, this is already
+done for you.)</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>2.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>Set up a module that does a "use
+Filter::Util::Call".</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>3.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>Within that module, create an "import"
+subroutine.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>4.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>Within the "import" subroutine do a call to
+"filter_add", passing it either a subroutine
+reference.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>5.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>Within the subroutine reference, call
+"filter_read" or "filter_read_exact" to
+"prime" $_ with source code data from the source
+file that will "use" your module. Check the status
+value returned to see if any source code was actually read
+in.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>6.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>Process the contents of $_ to change the source code in
+the desired manner.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>7.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>Return the status value.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>8.</p></td>
+<td width="2%"></td>
+<td width="86%">
+<p>If the act of unimporting your module (via a
+"no") should cause source code filtering to cease,
+create an "unimport" subroutine, and have it call
+"filter_del". Make sure that the call to
+"filter_read" or "filter_read_exact" in
+step 5 will not accidentally read past the "no".
+Effectively this limits source code filters to
+line−by−line operation, unless the
+"import" subroutine does some fancy
+pre−pre−parsing of the source code it's
+filtering.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">For example,
+here is a minimal source code filter in a module named
+BANG.pm. It simply converts every occurrence of the sequence
+"BANG\s+BANG" to the sequence "die 'BANG' if
+$BANG" in any piece of code following a "use
+BANG;" statement (until the next "no BANG;"
+statement, if any):</p>
+<p style="margin-left:9%; margin-top: 1em">package BANG;
+<br/>
+use Filter::Util::Call ; <br/>
+sub import { <br/>
+filter_add( sub { <br/>
+my $caller = caller; <br/>
+my ($status, $no_seen, $data); <br/>
+while ($status = filter_read()) { <br/>
+if (/ˆ\s*no\s+$caller\s*;\s*?$/) { <br/>
+$no_seen=1; <br/>
+last; <br/>
+} <br/>
+$data .= $_; <br/>
+$_ = ""; <br/>
+} <br/>
+$_ = $data; <br/>
+s/BANG\s+BANG/die 'BANG' if \$BANG/g <br/>
+unless $status &lt; 0; <br/>
+$_ .= "no $class;\n" if $no_seen; <br/>
+return 1; <br/>
+}) <br/>
+} <br/>
+sub unimport { <br/>
+filter_del(); <br/>
+} <br/>
+1 ;</p>
+<p style="margin-left:9%; margin-top: 1em">This level of
+sophistication puts filtering out of the reach of many
+programmers.</p>
+<h3>A Solution
+<a name="A Solution"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+Filter::Simple module provides a simplified interface to
+Filter::Util::Call; one that is sufficient for most common
+cases.</p>
+<p style="margin-left:9%; margin-top: 1em">Instead of the
+above process, with Filter::Simple the task of setting up a
+source code filter is reduced to:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">1.</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p style="margin-top: 1em">Download and install the
+Filter::Simple module. (If you have Perl 5.7.1 or later,
+this is already done for you.)</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>2.</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p>Set up a module that does a "use
+Filter::Simple" and then calls "FILTER { ...
+}".</p> </td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>3.</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p>Within the anonymous subroutine or block that is passed
+to "FILTER", process the contents of $_ to change
+the source code in the desired manner.</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">In other words,
+the previous example, would become:</p>
+<p style="margin-left:9%; margin-top: 1em">package BANG;
+<br/>
+use Filter::Simple; <br/>
+FILTER { <br/>
+s/BANG\s+BANG/die 'BANG' if \$BANG/g; <br/>
+}; <br/>
+1 ;</p>
+<p style="margin-left:9%; margin-top: 1em">Note that the
+source code is passed as a single string, so any regex that
+uses "ˆ" or "$" to detect line
+boundaries will need the "/m" flag.</p>
+<h3>Disabling or changing &lt;no&gt; behaviour
+<a name="Disabling or changing &lt;no&gt; behaviour"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default, the
+installed filter only filters up to a line consisting of one
+of the three standard source "terminators":</p>
+<p style="margin-left:9%; margin-top: 1em">no ModuleName; #
+optional comment</p>
+<p style="margin-left:9%; margin-top: 1em">or:</p>
+<p style="margin-left:9%; margin-top: 1em">__END__</p>
+<p style="margin-left:9%; margin-top: 1em">or:</p>
+<p style="margin-left:9%; margin-top: 1em">__DATA__</p>
+<p style="margin-left:9%; margin-top: 1em">but this can be
+altered by passing a second argument to "use
+Filter::Simple" or "FILTER" (just remember:
+there's <i>no</i> comma after the initial block when you use
+"FILTER").</p>
+<p style="margin-left:9%; margin-top: 1em">That second
+argument may be either a "qr"'d regular expression
+(which is then used to match the terminator line), or a
+defined false value (which indicates that no terminator line
+should be looked for), or a reference to a hash (in which
+case the terminator is the value associated with the key
+'terminator'.</p>
+<p style="margin-left:9%; margin-top: 1em">For example, to
+cause the previous filter to filter only up to a line of the
+form:</p>
+<p style="margin-left:9%; margin-top: 1em">GNAB esu;</p>
+<p style="margin-left:9%; margin-top: 1em">you would
+write:</p>
+<p style="margin-left:9%; margin-top: 1em">package BANG;
+<br/>
+use Filter::Simple; <br/>
+FILTER { <br/>
+s/BANG\s+BANG/die 'BANG' if \$BANG/g; <br/>
+} <br/>
+qr/ˆ\s*GNAB\s+esu\s*;\s*?$/;</p>
+<p style="margin-left:9%; margin-top: 1em">or:</p>
+<p style="margin-left:9%; margin-top: 1em">FILTER { <br/>
+s/BANG\s+BANG/die 'BANG' if \$BANG/g; <br/>
+} <br/>
+{ terminator =&gt; qr/ˆ\s*GNAB\s+esu\s*;\s*?$/ };</p>
+<p style="margin-left:9%; margin-top: 1em">and to prevent
+the filter's being turned off in any way:</p>
+<p style="margin-left:9%; margin-top: 1em">package BANG;
+<br/>
+use Filter::Simple; <br/>
+FILTER { <br/>
+s/BANG\s+BANG/die 'BANG' if \$BANG/g; <br/>
+} <br/>
+""; # or: 0</p>
+<p style="margin-left:9%; margin-top: 1em">or:</p>
+<p style="margin-left:9%; margin-top: 1em">FILTER { <br/>
+s/BANG\s+BANG/die 'BANG' if \$BANG/g; <br/>
+} <br/>
+{ terminator =&gt; "" };</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note that, no
+matter what you set the terminator pattern to, the actual
+terminator itself</b> <b><i>must</i></b> <b>be contained on
+a single source line.</b></p>
+<h3>All−in−one interface
+<a name="All−in−one interface"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Separating the
+loading of Filter::Simple:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Filter::Simple;</p>
+<p style="margin-left:9%; margin-top: 1em">from the setting
+up of the filtering:</p>
+<p style="margin-left:9%; margin-top: 1em">FILTER { ...
+};</p>
+<p style="margin-left:9%; margin-top: 1em">is useful
+because it allows other code (typically parser support code
+or caching variables) to be defined before the filter is
+invoked. However, there is often no need for such a
+separation.</p>
+<p style="margin-left:9%; margin-top: 1em">In those cases,
+it is easier to just append the filtering subroutine and any
+terminator specification directly to the "use"
+statement that loads Filter::Simple, like so:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Filter::Simple sub { <br/>
+s/BANG\s+BANG/die 'BANG' if \$BANG/g; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">This is exactly
+the same as:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Filter::Simple; <br/>
+BEGIN { <br/>
+Filter::Simple::FILTER { <br/>
+s/BANG\s+BANG/die 'BANG' if \$BANG/g; <br/>
+}; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">except that the
+"FILTER" subroutine is not exported by
+Filter::Simple.</p>
+<h3>Filtering only specific components of source code
+<a name="Filtering only specific components of source code"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">One of the
+problems with a filter like:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Filter::Simple; <br/>
+FILTER { s/BANG\s+BANG/die 'BANG' if \$BANG/g };</p>
+<p style="margin-left:9%; margin-top: 1em">is that it
+indiscriminately applies the specified transformation to the
+entire text of your source program. So something like:</p>
+<p style="margin-left:9%; margin-top: 1em">warn 'BANG BANG,
+YOU'RE DEAD'; <br/>
+BANG BANG;</p>
+<p style="margin-left:9%; margin-top: 1em">will become:</p>
+<p style="margin-left:9%; margin-top: 1em">warn 'die 'BANG'
+if $BANG, YOU'RE DEAD'; <br/>
+die 'BANG' if $BANG;</p>
+<p style="margin-left:9%; margin-top: 1em">It is very
+common when filtering source to only want to apply the
+filter to the non−character−string parts of the
+code, or alternatively to <i>only</i> the character
+strings.</p>
+<p style="margin-left:9%; margin-top: 1em">Filter::Simple
+supports this type of filtering by automatically exporting
+the "FILTER_ONLY" subroutine.</p>
+<p style="margin-left:9%; margin-top: 1em">"FILTER_ONLY"
+takes a sequence of specifiers that install separate (and
+possibly multiple) filters that act on only parts of the
+source code. For example:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Filter::Simple; <br/>
+FILTER_ONLY <br/>
+code =&gt; sub { s/BANG\s+BANG/die 'BANG' if \$BANG/g },
+<br/>
+quotelike =&gt; sub { s/BANG\s+BANG/CHITTY CHITTY/g };</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"code" subroutine will only be used to filter
+parts of the source code that are not quotelikes, POD, or
+"__DATA__". The "quotelike" subroutine
+only filters Perl quotelikes (including here documents).</p>
+<p style="margin-left:9%; margin-top: 1em">The full list of
+alternatives is: <br/>
+"code"</p>
+<p style="margin-left:14%;">Filters only those sections of
+the source code that are not quotelikes, POD, or
+"__DATA__".</p>
+<p style="margin-left:9%;">"code_no_comments"</p>
+<p style="margin-left:14%;">Filters only those sections of
+the source code that are not quotelikes, POD, comments, or
+"__DATA__".</p>
+<p style="margin-left:9%;">"executable"</p>
+<p style="margin-left:14%;">Filters only those sections of
+the source code that are not POD or
+"__DATA__".</p>
+<p style="margin-left:9%;">"executable_no_comments"</p>
+<p style="margin-left:14%;">Filters only those sections of
+the source code that are not POD, comments, or
+"__DATA__".</p>
+<p style="margin-left:9%;">"quotelike"</p>
+<p style="margin-left:14%;">Filters only Perl quotelikes
+(as interpreted by
+&amp;Text::Balanced::extract_quotelike).</p>
+<p style="margin-left:9%;">"string"</p>
+<p style="margin-left:14%;">Filters only the string literal
+parts of a Perl quotelike (i.e. the contents of a string
+literal, either half of a "tr///", the second half
+of an "s///").</p>
+<p style="margin-left:9%;">"regex"</p>
+<p style="margin-left:14%;">Filters only the pattern
+literal parts of a Perl quotelike (i.e. the contents of a
+"qr//" or an "m//", the first half of an
+"s///").</p>
+<p style="margin-left:9%;">"all"</p>
+<p style="margin-left:14%;">Filters everything. Identical
+in effect to "FILTER".</p>
+<p style="margin-left:9%; margin-top: 1em">Except for
+"FILTER_ONLY code =&gt; sub {...}", each of the
+component filters is called repeatedly, once for each
+component found in the source code.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that you
+can also apply two or more of the same type of filter in a
+single "FILTER_ONLY". For example, here's a simple
+macro−preprocessor that is only applied within
+regexes, with a final debugging pass that prints the
+resulting source code:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Regexp::Common; <br/>
+FILTER_ONLY <br/>
+regex =&gt; sub { s/!\[/[ˆ/g }, <br/>
+regex =&gt; sub { s/%d/$RE{num}{int}/g }, <br/>
+regex =&gt; sub { s/%f/$RE{num}{real}/g }, <br/>
+all =&gt; sub { print if $::DEBUG };</p>
+<h3>Filtering only the code parts of source code
+<a name="Filtering only the code parts of source code"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Most source code
+ceases to be grammatically correct when it is broken up into
+the pieces between string literals and regexes. So the
+'code' and 'code_no_comments' component filter behave
+slightly differently from the other partial filters
+described in the previous section.</p>
+<p style="margin-left:9%; margin-top: 1em">Rather than
+calling the specified processor on each individual piece of
+code (i.e. on the bits between quotelikes), the 'code...'
+partial filters operate on the entire source code, but with
+the quotelike bits (and, in the case of 'code_no_comments',
+the comments) "blanked out".</p>
+<p style="margin-left:9%; margin-top: 1em">That is, a
+'code...' filter <i>replaces</i> each quoted string,
+quotelike, regex, POD, and __DATA__ section with a
+placeholder. The delimiters of this placeholder are the
+contents of the $; variable at the time the filter is
+applied (normally "\034"). The remaining four
+bytes are a unique identifier for the component being
+replaced.</p>
+<p style="margin-left:9%; margin-top: 1em">This approach
+makes it comparatively easy to write code preprocessors
+without worrying about the form or contents of strings,
+regexes, etc.</p>
+<p style="margin-left:9%; margin-top: 1em">For convenience,
+during a 'code...' filtering operation, Filter::Simple
+provides a package variable ($Filter::Simple::placeholder)
+that contains a pre−compiled regex that matches any
+placeholder...and captures the identifier within the
+placeholder. Placeholders can be moved and re−ordered
+within the source code as needed.</p>
+<p style="margin-left:9%; margin-top: 1em">In addition, a
+second package variable (@Filter::Simple::components)
+contains a list of the various pieces of $_, as they were
+originally split up to allow placeholders to be
+inserted.</p>
+<p style="margin-left:9%; margin-top: 1em">Once the
+filtering has been applied, the original strings, regexes,
+POD, etc. are re−inserted into the code, by replacing
+each placeholder with the corresponding original component
+(from @components). Note that this means that the
+@components variable must be treated with extreme care
+within the filter. The @components array stores the
+"back− translations" of each placeholder
+inserted into $_, as well as the interstitial source code
+between placeholders. If the placeholder backtranslations
+are altered in @components, they will be similarly changed
+when the placeholders are removed from $_ after the filter
+is complete.</p>
+<p style="margin-left:9%; margin-top: 1em">For example, the
+following filter detects concatenated pairs of
+strings/quotelikes and reverses the order in which they are
+concatenated:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+DemoRevCat; <br/>
+use Filter::Simple; <br/>
+FILTER_ONLY code =&gt; sub { <br/>
+my $ph = $Filter::Simple::placeholder; <br/>
+s{ ($ph) \s* [.] \s* ($ph) }{ $2.$1 }gx <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">Thus, the
+following code:</p>
+<p style="margin-left:9%; margin-top: 1em">use DemoRevCat;
+<br/>
+my $str = "abc" . q(def); <br/>
+print "$str\n";</p>
+<p style="margin-left:9%; margin-top: 1em">would
+become:</p>
+<p style="margin-left:9%; margin-top: 1em">my $str =
+q(def)."abc"; <br/>
+print "$str\n";</p>
+<p style="margin-left:9%; margin-top: 1em">and hence
+print:</p>
+<p style="margin-left:9%; margin-top: 1em">defabc</p>
+<h3>Using Filter::Simple with an explicit "import" subroutine
+<a name='Using Filter::Simple with an explicit "import" subroutine'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Filter::Simple
+generates a special "import" subroutine for your
+module (see "How it works") which would normally
+replace any "import" subroutine you might have
+explicitly declared.</p>
+<p style="margin-left:9%; margin-top: 1em">However,
+Filter::Simple is smart enough to notice your existing
+"import" and Do The Right Thing with it. That is,
+if you explicitly define an "import" subroutine in
+a package that's using Filter::Simple, that
+"import" subroutine will still be invoked
+immediately after any filter you install.</p>
+<p style="margin-left:9%; margin-top: 1em">The only thing
+you have to remember is that the "import"
+subroutine <i>must</i> be declared <i>before</i> the filter
+is installed. If you use "FILTER" to install the
+filter:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Filter::TurnItUpTo11; <br/>
+use Filter::Simple; <br/>
+FILTER { s/(\w+)/\U$1/ };</p>
+<p style="margin-left:9%; margin-top: 1em">that will almost
+never be a problem, but if you install a filtering
+subroutine by passing it directly to the "use
+Filter::Simple" statement:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Filter::TurnItUpTo11; <br/>
+use Filter::Simple sub{ s/(\w+)/\U$1/ };</p>
+<p style="margin-left:9%; margin-top: 1em">then you must
+make sure that your "import" subroutine appears
+before that "use" statement.</p>
+<h3>Using Filter::Simple and Exporter together
+<a name="Using Filter::Simple and Exporter together"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Likewise,
+Filter::Simple is also smart enough to Do The Right Thing if
+you use Exporter:</p>
+<p style="margin-left:9%; margin-top: 1em">package Switch;
+<br/>
+use base Exporter; <br/>
+use Filter::Simple; <br/>
+@EXPORT = qw(switch case); <br/>
+@EXPORT_OK = qw(given when); <br/>
+FILTER { $_ = magic_Perl_filter($_) }</p>
+<p style="margin-left:9%; margin-top: 1em">Immediately
+after the filter has been applied to the source,
+Filter::Simple will pass control to Exporter, so it can do
+its magic too.</p>
+<p style="margin-left:9%; margin-top: 1em">Of course, here
+too, Filter::Simple has to know you're using Exporter before
+it applies the filter. That's almost never a problem, but if
+you're nervous about it, you can guarantee that things will
+work correctly by ensuring that your "use base
+Exporter" always precedes your "use
+Filter::Simple".</p>
+<h3>How it works
+<a name="How it works"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+Filter::Simple module exports into the package that calls
+"FILTER" (or "use"s it directly)
+−− such as package "BANG" in the above
+example −− two automagically constructed
+subroutines −− "import" and
+"unimport" −− which take care of all
+the nasty details.</p>
+<p style="margin-left:9%; margin-top: 1em">In addition, the
+generated "import" subroutine passes its own
+argument list to the filtering subroutine, so the BANG.pm
+filter could easily be made parametric:</p>
+<p style="margin-left:9%; margin-top: 1em">package BANG;
+<br/>
+use Filter::Simple; <br/>
+FILTER { <br/>
+my ($die_msg, $var_name) = @_; <br/>
+s/BANG\s+BANG/die '$die_msg' if \${$var_name}/g; <br/>
+}; <br/>
+# and in some user code: <br/>
+use BANG "BOOM", "BAM"; # "BANG
+BANG" becomes: die 'BOOM' if $BAM</p>
+<p style="margin-left:9%; margin-top: 1em">The specified
+filtering subroutine is called every time a "use
+BANG" is encountered, and passed all the source code
+following that call, up to either the next "no
+BANG;" (or whatever terminator you've set) or the end
+of the source file, whichever occurs first. By default, any
+"no BANG;" call must appear by itself on a
+separate line, or it is ignored.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Damian
+Conway</p>
+<h2>CONTACT
+<a name="CONTACT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Filter::Simple
+is now maintained by the Perl5−Porters. Please submit
+bug via the "perlbug" tool that comes with your
+perl. For usage instructions, read "perldoc
+perlbug" or possibly "man perlbug". For
+mostly anything else, please contact
+&lt;perl5−porters@perl.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">Maintainer of
+the CPAN release is Steffen Mueller
+&lt;smueller@cpan.org&gt;. Contact him with technical
+difficulties with respect to the packaging of the CPAN
+module.</p>
+<p style="margin-left:9%; margin-top: 1em">Praise of the
+module, flowers, and presents still go to the author, Damian
+Conway &lt;damian@conway.org&gt;.</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+2000−2014, Damian Conway. All Rights Reserved. <br/>
+This module is free software. It may be used, redistributed
+<br/>
+and/or modified under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

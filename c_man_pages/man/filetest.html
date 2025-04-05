@@ -1,0 +1,215 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:15 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>filetest</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">filetest</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Consider this carefully">Consider this carefully</a><br/>
+<a href='#The "access" sub-pragma'>The "access" sub-pragma</a><br/>
+<a href='#Limitation with regard to "_"'>Limitation with regard to "_"</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">filetest −
+Perl pragma to control the filetest permission operators</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">$can_perhaps_read
+= −r "file"; # use the mode bits <br/>
+{ <br/>
+use filetest 'access'; # intuit harder <br/>
+$can_really_read = −r "file"; <br/>
+} <br/>
+$can_perhaps_read = −r "file"; # use the
+mode bits again</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This pragma
+tells the compiler to change the behaviour of the filetest
+permission operators, "−r"
+"−w" "−x"
+"−R" "−W"
+"−X" (see perlfunc).</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+behaviour of file test operators is to use the simple mode
+bits as returned by the <b>stat()</b> family of system
+calls. However, many operating systems have additional
+features to define more complex access rights, for example
+ACLs (Access Control Lists). For such environments,
+"use filetest" may help the permission operators
+to return results more consistent with other tools.</p>
+<p style="margin-left:9%; margin-top: 1em">The "use
+filetest" or "no filetest" statements affect
+file tests defined in their block, up to the end of the
+closest enclosing block (they are lexically
+block-scoped).</p>
+<p style="margin-left:9%; margin-top: 1em">Currently, only
+the "access" sub-pragma is implemented. It enables
+(or disables) the use of <b>access()</b> when available,
+that is, on most UNIX systems and other POSIX environments.
+See details below.</p>
+<h3>Consider this carefully
+<a name="Consider this carefully"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>stat()</b> mode bits are probably right for most of the
+files and directories found on your system, because few
+people want to use the additional features offered by
+<b>access()</b>. But you may encounter surprises if your
+program runs on a system that uses ACLs, since the
+<b>stat()</b> information won’t reflect the actual
+permissions.</p>
+<p style="margin-left:9%; margin-top: 1em">There may be a
+slight performance decrease in the filetest operations when
+the filetest pragma is in effect, because checking bits is
+very cheap.</p>
+<p style="margin-left:9%; margin-top: 1em">Also, note that
+using the file tests for security purposes is a lost cause
+from the start: there is a window open for race conditions
+(who is to say that the permissions will not change between
+the test and the real operation?). Therefore if you are
+serious about security, just try the real operation and test
+for its success − think in terms of atomic operations.
+Filetests are more useful for filesystem administrative
+tasks, when you have no need for the content of the elements
+on disk.</p>
+<h3>The "access" sub-pragma
+<a name='The "access" sub-pragma'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">UNIX and POSIX
+systems provide an abstract <b>access()</b> operating system
+call, which should be used to query the read, write, and
+execute rights. This function hides various distinct
+approaches in additional operating system specific security
+features, like Access Control Lists (ACLs)</p>
+<p style="margin-left:9%; margin-top: 1em">The extended
+filetest functionality is used by Perl only when the
+argument of the operators is a filename, not when it is a
+filehandle.</p>
+<h3>Limitation with regard to "_"
+<a name='Limitation with regard to "_"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Because
+<b>access()</b> does not invoke <b>stat()</b> (at least not
+in a way visible to Perl), <b>the stat result cache
+"_" is not set</b>. This means that the outcome of
+the following two tests is different. The first has the stat
+bits of <i>/etc/passwd</i> in "_", and in the
+second case this still contains the bits of
+"/etc".</p>
+<p style="margin-left:9%; margin-top: 1em">{ −d
+'/etc'; <br/>
+−w '/etc/passwd'; <br/>
+print −f _ ? 'Yes' : 'No'; # Yes <br/>
+} <br/>
+{ use filetest 'access'; <br/>
+−d '/etc'; <br/>
+−w '/etc/passwd'; <br/>
+print −f _ ? 'Yes' : 'No'; # No <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Of course,
+unless your OS does not implement <b>access()</b>, in which
+case the pragma is simply ignored. Best not to use
+"_" at all in a file where the filetest pragma is
+active!</p>
+<p style="margin-left:9%; margin-top: 1em">As a side
+effect, as "_" doesn’t work, stacked
+filetest operators ("−f −w $file")
+won’t work either.</p>
+<p style="margin-left:9%; margin-top: 1em">This limitation
+might be removed in a future version of perl.</p>
+<hr/>
+</body>
+</html>

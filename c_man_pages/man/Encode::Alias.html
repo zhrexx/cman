@@ -1,0 +1,205 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:46 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Encode::Alias</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Encode::Alias</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Alias overloading">Alias overloading</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode::Alias
+− alias definitions to encodings</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Encode; <br/>
+use Encode::Alias; <br/>
+define_alias( "newName" =&gt; ENCODING); <br/>
+define_alias( qr/.../ =&gt; ENCODING); <br/>
+define_alias( sub { return ENCODING if ...; } );</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Allows newName
+to be used as an alias for ENCODING. ENCODING may be either
+the name of an encoding or an encoding object (as described
+in Encode).</p>
+<p style="margin-left:9%; margin-top: 1em">Currently the
+first argument to <b>define_alias()</b> can be specified in
+the following ways: <br/>
+As a simple string. <br/>
+As a qr// compiled regular expression, e.g.:</p>
+<p style="margin-left:14%;">define_alias(
+qr/ˆiso8859−(\d+)$/i =&gt;
+'"iso−8859−$1"' );</p>
+<p style="margin-left:14%; margin-top: 1em">In this case,
+if <i>ENCODING</i> is not a reference, it is
+"eval"−ed in order to allow $1 etc. to be
+substituted. The example is one way to alias names as used
+in X11 fonts to the MIME names for the
+iso−8859−* family. Note the double quotes inside
+the single quotes.</p>
+<p style="margin-left:14%; margin-top: 1em">(or, you don't
+have to do this yourself because this example is
+predefined)</p>
+<p style="margin-left:14%; margin-top: 1em">If you are
+using a regex here, you have to use the quotes as shown or
+it won't work. Also note that regex handling is tricky even
+for the experienced. Use this feature with caution.</p>
+<p style="margin-left:9%;">As a code reference, e.g.:</p>
+<p style="margin-left:14%;">define_alias( sub {shift
+=˜ /ˆiso8859−(\d+)$/i ?
+"iso−8859−$1" : undef } );</p>
+<p style="margin-left:14%; margin-top: 1em">The same effect
+as the example above in a different way. The coderef takes
+the alias name as an argument and returns a canonical name
+on success or undef if not. Note the second argument is
+ignored if provided. Use this with even more caution than
+the regex version.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Changes in
+code reference aliasing</i></p>
+<p style="margin-left:9%; margin-top: 1em">As of Encode
+1.87, the older form</p>
+<p style="margin-left:9%; margin-top: 1em">define_alias(
+sub { return /ˆiso8859−(\d+)$/i ?
+"iso−8859−$1" : undef } );</p>
+<p style="margin-left:9%; margin-top: 1em">no longer
+works.</p>
+<p style="margin-left:9%; margin-top: 1em">Encode up to
+1.86 internally used "local $_" to implement this
+older form. But consider the code below;</p>
+<p style="margin-left:9%; margin-top: 1em">use Encode; <br/>
+$_ = "eeeee" ; <br/>
+while (/(e)/g) { <br/>
+my $utf = decode('aliased−encoding−name', $1);
+<br/>
+print "position:",pos,"\n"; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Prior to Encode
+1.86 this fails because of "local $_".</p>
+<h3>Alias overloading
+<a name="Alias overloading"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">You can override
+predefined aliases by simply applying <b>define_alias()</b>.
+The new alias is always evaluated first, and when necessary,
+<b>define_alias()</b> flushes the internal cache to make the
+new definition available.</p>
+<p style="margin-left:9%; margin-top: 1em"># redirect
+SHIFT_JIS to MS/IBM Code Page 932, which is a <br/>
+# superset of SHIFT_JIS <br/>
+define_alias( qr/shift.*jis$/i =&gt; '"cp932"' );
+<br/>
+define_alias( qr/sjis$/i =&gt; '"cp932"' );</p>
+<p style="margin-left:9%; margin-top: 1em">If you want to
+zap all predefined aliases, you can use</p>
+<p style="margin-left:9%; margin-top: 1em">Encode::Alias−&gt;undef_aliases;</p>
+<p style="margin-left:9%; margin-top: 1em">to do so.
+And</p>
+<p style="margin-left:9%; margin-top: 1em">Encode::Alias−&gt;init_aliases;</p>
+<p style="margin-left:9%; margin-top: 1em">gets the factory
+settings back.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+<b>define_alias()</b> will not be able to override the
+canonical name of encodings. Encodings are first looked up
+by canonical name before potential aliases are tried.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode,
+Encode::Supported</p>
+<hr/>
+</body>
+</html>

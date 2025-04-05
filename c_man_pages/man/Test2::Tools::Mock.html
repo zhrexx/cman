@@ -1,0 +1,324 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:09 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Tools::Mock</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Tools::Mock</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#BY REQUEST">BY REQUEST</a><br/>
+<a href="#MOCK CONTROL OBJECTS">MOCK CONTROL OBJECTS</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Tools::Mock
+− Class/Instance mocking for Test2.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Mocking is often
+an essential part of testing. This library covers some of
+the most common mocking needs. This plugin is heavily
+influenced by Mock::Quick, but with an improved API. This
+plugin is also intended to play well with other plugins in
+ways Mock::Quick would be unable to.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">my $mock = mock
+'Some::Class' =&gt; ( <br/>
+track =&gt; $BOOL, # Enable/Disable tracking on subs defined
+below <br/>
+add =&gt; [ <br/>
+new_method =&gt; sub { ... }, <br/>
+], <br/>
+override =&gt; [ <br/>
+replace_method =&gt; sub { ... }, <br/>
+], <br/>
+set =&gt; [ <br/>
+replace_or_inject =&gt; sub { ... }, <br/>
+], <br/>
+track =&gt; $bool, # enable/disable tracking again to affect
+mocks made after this point <br/>
+..., # Argument keys may be repeated <br/>
+); <br/>
+Some::Class−&gt;new_method(); # Calls the newly
+injected method <br/>
+Some::Class−&gt;replace_method(); # Calls our
+replacement method. <br/>
+$mock−&gt;override(...) # Override some more <br/>
+$mock = undef; # Undoes all the mocking, restoring all
+original methods. <br/>
+my $simple_mock = mock {} =&gt; ( <br/>
+add =&gt; [ <br/>
+is_active =&gt; sub { ... } <br/>
+] <br/>
+); <br/>
+$simple_mock−&gt;is_active(); # Calls our newly mocked
+method.</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<h3>DEFAULT
+<a name="DEFAULT"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">mock</p>
+<p style="margin-left:14%;">This is a one−stop shop
+function that delegates to one of the other methods
+depending on how it is used. If you are not comfortable with
+a function that has a lot of potential behaviors, you can
+use one of the other functions directly.</p>
+<p style="margin-left:9%;">@mocks = mocked($object) <br/>
+@mocks = mocked($class)</p>
+<p style="margin-left:14%;">Check if an object or class is
+mocked. If it is mocked the $mock object(s) (Test2::Mock)
+will be returned.</p>
+<p style="margin-left:9%;">$mock = mock $class =&gt; ( ...
+); <br/>
+$mock = mock $instance =&gt; ( ... ) <br/>
+$mock = mock 'class', $class =&gt; ( ... )</p>
+<p style="margin-left:14%;">These forms delegate to
+mock_class() to mock a package. The third form is to be
+explicit about what type of mocking you want.</p>
+<p style="margin-left:9%;">$obj = <b>mock()</b> <br/>
+$obj = mock { ... } <br/>
+$obj = mock 'obj', ...;</p>
+<p style="margin-left:14%;">These forms delegate to
+mock_obj() to create instances of anonymous packages where
+methods are vivified into existence as needed.</p>
+<p style="margin-left:9%;">mock $mock =&gt; sub { ... }
+<br/>
+mock $method =&gt; ( ... )</p>
+<p style="margin-left:14%;">These forms go together, the
+first form will set $mock as the current mock build, then
+run the sub. Within the sub you can declare mock
+specifications using the second form. The first form
+delegates to mock_build().</p>
+<p style="margin-left:14%; margin-top: 1em">The second form
+calls the specified method on the current build. This second
+form delegates to mock_do().</p>
+<h3>BY REQUEST
+<a name="BY REQUEST"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>DEFINING
+MOCKS</i> <br/>
+$obj = mock_obj( ... ) <br/>
+$obj = mock_obj { ... } =&gt; ( ... ) <br/>
+$obj = mock_obj sub { ... } <br/>
+$obj = mock_obj { ... } =&gt; sub { ... }</p>
+<p style="margin-left:14%;">This method lets you quickly
+generate a blessed object. The object will be an instance of
+a randomly generated package name. Methods will vivify as
+read/write accessors as needed.</p>
+<p style="margin-left:14%; margin-top: 1em">Arguments can
+be any method available to Test2::Mock followed by an
+argument. If the very first argument is a hashref then it
+will be blessed as your new object.</p>
+<p style="margin-left:14%; margin-top: 1em">If you provide
+a coderef instead of key/value pairs, the coderef will be
+run to build the mock. (See the "BUILDING MOCKS"
+section).</p>
+<p style="margin-left:9%;">$mock = mock_class $class =&gt;
+( ... ) <br/>
+$mock = mock_class $instance =&gt; ( ... ) <br/>
+$mock = mock_class ... =&gt; sub { ... }</p>
+<p style="margin-left:14%;">This will create a new instance
+of Test2::Mock to control the package specified. If you give
+it a blessed reference it will use the class of the
+instance.</p>
+<p style="margin-left:14%; margin-top: 1em">Arguments can
+be any method available to Test2::Mock followed by an
+argument. If the very first argument is a hashref then it
+will be blessed as your new object.</p>
+<p style="margin-left:14%; margin-top: 1em">If you provide
+a coderef instead of key/value pairs, the coderef will be
+run to build the mock. (See the "BUILDING MOCKS"
+section).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>BUILDING
+MOCKS</i> <br/>
+mock_build $mock =&gt; sub { ... }</p>
+<p style="margin-left:14%;">Set $mock as the current build,
+then run the specified code. $mock will no longer be the
+current build when the sub is complete.</p>
+<p style="margin-left:9%;">$mock =
+<b>mock_building()</b></p>
+<p style="margin-left:14%;">Get the current building $mock
+object.</p>
+<p style="margin-left:9%;">mock_do $method =&gt; $args</p>
+<p style="margin-left:14%;">Run the specified method on the
+currently building object.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>METHOD
+GENERATORS</i> <br/>
+$sub = mock_accessor $field</p>
+<p style="margin-left:14%;">Generate a read/write accessor
+for the specified field. This will generate a sub like the
+following:</p>
+<p style="margin-left:14%; margin-top: 1em">$sub = sub {
+<br/>
+my $self = shift; <br/>
+($self−&gt;{$field}) = @_ if @_; <br/>
+return $self−&gt;{$field}; <br/>
+};</p>
+<p style="margin-left:9%;">$sub = mock_getter $field</p>
+<p style="margin-left:14%;">Generate a read only accessor
+for the specified field. This will generate a sub like the
+following:</p>
+<p style="margin-left:14%; margin-top: 1em">$sub = sub {
+<br/>
+my $self = shift; <br/>
+return $self−&gt;{$field}; <br/>
+};</p>
+<p style="margin-left:9%;">$sub = mock_setter $field</p>
+<p style="margin-left:14%;">Generate a write accessor for
+the specified field. This will generate a sub like the
+following:</p>
+<p style="margin-left:14%; margin-top: 1em">$sub = sub {
+<br/>
+my $self = shift; <br/>
+($self−&gt;{$field}) = @_; <br/>
+};</p>
+<p style="margin-left:9%;">%pairs = mock_accessors(qw/name1
+name2 name3/)</p>
+<p style="margin-left:14%;">Generates several read/write
+accessors at once, returns key/value pairs where the key is
+the field name, and the value is the coderef.</p>
+<p style="margin-left:9%;">%pairs = mock_getters(qw/name1
+name2 name3/)</p>
+<p style="margin-left:14%;">Generates several read only
+accessors at once, returns key/value pairs where the key is
+the field name, and the value is the coderef.</p>
+<p style="margin-left:9%;">%pairs = mock_setters(qw/name1
+name2 name3/)</p>
+<p style="margin-left:14%;">Generates several write
+accessors at once, returns key/value pairs where the key is
+the field name, and the value is the coderef.</p>
+<h2>MOCK CONTROL OBJECTS
+<a name="MOCK CONTROL OBJECTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">my $mock =
+mock(...);</p>
+<p style="margin-left:9%; margin-top: 1em">Mock objects are
+instances of Test2::Mock. See it for their methods.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2−Suite can be found at
+&lt;https://github.com/Test−More/test−more/&gt;.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;https://dev.perl.org/licenses/&gt;</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:21 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>pthread_key_create</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">pthread_key_create</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">pthread_key_create,
+pthread_key_delete, pthread_setspecific, pthread_getspecific
+− management of thread-specific data</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;pthread.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+pthread_key_create(pthread_key_t *</b><i>key</i><b>, <br/>
+void (*</b><i>destr_function</i><b>) (void *)); <br/>
+int pthread_key_delete(pthread_key_t</b> <i>key</i><b>);
+<br/>
+int pthread_setspecific(pthread_key_t</b> <i>key</i><b>,
+const void *</b><i>pointer</i><b>); <br/>
+void * pthread_getspecific(pthread_key_t</b>
+<i>key</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Programs often
+need global or static variables that have different values
+in different threads. Since threads share one memory space,
+this cannot be achieved with regular variables.
+Thread-specific data is the POSIX threads answer to this
+need.</p>
+<p style="margin-left:9%; margin-top: 1em">Each thread
+possesses a private memory block, the thread-specific data
+area, or TSD area for short. This area is indexed by TSD
+keys. The TSD area associates values of type <b>void *</b>
+to TSD keys. TSD keys are common to all threads, but the
+value associated with a given TSD key can be different in
+each thread.</p>
+<p style="margin-left:9%; margin-top: 1em">For
+concreteness, the TSD areas can be viewed as arrays of
+<b>void *</b> pointers, TSD keys as integer indices into
+these arrays, and the value of a TSD key as the value of the
+corresponding array element in the calling thread.</p>
+<p style="margin-left:9%; margin-top: 1em">When a thread is
+created, its TSD area initially associates <b>NULL</b> with
+all keys.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_key_create</b>
+allocates a new TSD key. The key is stored in the location
+pointed to by <i>key</i>. There is a limit of
+<b>PTHREAD_KEYS_MAX</b> on the number of keys allocated at a
+given time. The value initially associated with the returned
+key is <b>NULL</b> in all currently executing threads.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>destr_function</i> argument, if not <b>NULL</b>,
+specifies a destructor function associated with the key.
+When a thread terminates via <b>pthread_exit</b> or by
+cancelation, <i>destr_function</i> is called with arguments
+the value associated with the key in that thread. The
+<i>destr_function</i> is not called if that value is
+<b>NULL</b>. The order in which destructor functions are
+called at thread termination time is unspecified.</p>
+<p style="margin-left:9%; margin-top: 1em">Before the
+destructor function is called, the <b>NULL</b> value is
+associated with the key in the current thread. A destructor
+function might, however, re-associate non-<b>NULL</b> values
+to that key or some other key. To deal with this, if after
+all the destructors have been called for all non-<b>NULL</b>
+values, there are still some non-<b>NULL</b> values with
+associated destructors, then the process is repeated. The
+glibc implementation stops the process after
+<b>PTHREAD_DESTRUCTOR_ITERATIONS</b> iterations, even if
+some non-<b>NULL</b> values with associated descriptors
+remain. Other implementations may loop indefinitely.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_key_delete</b>
+deallocates a TSD key. It does not check whether
+non-<b>NULL</b> values are associated with that key in the
+currently executing threads, nor call the destructor
+function associated with the key.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_setspecific</b>
+changes the value associated with <i>key</i> in the calling
+thread, storing the given <i>pointer</i> instead.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_getspecific</b>
+returns the value currently associated with <i>key</i> in
+the calling thread.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_key_create</b>,
+<b>pthread_key_delete</b>, and <b>pthread_setspecific</b>
+return 0 on success and a non-zero error code on failure. If
+successful, <b>pthread_key_create</b> stores the newly
+allocated key in the location pointed to by its <i>key</i>
+argument.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_getspecific</b>
+returns the value associated with <i>key</i> on success, and
+<b>NULL</b> on error.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_key_create</b>
+returns the following error code on error:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p><b>EAGAIN</b></p></td>
+<td width="1%"></td>
+<td width="56%">
+<p><b>PTHREAD_KEYS_MAX</b> keys are already allocated.</p></td>
+<td width="17%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_key_delete</b>
+and <b>pthread_setspecific</b> return the following error
+code on error:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="49%">
+<p style="margin-top: 1em"><i>key</i> is not a valid,
+allocated TSD key.</p></td>
+<td width="24%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_getspecific</b>
+returns <b>NULL</b> if <i>key</i> is not a valid, allocated
+TSD key.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">pthread_create(3),
+pthread_exit(3), pthread_testcancel(3).</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+code fragment allocates a thread-specific array of 100
+characters, with automatic reclamation at thread exit:</p>
+<p style="margin-left:18%; margin-top: 1em"><b>/* Key for
+the thread-specific buffer */ <br/>
+static pthread_key_t buffer_key; <br/>
+/* Once-only initialisation of the key */ <br/>
+static pthread_once_t buffer_key_once = PTHREAD_ONCE_INIT;
+<br/>
+/* Allocate the thread-specific buffer */ <br/>
+void buffer_alloc(void) <br/>
+{ <br/>
+pthread_once(&amp;buffer_key_once, buffer_key_alloc); <br/>
+pthread_setspecific(buffer_key, malloc(100)); <br/>
+} <br/>
+/* Return the thread-specific buffer */ <br/>
+char * get_buffer(void) <br/>
+{ <br/>
+return (char *) pthread_getspecific(buffer_key); <br/>
+} <br/>
+/* Allocate the key */ <br/>
+static void buffer_key_alloc() <br/>
+{ <br/>
+pthread_key_create(&amp;buffer_key, buffer_destroy); <br/>
+} <br/>
+/* Free the thread-specific buffer */ <br/>
+static void buffer_destroy(void * buf) <br/>
+{ <br/>
+free(buf); <br/>
+ }</b></p>
+<hr/>
+</body>
+</html>

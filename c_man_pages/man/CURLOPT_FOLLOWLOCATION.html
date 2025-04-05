@@ -1,0 +1,207 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:40 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_FOLLOWLOCATION</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_FOLLOWLOCATION</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTE">NOTE</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_FOLLOWLOCATION
+− follow HTTP 3xx redirects</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_FOLLOWLOCATION, long
+enable);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A long parameter
+set to 1 tells the library to follow any Location: header
+redirects that an HTTP server sends in a 30x response. The
+Location: header can specify a relative or an absolute URL
+to follow.</p>
+<p style="margin-left:9%; margin-top: 1em">libcurl issues
+another request for the new URL and follows subsequent new
+Location: redirects all the way until no more such headers
+are returned or the maximum limit is reached.
+<i>CURLOPT_MAXREDIRS(3)</i> is used to limit the number of
+redirects libcurl follows.</p>
+<p style="margin-left:9%; margin-top: 1em">libcurl
+restricts what protocols it automatically follow redirects
+to. The accepted target protocols are set with
+<i>CURLOPT_REDIR_PROTOCOLS_STR(3)</i>. By default libcurl
+allows HTTP, HTTPS, FTP and FTPS on redirects.</p>
+<p style="margin-left:9%; margin-top: 1em">When following a
+redirect, the specific 30x response code also dictates which
+request method libcurl uses in the subsequent request: For
+301, 302 and 303 responses libcurl switches method from POST
+to GET unless <i>CURLOPT_POSTREDIR(3)</i> instructs libcurl
+otherwise. All other redirect response codes make libcurl
+use the same method again.</p>
+<p style="margin-left:9%; margin-top: 1em">For users who
+think the existing location following is too naive, too
+simple or just lacks features, it is easy to instead
+implement your own redirect follow logic with the use of
+<i>curl_easy_getinfo(3)</i>'s
+<i>CURLINFO_REDIRECT_URL(3)</i> option instead of using
+<i>CURLOPT_FOLLOWLOCATION(3)</i>.</p>
+<h2>NOTE
+<a name="NOTE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Since libcurl
+changes method or not based on the specific HTTP response
+code, setting <i>CURLOPT_CUSTOMREQUEST(3)</i> while
+following redirects may change what libcurl would otherwise
+do and if not that carefully may even make it misbehave
+since <i>CURLOPT_CUSTOMREQUEST(3)</i> overrides the method
+libcurl would otherwise select internally.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">0, disabled</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects http only</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+curl_easy_setopt(curl, CURLOPT_URL,
+"https://example.com");</p>
+<p style="margin-left:9%; margin-top: 1em">/* example.com
+is redirected, so we tell libcurl to follow redirection */
+<br/>
+curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);</p>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_perform(curl);
+<br/>
+} <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.1</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLE_OK
+if HTTP is supported, and CURLE_UNKNOWN_OPTION if not.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLINFO_REDIRECT_COUNT</b>(3),
+<b>CURLINFO_REDIRECT_URL</b>(3),
+<b>CURLOPT_POSTREDIR</b>(3),
+<b>CURLOPT_PROTOCOLS_STR</b>(3),
+<b>CURLOPT_REDIR_PROTOCOLS_STR</b>(3)</p>
+<hr/>
+</body>
+</html>

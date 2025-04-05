@@ -1,0 +1,1037 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:03 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>List::Util</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">List::Util</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#LIST−REDUCTION FUNCTIONS">LIST−REDUCTION FUNCTIONS</a><br/>
+<a href="#reduce">reduce</a><br/>
+<a href="#reductions">reductions</a><br/>
+<a href="#any">any</a><br/>
+<a href="#all">all</a><br/>
+<a href="#none">none</a><br/>
+<a href="#notall">notall</a><br/>
+<a href="#first">first</a><br/>
+<a href="#max">max</a><br/>
+<a href="#maxstr">maxstr</a><br/>
+<a href="#min">min</a><br/>
+<a href="#minstr">minstr</a><br/>
+<a href="#product">product</a><br/>
+<a href="#sum">sum</a><br/>
+<a href="#sum0">sum0</a><br/>
+<a href="#KEY/VALUE PAIR LIST FUNCTIONS">KEY/VALUE PAIR LIST FUNCTIONS</a><br/>
+<a href="#pairs">pairs</a><br/>
+<a href="#unpairs">unpairs</a><br/>
+<a href="#pairkeys">pairkeys</a><br/>
+<a href="#pairvalues">pairvalues</a><br/>
+<a href="#pairgrep">pairgrep</a><br/>
+<a href="#pairfirst">pairfirst</a><br/>
+<a href="#pairmap">pairmap</a><br/>
+<a href="#OTHER FUNCTIONS">OTHER FUNCTIONS</a><br/>
+<a href="#shuffle">shuffle</a><br/>
+<a href="#sample">sample</a><br/>
+<a href="#uniq">uniq</a><br/>
+<a href="#uniqint">uniqint</a><br/>
+<a href="#uniqnum">uniqnum</a><br/>
+<a href="#uniqstr">uniqstr</a><br/>
+<a href="#head">head</a><br/>
+<a href="#tail">tail</a><br/>
+<a href="#zip">zip</a><br/>
+<a href="#mesh">mesh</a><br/>
+<a href="#CONFIGURATION VARIABLES">CONFIGURATION VARIABLES</a><br/>
+<a href="#$RAND">$RAND</a><br/>
+<a href="#KNOWN BUGS">KNOWN BUGS</a><br/>
+<a href="#RT #95409">RT #95409</a><br/>
+<a href="#uniqnum() on oversized bignums">uniqnum() on oversized bignums</a><br/>
+<a href="#SUGGESTED ADDITIONS">SUGGESTED ADDITIONS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">List::Util
+− A selection of general−utility list
+subroutines</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use List::Util
+qw( <br/>
+reduce any all none notall first reductions <br/>
+max maxstr min minstr product sum sum0 <br/>
+pairs unpairs pairkeys pairvalues pairfirst pairgrep pairmap
+<br/>
+shuffle uniq uniqint uniqnum uniqstr head tail zip mesh <br/>
+);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"List::Util"
+contains a selection of subroutines that people have
+expressed would be nice to have in the perl core, but the
+usage would not really be high enough to warrant the use of
+a keyword, and the size so small such that being individual
+extensions would be wasteful.</p>
+<p style="margin-left:9%; margin-top: 1em">By default
+"List::Util" does not export any subroutines.</p>
+<h2>LIST−REDUCTION FUNCTIONS
+<a name="LIST−REDUCTION FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+set of functions all apply a given block of code to a list
+of values.</p>
+<h3>reduce
+<a name="reduce"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$result = reduce
+{ BLOCK } @list</p>
+<p style="margin-left:9%; margin-top: 1em">Reduces @list by
+calling "BLOCK" in a scalar context multiple
+times, setting $a and $b each time. The first call will be
+with $a and $b set to the first two elements of the list,
+subsequent calls will be done by setting $a to the result of
+the previous call and $b to the next element in the
+list.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+result of the last call to the "BLOCK". If @list
+is empty then "undef" is returned. If @list only
+contains one element then that element is returned and
+"BLOCK" is not executed.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+examples all demonstrate how "reduce" could be
+used to implement the other list−reduction functions
+in this module. (They are not in fact implemented like this,
+but instead in a more efficient manner in individual C
+functions).</p>
+<p style="margin-left:9%; margin-top: 1em">$foo = reduce {
+defined($a) ? $a : <br/>
+$code−&gt;(local $_ = $b) ? $b : <br/>
+undef } undef, @list # first <br/>
+$foo = reduce { $a &gt; $b ? $a : $b } 1..10 # max <br/>
+$foo = reduce { $a gt $b ? $a : $b } 'A'..'Z' # maxstr <br/>
+$foo = reduce { $a &lt; $b ? $a : $b } 1..10 # min <br/>
+$foo = reduce { $a lt $b ? $a : $b } 'aa'..'zz' # minstr
+<br/>
+$foo = reduce { $a + $b } 1 .. 10 # sum <br/>
+$foo = reduce { $a . $b } @bar # concat <br/>
+$foo = reduce { $a || $code−&gt;(local $_ = $b) } 0,
+@bar # any <br/>
+$foo = reduce { $a &amp;&amp; $code−&gt;(local $_ =
+$b) } 1, @bar # all <br/>
+$foo = reduce { $a &amp;&amp; !$code−&gt;(local $_ =
+$b) } 1, @bar # none <br/>
+$foo = reduce { $a || !$code−&gt;(local $_ = $b) } 0,
+@bar # notall <br/>
+# Note that these implementations do not fully
+short−circuit</p>
+<p style="margin-left:9%; margin-top: 1em">If your
+algorithm requires that "reduce" produce an
+identity value, then make sure that you always pass that
+identity value as the first argument to prevent
+"undef" being returned</p>
+<p style="margin-left:9%; margin-top: 1em">$foo = reduce {
+$a + $b } 0, @values; # sum with 0 identity value</p>
+<p style="margin-left:9%; margin-top: 1em">The above
+example code blocks also suggest how to use
+"reduce" to build a more efficient combined
+version of one of these basic functions and a
+"map" block. For example, to find the total length
+of all the strings in a list, we could use</p>
+<p style="margin-left:9%; margin-top: 1em">$total = sum map
+{ length } @strings;</p>
+<p style="margin-left:9%; margin-top: 1em">However, this
+produces a list of temporary integer values as long as the
+original list of strings, only to reduce it down to a single
+value again. We can compute the same result more efficiently
+by using "reduce" with a code block that
+accumulates lengths by writing this instead as:</p>
+<p style="margin-left:9%; margin-top: 1em">$total = reduce
+{ $a + length $b } 0, @strings</p>
+<p style="margin-left:9%; margin-top: 1em">The other
+scalar−returning list reduction functions are all
+specialisations of this generic idea.</p>
+<h3>reductions
+<a name="reductions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">@results =
+reductions { BLOCK } @list</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.54.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+"reduce" except that it also returns the
+intermediate values along with the final result. As before,
+$a is set to the first element of the given list, and the
+"BLOCK" is then called once for remaining item in
+the list set into $b, with the result being captured for
+return as well as becoming the new value for $a.</p>
+<p style="margin-left:9%; margin-top: 1em">The returned
+list will begin with the initial value for $a, followed by
+each return value from the block in order. The final value
+of the result will be identical to what the
+"reduce" function would have returned given the
+same block and list.</p>
+<p style="margin-left:9%; margin-top: 1em">reduce {
+"$a−$b" } "a".."d" #
+"a−b−c−d" <br/>
+reductions { "$a−$b" }
+"a".."d" # "a",
+"a−b", "a−b−c",
+"a−b−c−d"</p>
+<h3>any
+<a name="any"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $bool = any {
+BLOCK } @list;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.33.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+"grep" in that it evaluates "BLOCK"
+setting $_ to each element of @list in turn. "any"
+returns true if any element makes the "BLOCK"
+return a true value. If "BLOCK" never returns true
+or @list was empty then it returns false.</p>
+<p style="margin-left:9%; margin-top: 1em">Many cases of
+using "grep" in a conditional can be written using
+"any" instead, as it can short−circuit after
+the first true result.</p>
+<p style="margin-left:9%; margin-top: 1em">if( any { length
+&gt; 10 } @strings ) { <br/>
+# at least one string has more than 10 characters <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Note: Due to XS
+issues the block passed may be able to access the outer @_
+directly. This is not intentional and will break under
+debugger.</p>
+<h3>all
+<a name="all"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $bool = all {
+BLOCK } @list;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.33.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+"any", except that it requires all elements of the
+@list to make the "BLOCK" return true. If any
+element returns false, then it returns false. If the
+"BLOCK" never returns false or the @list was empty
+then it returns true.</p>
+<p style="margin-left:9%; margin-top: 1em">Note: Due to XS
+issues the block passed may be able to access the outer @_
+directly. This is not intentional and will break under
+debugger.</p>
+<h3>none
+<a name="none"></a>
+</h3>
+<h3>notall
+<a name="notall"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $bool = none
+{ BLOCK } @list; <br/>
+my $bool = notall { BLOCK } @list;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.33.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+"any" and "all", but with the return
+sense inverted. "none" returns true only if no
+value in the @list causes the "BLOCK" to return
+true, and "notall" returns true only if not all of
+the values do.</p>
+<p style="margin-left:9%; margin-top: 1em">Note: Due to XS
+issues the block passed may be able to access the outer @_
+directly. This is not intentional and will break under
+debugger.</p>
+<h3>first
+<a name="first"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $val = first
+{ BLOCK } @list;</p>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+"grep" in that it evaluates "BLOCK"
+setting $_ to each element of @list in turn.
+"first" returns the first element where the result
+from "BLOCK" is a true value. If "BLOCK"
+never returns true or @list was empty then "undef"
+is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">$foo = first {
+defined($_) } @list # first defined value in @list <br/>
+$foo = first { $_ &gt; $value } @list # first value in @list
+which <br/>
+# is greater than $value</p>
+<h3>max
+<a name="max"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $num = max
+@list;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+entry in the list with the highest numerical value. If the
+list is empty then "undef" is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">$foo = max 1..10
+# 10 <br/>
+$foo = max 3,9,12 # 12 <br/>
+$foo = max @bar, @baz # whatever</p>
+<h3>maxstr
+<a name="maxstr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $str = maxstr
+@list;</p>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+"max", but treats all the entries in the list as
+strings and returns the highest string as defined by the
+"gt" operator. If the list is empty then
+"undef" is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">$foo = maxstr
+'A'..'Z' # 'Z' <br/>
+$foo = maxstr "hello","world" #
+"world" <br/>
+$foo = maxstr @bar, @baz # whatever</p>
+<h3>min
+<a name="min"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $num = min
+@list;</p>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+"max" but returns the entry in the list with the
+lowest numerical value. If the list is empty then
+"undef" is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">$foo = min 1..10
+# 1 <br/>
+$foo = min 3,9,12 # 3 <br/>
+$foo = min @bar, @baz # whatever</p>
+<h3>minstr
+<a name="minstr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $str = minstr
+@list;</p>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+"min", but treats all the entries in the list as
+strings and returns the lowest string as defined by the
+"lt" operator. If the list is empty then
+"undef" is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">$foo = minstr
+'A'..'Z' # 'A' <br/>
+$foo = minstr "hello","world" #
+"hello" <br/>
+$foo = minstr @bar, @baz # whatever</p>
+<h3>product
+<a name="product"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $num =
+product @list;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.35.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+numerical product of all the elements in @list. If @list is
+empty then 1 is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">$foo = product
+1..10 # 3628800 <br/>
+$foo = product 3,9,12 # 324</p>
+<h3>sum
+<a name="sum"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $num_or_undef
+= sum @list;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+numerical sum of all the elements in @list. For backwards
+compatibility, if @list is empty then "undef" is
+returned.</p>
+<p style="margin-left:9%; margin-top: 1em">$foo = sum 1..10
+# 55 <br/>
+$foo = sum 3,9,12 # 24 <br/>
+$foo = sum @bar, @baz # whatever</p>
+<h3>sum0
+<a name="sum0"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $num = sum0
+@list;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.26.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+"sum", except this returns 0 when given an empty
+list, rather than "undef".</p>
+<h2>KEY/VALUE PAIR LIST FUNCTIONS
+<a name="KEY/VALUE PAIR LIST FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+set of functions, all inspired by List::Pairwise, consume an
+even−sized list of pairs. The pairs may be key/value
+associations from a hash, or just a list of values. The
+functions will all preserve the original ordering of the
+pairs, and will not be confused by multiple pairs having the
+same "key" value − nor even do they require
+that the first of each pair be a plain string.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NOTE</b>: At
+the time of writing, the following "pair*"
+functions that take a block do not modify the value of $_
+within the block, and instead operate using the $a and $b
+globals instead. This has turned out to be a poor design, as
+it precludes the ability to provide a "pairsort"
+function. Better would be to pass pair−like objects as
+2−element array references in $_, in a style similar
+to the return value of the "pairs" function. At
+some future version this behaviour may be added.</p>
+<p style="margin-left:9%; margin-top: 1em">Until then,
+users are alerted <b>NOT</b> to rely on the value of $_
+remaining unmodified between the outside and the inside of
+the control block. In particular, the following example is
+<b>UNSAFE</b>:</p>
+<p style="margin-left:9%; margin-top: 1em">my @kvlist = ...
+<br/>
+foreach (qw( some keys here )) { <br/>
+my @items = pairgrep { $a eq $_ } @kvlist; <br/>
+... <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Instead, write
+this using a lexical variable:</p>
+<p style="margin-left:9%; margin-top: 1em">foreach my $key
+(qw( some keys here )) { <br/>
+my @items = pairgrep { $a eq $key } @kvlist; <br/>
+... <br/>
+}</p>
+<h3>pairs
+<a name="pairs"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @pairs =
+pairs @kvlist;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.29.</i></p>
+<p style="margin-left:9%; margin-top: 1em">A convenient
+shortcut to operating on even−sized lists of pairs,
+this function returns a list of "ARRAY"
+references, each containing two items from the given list.
+It is a more efficient version of</p>
+<p style="margin-left:9%; margin-top: 1em">@pairs = pairmap
+{ [ $a, $b ] } @kvlist</p>
+<p style="margin-left:9%; margin-top: 1em">It is most
+convenient to use in a "foreach" loop, for
+example:</p>
+<p style="margin-left:9%; margin-top: 1em">foreach my $pair
+( pairs @kvlist ) { <br/>
+my ( $key, $value ) = @$pair; <br/>
+... <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Since version
+1.39 these "ARRAY" references are blessed objects,
+recognising the two methods "key" and
+"value". The following code is equivalent:</p>
+<p style="margin-left:9%; margin-top: 1em">foreach my $pair
+( pairs @kvlist ) { <br/>
+my $key = $pair−&gt;key; <br/>
+my $value = $pair−&gt;value; <br/>
+... <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Since version
+1.51 they also have a "TO_JSON" method to ease
+serialisation.</p>
+<h3>unpairs
+<a name="unpairs"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @kvlist =
+unpairs @pairs</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.42.</i></p>
+<p style="margin-left:9%; margin-top: 1em">The inverse
+function to "pairs"; this function takes a list of
+"ARRAY" references containing two elements each,
+and returns a flattened list of the two values from each of
+the pairs, in order. This is notionally equivalent to</p>
+<p style="margin-left:9%; margin-top: 1em">my @kvlist = map
+{ @{$_}[0,1] } @pairs</p>
+<p style="margin-left:9%; margin-top: 1em">except that it
+is implemented more efficiently internally. Specifically,
+for any input item it will extract exactly two values for
+the output list; using "undef" if the input array
+references are short.</p>
+<p style="margin-left:9%; margin-top: 1em">Between
+"pairs" and "unpairs", a
+higher−order list function can be used to operate on
+the pairs as single scalars; such as the following
+near−equivalents of the other "pair*"
+higher−order functions:</p>
+<p style="margin-left:9%; margin-top: 1em">@kvlist =
+unpairs grep { FUNC } pairs @kvlist <br/>
+# Like pairgrep, but takes $_ instead of $a and $b <br/>
+@kvlist = unpairs map { FUNC } pairs @kvlist <br/>
+# Like pairmap, but takes $_ instead of $a and $b</p>
+<p style="margin-left:9%; margin-top: 1em">Note however
+that these versions will not behave as nicely in scalar
+context.</p>
+<p style="margin-left:9%; margin-top: 1em">Finally, this
+technique can be used to implement a sort on a keyvalue pair
+list; e.g.:</p>
+<p style="margin-left:9%; margin-top: 1em">@kvlist =
+unpairs sort { $a−&gt;key cmp $b−&gt;key } pairs
+@kvlist</p>
+<h3>pairkeys
+<a name="pairkeys"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @keys =
+pairkeys @kvlist;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.29.</i></p>
+<p style="margin-left:9%; margin-top: 1em">A convenient
+shortcut to operating on even−sized lists of pairs,
+this function returns a list of the first values of each of
+the pairs in the given list. It is a more efficient version
+of</p>
+<p style="margin-left:9%; margin-top: 1em">@keys = pairmap
+{ $a } @kvlist</p>
+<h3>pairvalues
+<a name="pairvalues"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @values =
+pairvalues @kvlist;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.29.</i></p>
+<p style="margin-left:9%; margin-top: 1em">A convenient
+shortcut to operating on even−sized lists of pairs,
+this function returns a list of the second values of each of
+the pairs in the given list. It is a more efficient version
+of</p>
+<p style="margin-left:9%; margin-top: 1em">@values =
+pairmap { $b } @kvlist</p>
+<h3>pairgrep
+<a name="pairgrep"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @kvlist =
+pairgrep { BLOCK } @kvlist; <br/>
+my $count = pairgrep { BLOCK } @kvlist;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.29.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+perl's "grep" keyword, but interprets the given
+list as an even−sized list of pairs. It invokes the
+"BLOCK" multiple times, in scalar context, with $a
+and $b set to successive pairs of values from the
+@kvlist.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns an
+even−sized list of those pairs for which the
+"BLOCK" returned true in list context, or the
+count of the <b>number of pairs</b> in scalar context.
+(Note, therefore, in scalar context that it returns a number
+half the size of the count of items it would have returned
+in list context).</p>
+<p style="margin-left:9%; margin-top: 1em">@subset =
+pairgrep { $a =˜ m/ˆ[[:upper:]]+$/ } @kvlist</p>
+<p style="margin-left:9%; margin-top: 1em">As with
+"grep" aliasing $_ to list elements,
+"pairgrep" aliases $a and $b to elements of the
+given list. Any modifications of it by the code block will
+be visible to the caller.</p>
+<h3>pairfirst
+<a name="pairfirst"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my ( $key, $val
+) = pairfirst { BLOCK } @kvlist; <br/>
+my $found = pairfirst { BLOCK } @kvlist;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.30.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Similar to the
+"first" function, but interprets the given list as
+an even−sized list of pairs. It invokes the
+"BLOCK" multiple times, in scalar context, with $a
+and $b set to successive pairs of values from the
+@kvlist.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+first pair of values from the list for which the
+"BLOCK" returned true in list context, or an empty
+list of no such pair was found. In scalar context it returns
+a simple boolean value, rather than either the key or the
+value found.</p>
+<p style="margin-left:9%; margin-top: 1em">( $key, $value )
+= pairfirst { $a =˜ m/ˆ[[:upper:]]+$/ }
+@kvlist</p>
+<p style="margin-left:9%; margin-top: 1em">As with
+"grep" aliasing $_ to list elements,
+"pairfirst" aliases $a and $b to elements of the
+given list. Any modifications of it by the code block will
+be visible to the caller.</p>
+<h3>pairmap
+<a name="pairmap"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @list =
+pairmap { BLOCK } @kvlist; <br/>
+my $count = pairmap { BLOCK } @kvlist;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.29.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Similar to
+perl's "map" keyword, but interprets the given
+list as an even−sized list of pairs. It invokes the
+"BLOCK" multiple times, in list context, with $a
+and $b set to successive pairs of values from the
+@kvlist.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+concatenation of all the values returned by the
+"BLOCK" in list context, or the count of the
+number of items that would have been returned in scalar
+context.</p>
+<p style="margin-left:9%; margin-top: 1em">@result =
+pairmap { "The key $a has value $b" } @kvlist</p>
+<p style="margin-left:9%; margin-top: 1em">As with
+"map" aliasing $_ to list elements,
+"pairmap" aliases $a and $b to elements of the
+given list. Any modifications of it by the code block will
+be visible to the caller.</p>
+<p style="margin-left:9%; margin-top: 1em">See "KNOWN
+BUGS" for a known−bug with "pairmap",
+and a workaround.</p>
+<h2>OTHER FUNCTIONS
+<a name="OTHER FUNCTIONS"></a>
+</h2>
+<h3>shuffle
+<a name="shuffle"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @values =
+shuffle @values;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+values of the input in a random order</p>
+<p style="margin-left:9%; margin-top: 1em">@cards = shuffle
+0..51 # 0..51 in a random order</p>
+<p style="margin-left:9%; margin-top: 1em">This function is
+affected by the $RAND variable.</p>
+<h3>sample
+<a name="sample"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @items =
+sample $count, @values</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.54.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Randomly select
+the given number of elements from the input list. Any given
+position in the input list will be selected at most
+once.</p>
+<p style="margin-left:9%; margin-top: 1em">If there are
+fewer than $count items in the list then the function will
+return once all of them have been randomly selected;
+effectively the function behaves similarly to
+"shuffle".</p>
+<p style="margin-left:9%; margin-top: 1em">This function is
+affected by the $RAND variable.</p>
+<h3>uniq
+<a name="uniq"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @subset =
+uniq @values</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.45.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Filters a list
+of values to remove subsequent duplicates, as judged by a
+DWIM−ish string equality or "undef" test.
+Preserves the order of unique elements, and retains the
+first value of any duplicate set.</p>
+<p style="margin-left:9%; margin-top: 1em">my $count = uniq
+@values</p>
+<p style="margin-left:9%; margin-top: 1em">In scalar
+context, returns the number of elements that would have been
+returned as a list.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"undef" value is treated by this function as
+distinct from the empty string, and no warning will be
+produced. It is left as−is in the returned list.
+Subsequent "undef" values are still considered
+identical to the first, and will be removed.</p>
+<h3>uniqint
+<a name="uniqint"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @subset =
+uniqint @values</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.55.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Filters a list
+of values to remove subsequent duplicates, as judged by an
+integer numerical equality test. Preserves the order of
+unique elements, and retains the first value of any
+duplicate set. Values in the returned list will be coerced
+into integers.</p>
+<p style="margin-left:9%; margin-top: 1em">my $count =
+uniqint @values</p>
+<p style="margin-left:9%; margin-top: 1em">In scalar
+context, returns the number of elements that would have been
+returned as a list.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+"undef" is treated much as other numerical
+operations treat it; it compares equal to zero but
+additionally produces a warning if such warnings are enabled
+("use warnings 'uninitialized';"). In addition, an
+"undef" in the returned list is coerced into a
+numerical zero, so that the entire list of values returned
+by "uniqint" are well−behaved as
+integers.</p>
+<h3>uniqnum
+<a name="uniqnum"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @subset =
+uniqnum @values</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.44.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Filters a list
+of values to remove subsequent duplicates, as judged by a
+numerical equality test. Preserves the order of unique
+elements, and retains the first value of any duplicate
+set.</p>
+<p style="margin-left:9%; margin-top: 1em">my $count =
+uniqnum @values</p>
+<p style="margin-left:9%; margin-top: 1em">In scalar
+context, returns the number of elements that would have been
+returned as a list.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+"undef" is treated much as other numerical
+operations treat it; it compares equal to zero but
+additionally produces a warning if such warnings are enabled
+("use warnings 'uninitialized';"). In addition, an
+"undef" in the returned list is coerced into a
+numerical zero, so that the entire list of values returned
+by "uniqnum" are well−behaved as
+numbers.</p>
+<p style="margin-left:9%; margin-top: 1em">Note also that
+multiple IEEE "NaN" values are treated as
+duplicates of each other, regardless of any differences in
+their payloads, and despite the fact that "0+'NaN' ==
+0+'NaN'" yields false.</p>
+<h3>uniqstr
+<a name="uniqstr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @subset =
+uniqstr @values</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.45.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Filters a list
+of values to remove subsequent duplicates, as judged by a
+string equality test. Preserves the order of unique
+elements, and retains the first value of any duplicate
+set.</p>
+<p style="margin-left:9%; margin-top: 1em">my $count =
+uniqstr @values</p>
+<p style="margin-left:9%; margin-top: 1em">In scalar
+context, returns the number of elements that would have been
+returned as a list.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+"undef" is treated much as other string operations
+treat it; it compares equal to the empty string but
+additionally produces a warning if such warnings are enabled
+("use warnings 'uninitialized';"). In addition, an
+"undef" in the returned list is coerced into an
+empty string, so that the entire list of values returned by
+"uniqstr" are well−behaved as strings.</p>
+<h3>head
+<a name="head"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @values =
+head $size, @list;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.50.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+first $size elements from @list. If $size is negative,
+returns all but the last $size elements from @list.</p>
+<p style="margin-left:9%; margin-top: 1em">@result = head
+2, qw( foo bar baz ); <br/>
+# foo, bar <br/>
+@result = head −2, qw( foo bar baz ); <br/>
+# foo</p>
+<h3>tail
+<a name="tail"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @values =
+tail $size, @list;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.50.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns the last
+$size elements from @list. If $size is negative, returns all
+but the first $size elements from @list.</p>
+<p style="margin-left:9%; margin-top: 1em">@result = tail
+2, qw( foo bar baz ); <br/>
+# bar, baz <br/>
+@result = tail −2, qw( foo bar baz ); <br/>
+# baz</p>
+<h3>zip
+<a name="zip"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @result = zip
+[1..3], ['a'..'c']; <br/>
+# [1, 'a'], [2, 'b'], [3, 'c']</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.56.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns a list
+of array references, composed of elements from the given
+list of array references. Each array in the returned list is
+composed of elements at that corresponding position from
+each of the given input arrays. If any input arrays run out
+of elements before others, then "undef" will be
+inserted into the result to fill in the gaps.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"zip" function is particularly handy for iterating
+over multiple arrays at the same time with a
+"foreach" loop, taking one element from each:</p>
+<p style="margin-left:9%; margin-top: 1em">foreach ( zip
+\@xs, \@ys, \@zs ) { <br/>
+my ($x, $y, $z) = @$_; <br/>
+... <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NOTE</b> to
+users of List::MoreUtils: This function does not behave the
+same as "List::MoreUtils::zip", but is actually a
+non−prototyped equivalent to
+"List::MoreUtils::zip_unflatten". This function
+does not apply a prototype, so make sure to invoke it with
+references to arrays.</p>
+<p style="margin-left:9%; margin-top: 1em">For a function
+similar to the "zip" function from
+"List::MoreUtils", see mesh.</p>
+<p style="margin-left:9%; margin-top: 1em">my @result =
+zip_shortest ...</p>
+<p style="margin-left:9%; margin-top: 1em">A variation of
+the function that differs in how it behaves when given input
+arrays of differing lengths. "zip_shortest" will
+stop as soon as any one of the input arrays run out of
+elements, discarding any remaining unused values from the
+others.</p>
+<p style="margin-left:9%; margin-top: 1em">my @result =
+zip_longest ...</p>
+<p style="margin-left:9%; margin-top: 1em">"zip_longest"
+is an alias to the "zip" function, provided simply
+to be explicit about that behaviour as compared to
+"zip_shortest".</p>
+<h3>mesh
+<a name="mesh"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my @result =
+mesh [1..3], ['a'..'c']; <br/>
+# (1, 'a', 2, 'b', 3, 'c')</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.56.</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns a list
+of items collected from elements of the given list of array
+references. Each section of items in the returned list is
+composed of elements at the corresponding position from each
+of the given input arrays. If any input arrays run out of
+elements before others, then "undef" will be
+inserted into the result to fill in the gaps.</p>
+<p style="margin-left:9%; margin-top: 1em">This is similar
+to zip, except that all of the ranges in the result are
+returned in one long flattened list, instead of being
+bundled into separate arrays.</p>
+<p style="margin-left:9%; margin-top: 1em">Because it
+returns a flat list of items, the "mesh" function
+is particularly useful for building a hash out of two
+separate arrays of keys and values:</p>
+<p style="margin-left:9%; margin-top: 1em">my %hash = mesh
+\@keys, \@values; <br/>
+my $href = { mesh \@keys, \@values };</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NOTE</b> to
+users of List::MoreUtils: This function is a
+non−prototyped equivalent to
+"List::MoreUtils::mesh" or
+"List::MoreUtils::zip" (themselves aliases of each
+other). This function does not apply a prototype, so make
+sure to invoke it with references to arrays.</p>
+<p style="margin-left:9%; margin-top: 1em">my @result =
+mesh_shortest ... <br/>
+my @result = mesh_longest ...</p>
+<p style="margin-left:9%; margin-top: 1em">These variations
+are similar to those of zip, in that they differ in
+behaviour when one of the input lists runs out of elements
+before the others.</p>
+<h2>CONFIGURATION VARIABLES
+<a name="CONFIGURATION VARIABLES"></a>
+</h2>
+<h3>$RAND
+<a name="$RAND"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">local
+$List::Util::RAND = sub { ... };</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Since version
+1.54.</i></p>
+<p style="margin-left:9%; margin-top: 1em">This package
+variable is used by code which needs to generate random
+numbers (such as the "shuffle" and
+"sample" functions). If set to a CODE reference it
+provides an alternative to perl's builtin rand() function.
+When a new random number is needed this function will be
+invoked with no arguments and is expected to return a
+floating−point value, of which only the fractional
+part will be used.</p>
+<h2>KNOWN BUGS
+<a name="KNOWN BUGS"></a>
+</h2>
+<h3>RT #95409
+<a name="RT #95409"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">&lt;https://rt.cpan.org/Ticket/Display.html?id=95409&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">If the block of
+code given to "pairmap" contains lexical variables
+that are captured by a returned closure, and the closure is
+executed after the block has been re−used for the next
+iteration, these lexicals will not see the correct values.
+For example:</p>
+<p style="margin-left:9%; margin-top: 1em">my @subs =
+pairmap { <br/>
+my $var = "$a is $b"; <br/>
+sub { print "$var\n" }; <br/>
+} one =&gt; 1, two =&gt; 2, three =&gt; 3; <br/>
+$_−&gt;() for @subs;</p>
+<p style="margin-left:9%; margin-top: 1em">Will incorrectly
+print</p>
+<p style="margin-left:9%; margin-top: 1em">three is 3 <br/>
+three is 3 <br/>
+three is 3</p>
+<p style="margin-left:9%; margin-top: 1em">This is due to
+the performance optimisation of using "MULTICALL"
+for the code block, which means that fresh SVs do not get
+allocated for each call to the block. Instead, the same SV
+is re−assigned for each iteration, and all the
+closures will share the value seen on the final
+iteration.</p>
+<p style="margin-left:9%; margin-top: 1em">To work around
+this bug, surround the code with a second set of braces.
+This creates an inner block that defeats the
+"MULTICALL" logic, and does get fresh SVs
+allocated each time:</p>
+<p style="margin-left:9%; margin-top: 1em">my @subs =
+pairmap { <br/>
+{ <br/>
+my $var = "$a is $b"; <br/>
+sub { print "$var\n"; } <br/>
+} <br/>
+} one =&gt; 1, two =&gt; 2, three =&gt; 3;</p>
+<p style="margin-left:9%; margin-top: 1em">This bug only
+affects closures that are generated by the block but used
+afterwards. Lexical variables that are only used during the
+lifetime of the block's execution will take their individual
+values for each invocation, as normal.</p>
+<h3>uniqnum() on oversized bignums
+<a name="uniqnum() on oversized bignums"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Due to the way
+that uniqnum() compares numbers, it cannot distinguish
+differences between bignums (especially bigints) that are
+too large to fit in the native platform types. For
+example,</p>
+<p style="margin-left:9%; margin-top: 1em">my $x =
+Math::BigInt−&gt;new( "1" x 100 ); <br/>
+my $y = $x + 1; <br/>
+say for uniqnum( $x, $y );</p>
+<p style="margin-left:9%; margin-top: 1em">Will print just
+the value of $x, believing that $y is a numerically−
+equivalent value. This bug does not affect uniqstr(), which
+will correctly observe that the two values stringify to
+different strings.</p>
+<h2>SUGGESTED ADDITIONS
+<a name="SUGGESTED ADDITIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+are additions that have been requested, but I have been
+reluctant to add due to them being very simple to implement
+in perl</p>
+<p style="margin-left:9%; margin-top: 1em"># How many
+elements are true <br/>
+sub true { scalar grep { $_ } @_ } <br/>
+# How many elements are false <br/>
+sub false { scalar grep { !$_ } @_ }</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Scalar::Util,
+List::MoreUtils</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+1997−2007 Graham Barr &lt;gbarr@pobox.com&gt;. All
+rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as
+Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">Recent additions
+and current maintenance by Paul Evans,
+&lt;leonerd@leonerd.org.uk&gt;.</p>
+<hr/>
+</body>
+</html>

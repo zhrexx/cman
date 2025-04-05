@@ -1,0 +1,216 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:07 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OSSL_CMP_VALIDATE_MSG</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OSSL_CMP_VALIDATE_MSG</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OSSL_CMP_validate_msg,
+OSSL_CMP_validate_cert_path − functions for verifying
+CMP message protection</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/cmp.h&gt; <br/>
+int OSSL_CMP_validate_msg(OSSL_CMP_CTX *ctx, OSSL_CMP_MSG
+*msg); <br/>
+int OSSL_CMP_validate_cert_path(const OSSL_CMP_CTX *ctx,
+<br/>
+X509_STORE *trusted_store, X509 *cert);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This is the API
+for validating the protection of CMP messages, which
+includes validating CMP message sender certificates and
+their paths while optionally checking the revocation status
+of the certificates(s).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_CMP_validate_msg()</b>
+validates the protection of the given <i>msg</i>, which must
+be signature−based or using password−based MAC
+(PBM). In the former case a suitable trust anchor must be
+given in the CMP context <i>ctx</i>, and in the latter case
+the matching secret must have been set there using
+<b>OSSL_CMP_CTX_set1_secretValue</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">In case of
+signature algorithm, the certificate to use for the
+signature check is preferably the one provided by a call to
+<b>OSSL_CMP_CTX_set1_srvCert</b>(3). If no such sender cert
+has been pinned then candidate sender certificates are taken
+from the list of certificates received in the <i>msg</i>
+extraCerts, then any certificates provided before via
+<b>OSSL_CMP_CTX_set1_untrusted</b>(3), and then all trusted
+certificates provided via
+<b>OSSL_CMP_CTX_set0_trusted</b>(3). A candidate certificate
+is acceptable only if it is currently valid (or the trust
+store contains a verification callback that overrides the
+verdict that the certificate is expired or not yet valid),
+its subject DN matches the <i>msg</i> sender DN (as far as
+present), and its subject key identifier is present and
+matches the senderKID (as far as the latter is present).
+Each acceptable cert is tried in the given order to see if
+the message signature check succeeds and the cert and its
+path can be verified using any trust store set via
+<b>OSSL_CMP_CTX_set0_trusted</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">If the option
+OSSL_CMP_OPT_PERMIT_TA_IN_EXTRACERTS_FOR_IR was set by
+calling <b>OSSL_CMP_CTX_set_option</b>(3), for an
+Initialization Response (IP) message any self−issued
+certificate from the <i>msg</i> extraCerts field may be used
+as a trust anchor for the path verification of an
+'acceptable' cert if it can be used also to validate the
+issued certificate returned in the IP message. This is
+according to TS 33.310 [Network Domain Security (NDS);
+Authentication Framework (AF)] document specified by The 3rd
+Generation Partnership Project (3GPP). Note that using this
+option is dangerous as the certificate obtained this way has
+not been authenticated (at least not at CMP level). Taking
+it over as a trust anchor implements
+trust−on−first−use (TOFU).</p>
+<p style="margin-left:9%; margin-top: 1em">Any cert that
+has been found as described above is cached and tried first
+when validating the signatures of subsequent messages in the
+same transaction.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_CMP_validate_cert_path()</b>
+attempts to validate the given certificate and its path
+using the given store of trusted certs (possibly including
+CRLs and a cert verification callback) and non−trusted
+intermediate certs from the <i>ctx</i>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CMP is defined
+in RFC 4210 (and CRMF in RFC 4211).</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_CMP_validate_msg()</b>
+and <b>OSSL_CMP_validate_cert_path()</b> return 1 on
+success, 0 on error or validation failed.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_CMP_CTX_new</b>(3),
+<b>OSSL_CMP_exec_certreq</b>(3),
+<b>OSSL_CMP_CTX_set1_secretValue</b>(3),
+<b>OSSL_CMP_CTX_set1_srvCert</b>(3),
+<b>OSSL_CMP_CTX_set1_untrusted</b>(3),
+<b>OSSL_CMP_CTX_set0_trusted</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The OpenSSL CMP
+support was added in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2007−2025 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

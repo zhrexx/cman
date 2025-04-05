@@ -1,0 +1,230 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:31 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PAM_CONV</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">PAM_CONV</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">pam_conv −
+PAM conversation function</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;security/pam_appl.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em">struct
+pam_message { <br/>
+int msg_style; <br/>
+const char *msg; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">struct
+pam_response { <br/>
+char *resp; <br/>
+int resp_retcode; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">struct pam_conv
+{ <br/>
+int (*conv)(int num_msg, const struct pam_message **msg,
+<br/>
+struct pam_response **resp, void *appdata_ptr); <br/>
+void *appdata_ptr; <br/>
+};</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The PAM library
+uses an application−defined callback to allow a direct
+communication between a loaded module and the application.
+This callback is specified by the <i>struct pam_conv</i>
+passed to <b>pam_start</b>(3) at the start of the
+transaction.</p>
+<p style="margin-left:9%; margin-top: 1em">When a module
+calls the referenced conv() function, the argument
+<i>appdata_ptr</i> is set to the second element of this
+structure.</p>
+<p style="margin-left:9%; margin-top: 1em">The other
+arguments of a call to conv() concern the information
+exchanged by module and application. That is to say,
+<i>num_msg</i> holds the length of the array of pointers,
+<i>msg</i>. After a successful return, the pointer
+<i>resp</i> points to an array of pam_response structures,
+holding the application supplied text. The
+<i>resp_retcode</i> member of this struct is unused and
+should be set to zero. It is the caller's responsibility to
+release both, this array and the responses themselves, using
+<b>free</b>(3). Note, <i>*resp</i> is a <i>struct
+pam_response</i> array and not an array of pointers.</p>
+<p style="margin-left:9%; margin-top: 1em">The number of
+responses is always equal to the <i>num_msg</i> conversation
+function argument. This does require that the response array
+is <b>free</b>(3)'d after every call to the conversation
+function. The index of the responses corresponds directly to
+the prompt index in the pam_message array.</p>
+<p style="margin-left:9%; margin-top: 1em">On failure, the
+conversation function should release any resources it has
+allocated, and return one of the predefined PAM error
+codes.</p>
+<p style="margin-left:9%; margin-top: 1em">Each message can
+have one of four types, specified by the <i>msg_style</i>
+member of <i>struct pam_message</i>:</p>
+<p style="margin-left:9%; margin-top: 1em">PAM_PROMPT_ECHO_OFF</p>
+<p style="margin-left:14%;">Obtain a string without echoing
+any text.</p>
+<p style="margin-left:9%; margin-top: 1em">PAM_PROMPT_ECHO_ON</p>
+<p style="margin-left:14%;">Obtain a string whilst echoing
+text.</p>
+<p style="margin-left:9%; margin-top: 1em">PAM_ERROR_MSG</p>
+<p style="margin-left:14%;">Display an error message.</p>
+<p style="margin-left:9%; margin-top: 1em">PAM_TEXT_INFO</p>
+<p style="margin-left:14%;">Display some text.</p>
+<p style="margin-left:9%; margin-top: 1em">The point of
+having an array of messages is that it becomes possible to
+pass a number of things to the application in a single call
+from the module. It can also be convenient for the
+application that related things come at once: a windows
+based application can then present a single form with many
+messages/prompts on at once.</p>
+<p style="margin-left:9%; margin-top: 1em">In passing, it
+is worth noting that there is a discrepancy between the way
+Linux−PAM handles the const struct pam_message **msg
+conversation function argument and the way that Solaris' PAM
+(and derivatives, known to include HP/UX, are there others?)
+does. Linux−PAM interprets the msg argument as
+entirely equivalent to the following prototype const struct
+pam_message *msg[] (which, in spirit, is consistent with the
+commonly used prototypes for argv argument to the familiar
+main() function: char **argv; and char *argv[]). Said
+another way Linux−PAM interprets the msg argument as a
+pointer to an array of num_msg read only 'struct
+pam_message' pointers. Solaris' PAM implementation
+interprets this argument as a pointer to a pointer to an
+array of num_msg pam_message structures. Fortunately,
+perhaps, for most module/application developers when num_msg
+has a value of one these two definitions are entirely
+equivalent. Unfortunately, casually raising this number to
+two has led to unanticipated compatibility problems.</p>
+<p style="margin-left:9%; margin-top: 1em">For what its
+worth the two known module writer work−arounds for
+trying to maintain source level compatibility with both PAM
+implementations are:</p>
+<p style="margin-left:14%; margin-top: 1em">• never
+call the conversation function with num_msg greater than
+one.</p>
+<p style="margin-left:14%; margin-top: 1em">• set up
+msg as doubly referenced so both types of conversation
+function can find the messages. That is, make</p>
+<p style="margin-left:19%; margin-top: 1em">msg[n] = &amp;
+(( *msg )[n])</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">PAM_BUF_ERR</p>
+<p style="margin-left:14%;">Memory buffer error.</p>
+<p style="margin-left:9%; margin-top: 1em">PAM_CONV_ERR</p>
+<p style="margin-left:14%;">Conversation failure. The
+application should not set <i>*resp</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">PAM_SUCCESS</p>
+<p style="margin-left:14%;">Success.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>pam_start</b>(3),
+<b>pam_set_item</b>(3), <b>pam_get_item</b>(3),
+<b>pam_strerror</b>(3), <b>pam</b>(8)</p>
+<hr/>
+</body>
+</html>

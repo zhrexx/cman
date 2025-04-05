@@ -1,0 +1,235 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:52 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>perfmonctl</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">perfmonctl</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">perfmonctl
+− interface to IA-64 performance monitoring unit</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;syscall.h&gt; <br/>
+#include &lt;perfmon.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>long
+perfmonctl(int</b> <i>fd</i><b>, int</b> <i>cmd</i><b>,
+void</b> <i>arg</i><b>[.</b><i>narg</i><b>], int</b>
+<i>narg</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>Note</i>:
+There is no glibc wrapper for this system call; see
+HISTORY.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+IA-64-specific <b>perfmonctl</b>() system call provides an
+interface to the PMU (performance monitoring unit). The PMU
+consists of PMD (performance monitoring data) registers and
+PMC (performance monitoring control) registers, which gather
+hardware statistics.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>perfmonctl</b>()
+applies the operation <i>cmd</i> to the input arguments
+specified by <i>arg</i>. The number of arguments is defined
+by <i>narg</i>. The <i>fd</i> argument specifies the perfmon
+context to operate on.</p>
+<p style="margin-left:9%; margin-top: 1em">Supported values
+for <i>cmd</i> are: <b><br/>
+PFM_CREATE_CONTEXT</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_CREATE_CONTEXT, pfarg_context_t
+*</b><i>ctxt</i><b>, 1);</b> <br/>
+Set up a context.</p>
+<p style="margin-left:18%; margin-top: 1em">The <i>fd</i>
+parameter is ignored. A new perfmon context is created as
+specified in <i>ctxt</i> and its file descriptor is returned
+in <i>ctxt−&gt;ctx_fd</i>.</p>
+<p style="margin-left:18%; margin-top: 1em">The file
+descriptor can be used in subsequent calls to
+<b>perfmonctl</b>() and can be used to read event
+notifications (type <i>pfm_msg_t</i>) using <b>read</b>(2).
+The file descriptor is pollable using <b>select</b>(2),
+<b>poll</b>(2), and <b>epoll</b>(7).</p>
+<p style="margin-left:18%; margin-top: 1em">The context can
+be destroyed by calling <b>close</b>(2) on the file
+descriptor.</p>
+<p style="margin-left:9%;"><b>PFM_WRITE_PMCS</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_WRITE_PMCS, pfarg_reg_t
+*</b><i>pmcs</i><b>, n);</b> <br/>
+Set PMC registers.</p>
+<p style="margin-left:9%;"><b>PFM_WRITE_PMDS</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_WRITE_PMDS, pfarg_reg_t
+*</b><i>pmds</i><b>, n);</b> <br/>
+Set PMD registers.</p>
+<p style="margin-left:9%;"><b>PFM_READ_PMDS</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_READ_PMDS, pfarg_reg_t
+*</b><i>pmds</i><b>, n);</b> <br/>
+Read PMD registers.</p>
+<p style="margin-left:9%;"><b>PFM_START</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_START, NULL, 0);</b> <br/>
+Start monitoring.</p>
+<p style="margin-left:9%;"><b>PFM_STOP</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_STOP, NULL, 0);</b> <br/>
+Stop monitoring.</p>
+<p style="margin-left:9%;"><b>PFM_LOAD_CONTEXT</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_LOAD_CONTEXT, pfarg_load_t
+*</b><i>largs</i><b>, 1);</b> <br/>
+Attach the context to a thread.</p>
+<p style="margin-left:9%;"><b>PFM_UNLOAD_CONTEXT</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_UNLOAD_CONTEXT, NULL, 0);</b> <br/>
+Detach the context from a thread.</p>
+<p style="margin-left:9%;"><b>PFM_RESTART</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_RESTART, NULL, 0);</b> <br/>
+Restart monitoring after receiving an overflow
+notification.</p>
+<p style="margin-left:9%;"><b>PFM_GET_FEATURES</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_GET_FEATURES, pfarg_features_t
+*</b><i>arg</i><b>, 1);</b></p>
+<p style="margin-left:9%;"><b>PFM_DEBUG</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_DEBUG,</b> <i>val</i><b>, 0);</b> <br/>
+If <i>val</i> is nonzero, enable debugging mode, otherwise
+disable.</p>
+<p style="margin-left:9%;"><b>PFM_GET_PMC_RESET_VAL</b></p>
+<p style="margin-left:18%;"><b>perfmonctl(int</b>
+<i>fd</i><b>, PFM_GET_PMC_RESET_VAL, pfarg_reg_t
+*</b><i>req</i><b>, n);</b> <br/>
+Reset PMC registers to default values.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>perfmonctl</b>()
+returns zero when the operation is successful. On error,
+−1 is returned and <i>errno</i> is set to indicate the
+error.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux on
+IA-64.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in Linux
+2.4; removed in Linux 5.10.</p>
+<p style="margin-left:9%; margin-top: 1em">This system call
+was broken for many years, and ultimately removed in Linux
+5.10.</p>
+<p style="margin-left:9%; margin-top: 1em">glibc does not
+provide a wrapper for this system call; on kernels where it
+exists, call it using <b>syscall</b>(2).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>gprof</b>(1)</p>
+<p style="margin-left:9%; margin-top: 1em">The perfmon2
+interface specification</p>
+<hr/>
+</body>
+</html>

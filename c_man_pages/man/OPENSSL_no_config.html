@@ -1,0 +1,201 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:52 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OPENSSL_CONFIG</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OPENSSL_CONFIG</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#ENVIRONMENT">ENVIRONMENT</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OPENSSL_config,
+OPENSSL_no_config − simple OpenSSL configuration
+functions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/conf.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions have been deprecated since OpenSSL 1.1.0, and can
+be hidden entirely by defining <b>OPENSSL_API_COMPAT</b>
+with a suitable version value, see
+<b>openssl_user_macros</b>(7):</p>
+<p style="margin-left:9%; margin-top: 1em">void
+OPENSSL_config(const char *appname); <br/>
+void OPENSSL_no_config(void);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OPENSSL_config()</b>
+configures OpenSSL using the standard <b>openssl.cnf</b> and
+reads from the application section <b>appname</b>. If
+<b>appname</b> is NULL then the default section,
+<b>openssl_conf</b>, will be used. Errors are silently
+ignored. Multiple calls have no effect.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OPENSSL_no_config()</b>
+disables configuration. If called before
+<b>OPENSSL_config()</b> no configuration takes place.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+application is built with <b>OPENSSL_LOAD_CONF</b> defined,
+then a call to <b>OpenSSL_add_all_algorithms()</b> will
+implicitly call <b>OPENSSL_config()</b> first.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>OPENSSL_config()</b> function is designed to be a very
+simple "call it and forget it" function. It is
+however <b>much</b> better than nothing. Applications which
+need finer control over their configuration functionality
+should use the configuration functions such as
+<b>CONF_modules_load()</b> directly. This function is
+deprecated and its use should be avoided. Applications
+should instead call <b>CONF_modules_load()</b> during
+initialization (that is before starting any threads).</p>
+<p style="margin-left:9%; margin-top: 1em">There are
+several reasons why calling the OpenSSL configuration
+routines is advisable. For example, to load dynamic ENGINEs
+from shared libraries (DSOs). However, very few applications
+currently support the control interface and so very few can
+load and use dynamic ENGINEs. Equally in future more
+sophisticated ENGINEs will require certain control
+operations to customize them. If an application calls
+<b>OPENSSL_config()</b> it doesn't need to know or care
+about ENGINE control operations because they can be
+performed by editing a configuration file.</p>
+<h2>ENVIRONMENT
+<a name="ENVIRONMENT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OPENSSL_CONF</b></p>
+<p style="margin-left:14%;">The path to the config file.
+Ignored in set−user−ID and
+set−group−ID programs.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Neither
+<b>OPENSSL_config()</b> nor <b>OPENSSL_no_config()</b>
+return a value.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>config</b>(5),
+<b>CONF_modules_load_file</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>OPENSSL_no_config()</b> and <b>OPENSSL_config()</b>
+functions were deprecated in OpenSSL 1.1.0 by
+<b>OPENSSL_init_crypto()</b>.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2004−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

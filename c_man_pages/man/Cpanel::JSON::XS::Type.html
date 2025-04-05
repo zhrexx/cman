@@ -1,0 +1,338 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:20 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>XS::Type</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">XS::Type</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#JSON type specification for scalars:">JSON type specification for scalars:</a><br/>
+<a href="#JSON type specification for arrays:">JSON type specification for arrays:</a><br/>
+<a href="#JSON type specification for hashes:">JSON type specification for hashes:</a><br/>
+<a href="#JSON type specification for alternatives:">JSON type specification for alternatives:</a><br/>
+<a href="#Recursive specifications">Recursive specifications</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT &amp; LICENSE">COPYRIGHT &amp; LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Cpanel::JSON::XS::Type
+− Type support for JSON encode</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Cpanel::JSON::XS; <br/>
+use Cpanel::JSON::XS::Type; <br/>
+encode_json([10, "10", 10.25], [JSON_TYPE_INT,
+JSON_TYPE_INT, JSON_TYPE_STRING]); <br/>
+# '[10,10,"10.25"]' <br/>
+encode_json([10, "10", 10.25],
+json_type_arrayof(JSON_TYPE_INT)); <br/>
+# '[10,10,10]' <br/>
+encode_json(1, JSON_TYPE_BOOL); <br/>
+# 'true' <br/>
+my $perl_struct = { key1 =&gt; 1, key2 =&gt; "2",
+key3 =&gt; 1 }; <br/>
+my $type_spec = { key1 =&gt; JSON_TYPE_STRING, key2 =&gt;
+JSON_TYPE_INT, key3 =&gt; JSON_TYPE_BOOL }; <br/>
+my $json_string = encode_json($perl_struct, $type_spec);
+<br/>
+#
+'{"key1":"1","key2":2,"key3":true}'
+<br/>
+my $perl_struct = { key1 =&gt; "value1", key2
+=&gt; "value2", key3 =&gt; 0, key4 =&gt; 1, key5
+=&gt; "string", key6 =&gt; "string2" };
+<br/>
+my $type_spec = json_type_hashof(JSON_TYPE_STRING); <br/>
+my $json_string = encode_json($perl_struct, $type_spec);
+<br/>
+#
+'{"key1":"value1","key2":"value2","key3":"0","key4":"1","key5":"string","key6":"string2"}'
+<br/>
+my $perl_struct = { key1 =&gt; { key2 =&gt; [ 10,
+"10", 10.6 ] }, key3 =&gt; "10.5" };
+<br/>
+my $type_spec = { key1 =&gt;
+json_type_anyof(JSON_TYPE_FLOAT,
+json_type_hashof(json_type_arrayof(JSON_TYPE_INT))), key3
+=&gt; JSON_TYPE_FLOAT }; <br/>
+my $json_string = encode_json($perl_struct, $type_spec);
+<br/>
+#
+'{"key1":{"key2":[10,10,10]},"key3":10.5}'
+<br/>
+my $value = decode_json('false', 1, my $type); <br/>
+# $value is 0 and $type is JSON_TYPE_BOOL <br/>
+my $value = decode_json('0', 1, my $type); <br/>
+# $value is 0 and $type is JSON_TYPE_INT <br/>
+my $value = decode_json('"0"', 1, my $type); <br/>
+# $value is 0 and $type is JSON_TYPE_STRING <br/>
+my $json_string =
+'{"key1":{"key2":[10,"10",10.6]},"key3":"10.5"}';
+<br/>
+my $perl_struct = decode_json($json_string, 0, my
+$type_spec); <br/>
+# $perl_struct is { key1 =&gt; { key2 =&gt; [ 10, 10, 10.6 ]
+}, key3 =&gt; 10.5 } <br/>
+# $type_spec is { key1 =&gt; { key2 =&gt; [ JSON_TYPE_INT,
+JSON_TYPE_STRING, JSON_TYPE_FLOAT ] }, key3 =&gt;
+JSON_TYPE_STRING }</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides stable JSON type support for the Cpanel::JSON::XS
+encoder which doesn't depend on any internal perl scalar
+flags or characteristics. Also it provides real JSON types
+for Cpanel::JSON::XS decoder.</p>
+<p style="margin-left:9%; margin-top: 1em">In most cases
+perl structures passed to encode_json come from other
+functions or from other modules and caller of
+Cpanel::JSON::XS module does not have control of internals
+or they are subject of change. So it is not easy to support
+enforcing types as described in the simple scalars
+section.</p>
+<p style="margin-left:9%; margin-top: 1em">For services
+based on JSON contents it is sometimes needed to correctly
+process and enforce JSON types.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+decode_json takes optional third scalar parameter and fills
+it with specification of json types.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+encode_json takes a perl structure as its input and
+optionally also a json type specification in the second
+parameter.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+specification is not provided (or is undef) internal perl
+scalar flags are used for the resulting JSON type. The
+internal flags can be changed by perl itself, but also by
+external modules. Which means that types in resulting JSON
+string aren't stable. Specially it does not work reliable
+for dual vars and scalars which were used in both numeric
+and string operations. See simple scalars.</p>
+<p style="margin-left:9%; margin-top: 1em">To enforce that
+specification is always provided use
+"require_types". In this case when
+"encode" is called without second argument (or is
+undef) then it croaks. It applies recursively for all
+sub−structures.</p>
+<h3>JSON type specification for scalars:
+<a name="JSON type specification for scalars:"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">JSON_TYPE_BOOL</p>
+<p style="margin-left:14%;">It enforces JSON boolean in
+resulting JSON, i.e. either "true" or
+"false". For determining whether the scalar passed
+to the encoder is true, standard perl boolean logic is
+used.</p>
+<p style="margin-left:9%;">JSON_TYPE_INT</p>
+<p style="margin-left:14%;">It enforces JSON number without
+fraction part in the resulting JSON. Equivalent of perl
+function int is used for conversion.</p>
+<p style="margin-left:9%;">JSON_TYPE_FLOAT</p>
+<p style="margin-left:14%;">It enforces JSON number with
+fraction part in the resulting JSON. Equivalent of perl
+operation +0 is used for conversion.</p>
+<p style="margin-left:9%;">JSON_TYPE_STRING</p>
+<p style="margin-left:14%;">It enforces JSON string type in
+the resulting JSON.</p>
+<p style="margin-left:9%;">JSON_TYPE_NULL</p>
+<p style="margin-left:14%;">It represents JSON
+"null" value. Makes sense only when passing perl's
+"undef" value.</p>
+<p style="margin-left:9%; margin-top: 1em">For each type,
+there also exists a type with the suffix
+"_OR_NULL" which encodes perl's "undef"
+into JSON "null". Without type with suffix
+"_OR_NULL" perl's "undef" is converted
+to specific type according to above rules.</p>
+<h3>JSON type specification for arrays:
+<a name="JSON type specification for arrays:"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">[...]</p>
+<p style="margin-left:14%;">The array must contain the same
+number of elements as in the perl array passed for encoding.
+Each element of the array describes the JSON type which is
+enforced for the corresponding element of the perl
+array.</p>
+<p style="margin-left:9%;">json_type_arrayof</p>
+<p style="margin-left:14%;">This function takes a JSON type
+specification as its argument which is enforced for every
+element of the passed perl array.</p>
+<h3>JSON type specification for hashes:
+<a name="JSON type specification for hashes:"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">{...}</p>
+<p style="margin-left:14%;">Each hash value for
+corresponding key describes the JSON type specification for
+values of passed perl hash structure. Keys in hash which are
+not present in passed perl hash structure are simple ignored
+and not used.</p>
+<p style="margin-left:9%;">json_type_hashof</p>
+<p style="margin-left:14%;">This function takes a JSON type
+specification as its argument which is enforced for every
+value of passed perl hash structure.</p>
+<h3>JSON type specification for alternatives:
+<a name="JSON type specification for alternatives:"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">json_type_anyof</p>
+<p style="margin-left:14%;">This function takes a list of
+JSON type alternative specifications (maximally one scalar,
+one array, and one hash) as its input and the JSON encoder
+chooses one that matches.</p>
+<p style="margin-left:9%;">json_type_null_or_anyof</p>
+<p style="margin-left:14%;">Like
+"json_type_anyof", but scalar can be only perl's
+"undef".</p>
+<h3>Recursive specifications
+<a name="Recursive specifications"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">json_type_weaken</p>
+<p style="margin-left:14%;">This function can be used as an
+argument for "json_type_arrayof",
+"json_type_hashof" or "json_type_anyof"
+functions to create weak references suitable for complicated
+recursive structures. It depends on the weaken function from
+Scalar::Util module. See following example:</p>
+<p style="margin-left:14%; margin-top: 1em">my $struct = {
+<br/>
+type =&gt; JSON_TYPE_STRING, <br/>
+array =&gt; json_type_arrayof(JSON_TYPE_INT), <br/>
+}; <br/>
+$struct−&gt;{recursive} = json_type_anyof( <br/>
+json_type_weaken($struct), <br/>
+json_type_arrayof(JSON_TYPE_STRING), <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">If you want to
+encode all perl scalars to JSON string types despite how
+complicated is input perl structure you can define JSON type
+specification for alternatives recursively. It could be
+defined as:</p>
+<p style="margin-left:14%; margin-top: 1em">my $type =
+json_type_anyof(); <br/>
+$type−&gt;[0] = JSON_TYPE_STRING_OR_NULL; <br/>
+$type−&gt;[1] =
+json_type_arrayof(json_type_weaken($type)); <br/>
+$type−&gt;[2] =
+json_type_hashof(json_type_weaken($type)); <br/>
+print encode_json([ 10, "10", { key =&gt; 10 } ],
+$type); <br/>
+#
+["10","10",{"key":"10"}]</p>
+<p style="margin-left:14%; margin-top: 1em">An alternative
+solution for encoding all scalars to JSON strings is to use
+"type_all_string" method of Cpanel::JSON::XS
+itself:</p>
+<p style="margin-left:14%; margin-top: 1em">my $json =
+Cpanel::JSON::XS−&gt;new−&gt;type_all_string;
+<br/>
+print $json−&gt;encode([ 10, "10", { key
+=&gt; 10 } ]); <br/>
+#
+["10","10",{"key":"10"}]</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pali
+&lt;pali@cpan.org&gt;</p>
+<h2>COPYRIGHT &amp; LICENSE
+<a name="COPYRIGHT &amp; LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+2017, GoodData Corporation. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This module is
+available under the same licences as perl, the Artistic
+license and the GPL.</p>
+<hr/>
+</body>
+</html>

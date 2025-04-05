@@ -1,0 +1,739 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:53 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>select</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">select</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#fd_set">fd_set</a><br/>
+<a href="#File descriptor sets">File descriptor sets</a><br/>
+<a href="#Arguments">Arguments</a><br/>
+<a href="#pselect()">pselect()</a><br/>
+<a href="#The timeout">The timeout</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#VERSIONS">VERSIONS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#The self-pipe trick">The self-pipe trick</a><br/>
+<a href="#Emulating usleep(3)">Emulating usleep(3)</a><br/>
+<a href="#Correspondence between select() and poll() notifications">Correspondence between select() and poll() notifications</a><br/>
+<a href="#Multithreaded applications">Multithreaded applications</a><br/>
+<a href="#C library/kernel differences">C library/kernel differences</a><br/>
+<a href="#Historical glibc details">Historical glibc details</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">select, pselect,
+FD_CLR, FD_ISSET, FD_SET, FD_ZERO, fd_set −
+synchronous I/O multiplexing</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;sys/select.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>typedef</b>
+/* ... */ <b>fd_set;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+select(int</b> <i>nfds</i><b>, fd_set *_Nullable
+restrict</b> <i>readfds</i><b>, <br/>
+fd_set *_Nullable restrict</b> <i>writefds</i><b>, <br/>
+fd_set *_Nullable restrict</b> <i>exceptfds</i><b>, <br/>
+struct timeval *_Nullable restrict</b>
+<i>timeout</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+FD_CLR(int</b> <i>fd</i><b>, fd_set *</b><i>set</i><b>);
+<br/>
+int FD_ISSET(int</b> <i>fd</i><b>, fd_set
+*</b><i>set</i><b>); <br/>
+void FD_SET(int</b> <i>fd</i><b>, fd_set
+*</b><i>set</i><b>); <br/>
+void FD_ZERO(fd_set *</b><i>set</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+pselect(int</b> <i>nfds</i><b>, fd_set *_Nullable
+restrict</b> <i>readfds</i><b>, <br/>
+fd_set *_Nullable restrict</b> <i>writefds</i><b>, <br/>
+fd_set *_Nullable restrict</b> <i>exceptfds</i><b>, <br/>
+const struct timespec *_Nullable restrict</b>
+<i>timeout</i><b>, <br/>
+const sigset_t *_Nullable restrict</b>
+<i>sigmask</i><b>);</b></p>
+<p style="margin-left:4%; margin-top: 1em">Feature Test
+Macro Requirements for glibc (see
+<b>feature_test_macros</b>(7)):</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pselect</b>():
+<br/>
+_POSIX_C_SOURCE &gt;= 200112L</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>WARNING</b>:
+<b>select</b>() can monitor only file descriptors numbers
+that are less than <b>FD_SETSIZE</b> (1024)—an
+unreasonably low limit for many modern
+applications—and this limitation will not change. All
+modern applications should instead use <b>poll</b>(2) or
+<b>epoll</b>(7), which do not suffer this limitation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>select</b>()
+allows a program to monitor multiple file descriptors,
+waiting until one or more of the file descriptors become
+"ready" for some class of I/O operation (e.g.,
+input possible). A file descriptor is considered ready if it
+is possible to perform a corresponding I/O operation (e.g.,
+<b>read</b>(2), or a sufficiently small <b>write</b>(2))
+without blocking.</p>
+<h3>fd_set
+<a name="fd_set"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A structure type
+that can represent a set of file descriptors. According to
+POSIX, the maximum number of file descriptors in an
+<i>fd_set</i> structure is the value of the macro
+<b>FD_SETSIZE</b>.</p>
+<h3>File descriptor sets
+<a name="File descriptor sets"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The principal
+arguments of <b>select</b>() are three "sets" of
+file descriptors (declared with the type <i>fd_set</i>),
+which allow the caller to wait for three classes of events
+on the specified set of file descriptors. Each of the
+<i>fd_set</i> arguments may be specified as NULL if no file
+descriptors are to be watched for the corresponding class of
+events.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note
+well</b>: Upon return, each of the file descriptor sets is
+modified in place to indicate which file descriptors are
+currently "ready". Thus, if using <b>select</b>()
+within a loop, the sets <i>must be reinitialized</i> before
+each call.</p>
+<p style="margin-left:9%; margin-top: 1em">The contents of
+a file descriptor set can be manipulated using the following
+macros: <b><br/>
+FD_ZERO</b>()</p>
+<p style="margin-left:18%;">This macro clears (removes all
+file descriptors from) <i>set</i>. It should be employed as
+the first step in initializing a file descriptor set.</p>
+<p style="margin-left:9%;"><b>FD_SET</b>()</p>
+<p style="margin-left:18%;">This macro adds the file
+descriptor <i>fd</i> to <i>set</i>. Adding a file descriptor
+that is already present in the set is a no-op, and does not
+produce an error.</p>
+<p style="margin-left:9%;"><b>FD_CLR</b>()</p>
+<p style="margin-left:18%;">This macro removes the file
+descriptor <i>fd</i> from <i>set</i>. Removing a file
+descriptor that is not present in the set is a no-op, and
+does not produce an error.</p>
+<p style="margin-left:9%;"><b>FD_ISSET</b>()</p>
+<p style="margin-left:18%;"><b>select</b>() modifies the
+contents of the sets according to the rules described below.
+After calling <b>select</b>(), the <b>FD_ISSET</b>() macro
+can be used to test if a file descriptor is still present in
+a set. <b>FD_ISSET</b>() returns nonzero if the file
+descriptor <i>fd</i> is present in <i>set</i>, and zero if
+it is not.</p>
+<h3>Arguments
+<a name="Arguments"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The arguments of
+<b>select</b>() are as follows: <i><br/>
+readfds</i></p>
+<p style="margin-left:18%;">The file descriptors in this
+set are watched to see if they are ready for reading. A file
+descriptor is ready for reading if a read operation will not
+block; in particular, a file descriptor is also ready on
+end-of-file.</p>
+<p style="margin-left:18%; margin-top: 1em">After
+<b>select</b>() has returned, <i>readfds</i> will be cleared
+of all file descriptors except for those that are ready for
+reading.</p>
+<p style="margin-left:9%;"><i>writefds</i></p>
+<p style="margin-left:18%;">The file descriptors in this
+set are watched to see if they are ready for writing. A file
+descriptor is ready for writing if a write operation will
+not block. However, even if a file descriptor indicates as
+writable, a large write may still block.</p>
+<p style="margin-left:18%; margin-top: 1em">After
+<b>select</b>() has returned, <i>writefds</i> will be
+cleared of all file descriptors except for those that are
+ready for writing.</p>
+<p style="margin-left:9%;"><i>exceptfds</i></p>
+<p style="margin-left:18%;">The file descriptors in this
+set are watched for "exceptional conditions". For
+examples of some exceptional conditions, see the discussion
+of <b>POLLPRI</b> in <b>poll</b>(2).</p>
+<p style="margin-left:18%; margin-top: 1em">After
+<b>select</b>() has returned, <i>exceptfds</i> will be
+cleared of all file descriptors except for those for which
+an exceptional condition has occurred.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><i>nfds</i></p></td>
+<td width="4%"></td>
+<td width="82%">
+<p>This argument should be set to the highest-numbered file
+descriptor in any of the three sets, plus 1. The indicated
+file descriptors in each set are checked, up to this limit
+(but see BUGS).</p></td></tr>
+</table>
+<p style="margin-left:9%;"><i>timeout</i></p>
+<p style="margin-left:18%;">The <i>timeout</i> argument is
+a <i>timeval</i> structure (shown below) that specifies the
+interval that <b>select</b>() should block waiting for a
+file descriptor to become ready. The call will block until
+either:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="60%">
+<p>a file descriptor becomes ready;</p></td>
+<td width="18%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="60%">
+<p>the call is interrupted by a signal handler; or</p></td>
+<td width="18%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="60%">
+<p>the timeout expires.</p></td>
+<td width="18%">
+</td></tr>
+</table>
+<p style="margin-left:18%; margin-top: 1em">Note that the
+<i>timeout</i> interval will be rounded up to the system
+clock granularity, and kernel scheduling delays mean that
+the blocking interval may overrun by a small amount.</p>
+<p style="margin-left:18%; margin-top: 1em">If both fields
+of the <i>timeval</i> structure are zero, then
+<b>select</b>() returns immediately. (This is useful for
+polling.)</p>
+<p style="margin-left:18%; margin-top: 1em">If
+<i>timeout</i> is specified as NULL, <b>select</b>() blocks
+indefinitely waiting for a file descriptor to become
+ready.</p>
+<h3>pselect()
+<a name="pselect()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pselect</b>() system call allows an application to safely
+wait until either a file descriptor becomes ready or until a
+signal is caught.</p>
+<p style="margin-left:9%; margin-top: 1em">The operation of
+<b>select</b>() and <b>pselect</b>() is identical, other
+than these three differences:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p style="margin-top: 1em"><b>select</b>() uses a timeout
+that is a <i>struct timeval</i> (with seconds and
+microseconds), while <b>pselect</b>() uses a <i>struct
+timespec</i> (with seconds and nanoseconds).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p><b>select</b>() may update the <i>timeout</i> argument
+to indicate how much time was left. <b>pselect</b>() does
+not change this argument.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p><b>select</b>() has no <i>sigmask</i> argument, and
+behaves as <b>pselect</b>() called with NULL
+<i>sigmask</i>.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><i>sigmask</i>
+is a pointer to a signal mask (see <b>sigprocmask</b>(2));
+if it is not NULL, then <b>pselect</b>() first replaces the
+current signal mask by the one pointed to by <i>sigmask</i>,
+then does the "select" function, and then restores
+the original signal mask. (If <i>sigmask</i> is NULL, the
+signal mask is not modified during the <b>pselect</b>()
+call.)</p>
+<p style="margin-left:9%; margin-top: 1em">Other than the
+difference in the precision of the <i>timeout</i> argument,
+the following <b>pselect</b>() call:</p>
+<p style="margin-left:14%; margin-top: 1em">ready =
+pselect(nfds, &amp;readfds, &amp;writefds, &amp;exceptfds,
+<br/>
+timeout, &amp;sigmask);</p>
+<p style="margin-left:9%; margin-top: 1em">is equivalent to
+<i>atomically</i> executing the following calls:</p>
+<p style="margin-left:14%; margin-top: 1em">sigset_t
+origmask; <br/>
+pthread_sigmask(SIG_SETMASK, &amp;sigmask, &amp;origmask);
+<br/>
+ready = select(nfds, &amp;readfds, &amp;writefds,
+&amp;exceptfds, timeout); <br/>
+pthread_sigmask(SIG_SETMASK, &amp;origmask, NULL);</p>
+<p style="margin-left:9%; margin-top: 1em">The reason that
+<b>pselect</b>() is needed is that if one wants to wait for
+either a signal or for a file descriptor to become ready,
+then an atomic test is needed to prevent race conditions.
+(Suppose the signal handler sets a global flag and returns.
+Then a test of this global flag followed by a call of
+<b>select</b>() could hang indefinitely if the signal
+arrived just after the test but just before the call. By
+contrast, <b>pselect</b>() allows one to first block
+signals, handle the signals that have come in, then call
+<b>pselect</b>() with the desired <i>sigmask</i>, avoiding
+the race.)</p>
+<h3>The timeout
+<a name="The timeout"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>timeout</i> argument for <b>select</b>() is a structure
+of the following type:</p>
+<p style="margin-left:14%; margin-top: 1em">struct timeval
+{ <br/>
+time_t tv_sec; /* seconds */ <br/>
+suseconds_t tv_usec; /* microseconds */ <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">The
+corresponding argument for <b>pselect</b>() is a
+<b>timespec</b>(3) structure.</p>
+<p style="margin-left:9%; margin-top: 1em">On Linux,
+<b>select</b>() modifies <i>timeout</i> to reflect the
+amount of time not slept; most other implementations do not
+do this. (POSIX.1 permits either behavior.) This causes
+problems both when Linux code which reads <i>timeout</i> is
+ported to other operating systems, and when code is ported
+to Linux that reuses a <i>struct timeval</i> for multiple
+<b>select</b>()s in a loop without reinitializing it.
+Consider <i>timeout</i> to be undefined after
+<b>select</b>() returns.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>select</b>() and <b>pselect</b>() return the number of
+file descriptors contained in the three returned descriptor
+sets (that is, the total number of bits that are set in
+<i>readfds</i>, <i>writefds</i>, <i>exceptfds</i>). The
+return value may be zero if the timeout expired before any
+file descriptors became ready.</p>
+<p style="margin-left:9%; margin-top: 1em">On error,
+−1 is returned, and <i>errno</i> is set to indicate
+the error; the file descriptor sets are unmodified, and
+<i>timeout</i> becomes undefined.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EBADF</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p style="margin-top: 1em">An invalid file descriptor was
+given in one of the sets. (Perhaps a file descriptor that
+was already closed, or one on which an error has occurred.)
+However, see BUGS.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINTR</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>A signal was caught; see <b>signal</b>(7).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><i>nfds</i> is negative or exceeds the
+<b>RLIMIT_NOFILE</b> resource limit (see
+<b>getrlimit</b>(2)).</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The value contained within <i>timeout</i> is
+invalid.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOMEM</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>Unable to allocate memory for internal tables.</p></td></tr>
+</table>
+<h2>VERSIONS
+<a name="VERSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On some other
+UNIX systems, <b>select</b>() can fail with the error
+<b>EAGAIN</b> if the system fails to allocate
+kernel-internal resources, rather than <b>ENOMEM</b> as
+Linux does. POSIX specifies this error for <b>poll</b>(2),
+but not for <b>select</b>(). Portable programs may wish to
+check for <b>EAGAIN</b> and loop, just as with
+<b>EINTR</b>.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2008.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>select</b>()</p>
+<p style="margin-left:18%;">POSIX.1-2001, 4.4BSD (first
+appeared in 4.2BSD).</p>
+<p style="margin-left:18%; margin-top: 1em">Generally
+portable to/from non-BSD systems supporting clones of the
+BSD socket layer (including System V variants).
+However, note that the System V variant typically sets
+the timeout variable before returning, but the BSD variant
+does not.</p>
+<p style="margin-left:9%;"><b>pselect</b>()</p>
+<p style="margin-left:18%;">Linux 2.6.16. POSIX.1g,
+POSIX.1-2001.</p>
+<p style="margin-left:18%; margin-top: 1em">Prior to this,
+it was emulated in glibc (but see BUGS).</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>fd_set</b></p></td>
+<td width="1%"></td>
+<td width="17%">
+<p>POSIX.1-2001.</p></td>
+<td width="65%">
+</td></tr>
+</table>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+header also provides the <i>fd_set</i> type:
+<i>&lt;sys/time.h&gt;</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">An <i>fd_set</i>
+is a fixed size buffer. Executing <b>FD_CLR</b>() or
+<b>FD_SET</b>() with a value of <i>fd</i> that is negative
+or is equal to or larger than <b>FD_SETSIZE</b> will result
+in undefined behavior. Moreover, POSIX requires <i>fd</i> to
+be a valid file descriptor.</p>
+<p style="margin-left:9%; margin-top: 1em">The operation of
+<b>select</b>() and <b>pselect</b>() is not affected by the
+<b>O_NONBLOCK</b> flag.</p>
+<h3>The self-pipe trick
+<a name="The self-pipe trick"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">On systems that
+lack <b>pselect</b>(), reliable (and more portable) signal
+trapping can be achieved using the self-pipe trick. In this
+technique, a signal handler writes a byte to a pipe whose
+other end is monitored by <b>select</b>() in the main
+program. (To avoid possibly blocking when writing to a pipe
+that may be full or reading from a pipe that may be empty,
+nonblocking I/O is used when reading from and writing to the
+pipe.)</p>
+<h3>Emulating usleep(3)
+<a name="Emulating usleep(3)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Before the
+advent of <b>usleep</b>(3), some code employed a call to
+<b>select</b>() with all three sets empty, <i>nfds</i> zero,
+and a non-NULL <i>timeout</i> as a fairly portable way to
+sleep with subsecond precision.</p>
+<h3>Correspondence between select() and poll() notifications
+<a name="Correspondence between select() and poll() notifications"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Within the Linux
+kernel source, we find the following definitions which show
+the correspondence between the readable, writable, and
+exceptional condition notifications of <b>select</b>() and
+the event notifications provided by <b>poll</b>(2) and
+<b>epoll</b>(7):</p>
+<p style="margin-left:14%; margin-top: 1em">#define
+POLLIN_SET (EPOLLRDNORM | EPOLLRDBAND | EPOLLIN | <br/>
+EPOLLHUP | EPOLLERR) <br/>
+/* Ready for reading */ <br/>
+#define POLLOUT_SET (EPOLLWRBAND | EPOLLWRNORM | EPOLLOUT |
+<br/>
+EPOLLERR) <br/>
+/* Ready for writing */ <br/>
+#define POLLEX_SET (EPOLLPRI) <br/>
+/* Exceptional condition */</p>
+<h3>Multithreaded applications
+<a name="Multithreaded applications"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If a file
+descriptor being monitored by <b>select</b>() is closed in
+another thread, the result is unspecified. On some UNIX
+systems, <b>select</b>() unblocks and returns, with an
+indication that the file descriptor is ready (a subsequent
+I/O operation will likely fail with an error, unless another
+process reopens the file descriptor between the time
+<b>select</b>() returned and the I/O operation is
+performed). On Linux (and some other systems), closing the
+file descriptor in another thread has no effect on
+<b>select</b>(). In summary, any application that relies on
+a particular behavior in this scenario must be considered
+buggy.</p>
+<h3>C library/kernel differences
+<a name="C library/kernel differences"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The Linux kernel
+allows file descriptor sets of arbitrary size, determining
+the length of the sets to be checked from the value of
+<i>nfds</i>. However, in the glibc implementation, the
+<i>fd_set</i> type is fixed in size. See also BUGS.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pselect</b>() interface described in this page is
+implemented by glibc. The underlying Linux system call is
+named <b>pselect6</b>(). This system call has somewhat
+different behavior from the glibc wrapper function.</p>
+<p style="margin-left:9%; margin-top: 1em">The Linux
+<b>pselect6</b>() system call modifies its <i>timeout</i>
+argument. However, the glibc wrapper function hides this
+behavior by using a local variable for the timeout argument
+that is passed to the system call. Thus, the glibc
+<b>pselect</b>() function does not modify its <i>timeout</i>
+argument; this is the behavior required by POSIX.1-2001.</p>
+<p style="margin-left:9%; margin-top: 1em">The final
+argument of the <b>pselect6</b>() system call is not a
+<i>sigset_t *</i> pointer, but is instead a structure
+of the form:</p>
+<p style="margin-left:14%; margin-top: 1em">struct { <br/>
+const kernel_sigset_t *ss; /* Pointer to signal set */ <br/>
+size_t ss_len; /* Size (in bytes) of object <br/>
+pointed to by 'ss' */ <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">This allows the
+system call to obtain both a pointer to the signal set and
+its size, while allowing for the fact that most
+architectures support a maximum of 6 arguments to a system
+call. See <b>sigprocmask</b>(2) for a discussion of the
+difference between the kernel and libc notion of the signal
+set.</p>
+<h3>Historical glibc details
+<a name="Historical glibc details"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">glibc 2.0
+provided an incorrect version of <b>pselect</b>() that did
+not take a <i>sigmask</i> argument.</p>
+<p style="margin-left:9%; margin-top: 1em">From glibc 2.1
+to glibc 2.2.1, one must define <b>_GNU_SOURCE</b> in order
+to obtain the declaration of <b>pselect</b>() from
+<i>&lt;sys/select.h&gt;</i>.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX allows an
+implementation to define an upper limit, advertised via the
+constant <b>FD_SETSIZE</b>, on the range of file descriptors
+that can be specified in a file descriptor set. The Linux
+kernel imposes no fixed limit, but the glibc implementation
+makes <i>fd_set</i> a fixed-size type, with
+<b>FD_SETSIZE</b> defined as 1024, and the <b>FD_*</b>()
+macros operating according to that limit. To monitor file
+descriptors greater than 1023, use <b>poll</b>(2) or
+<b>epoll</b>(7) instead.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+implementation of the <i>fd_set</i> arguments as
+value-result arguments is a design error that is avoided in
+<b>poll</b>(2) and <b>epoll</b>(7).</p>
+<p style="margin-left:9%; margin-top: 1em">According to
+POSIX, <b>select</b>() should check all specified file
+descriptors in the three file descriptor sets, up to the
+limit <i>nfds−1</i>. However, the current
+implementation ignores any file descriptor in these sets
+that is greater than the maximum file descriptor number that
+the process currently has open. According to POSIX, any such
+file descriptor that is specified in one of the sets should
+result in the error <b>EBADF</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">Starting with
+glibc 2.1, glibc provided an emulation of <b>pselect</b>()
+that was implemented using <b>sigprocmask</b>(2) and
+<b>select</b>(). This implementation remained vulnerable to
+the very race condition that <b>pselect</b>() was designed
+to prevent. Modern versions of glibc use the (race-free)
+<b>pselect</b>() system call on kernels where it is
+provided.</p>
+<p style="margin-left:9%; margin-top: 1em">On Linux,
+<b>select</b>() may report a socket file descriptor as
+"ready for reading", while nevertheless a
+subsequent read blocks. This could for example happen when
+data has arrived but upon examination has the wrong checksum
+and is discarded. There may be other circumstances in which
+a file descriptor is spuriously reported as ready. Thus it
+may be safer to use <b>O_NONBLOCK</b> on sockets that should
+not block.</p>
+<p style="margin-left:9%; margin-top: 1em">On Linux,
+<b>select</b>() also modifies <i>timeout</i> if the call is
+interrupted by a signal handler (i.e., the <b>EINTR</b>
+error return). This is not permitted by POSIX.1. The Linux
+<b>pselect</b>() system call has the same behavior, but the
+glibc wrapper hides this behavior by internally copying the
+<i>timeout</i> to a local variable and passing that variable
+to the system call.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;sys/select.h&gt; <br/>
+int <br/>
+main(void) <br/>
+{ <br/>
+int retval; <br/>
+fd_set rfds; <br/>
+struct timeval tv; <br/>
+/* Watch stdin (fd 0) to see when it has input. */ <br/>
+FD_ZERO(&amp;rfds); <br/>
+FD_SET(0, &amp;rfds); <br/>
+/* Wait up to five seconds. */ <br/>
+tv.tv_sec = 5; <br/>
+tv.tv_usec = 0; <br/>
+retval = select(1, &amp;rfds, NULL, NULL, &amp;tv); <br/>
+/* Don't rely on the value of tv now! */ <br/>
+if (retval == −1) <br/>
+perror("select()"); <br/>
+else if (retval) <br/>
+printf("Data is available now.\n"); <br/>
+/* FD_ISSET(0, &amp;rfds) will be true. */ <br/>
+else <br/>
+printf("No data within five seconds.\n"); <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>accept</b>(2),
+<b>connect</b>(2), <b>poll</b>(2), <b>read</b>(2),
+<b>recv</b>(2), <b>restart_syscall</b>(2), <b>send</b>(2),
+<b>sigprocmask</b>(2), <b>write</b>(2), <b>timespec</b>(3),
+<b>epoll</b>(7), <b>time</b>(7)</p>
+<p style="margin-left:9%; margin-top: 1em">For a tutorial
+with discussion and examples, see <b>select_tut</b>(2).</p>
+<hr/>
+</body>
+</html>

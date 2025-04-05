@@ -1,0 +1,197 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:31 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_multi_assign</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_multi_assign</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#TYPICAL USAGE">TYPICAL USAGE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_multi_assign
+− set data to associate with an internal socket</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLMcode
+curl_multi_assign(CURLM *multi_handle, curl_socket_t sockfd,
+<br/>
+void *sockptr);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This function
+creates an association in the multi handle between the given
+socket and a private pointer of the application. This is
+designed for <i>curl_multi_socket_action(3)</i> uses.</p>
+<p style="margin-left:9%; margin-top: 1em">When set, the
+<i>sockptr</i> pointer is passed to all future socket
+callbacks for the specific <i>sockfd</i> socket.</p>
+<p style="margin-left:9%; margin-top: 1em">If the given
+<i>sockfd</i> is not already in use by libcurl, this
+function returns an error.</p>
+<p style="margin-left:9%; margin-top: 1em">libcurl only
+keeps one single pointer associated with a socket, so
+calling this function several times for the same socket
+makes the last set pointer get used.</p>
+<p style="margin-left:9%; margin-top: 1em">The idea here
+being that this association (socket to private pointer) is
+something that just about every application that uses this
+API needs and then libcurl can just as well do it since it
+already has the necessary functionality.</p>
+<p style="margin-left:9%; margin-top: 1em">It is acceptable
+to call this function from your multi callback
+functions.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURLM *multi = curl_multi_init(); <br/>
+void *ourstructp; /* pointer to our data */ <br/>
+curl_socket_t fd; /* file descriptor to associate our data
+with */</p>
+<p style="margin-left:9%; margin-top: 1em">/* make our
+struct pointer associated with socket fd */ <br/>
+CURLMcode mc = curl_multi_assign(multi, fd, ourstructp);
+<br/>
+if(mc) <br/>
+printf("error: %s\n", curl_multi_strerror(mc));
+<br/>
+}</p>
+<h2>TYPICAL USAGE
+<a name="TYPICAL USAGE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">In a typical
+application you allocate a struct or at least use some kind
+of semi−dynamic data for each socket that we must wait
+for action on when using the
+<i>curl_multi_socket_action(3)</i> approach.</p>
+<p style="margin-left:9%; margin-top: 1em">When our
+socket−callback gets called by libcurl and we get to
+know about yet another socket to wait for, we can use
+<i>curl_multi_assign(3)</i> to point out the particular data
+so that when we get updates about this same socket again, we
+do not have to find the struct associated with this socket
+by ourselves.</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.15.5</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The standard
+CURLMcode for multi interface error codes.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curl_multi_setopt</b>(3),
+<b>curl_multi_socket_action</b>(3)</p>
+<hr/>
+</body>
+</html>

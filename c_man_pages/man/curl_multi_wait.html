@@ -1,0 +1,230 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:32 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_multi_wait</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_multi_wait</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#curl_waitfd">curl_waitfd</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_multi_wait
+− poll on all easy handles in a multi handle</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLMcode
+curl_multi_wait(CURLM *multi_handle, <br/>
+struct curl_waitfd extra_fds[], <br/>
+unsigned int extra_nfds, <br/>
+int timeout_ms, <br/>
+int *numfds);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>curl_multi_wait(3)</i>
+polls all file descriptors used by the curl easy handles
+contained in the given multi handle set. It blocks until
+activity is detected on at least one of the handles or
+<i>timeout_ms</i> has passed. Alternatively, if the multi
+handle has a pending internal timeout that has a shorter
+expiry time than <i>timeout_ms</i>, that shorter time is
+being used instead to make sure timeout accuracy is
+reasonably kept.</p>
+<p style="margin-left:9%; margin-top: 1em">The calling
+application may pass additional <i>curl_waitfd</i>
+structures which are similar to <i>poll(2)</i>'s
+<i>pollfd</i> structure to be waited on in the same
+call.</p>
+<p style="margin-left:9%; margin-top: 1em">On completion,
+if <i>numfds</i> is non−NULL, it gets populated with
+the total number of file descriptors on which interesting
+events occurred. This number can include both libcurl
+internal descriptors as well as descriptors provided in
+<i>extra_fds</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">If no extra file
+descriptors are provided and libcurl has no file descriptor
+to offer to wait for, this function returns immediately.
+(Consider using <i>curl_multi_poll(3)</i> to avoid this
+behavior.)</p>
+<p style="margin-left:9%; margin-top: 1em">This function is
+encouraged to be used instead of select(3) when using the
+multi interface to allow applications to easier circumvent
+the common problem with 1024 maximum file descriptors.</p>
+<h2>curl_waitfd
+<a name="curl_waitfd"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">struct
+curl_waitfd { <br/>
+curl_socket_t fd; <br/>
+short events; <br/>
+short revents; <br/>
+}; <br/>
+CURL_WAIT_POLLIN</p>
+<p style="margin-left:18%;">Bit flag to
+<i>curl_waitfd.events</i> indicating the socket should poll
+on read events such as new data received.</p>
+<p style="margin-left:9%;">CURL_WAIT_POLLPRI</p>
+<p style="margin-left:18%;">Bit flag to
+<i>curl_waitfd.events</i> indicating the socket should poll
+on high priority read events such as out of band data.</p>
+<p style="margin-left:9%;">CURL_WAIT_POLLOUT</p>
+<p style="margin-left:18%;">Bit flag to
+<i>curl_waitfd.events</i> indicating the socket should poll
+on write events such as the socket being clear to write
+without blocking.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *easy; <br/>
+CURLM *multi = curl_multi_init(); <br/>
+int still_running;</p>
+<p style="margin-left:9%; margin-top: 1em">/* add the
+individual easy handle */ <br/>
+curl_multi_add_handle(multi, easy);</p>
+<p style="margin-left:9%; margin-top: 1em">do { <br/>
+CURLMcode mc; <br/>
+int numfds;</p>
+<p style="margin-left:9%; margin-top: 1em">mc =
+curl_multi_perform(multi, &amp;still_running);</p>
+<p style="margin-left:9%; margin-top: 1em">if(mc ==
+CURLM_OK) { <br/>
+/* wait for activity, timeout or "nothing" */ <br/>
+mc = curl_multi_wait(multi, NULL, 0, 1000, &amp;numfds);
+<br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">if(mc !=
+CURLM_OK) { <br/>
+fprintf(stderr, "curl_multi failed, code %d.\n",
+mc); <br/>
+break; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">}
+while(still_running);</p>
+<p style="margin-left:9%; margin-top: 1em">curl_multi_remove_handle(multi,
+easy); <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.28.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLMcode type,
+general libcurl multi interface error code. See
+<i>libcurl−errors(3)</i></p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i><b>curl_multi_fdset</b></i>(3),
+<b>curl_multi_perform</b>(3), <b>curl_multi_poll</b>(3)</p>
+<hr/>
+</body>
+</html>

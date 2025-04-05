@@ -1,0 +1,373 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:26 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Module::CoreList</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Module::CoreList</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTIONS API">FUNCTIONS API</a><br/>
+<a href="#DATA STRUCTURES">DATA STRUCTURES</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Module::CoreList
+− what modules shipped with versions of perl</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Module::CoreList; <br/>
+print $Module::CoreList::version{5.00503}{CPAN}; # prints
+1.48 <br/>
+print
+Module::CoreList−&gt;first_release('File::Spec'); <br/>
+# prints 5.00405 <br/>
+print
+Module::CoreList−&gt;first_release_by_date('File::Spec');
+<br/>
+# prints 5.005 <br/>
+print Module::CoreList−&gt;first_release('File::Spec',
+0.82); <br/>
+# prints 5.006001 <br/>
+if (Module::CoreList::is_core('File::Spec')) { <br/>
+print "File::Spec is a core module\n"; <br/>
+} <br/>
+print join ', ',
+Module::CoreList−&gt;find_modules(qr/Data/); <br/>
+# prints 'Data::Dumper' <br/>
+print join ', ', <br/>
+
+Module::CoreList−&gt;find_modules(qr/test::h.*::.*s/i,
+5.008008); <br/>
+# prints 'Test::Harness::Assert, Test::Harness::Straps' <br/>
+print join ", ", @{
+$Module::CoreList::families{5.005} }; <br/>
+# prints "5.005, 5.00503, 5.00504"</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Module::CoreList
+provides information on which core and dual−life
+modules shipped with each version of perl.</p>
+<p style="margin-left:9%; margin-top: 1em">It provides a
+number of mechanisms for querying this information.</p>
+<p style="margin-left:9%; margin-top: 1em">There is a
+utility called corelist provided with this module which is a
+convenient way of querying from the command−line.</p>
+<p style="margin-left:9%; margin-top: 1em">There is a
+functional programming API available for programmers to
+query information.</p>
+<p style="margin-left:9%; margin-top: 1em">Programmers may
+also query the contained hash structures to find relevant
+information.</p>
+<h2>FUNCTIONS API
+<a name="FUNCTIONS API"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These are the
+functions that are available, they may either be called as
+functions or class methods:</p>
+<p style="margin-left:9%; margin-top: 1em">Module::CoreList::first_release('File::Spec');
+# as a function <br/>
+Module::CoreList−&gt;first_release('File::Spec'); #
+class method <br/>
+first_release( MODULE )</p>
+<p style="margin-left:14%;">Behaviour since version
+2.11</p>
+<p style="margin-left:14%; margin-top: 1em">Requires a
+MODULE name as an argument, returns the perl version when
+that module first appeared in core as ordered by perl
+version number or undef ( in scalar context ) or an empty
+list ( in list context ) if that module is not in core.</p>
+<p style="margin-left:9%;">first_release_by_date( MODULE
+)</p>
+<p style="margin-left:14%;">Requires a MODULE name as an
+argument, returns the perl version when that module first
+appeared in core as ordered by release date or undef ( in
+scalar context ) or an empty list ( in list context ) if
+that module is not in core.</p>
+<p style="margin-left:9%;">"find_modules( REGEX, [
+LIST OF PERLS ] )"</p>
+<p style="margin-left:14%;">Takes a regex as an argument,
+returns a list of modules that match the regex given. If
+only a regex is provided applies to all modules in all perl
+versions. Optionally you may provide a list of perl versions
+to limit the regex search.</p>
+<p style="margin-left:9%;">find_version( PERL_VERSION )</p>
+<p style="margin-left:14%;">Takes a perl version as an
+argument. Upon successful completion, returns a reference to
+a hash. Each element of that hash has a key which is the
+name of a module (<i>e.g.,</i> 'File::Path') shipped with
+that version of perl and a value which is the version number
+(<i>e.g.,</i> '2.09') of that module which shipped with that
+version of perl . Returns "undef" otherwise.</p>
+<p style="margin-left:9%;">"is_core( MODULE, [
+MODULE_VERSION, [ PERL_VERSION ] ] )"</p>
+<p style="margin-left:14%;">Available in version 2.99 and
+above.</p>
+<p style="margin-left:14%; margin-top: 1em">Returns true if
+MODULE was bundled with the specified version of Perl. You
+can optionally specify a minimum version of the module, and
+can also specify a version of Perl. If a version of Perl
+isn't specified, is_core() will use the numeric version of
+Perl that is running (ie $]).</p>
+<p style="margin-left:14%; margin-top: 1em">If you want to
+specify the version of Perl, but don't care about the
+version of the module, pass "undef" for the module
+version:</p>
+<p style="margin-left:9%;">"is_deprecated( MODULE,
+PERL_VERSION )"</p>
+<p style="margin-left:14%;">Available in version 2.22 and
+above.</p>
+<p style="margin-left:14%; margin-top: 1em">Returns true if
+MODULE is marked as deprecated in PERL_VERSION. If
+PERL_VERSION is omitted, it defaults to the current version
+of Perl.</p>
+<p style="margin-left:9%;">deprecated_in( MODULE )</p>
+<p style="margin-left:14%;">Available in version 2.77 and
+above.</p>
+<p style="margin-left:14%; margin-top: 1em">Returns the
+first perl version where the MODULE was marked as
+deprecated. Returns "undef" if the MODULE has not
+been marked as deprecated.</p>
+<p style="margin-left:9%;">removed_from( MODULE )</p>
+<p style="margin-left:14%;">Available in version 2.32 and
+above</p>
+<p style="margin-left:14%; margin-top: 1em">Takes a module
+name as an argument, returns the first perl version where
+that module was removed from core. Returns undef if the
+given module was never in core or remains in core.</p>
+<p style="margin-left:9%;">removed_from_by_date( MODULE
+)</p>
+<p style="margin-left:14%;">Available in version 2.32 and
+above</p>
+<p style="margin-left:14%; margin-top: 1em">Takes a module
+name as an argument, returns the first perl version by
+release date where that module was removed from core.
+Returns undef if the given module was never in core or
+remains in core.</p>
+<p style="margin-left:9%;">"changes_between(
+PERL_VERSION, PERL_VERSION )"</p>
+<p style="margin-left:14%;">Available in version 2.66 and
+above.</p>
+<p style="margin-left:14%; margin-top: 1em">Given two perl
+versions, this returns a list of pairs describing the
+changes in core module content between them. The list is
+suitable for storing in a hash. The keys are library names
+and the values are hashrefs. Each hashref has an entry for
+one or both of "left" and "right",
+giving the versions of the library in each of the left and
+right perl distributions.</p>
+<p style="margin-left:14%; margin-top: 1em">For example, it
+might return these data (among others) for the difference
+between 5.008000 and 5.008001:</p>
+<p style="margin-left:14%; margin-top: 1em">'Pod::ParseLink'
+=&gt; { left =&gt; '1.05', right =&gt; '1.06' }, <br/>
+'Pod::ParseUtils' =&gt; { left =&gt; '0.22', right =&gt;
+'0.3' }, <br/>
+'Pod::Perldoc' =&gt; { right =&gt; '3.10' }, <br/>
+'Pod::Perldoc::BaseTo' =&gt; { right =&gt; undef },</p>
+<p style="margin-left:14%; margin-top: 1em">This shows us
+two libraries being updated and two being added, one of
+which has an undefined version in the right−hand side
+version.</p>
+<h2>DATA STRUCTURES
+<a name="DATA STRUCTURES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These are the
+hash data structures that are available: <br/>
+%Module::CoreList::version</p>
+<p style="margin-left:14%;">A hash of hashes that is keyed
+on perl version as indicated in $]. The second level hash is
+module =&gt; version pairs.</p>
+<p style="margin-left:14%; margin-top: 1em">Note, it is
+possible for the version of a module to be unspecified,
+whereby the value is "undef", so use "exists
+$version{$foo}{$bar}" if that's what you're testing
+for.</p>
+<p style="margin-left:14%; margin-top: 1em">Starting with
+2.10, the special module name "Unicode" refers to
+the version of the Unicode Character Database bundled with
+Perl.</p>
+<p style="margin-left:9%;">%Module::CoreList::delta</p>
+<p style="margin-left:14%;">Available in version 3.00 and
+above.</p>
+<p style="margin-left:14%; margin-top: 1em">It is a hash of
+hashes that is keyed on perl version. Each keyed hash will
+have the following keys:</p>
+<p style="margin-left:14%; margin-top: 1em">delta_from
+− a previous perl version that the changes are based
+on <br/>
+changed − a hash of module/versions that have changed
+<br/>
+removed − a hash of modules that have been removed</p>
+<p style="margin-left:9%;">%Module::CoreList::released</p>
+<p style="margin-left:14%;">Keyed on perl version this
+contains ISO formatted versions of the release dates, as
+gleaned from perlhist.</p>
+<p style="margin-left:9%;">%Module::CoreList::families</p>
+<p style="margin-left:14%;">New, in 1.96, a hash that
+clusters known perl releases by their major versions.</p>
+<p style="margin-left:9%;">%Module::CoreList::deprecated</p>
+<p style="margin-left:14%;">A hash of hashes keyed on perl
+version and on module name. If a module is defined it
+indicates that that module is deprecated in that perl
+version and is scheduled for removal from core at some
+future point.</p>
+<p style="margin-left:9%;">%Module::CoreList::upstream</p>
+<p style="margin-left:14%;">A hash that contains
+information on where patches should be directed for each
+core module.</p>
+<p style="margin-left:14%; margin-top: 1em">UPSTREAM
+indicates where patches should go. "undef" implies
+that this hasn't been discussed for the module at hand.
+"blead" indicates that the copy of the module in
+the blead sources is to be considered canonical,
+"cpan" means that the module on CPAN is to be
+patched first. "first−come" means that blead
+can be patched freely if it is in sync with the latest
+release on CPAN.</p>
+<p style="margin-left:9%;">%Module::CoreList::bug_tracker</p>
+<p style="margin-left:14%;">A hash that contains
+information on the appropriate bug tracker for each core
+module.</p>
+<p style="margin-left:14%; margin-top: 1em">BUGS is an
+email or url to post bug reports. For modules with UPSTREAM
+=&gt; 'blead', use
+&lt;mailto:perl5−porters@perl.org&gt;. rt.cpan.org
+appears to automatically provide a URL for CPAN modules; any
+value given here overrides the default:
+&lt;http://rt.cpan.org/Public/Dist/Display.html?Name=$ModuleName&gt;</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Module::CoreList
+currently covers the 5.000, 5.001, 5.002, 5.003_07, 5.004,
+5.004_05, 5.005, 5.005_03, 5.005_04 and 5.7.3 releases of
+perl.</p>
+<p style="margin-left:9%; margin-top: 1em">All stable
+releases of perl since 5.6.0 are covered.</p>
+<p style="margin-left:9%; margin-top: 1em">All development
+releases of perl since 5.9.0 are covered.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Moved to Changes
+file.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Richard Clamp
+&lt;richardc@unixbeard.net&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">Currently
+maintained by the perl 5 porters
+&lt;perl5−porters@perl.org&gt;.</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2002−2009 Richard Clamp. All Rights Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This module is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">corelist,
+Module::Info, perl, &lt;http://perlpunks.de/corelist&gt;</p>
+<hr/>
+</body>
+</html>

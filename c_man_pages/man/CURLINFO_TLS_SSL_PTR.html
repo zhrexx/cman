@@ -1,0 +1,293 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:36 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLINFO_TLS_SSL_PTR</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLINFO_TLS_SSL_PTR</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#LIMITATIONS">LIMITATIONS</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLINFO_TLS_SESSION,
+CURLINFO_TLS_SSL_PTR − get TLS session info</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_getinfo(CURL *handle, CURLINFO_TLS_SSL_PTR, <br/>
+struct curl_tlssessioninfo **session);</p>
+<p style="margin-left:9%; margin-top: 1em">/* if you need
+compatibility with libcurl &lt; 7.48.0 use <br/>
+CURLINFO_TLS_SESSION instead: */</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_getinfo(CURL *handle, CURLINFO_TLS_SESSION, <br/>
+struct curl_tlssessioninfo **session);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a pointer
+to a <i>struct curl_tlssessioninfo</i> *. The pointer is
+initialized to refer to a <i>struct curl_tlssessioninfo</i>
+* that contains an enum indicating the SSL library used for
+the handshake and a pointer to the respective internal TLS
+session structure of this underlying SSL library.</p>
+<p style="margin-left:9%; margin-top: 1em">This option may
+be useful for example to extract certificate information in
+a format convenient for further processing, such as manual
+validation. Refer to the <b>LIMITATIONS</b> section.</p>
+<p style="margin-left:9%; margin-top: 1em">struct
+curl_tlssessioninfo { <br/>
+curl_sslbackend backend; <br/>
+void *internals; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>backend</i> struct member is one of the defines in the
+CURLSSLBACKEND_* series: CURLSSLBACKEND_NONE (when built
+without TLS support), CURLSSLBACKEND_WOLFSSL,
+CURLSSLBACKEND_SECURETRANSPORT, CURLSSLBACKEND_GNUTLS,
+CURLSSLBACKEND_MBEDTLS, CURLSSLBACKEND_NSS,
+CURLSSLBACKEND_OPENSSL or CURLSSLBACKEND_SCHANNEL. (Note
+that the OpenSSL forks are all reported as just OpenSSL
+here.)</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>internals</i> struct member points to a TLS library
+specific pointer for the active ("in use") SSL
+connection, with the following underlying types:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>GnuTLS</p></td>
+<td width="1%"></td>
+<td width="20%">
+<p><b>gnutls_session_t</b></p></td>
+<td width="62%">
+</td></tr>
+</table>
+<p style="margin-left:9%;">OpenSSL</p>
+<p style="margin-left:18%;"><i>CURLINFO_TLS_SESSION(3)</i>:
+<b>SSL_CTX</b> *</p>
+<p style="margin-left:18%; margin-top: 1em"><i>CURLINFO_TLS_SSL_PTR(3)</i>:
+<b>SSL</b> * Since 7.48.0 the <i>internals</i> member can
+point to these other SSL backends as well:</p>
+<p style="margin-left:9%;">mbedTLS</p>
+<p style="margin-left:18%;"><b>mbedTLS_ssl_context</b>
+*</p>
+<p style="margin-left:9%;">Secure Channel</p>
+<p style="margin-left:18%;"><b>CtxtHandle</b> *</p>
+<p style="margin-left:9%;">Secure Transport</p>
+<p style="margin-left:18%;"><b>SSLContext</b> *</p>
+<p style="margin-left:9%;">wolfSSL</p>
+<p style="margin-left:18%;"><b>SSL</b> *</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+<i>internals</i> pointer is NULL then either the SSL backend
+is not supported, an SSL session has not yet been
+established or the connection is no longer associated with
+the easy handle (e.g. <i>curl_easy_perform(3)</i> has
+returned).</p>
+<h2>LIMITATIONS
+<a name="LIMITATIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This option has
+some limitations that could make it unsafe when it comes to
+the manual verification of certificates.</p>
+<p style="margin-left:9%; margin-top: 1em">This option only
+retrieves the first in−use SSL session pointer for
+your easy handle, however your easy handle may have more
+than one in−use SSL session if using FTP over SSL.
+That is because the FTP protocol has a control channel and a
+data channel and one or both may be over SSL. Currently
+there is no way to retrieve a second in−use SSL
+session associated with an easy handle.</p>
+<p style="margin-left:9%; margin-top: 1em">This option has
+not been thoroughly tested with clear text protocols that
+can be upgraded/downgraded to/from SSL: FTP, SMTP, POP3,
+IMAP when used with <i>CURLOPT_USE_SSL(3)</i>. Though you
+can to retrieve the SSL pointer, it is possible that before
+you can do that, data (including auth) may have already been
+sent over a connection after it was upgraded.</p>
+<p style="margin-left:9%; margin-top: 1em">Renegotiation.
+If unsafe renegotiation or renegotiation in a way that the
+certificate is allowed to change is allowed by your SSL
+library this may occur and the certificate may change, and
+data may continue to be sent or received after renegotiation
+but before you are able to get the (possibly) changed SSL
+pointer, with the (possibly) changed certificate
+information.</p>
+<p style="margin-left:9%; margin-top: 1em">Instead of using
+this option to poll for certificate changes use
+<i>CURLOPT_SSL_CTX_FUNCTION(3)</i> to set a verification
+callback, if supported. That is safer and does not suffer
+from any of the problems above.</p>
+<p style="margin-left:9%; margin-top: 1em">How are you
+using this option? Are you affected by any of these
+limitations? Please let us know by making a comment at
+https://github.com/curl/curl/issues/685</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all TLS based protocols: HTTPS, FTPS,
+IMAPS, POP3S, SMTPS etc.</p>
+<p style="margin-left:9%; margin-top: 1em">This option
+works only with the following TLS backends: BearSSL, GnuTLS,
+OpenSSL, Schannel, Secure Transport, mbedTLS and wolfSSL</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt; <br/>
+#include &lt;openssl/ssl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURL *curl; <br/>
+static size_t wf(void *ptr, size_t size, size_t nmemb, void
+*stream) <br/>
+{ <br/>
+const struct curl_tlssessioninfo *info = NULL; <br/>
+CURLcode res = curl_easy_getinfo(curl, CURLINFO_TLS_SSL_PTR,
+&amp;info); <br/>
+if(info &amp;&amp; !res) { <br/>
+if(CURLSSLBACKEND_OPENSSL == info-&gt;backend) { <br/>
+printf("OpenSSL ver. %s\n",
+SSL_get_version((SSL*)info-&gt;internals)); <br/>
+} <br/>
+} <br/>
+return size * nmemb; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int main(int
+argc, char **argv) <br/>
+{ <br/>
+CURLcode res; <br/>
+curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+curl_easy_setopt(curl, CURLOPT_URL,
+"https://example.com"); <br/>
+curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, wf); <br/>
+res = curl_easy_perform(curl); <br/>
+curl_easy_cleanup(curl); <br/>
+} <br/>
+return res; <br/>
+}</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This option
+supersedes <i>CURLINFO_TLS_SESSION(3)</i> which was added in
+7.34.0. This option is exactly the same as that option
+except in the case of OpenSSL.</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.48.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLE_OK
+if the option is supported, and CURLE_UNKNOWN_OPTION if
+not.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLINFO_TLS_SESSION</b>(3),
+<b>curl_easy_getinfo</b>(3), <b>curl_easy_setopt</b>(3)</p>
+<hr/>
+</body>
+</html>

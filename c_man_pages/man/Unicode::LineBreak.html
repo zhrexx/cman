@@ -1,0 +1,1004 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:33 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Unicode::LineBreak</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Unicode::LineBreak</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Terminology">Terminology</a><br/>
+<a href="#PUBLIC INTERFACE">PUBLIC INTERFACE</a><br/>
+<a href="#Line Breaking">Line Breaking</a><br/>
+<a href="#Getting Informations">Getting Informations</a><br/>
+<a href="#Options">Options</a><br/>
+<a href="#Constants">Constants</a><br/>
+<a href="#CUSTOMIZATION">CUSTOMIZATION</a><br/>
+<a href="#Formatting Lines">Formatting Lines</a><br/>
+<a href="#User−Defined Breaking Behaviors">User−Defined Breaking Behaviors</a><br/>
+<a href="#Calculating String Size">Calculating String Size</a><br/>
+<a href="#Tailoring Character Properties">Tailoring Character Properties</a><br/>
+<a href="#Configuration File">Configuration File</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#Incompatible Changes">Incompatible Changes</a><br/>
+<a href="#Conformance to Standards">Conformance to Standards</a><br/>
+<a href="#IMPLEMENTATION NOTES">IMPLEMENTATION NOTES</a><br/>
+<a href="#REFERENCES">REFERENCES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Unicode::LineBreak
+− UAX #14 Unicode Line Breaking Algorithm</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Unicode::LineBreak; <br/>
+$lb = Unicode::LineBreak−&gt;new(); <br/>
+$broken = $lb−&gt;break($string);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Unicode::LineBreak
+performs Line Breaking Algorithm described in Unicode
+Standard Annex #14 [UAX #14]. East_Asian_Width informative
+property defined by Annex #11 [UAX #11] will be concerned to
+determine breaking positions.</p>
+<h3>Terminology
+<a name="Terminology"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Following terms
+are used for convenience.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Mandatory
+break</b> is obligatory line breaking behavior defined by
+core rules and performed regardless of surrounding
+characters. <b>Arbitrary break</b> is line breaking behavior
+allowed by core rules and chosen by user to perform it.
+Arbitrary break includes <b>direct break</b> and <b>indirect
+break</b> defined by [UAX #14].</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Alphabetic
+characters</b> are characters usually no line breaks are
+allowed between pairs of them, except that other characters
+provide break oppotunities. <b>Ideographic characters</b>
+are characters that usually allow line breaks both before
+and after themselves. [UAX #14] classifies most of
+alphabetic to AL and most of ideographic to ID (These terms
+are inaccurate from the point of view by grammatology). On
+several scripts, breaking positions are not obvious by each
+characters therefore heuristic based on dictionary is
+used.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Number of
+columns</b> of a string is not always equal to the number of
+characters it contains: Each of characters is either
+<b>wide</b>, <b>narrow</b> or nonspacing; they occupy 2, 1
+or 0 columns, respectively. Several characters may be both
+wide and narrow by the contexts they are used. Characters
+may have more various widths by customization.</p>
+<h2>PUBLIC INTERFACE
+<a name="PUBLIC INTERFACE"></a>
+</h2>
+<h3>Line Breaking
+<a name="Line Breaking"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">new ([KEY =&gt;
+VALUE, ...])</p>
+<p style="margin-left:14%;"><i>Constructor</i>. About KEY
+=&gt; VALUE pairs see "Options".</p>
+<p style="margin-left:9%;">break (STRING)</p>
+<p style="margin-left:14%;"><i>Instance method</i>. Break
+Unicode string STRING and returns it. In array context,
+returns array of lines contained in the result.</p>
+<p style="margin-left:9%;">break_partial (STRING)</p>
+<p style="margin-left:14%;"><i>Instance method</i>. Same as
+<b>break()</b> but accepts incremental inputs. Give
+"undef" as STRING argument to specify that input
+was completed.</p>
+<p style="margin-left:9%;">config (KEY) <br/>
+config (KEY =&gt; VALUE, ...)</p>
+<p style="margin-left:14%;"><i>Instance method</i>. Get or
+update configuration. About KEY =&gt; VALUE pairs see
+"Options".</p>
+<p style="margin-left:9%;">copy</p>
+<p style="margin-left:14%;"><i>Copy constructor</i>. Create
+a copy of object instance.</p>
+<h3>Getting Informations
+<a name="Getting Informations"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">breakingRule
+(BEFORESTR, AFTERSTR)</p>
+<p style="margin-left:14%;"><i>Instance method</i>. Get
+possible line breaking behavior between strings BEFORESTR
+and AFTERSTR. See "Constants" for returned
+value.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note</b>:
+This method gives just approximate description of line
+breaking behavior. Use <b>break()</b> and so on to wrap
+actual texts.</p>
+<p style="margin-left:9%;">context ([Charset =&gt;
+CHARSET], [Language =&gt; LANGUAGE])</p>
+<p style="margin-left:14%;"><i>Function</i>. Get
+language/region context used by character set CHARSET or
+language LANGUAGE.</p>
+<h3>Options
+<a name="Options"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"new"
+and "config" methods accept following pairs. Some
+of them affect number of columns ([<b>E</b>]), grapheme
+cluster segmentation ([<b>G</b>]) (see also
+Unicode::GCString) or line breaking behavior ([<b>L</b>]).
+<br/>
+BreakIndent =&gt; "YES" | "NO"</p>
+<p style="margin-left:14%;">[<b>L</b>] Always allows break
+after SPACEs at beginning of line, a.k.a. indent. [UAX #14]
+does not take account of such usage of SPACE. Default is
+"YES".</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note</b>:
+This option was introduced at release 1.011.</p>
+<p style="margin-left:9%;">CharMax =&gt; NUMBER</p>
+<p style="margin-left:14%;">[<b>L</b>] Possible maximum
+number of characters in one line, not counting trailing
+SPACEs and newline sequence. Note that number of characters
+generally doesn't represent length of line. Default is 998.
+0 means unlimited (as of release 2012.01).</p>
+<p style="margin-left:9%;">ColMin =&gt; NUMBER</p>
+<p style="margin-left:14%;">[<b>L</b>] Minimum number of
+columns which line broken arbitrarily may include, not
+counting trailing spaces and newline sequences. Default is
+0.</p>
+<p style="margin-left:9%;">ColMax =&gt; NUMBER</p>
+<p style="margin-left:14%;">[<b>L</b>] Maximum number of
+columns line may include not counting trailing spaces and
+newline sequence. In other words, maximum length of line.
+Default is 76.</p>
+<p style="margin-left:9%; margin-top: 1em">See also
+"Urgent" option and "User−Defined
+Breaking Behaviors". <br/>
+ComplexBreaking =&gt; "YES" | "NO"</p>
+<p style="margin-left:14%;">[<b>L</b>] Performs heuristic
+breaking on South East Asian complex context. Default is, if
+word segmentation for South East Asian writing systems is
+enabled, "YES".</p>
+<p style="margin-left:9%;">Context =&gt; CONTEXT</p>
+<p style="margin-left:14%;">[<b>E</b>][<b>L</b>] Specify
+language/region context. Currently available contexts are
+"EASTASIAN" and "NONEASTASIAN". Default
+context is "NONEASTASIAN".</p>
+<p style="margin-left:14%; margin-top: 1em">In
+"EASTASIAN" context, characters with
+East_Asian_Width property ambiguous (A) are treated as
+"wide" and with Line Breaking Class AI as
+ideographic (ID).</p>
+<p style="margin-left:14%; margin-top: 1em">In
+"NONEASTASIAN" context, characters with
+East_Asian_Width property ambiguous (A) are treated as
+"narrow" and with Line Breaking Class AI as
+alphabetic (AL).</p>
+<p style="margin-left:9%;">EAWidth =&gt; "[" ORD
+"=&gt;" PROPERTY "]" <br/>
+EAWidth =&gt; "undef"</p>
+<p style="margin-left:14%;">[<b>E</b>] Tailor
+classification of East_Asian_Width property. ORD is UCS
+scalar value of character or array reference of them.
+PROPERTY is one of East_Asian_Width property values and
+extended values (See "Constants"). This option may
+be specified multiple times. If "undef" is
+specified, all tailoring assigned before will be
+canceled.</p>
+<p style="margin-left:14%; margin-top: 1em">By default, no
+tailorings are available. See also "Tailoring Character
+Properties".</p>
+<p style="margin-left:9%;">Format =&gt; METHOD</p>
+<p style="margin-left:14%;">[<b>L</b>] Specify the method
+to format broken lines. <br/>
+"SIMPLE"</p>
+<p style="margin-left:19%;">Default method. Just only
+insert newline at arbitrary breaking positions.</p>
+<p style="margin-left:14%;">"NEWLINE"</p>
+<p style="margin-left:19%;">Insert or replace newline
+sequences with that specified by "Newline" option,
+remove SPACEs leading newline sequences or
+end−of−text. Then append newline at end of text
+if it does not exist.</p>
+<p style="margin-left:14%;">"TRIM"</p>
+<p style="margin-left:19%;">Insert newline at arbitrary
+breaking positions. Remove SPACEs leading newline
+sequences.</p>
+<p style="margin-left:14%;">"undef"</p>
+<p style="margin-left:19%;">Do nothing, even inserting any
+newlines.</p>
+<p style="margin-left:14%;">Subroutine reference</p>
+<p style="margin-left:19%;">See "Formatting
+Lines".</p>
+<p style="margin-left:9%;">HangulAsAL =&gt; "YES"
+| "NO"</p>
+<p style="margin-left:14%;">[<b>L</b>] Treat hangul
+syllables and conjoining jamos as alphabetic characters
+(AL). Default is "NO".</p>
+<p style="margin-left:9%;">LBClass =&gt; "[" ORD
+"=&gt;" CLASS "]" <br/>
+LBClass =&gt; "undef"</p>
+<p style="margin-left:14%;">[<b>G</b>][<b>L</b>] Tailor
+classification of line breaking property. ORD is UCS scalar
+value of character or array reference of them. CLASS is one
+of line breaking classes (See "Constants"). This
+option may be specified multiple times. If "undef"
+is specified, all tailoring assigned before will be
+canceled.</p>
+<p style="margin-left:14%; margin-top: 1em">By default, no
+tailorings are available. See also "Tailoring Character
+Properties".</p>
+<p style="margin-left:9%;">LegacyCM =&gt; "YES" |
+"NO"</p>
+<p style="margin-left:14%;">[<b>G</b>][<b>L</b>] Treat
+combining characters lead by a SPACE as an isolated
+combining character (ID). As of Unicode 5.0, such use of
+SPACE is not recommended. Default is "YES".</p>
+<p style="margin-left:9%;">Newline =&gt; STRING</p>
+<p style="margin-left:14%;">[<b>L</b>] Unicode string to be
+used for newline sequence. Default is "\n".</p>
+<p style="margin-left:9%;">Prep =&gt; METHOD</p>
+<p style="margin-left:14%;">[<b>L</b>] Add
+user−defined line breaking behavior(s). This option
+may be specified multiple times. Following methods are
+available. <br/>
+"NONBREAKURI"</p>
+<p style="margin-left:19%;">Won't break URIs.</p>
+<p style="margin-left:14%;">"BREAKURI"</p>
+<p style="margin-left:19%;">Break URIs according to a rule
+suitable for printed materials. For more details see [CMOS],
+sections 6.17 and 17.11.</p>
+<p style="margin-left:14%;">"[" REGEX, SUBREF
+"]"</p>
+<p style="margin-left:19%;">The sequences matching regular
+expression REGEX will be broken by subroutine referred by
+SUBREF. For more details see "User−Defined
+Breaking Behaviors".</p>
+<p style="margin-left:14%;">"undef"</p>
+<p style="margin-left:19%;">Cancel all methods assigned
+before.</p>
+<p style="margin-left:9%;">Sizing =&gt; METHOD</p>
+<p style="margin-left:14%;">[<b>L</b>] Specify method to
+calculate size of string. Following options are available.
+<br/>
+"UAX11"</p>
+<p style="margin-left:19%;">Default method. Sizes are
+computed by columns of each characters accoring to
+built−in character database.</p>
+<p style="margin-left:14%;">"undef"</p>
+<p style="margin-left:19%;">Number of grapheme clusters
+(see Unicode::GCString) contained in the string.</p>
+<p style="margin-left:14%;">Subroutine reference</p>
+<p style="margin-left:19%;">See "Calculating String
+Size".</p>
+<p style="margin-left:14%; margin-top: 1em">See also
+"ColMax", "ColMin" and
+"EAWidth" options.</p>
+<p style="margin-left:9%;">Urgent =&gt; METHOD</p>
+<p style="margin-left:14%;">[<b>L</b>] Specify method to
+handle excessing lines. Following options are available.
+<br/>
+"CROAK"</p>
+<p style="margin-left:19%;">Print error message and
+die.</p>
+<p style="margin-left:14%;">"FORCE"</p>
+<p style="margin-left:19%;">Force breaking excessing
+fragment.</p>
+<p style="margin-left:14%;">"undef"</p>
+<p style="margin-left:19%;">Default method. Won't break
+excessing fragment.</p>
+<p style="margin-left:14%;">Subroutine reference</p>
+<p style="margin-left:19%;">See "User−Defined
+Breaking Behaviors".</p>
+<p style="margin-left:9%;">ViramaAsJoiner =&gt;
+"YES" | "NO"</p>
+<p style="margin-left:14%;">[<b>G</b>] Virama sign
+("halant" in Hindi, "coeng" in Khmer)
+and its succeeding letter are not broken. Default is
+"YES". <b>Note</b>: This option was introduced by
+release 2012.001_29. On previous releases, it was fixed to
+"NO". "Default" grapheme cluster defined
+by [UAX #29] does not include this feature.</p>
+<h3>Constants
+<a name="Constants"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"EA_Na",
+"EA_N", "EA_A", "EA_W",
+"EA_H", "EA_F"</p>
+<p style="margin-left:14%;">Index values to specify six
+East_Asian_Width property values defined by [UAX #11]:
+narrow (Na), neutral (N), ambiguous (A), wide (W), halfwidth
+(H) and fullwidth (F).</p>
+<p style="margin-left:9%;">"EA_Z"</p>
+<p style="margin-left:14%;">Index value to specify
+nonspacing characters.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note</b>:
+This "nonspacing" value is extension by this
+module, not a part of [UAX #11].</p>
+<p style="margin-left:9%;">"LB_BK",
+"LB_CR", "LB_LF", "LB_NL",
+"LB_SP", "LB_OP", "LB_CL",
+"LB_CP", <br/>
+"LB_QU", "LB_GL", "LB_NS",
+"LB_EX", "LB_SY", "LB_IS",
+"LB_PR", "LB_PO", <br/>
+"LB_NU", "LB_AL", "LB_HL",
+"LB_ID", "LB_IN", "LB_HY",
+"LB_BA", "LB_BB", <br/>
+"LB_B2", "LB_CB", "LB_ZW",
+"LB_CM", "LB_WJ", "LB_H2",
+"LB_H3", "LB_JL", <br/>
+"LB_JV", "LB_JT", "LB_SG",
+"LB_AI", "LB_CJ", "LB_SA",
+"LB_XX", "LB_RI"</p>
+<p style="margin-left:14%;">Index values to specify 40 line
+breaking property values (classes) defined by [UAX #14].</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note</b>:
+Property value CP was introduced by Unicode 5.2.0. Property
+values HL and CJ were introduced by Unicode 6.1.0. Property
+value RI was introduced by Unicode 6.2.0.</p>
+<p style="margin-left:9%;">"MANDATORY",
+"DIRECT", "INDIRECT",
+"PROHIBITED"</p>
+<p style="margin-left:14%;">Four values to specify line
+breaking behaviors: Mandatory break; Both direct break and
+indirect break are allowed; Indirect break is allowed but
+direct break is prohibited; Prohibited break.</p>
+<p style="margin-left:9%;">"Unicode::LineBreak::SouthEastAsian::supported"</p>
+<p style="margin-left:14%;">Flag to determin if word
+segmentation for South East Asian writing systems is
+enabled. If this feature was enabled, a non−empty
+string is set. Otherwise, "undef" is set.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>N.B.</b>:
+Current release supports Thai script of modern Thai language
+only.</p>
+<p style="margin-left:9%;">"UNICODE_VERSION"</p>
+<p style="margin-left:14%;">A string to specify version of
+Unicode standard this module refers.</p>
+<h2>CUSTOMIZATION
+<a name="CUSTOMIZATION"></a>
+</h2>
+<h3>Formatting Lines
+<a name="Formatting Lines"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If you specify
+subroutine reference as a value of "Format"
+option, it should accept three arguments:</p>
+<p style="margin-left:9%; margin-top: 1em">$MODIFIED =
+&amp;subroutine(SELF, EVENT, STR);</p>
+<p style="margin-left:9%; margin-top: 1em">SELF is a
+Unicode::LineBreak object, EVENT is a string to determine
+the context that subroutine was called in, and STR is a
+fragment of Unicode string leading or trailing breaking
+position.</p>
+<p style="margin-left:9%; margin-top: 1em">EVENT |When
+Fired |Value of STR <br/>
+
+−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
+<br/>
+"sot" |Beginning of text |Fragment of first line
+<br/>
+"sop" |After mandatory break|Fragment of next line
+<br/>
+"sol" |After arbitrary break|Fragment on sequel of
+line <br/>
+"" |Just before any |Complete line without
+trailing <br/>
+|breaks |SPACEs <br/>
+"eol" |Arbitrary break |SPACEs leading breaking
+position <br/>
+"eop" |Mandatory break |Newline and its leading
+SPACEs <br/>
+"eot" |End of text |SPACEs (and newline) at end of
+<br/>
+| |text <br/>
+
+−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−</p>
+<p style="margin-left:9%; margin-top: 1em">Subroutine
+should return modified text fragment or may return
+"undef" to express that no modification occurred.
+Note that modification in the context of "sot",
+"sop" or "sol" may affect decision of
+successive breaking positions while in the others won't.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note</b>:
+String arguments are actually sequences of grapheme
+clusters. See Unicode::GCString.</p>
+<p style="margin-left:9%; margin-top: 1em">For example,
+following code folds lines removing trailing spaces:</p>
+<p style="margin-left:9%; margin-top: 1em">sub fmt { <br/>
+if ($_[1] =˜ /ˆeo/) { <br/>
+return "\n"; <br/>
+} <br/>
+return undef; <br/>
+} <br/>
+my $lb = Unicode::LineBreak−&gt;new(Format =&gt;
+\&amp;fmt); <br/>
+$output = $lb−&gt;break($text);</p>
+<h3>User−Defined Breaking Behaviors
+<a name="User−Defined Breaking Behaviors"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">When a line
+generated by arbitrary break is expected to be beyond
+measure of either CharMax, ColMax or ColMin, <b>urgent
+break</b> may be performed on successive string. If you
+specify subroutine reference as a value of
+"Urgent" option, it should accept two
+arguments:</p>
+<p style="margin-left:9%; margin-top: 1em">@BROKEN =
+&amp;subroutine(SELF, STR);</p>
+<p style="margin-left:9%; margin-top: 1em">SELF is a
+Unicode::LineBreak object and STR is a Unicode string to be
+broken.</p>
+<p style="margin-left:9%; margin-top: 1em">Subroutine
+should return an array of broken string STR.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note</b>:
+String argument is actually a sequence of grapheme clusters.
+See Unicode::GCString.</p>
+<p style="margin-left:9%; margin-top: 1em">For example,
+following code inserts hyphen to the name of several
+chemical substances (such as Titin) so that it may be
+folded:</p>
+<p style="margin-left:9%; margin-top: 1em">sub hyphenize {
+<br/>
+return map {$_ =˜ s/yl$/yl−/; $_} split
+/(\w+?yl(?=\w))/, $_[1]; <br/>
+} <br/>
+my $lb = Unicode::LineBreak−&gt;new(Urgent =&gt;
+\&amp;hyphenize); <br/>
+$output =
+$lb−&gt;break("Methionylthreonylthreonylglutaminylarginyl...");</p>
+<p style="margin-left:9%; margin-top: 1em">If you specify
+[REGEX, SUBREF] array reference as any of "Prep"
+option, subroutine should accept two arguments:</p>
+<p style="margin-left:9%; margin-top: 1em">@BROKEN =
+&amp;subroutine(SELF, STR);</p>
+<p style="margin-left:9%; margin-top: 1em">SELF is a
+Unicode::LineBreak object and STR is a Unicode string
+matched with REGEX.</p>
+<p style="margin-left:9%; margin-top: 1em">Subroutine
+should return an array of broken string STR.</p>
+<p style="margin-left:9%; margin-top: 1em">For example,
+following code will break HTTP URLs using [CMOS] rule.</p>
+<p style="margin-left:9%; margin-top: 1em">my $url =
+qr{http://[\x21−\x7E]+}i; <br/>
+sub breakurl { <br/>
+my $self = shift; <br/>
+my $str = shift; <br/>
+return split m{(?&lt;=[/]) (?=[ˆ/]) | <br/>
+(?&lt;=[ˆ−.]) (?=[−˜.,_?\#%=&amp;]) |
+<br/>
+(?&lt;=[=&amp;]) (?=.)}x, $str; <br/>
+} <br/>
+my $lb = Unicode::LineBreak−&gt;new(Prep =&gt; [$url,
+\&amp;breakurl]); <br/>
+$output = $lb−&gt;break($string);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Preserving
+State</i></p>
+<p style="margin-left:9%; margin-top: 1em">Unicode::LineBreak
+object can behave as hash reference. Any items may be
+preserved throughout its life.</p>
+<p style="margin-left:9%; margin-top: 1em">For example,
+following code will separate paragraphs with empty
+lines.</p>
+<p style="margin-left:9%; margin-top: 1em">sub paraformat {
+<br/>
+my $self = shift; <br/>
+my $action = shift; <br/>
+my $str = shift; <br/>
+if ($action eq 'sot' or $action eq 'sop') { <br/>
+$self−&gt;{'line'} = ''; <br/>
+} elsif ($action eq '') { <br/>
+$self−&gt;{'line'} = $str; <br/>
+} elsif ($action eq 'eol') { <br/>
+return "\n"; <br/>
+} elsif ($action eq 'eop') { <br/>
+if (length $self−&gt;{'line'}) { <br/>
+return "\n\n"; <br/>
+} else { <br/>
+return "\n"; <br/>
+} <br/>
+} elsif ($action eq 'eot') { <br/>
+return "\n"; <br/>
+} <br/>
+return undef; <br/>
+} <br/>
+my $lb = Unicode::LineBreak−&gt;new(Format =&gt;
+\&amp;paraformat); <br/>
+$output = $lb−&gt;break($string);</p>
+<h3>Calculating String Size
+<a name="Calculating String Size"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If you specify
+subroutine reference as a value of "Sizing"
+option, it will be called with five arguments:</p>
+<p style="margin-left:9%; margin-top: 1em">$COLS =
+&amp;subroutine(SELF, LEN, PRE, SPC, STR);</p>
+<p style="margin-left:9%; margin-top: 1em">SELF is a
+Unicode::LineBreak object, LEN is size of preceding string,
+PRE is preceding Unicode string, SPC is additional SPACEs
+and STR is a Unicode string to be processed.</p>
+<p style="margin-left:9%; margin-top: 1em">Subroutine
+should return calculated number of columns of
+"PRE.SPC.STR". The number of columns may not be an
+integer: Unit of the number may be freely chosen, however,
+it should be same as those of "ColMin" and
+"ColMax" option.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note</b>:
+String arguments are actually sequences of grapheme
+clusters. See Unicode::GCString.</p>
+<p style="margin-left:9%; margin-top: 1em">For example,
+following code processes lines with tab stops by each eight
+columns.</p>
+<p style="margin-left:9%; margin-top: 1em">sub tabbedsizing
+{ <br/>
+my ($self, $cols, $pre, $spc, $str) = @_; <br/>
+my $spcstr = $spc.$str; <br/>
+while ($spcstr−&gt;lbc == LB_SP) { <br/>
+my $c = $spcstr−&gt;item(0); <br/>
+if ($c eq "\t") { <br/>
+$cols += 8 − $cols % 8; <br/>
+} else { <br/>
+$cols += $c−&gt;columns; <br/>
+} <br/>
+$spcstr = $spcstr−&gt;substr(1); <br/>
+} <br/>
+$cols += $spcstr−&gt;columns; <br/>
+return $cols; <br/>
+}; <br/>
+my $lb = Unicode::LineBreak−&gt;new(LBClass =&gt;
+[ord("\t") =&gt; LB_SP], <br/>
+Sizing =&gt; \&amp;tabbedsizing); <br/>
+$output = $lb−&gt;break($string);</p>
+<h3>Tailoring Character Properties
+<a name="Tailoring Character Properties"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Character
+properties may be tailored by "LBClass" and
+"EAWidth" options. Some constants are defined for
+convenience of tailoring.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Line Breaking
+Properties</i></p>
+<p style="margin-left:9%; margin-top: 1em">Non−starters
+of Kana−like Characters</p>
+<p style="margin-left:9%; margin-top: 1em">By default,
+several hiragana, katakana and characters corresponding to
+kana are treated as non−starters (NS or CJ). When the
+following pair(s) are specified for value of
+"LBClass" option, these characters are treated as
+normal ideographic characters (ID). <br/>
+"KANA_NONSTARTERS() =&gt; LB_ID"</p>
+<p style="margin-left:14%;">All of characters below.</p>
+<p style="margin-left:9%;">"IDEOGRAPHIC_ITERATION_MARKS()
+=&gt; LB_ID"</p>
+<p style="margin-left:14%;">Ideographic iteration marks.
+U+3005 IDEOGRAPHIC ITERATION MARK, U+303B VERTICAL
+IDEOGRAPHIC ITERATION MARK, U+309D HIRAGANA ITERATION MARK,
+U+309E HIRAGANA VOICED ITERATION MARK, U+30FD KATAKANA
+ITERATION MARK and U+30FE KATAKANA VOICED ITERATION
+MARK.</p>
+<p style="margin-left:14%; margin-top: 1em">N.B. Some of
+them are neither hiragana nor katakana.</p>
+<p style="margin-left:9%;">"KANA_SMALL_LETTERS() =&gt;
+LB_ID" <br/>
+"KANA_PROLONGED_SOUND_MARKS() =&gt; LB_ID"</p>
+<p style="margin-left:14%;">Hiragana or katakana small
+letters: Hiragana small letters U+3041 A, U+3043 I, U+3045
+U, U+3047 E, U+3049 O, U+3063 TU, U+3083 YA, U+3085 YU,
+U+3087 YO, U+308E WA, U+3095 KA, U+3096 KE. Katakana small
+letters U+30A1 A, U+30A3 I, U+30A5 U, U+30A7 E, U+30A9 O,
+U+30C3 TU, U+30E3 YA, U+30E5 YU, U+30E7 YO, U+30EE WA,
+U+30F5 KA, U+30F6 KE. Katakana phonetic extensions U+31F0 KU
+− U+31FF RO. Halfwidth katakana small letters U+FF67 A
+− U+FF6F TU.</p>
+<p style="margin-left:14%; margin-top: 1em">Hiragana or
+katakana prolonged sound marks: U+30FC
+KATAKANA−HIRAGANA PROLONGED SOUND MARK and U+FF70
+HALFWIDTH KATAKANA−HIRAGANA PROLONGED SOUND MARK.</p>
+<p style="margin-left:14%; margin-top: 1em">N.B. These
+letters are optionally treated either as non−starter
+or as normal ideographic. See [JIS X 4051] 6.1.1, [JLREQ]
+3.1.7 or [UAX14].</p>
+<p style="margin-left:14%; margin-top: 1em">N.B. U+3095,
+U+3096, U+30F5, U+30F6 are considered to be neither hiragana
+nor katakana.</p>
+<p style="margin-left:9%;">"MASU_MARK() =&gt;
+LB_ID"</p>
+<p style="margin-left:14%;">U+303C MASU MARK.</p>
+<p style="margin-left:14%; margin-top: 1em">N.B. Although
+this character is not kana, it is usually regarded as
+abbreviation to sequence of hiragana ま す or
+katakana マ ス , MA and SU.</p>
+<p style="margin-left:14%; margin-top: 1em">N.B. This
+character is classified as non−starter (NS) by [UAX
+#14] and as the class corresponding to ID by [JIS X 4051]
+and [JLREQ].</p>
+<p style="margin-left:9%; margin-top: 1em">Ambiguous
+Quotation Marks</p>
+<p style="margin-left:9%; margin-top: 1em">By default, some
+punctuations are ambiguous quotation marks (QU). <br/>
+"BACKWARD_QUOTES() =&gt; LB_OP, FORWARD_QUOTES() =&gt;
+LB_CL"</p>
+<p style="margin-left:14%;">Some languages (Dutch, English,
+Italian, Portugese, Spanish, Turkish and most East Asian)
+use rotated−9−style punctuations (‘
+“) as opening and 9−style punctuations (’
+”) as closing quotation marks.</p>
+<p style="margin-left:9%;">"FORWARD_QUOTES() =&gt;
+LB_OP, BACKWARD_QUOTES() =&gt; LB_CL"</p>
+<p style="margin-left:14%;">Some others (Czech, German and
+Slovak) use 9−style punctuations (’ ”) as
+opening and rotated−9−style punctuations
+(‘ “) as closing quotation marks.</p>
+<p style="margin-left:9%;">"BACKWARD_GUILLEMETS()
+=&gt; LB_OP, FORWARD_GUILLEMETS() =&gt; LB_CL"</p>
+<p style="margin-left:14%;">French, Greek, Russian etc. use
+left−pointing guillemets (« ‹) as opening
+and right−pointing guillemets (» ›) as
+closing quotation marks.</p>
+<p style="margin-left:9%;">"FORWARD_GUILLEMETS() =&gt;
+LB_OP, BACKWARD_GUILLEMETS() =&gt; LB_CL"</p>
+<p style="margin-left:14%;">German and Slovak use
+right−pointing guillemets (» ›) as
+opening and left−pointing guillemets («
+‹) as closing quotation marks.</p>
+<p style="margin-left:9%; margin-top: 1em">Danish, Finnish,
+Norwegian and Swedish use 9−style or
+right−pointing punctuations (’ ” »
+›) as both opening and closing quotation marks.</p>
+<p style="margin-left:9%; margin-top: 1em">IDEOGRAPHIC
+SPACE <br/>
+"IDEOGRAPHIC_SPACE() =&gt; LB_BA"</p>
+<p style="margin-left:14%;">U+3000 IDEOGRAPHIC SPACE won't
+be placed at beginning of line. This is default
+behavior.</p>
+<p style="margin-left:9%;">"IDEOGRAPHIC_SPACE() =&gt;
+LB_ID"</p>
+<p style="margin-left:14%;">IDEOGRAPHIC SPACE can be placed
+at beginning of line. This was default behavior by Unicode
+6.2 and earlier.</p>
+<p style="margin-left:9%;">"IDEOGRAPHIC_SPACE() =&gt;
+LB_SP"</p>
+<p style="margin-left:14%;">IDEOGRAPHIC SPACE won't be
+placed at beginning of line, and will protrude from end of
+line.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>East_Asian_Width
+Properties</i></p>
+<p style="margin-left:9%; margin-top: 1em">Some particular
+letters of Latin, Greek and Cyrillic scripts have ambiguous
+(A) East_Asian_Width property. Thus, these characters are
+treated as wide in "EASTASIAN" context. Specifying
+"EAWidth =&gt; [ AMBIGUOUS_"*"() =&gt; EA_N
+]", those characters are always treated as narrow. <br/>
+"AMBIGUOUS_ALPHABETICS() =&gt; EA_N"</p>
+<p style="margin-left:14%;">Treat all of characters below
+as East_Asian_Width neutral (N).</p>
+<p style="margin-left:9%;">"AMBIGUOUS_CYRILLIC() =&gt;
+EA_N" <br/>
+"AMBIGUOUS_GREEK() =&gt; EA_N" <br/>
+"AMBIGUOUS_LATIN() =&gt; EA_N"</p>
+<p style="margin-left:14%;">Treate letters having ambiguous
+(A) width of Cyrillic, Greek and Latin scripts as neutral
+(N).</p>
+<p style="margin-left:9%; margin-top: 1em">On the other
+hand, despite several characters were occasionally rendered
+as wide characters by number of implementations for East
+Asian character sets, they are given narrow (Na)
+East_Asian_Width property just because they have fullwidth
+(F) compatibility characters. Specifying "EAWidth"
+as below, those characters are treated as ambiguous
+−−− wide on "EASTASIAN" context.
+<br/>
+"QUESTIONABLE_NARROW_SIGNS() =&gt; EA_A"</p>
+<p style="margin-left:14%;">U+00A2 CENT SIGN, U+00A3 POUND
+SIGN, U+00A5 YEN SIGN (or yuan sign), U+00A6 BROKEN BAR,
+U+00AC NOT SIGN, U+00AF MACRON.</p>
+<h3>Configuration File
+<a name="Configuration File"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Built−in
+defaults of option parameters for "new" and
+"config" method can be overridden by configuration
+files: <i>Unicode/LineBreak/Defaults.pm</i>. For more
+details read
+<i>Unicode/LineBreak/Defaults.pm.sample</i>.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please report
+bugs or buggy behaviors to developer.</p>
+<p style="margin-left:9%; margin-top: 1em">CPAN Request
+Tracker:
+&lt;http://rt.cpan.org/Public/Dist/Display.html?Name=Unicode−LineBreak&gt;.</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Consult $VERSION
+variable.</p>
+<h3>Incompatible Changes
+<a name="Incompatible Changes"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Release
+2012.06</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="66%">
+<p><b>eawidth()</b> method was deprecated.
+"columns" in Unicode::GCString may be used
+instead.</p> </td>
+<td width="15%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="66%">
+<p><b>lbclass()</b> method was deprecated. Use
+"lbc" in Unicode::GCString or "lbcext"
+in Unicode::GCString.</p></td>
+<td width="15%">
+</td></tr>
+</table>
+<h3>Conformance to Standards
+<a name="Conformance to Standards"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Character
+properties this module is based on are defined by Unicode
+Standard version 8.0.0.</p>
+<p style="margin-left:9%; margin-top: 1em">This module is
+intended to implement UAX14−C2.</p>
+<h2>IMPLEMENTATION NOTES
+<a name="IMPLEMENTATION NOTES"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">Some ideographic characters may
+be treated either as NS or as ID by choice.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Hangul syllables and conjoining jamos may be treated as
+either ID or AL by choice.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Characters assigned to AI may be resolved to either AL
+or ID by choice.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Character(s) assigned to CB are not resolved.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Characters assigned to CJ are always resolved to NS.
+More flexible tailoring mechanism is provided.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>When word segmentation for South East Asian writing
+systems is not supported, characters assigned to SA are
+resolved to AL, except that characters that have
+Grapheme_Cluster_Break property value Extend or SpacingMark
+be resolved to CM.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Characters assigned to SG or XX are resolved to AL.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Code points of following UCS ranges are given fixed
+property values even if they have not been assigned any
+characers.</p> </td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Ranges | UAX
+#14 | UAX #11 | Description <br/>
+
+−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
+<br/>
+U+20A0..U+20CF | PR [*1] | N [*2] | Currency symbols <br/>
+U+3400..U+4DBF | ID | W | CJK ideographs <br/>
+U+4E00..U+9FFF | ID | W | CJK ideographs <br/>
+U+D800..U+DFFF | AL (SG) | N | Surrogates <br/>
+U+E000..U+F8FF | AL (XX) | F or N (A) | Private use <br/>
+U+F900..U+FAFF | ID | W | CJK ideographs <br/>
+U+20000..U+2FFFD | ID | W | CJK ideographs <br/>
+U+30000..U+3FFFD | ID | W | Old hanzi <br/>
+U+F0000..U+FFFFD | AL (XX) | F or N (A) | Private use <br/>
+U+100000..U+10FFFD | AL (XX) | F or N (A) | Private use <br/>
+Other unassigned | AL (XX) | N | Unassigned, <br/>
+| | | reserved or <br/>
+| | | noncharacters <br/>
+
+−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
+<br/>
+[*1] Except U+20A7 PESETA SIGN (PO), <br/>
+U+20B6 LIVRE TOURNOIS SIGN (PO), U+20BB NORDIC MARK SIGN
+(PO) <br/>
+and U+20BE LARI SIGN (PO). <br/>
+[*2] Except U+20A9 WON SIGN (H) and U+20AC EURO SIGN <br/>
+(F or N (A)).</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="83%">
+<p style="margin-top: 1em">Characters belonging to General
+Category Mn, Me, Cc, Cf, Zl or Zp are treated as nonspacing
+by this module.</p></td>
+<td width="3%">
+</td></tr>
+</table>
+<h2>REFERENCES
+<a name="REFERENCES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">[CMOS]</p>
+<p style="margin-left:14%;"><i>The Chicago Manual of
+Style</i>, 15th edition. University of Chicago Press,
+2003.</p>
+<p style="margin-left:9%;">[JIS X 4051]</p>
+<p style="margin-left:14%;">JIS X 4051:2004 <i>日
+本 語 文 書 の 組
+版 方 法</i> (<i>Formatting Rules for
+Japanese Documents</i>). Japanese Standards Association,
+2004.</p>
+<p style="margin-left:9%;">[JLREQ]</p>
+<p style="margin-left:14%;">Anan, Yasuhiro et al.
+<i>Requirements for Japanese Text Layout</i>, W3C Working
+Group Note 3 April 2012.
+&lt;http://www.w3.org/TR/2012/NOTE−jlreq−20120403/&gt;.</p>
+<p style="margin-left:9%;">[UAX #11]</p>
+<p style="margin-left:14%;">A. Freytag (ed.)
+(2008−2009). <i>Unicode Standard Annex #11: East Asian
+Width</i>, Revisions 17−19.
+&lt;http://unicode.org/reports/tr11/&gt;.</p>
+<p style="margin-left:9%;">[UAX #14]</p>
+<p style="margin-left:14%;">A. Freytag and A. Heninger
+(eds.) (2008−2015). <i>Unicode Standard Annex #14:
+Unicode Line Breaking Algorithm</i>, Revisions 22−35.
+&lt;http://unicode.org/reports/tr14/&gt;.</p>
+<p style="margin-left:9%;">[UAX #29]</p>
+<p style="margin-left:14%;">Mark Davis (ed.)
+(2009−2013). <i>Unicode Standard Annex #29: Unicode
+Text Segmentation</i>, Revisions 15−23.
+&lt;http://www.unicode.org/reports/tr29/&gt;.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Text::LineFold,
+Text::Wrap, Unicode::GCString.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2009−2018 Hatuka*nezumi − IKEDA Soji
+&lt;hatuka(at)nezumi.nu&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

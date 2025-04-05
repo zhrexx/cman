@@ -1,0 +1,212 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:31 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_mime_encoder</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_mime_encoder</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_mime_encoder
+− set a mime part's encoder and content transfer
+encoding</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_mime_encoder(curl_mimepart *part, const char
+*encoding);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_mime_encoder()
+requests a mime part's content to be encoded before being
+transmitted.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>part</i> is
+the part's handle to assign an encoder. <i>encoding</i> is a
+pointer to a null−terminated encoding scheme. It may
+be set to NULL to disable an encoder previously attached to
+the part. The encoding scheme storage may safely be reused
+after this function returns.</p>
+<p style="margin-left:9%; margin-top: 1em">Setting a part's
+encoder multiple times is valid: only the value set by the
+last call is retained.</p>
+<p style="margin-left:9%; margin-top: 1em">Upon multipart
+rendering, the part's content is encoded according to the
+pertaining scheme and a corresponding
+<i>"Content−Transfer−Encoding"</i>
+header is added to the part.</p>
+<p style="margin-left:9%; margin-top: 1em">Supported
+encoding schemes are:</p>
+<p style="margin-left:9%; margin-top: 1em">"<i>binary</i>":
+the data is left unchanged, the header is added.</p>
+<p style="margin-left:9%; margin-top: 1em">"<i>8bit</i>":
+header added, no data change.</p>
+<p style="margin-left:9%; margin-top: 1em">"<i>7bit</i>":
+the data is unchanged, but is each byte is checked to be a
+7−bit value; if not, a read error occurs.</p>
+<p style="margin-left:9%; margin-top: 1em">"<i>base64</i>":
+Data is converted to base64 encoding, then split in
+CRLF−terminated lines of at most 76 characters.</p>
+<p style="margin-left:9%; margin-top: 1em">"<i>quoted−printable</i>":
+data is encoded in quoted printable lines of at most 76
+characters. Since the resulting size of the final data
+cannot be determined prior to reading the original data, it
+is left as unknown, causing chunked transfer in HTTP. For
+the same reason, this encoder may not be used with IMAP.
+This encoder targets text data that is mostly ASCII and
+should not be used with other types of data.</p>
+<p style="margin-left:9%; margin-top: 1em">If the original
+data is already encoded in such a scheme, a custom
+<i>Content−Transfer−Encoding</i> header should
+be added with <i>curl_mime_headers(3)</i> instead of setting
+a part encoder.</p>
+<p style="margin-left:9%; margin-top: 1em">Encoding should
+not be applied to multiparts, thus the use of this function
+on a part with content set with <i>curl_mime_subparts(3)</i>
+is strongly discouraged.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects http, imap and smtp</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+curl_mime *mime; <br/>
+curl_mimepart *part;</p>
+<p style="margin-left:9%; margin-top: 1em">CURL *curl =
+curl_easy_init(); <br/>
+if(curl) { <br/>
+/* create a mime handle */ <br/>
+mime = curl_mime_init(curl);</p>
+<p style="margin-left:9%; margin-top: 1em">/* add a part */
+<br/>
+part = curl_mime_addpart(mime);</p>
+<p style="margin-left:9%; margin-top: 1em">/* send a file
+*/ <br/>
+curl_mime_filedata(part, "image.png");</p>
+<p style="margin-left:9%; margin-top: 1em">/* encode file
+data in base64 for transfer */ <br/>
+curl_mime_encoder(part, "base64"); <br/>
+} <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.56.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLE_OK or a
+CURL error code upon failure.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curl_mime_addpart</b>(3),
+<b>curl_mime_headers</b>(3),
+<b>curl_mime_subparts</b>(3)</p>
+<hr/>
+</body>
+</html>

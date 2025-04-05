@@ -1,0 +1,808 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:42 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title></title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<hr/>
+<p><i>EDITLINE</i>(3) Library Functions Manual
+<i>EDITLINE</i>(3)</p>
+<p style="margin-top: 1em"><b>NAME</b></p>
+<p style="margin-left:9%;">editline, el_init, el_init_fd,
+el_end, el_reset, el_gets, el_wgets, el_getc, el_wgetc,
+el_push, el_wpush, el_parse, el_wparse, el_set, el_wset,
+el_get, el_wget, el_source, el_resize, el_cursor, el_line,
+el_wline, el_insertstr, el_winsertstr, el_deletestr,
+el_wdeletestr, history_init, history_winit, history_end,
+history_wend, history, history_w, tok_init, tok_winit,
+tok_end, tok_wend, tok_reset, tok_wreset, tok_line,
+tok_wline, tok_str, tok_wstr — line editor, history
+and tokenization functions</p>
+<p style="margin-top: 1em"><b>LIBRARY</b></p>
+<p style="margin-left:9%;">Command Line Editor Library
+(libedit, −ledit)</p>
+<p style="margin-top: 1em"><b>SYNOPSIS</b></p>
+<p style="margin-left:9%;"><b>#include
+&lt;histedit.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>EditLine
+*</i></p>
+<p style="margin-left:14%;"><b>el_init</b>(<i>const char *prog</i>,
+<i>FILE *fin</i>, <i>FILE *fout</i>,
+<i>FILE *ferr</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>EditLine
+*</i></p>
+<p style="margin-left:14%;"><b>el_init_fd</b>(<i>const char *prog</i>,
+<i>FILE *fin</i>, <i>FILE *fout</i>,
+<i>FILE *ferr</i>, <i>int fdin</i>,
+<i>int fdout</i>, <i>int fderr</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>el_end</b>(<i>EditLine *e</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>el_reset</b>(<i>EditLine *e</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>const char
+*</i></p>
+<p style="margin-left:14%;"><b>el_gets</b>(<i>EditLine *e</i>,
+<i>int *count</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>const wchar_t
+*</i></p>
+<p style="margin-left:14%;"><b>el_wgets</b>(<i>EditLine *e</i>,
+<i>int *count</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_getc</b>(<i>EditLine *e</i>,
+<i>char *ch</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_wgetc</b>(<i>EditLine *e</i>,
+<i>wchar_t *wc</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>el_push</b>(<i>EditLine *e</i>,
+<i>const char *mbs</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>el_wpush</b>(<i>EditLine *e</i>,
+<i>const wchar_t *wcs</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_parse</b>(<i>EditLine *e</i>,
+<i>int argc</i>,
+<i>const char *argv[]</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_wparse</b>(<i>EditLine *e</i>,
+<i>int argc</i>,
+<i>const wchar_t *argv[]</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_set</b>(<i>EditLine *e</i>,
+<i>int op</i>, <i>...</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_wset</b>(<i>EditLine *e</i>,
+<i>int op</i>, <i>...</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_get</b>(<i>EditLine *e</i>,
+<i>int op</i>, <i>...</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_wget</b>(<i>EditLine *e</i>,
+<i>int op</i>, <i>...</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_source</b>(<i>EditLine *e</i>,
+<i>const char *file</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>el_resize</b>(<i>EditLine *e</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_cursor</b>(<i>EditLine *e</i>,
+<i>int count</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>const
+LineInfo *</i></p>
+<p style="margin-left:14%;"><b>el_line</b>(<i>EditLine *e</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>const
+LineInfoW *</i></p>
+<p style="margin-left:14%;"><b>el_wline</b>(<i>EditLine *e</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_insertstr</b>(<i>EditLine *e</i>,
+<i>const char *str</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>el_winsertstr</b>(<i>EditLine *e</i>,
+<i>const wchar_t *str</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>el_deletestr</b>(<i>EditLine *e</i>,
+<i>int count</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>el_wdeletestr</b>(<i>EditLine *e</i>,
+<i>int count</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>History
+*</i></p>
+<p style="margin-left:14%;"><b>history_init</b>(<i>void</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>HistoryW
+*</i></p>
+<p style="margin-left:14%;"><b>history_winit</b>(<i>void</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>history_end</b>(<i>History *h</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>history_wend</b>(<i>HistoryW *h</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>history</b>(<i>History *h</i>,
+<i>HistEvent *ev</i>, <i>int op</i>,
+<i>...</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>history_w</b>(<i>HistoryW *h</i>,
+<i>HistEventW *ev</i>, <i>int op</i>,
+<i>...</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Tokenizer
+*</i></p>
+<p style="margin-left:14%;"><b>tok_init</b>(<i>const char *IFS</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TokenizerW
+*</i></p>
+<p style="margin-left:14%;"><b>tok_winit</b>(<i>const wchar_t *IFS</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>tok_end</b>(<i>Tokenizer *t</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>tok_wend</b>(<i>TokenizerW *t</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>tok_reset</b>(<i>Tokenizer *t</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>void</i></p>
+<p style="margin-left:14%;"><b>tok_wreset</b>(<i>TokenizerW *t</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>tok_line</b>(<i>Tokenizer *t</i>,
+<i>const LineInfo *li</i>, <i>int *argc</i>,
+<i>const char **argv[]</i>,
+<i>int *cursorc</i>, <i>int *cursoro</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>tok_wline</b>(<i>TokenizerW *t</i>,
+<i>const LineInfoW *li</i>, <i>int *argc</i>,
+<i>const wchar_t **argv[]</i>,
+<i>int *cursorc</i>, <i>int *cursoro</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>tok_str</b>(<i>Tokenizer *t</i>,
+<i>const char *str</i>, <i>int *argc</i>,
+<i>const char **argv[]</i>);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p style="margin-left:14%;"><b>tok_wstr</b>(<i>TokenizerW *t</i>,
+<i>const wchar_t *str</i>, <i>int *argc</i>,
+<i>const wchar_t **argv[]</i>);</p>
+<p style="margin-top: 1em"><b>DESCRIPTION</b></p>
+<p style="margin-left:9%;">The <b>editline</b> library
+provides generic line editing, history and tokenization
+functions, similar to those found in <i>sh</i>(1).</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+are available in the <b>libedit</b> library (which needs the
+<b>libtermcap</b> library). Programs should be linked with
+<b>−ledit −ltermcap</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>editline</b> library respects the LC_CTYPE locale set by
+the application program and never uses <i>setlocale</i>(3)
+to change the locale.</p>
+<p style="margin-top: 1em"><b>LINE EDITING
+FUNCTIONS</b></p>
+<p style="margin-left:9%;">The line editing functions use a
+common data structure, <i>EditLine</i>, which is created by
+<b>el_init</b>() or <b>el_init_fd</b>() and freed by
+<b>el_end</b>().</p>
+<p style="margin-left:9%; margin-top: 1em">The
+wide-character functions behave the same way as their narrow
+counterparts.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions are available:</p>
+<p style="margin-top: 1em"><b>el_init</b>()</p>
+<p style="margin-left:17%;">Initialize the line editor, and
+return a data structure to be used by all other line editing
+functions, or NULL on failure. <i>prog</i> is the name of
+the invoking program, used when reading the <i>editrc</i>(5)
+file to determine which settings to use. <i>fin</i>,
+<i>fout</i> and <i>ferr</i> are the input, output, and error
+streams (respectively) to use. In this documentation,
+references to “the tty” are actually to this
+input/output stream combination.</p>
+<p style="margin-top: 1em"><b>el_init_fd</b>()</p>
+<p style="margin-left:17%;">Like <b>el_init</b>() but
+allows specifying file descriptors for the <i>stdio</i>(3)
+corresponding streams, in case those were created with
+<i>funopen</i>(3).</p>
+<p style="margin-top: 1em"><b>el_end</b>()</p>
+<p style="margin-left:17%;">Clean up and finish with
+<i>e</i>, assumed to have been created with <b>el_init</b>()
+or <b>el_init_fd</b>().</p>
+<p style="margin-top: 1em"><b>el_reset</b>()</p>
+<p style="margin-left:17%;">Reset the tty and the parser.
+This should be called after an error which may have upset
+the tty’s state.</p>
+<p style="margin-top: 1em"><b>el_gets</b>()</p>
+<p style="margin-left:17%;">Read a line from the tty.
+<i>count</i> is modified to contain the number of characters
+read. Returns the line read if successful, or NULL if no
+characters were read or if an error occurred. If an error
+occurred, <i>count</i> is set to −1 and errno contains
+the error code that caused it. The return value may not
+remain valid across calls to <b>el_gets</b>() and must be
+copied if the data is to be retained.</p>
+<p style="margin-top: 1em"><b>el_wgetc</b>()</p>
+<p style="margin-left:17%;">Read a wide character from the
+tty, respecting the current locale, or from the input queue
+described in <i>editline</i>(7) if that is not empty, and
+store it in <i>wc</i>. If an invalid or incomplete character
+is found, it is discarded, <i>errno</i> is set to EILSEQ,
+and the next character is read and stored in <i>wc</i>.
+Returns 1 if a valid character was read, 0 on end of file,
+or −1 on <i>read</i>(2) failure. In the latter case,
+<i>errno</i> is set to indicate the error.</p>
+<p style="margin-top: 1em"><b>el_getc</b>()</p>
+<p style="margin-left:17%;">Read a wide character as
+described for <b>el_wgetc</b>() and return 0 on end of file
+or −1 on failure. If the wide character can be
+represented as a single-byte character, convert it with
+<i>wctob</i>(3), store the result in <i>ch</i>, and return
+1; otherwise, set <i>errno</i> to ERANGE and return
+−1. In the C or POSIX locale, this simply reads a
+byte, but for any other locale, including UTF-8, this is
+rarely useful.</p>
+<p style="margin-top: 1em"><b>el_wpush</b>()</p>
+<p style="margin-left:17%;">Push the wide character string
+<i>wcs</i> back onto the input queue described in
+<i>editline</i>(7). If the queue overflows, for example due
+to a recursive macro, or if an error occurs, for example
+because <i>wcs</i> is NULL or memory allocation fails, the
+function beeps at the user, but does not report the problem
+to the caller.</p>
+<p style="margin-top: 1em"><b>el_push</b>()</p>
+<p style="margin-left:17%;">Use the current locale to
+convert the multibyte string <i>mbs</i> to a wide character
+string, and pass the result to <b>el_wpush</b>().</p>
+<p style="margin-top: 1em"><b>el_parse</b>()</p>
+<p style="margin-left:17%;">Parses the <i>argv</i> array
+(which is <i>argc</i> elements in size) to execute builtin
+<b>editline</b> commands. If the command is prefixed with
+“prog”: then <b>el_parse</b>() will only execute
+the command if “prog” matches the <i>prog</i>
+argument supplied to <b>el_init</b>(). The return value is
+−1 if the command is unknown, 0 if there was no error
+or “prog” didn’t match, or 1 if the
+command returned an error. Refer to <i>editrc</i>(5) for
+more information.</p>
+<p style="margin-top: 1em"><b>el_set</b>()</p>
+<p style="margin-left:17%;">Set <b>editline</b> parameters.
+<i>op</i> determines which parameter to set, and each
+operation has its own parameter list. Returns 0 on success,
+−1 on failure.</p>
+<p style="margin-left:17%; margin-top: 1em">The following
+values for <i>op</i> are supported, along with the required
+argument list:</p>
+<p style="margin-top: 1em">EL_PROMPT, <i>char
+*(*f)(EditLine *)</i></p>
+<p style="margin-left:24%;">Define prompt printing function
+as <i>f</i>, which is to return a string that contains the
+prompt.</p>
+<p style="margin-top: 1em">EL_PROMPT_ESC, <i>char
+*(*f)(EditLine *)</i>, <i>char c</i></p>
+<p style="margin-left:24%;">Same as EL_PROMPT, but the
+<i>c</i> argument indicates the start/stop literal prompt
+character.</p>
+<p style="margin-left:24%; margin-top: 1em">If a start/stop
+literal character is found in the prompt, the character
+itself is not printed, but characters after it are printed
+directly to the terminal without affecting the state of the
+current line. A subsequent second start/stop literal
+character ends this behavior. This is typically used to
+embed literal escape sequences that change the color/style
+of the terminal in the prompt. Note that the literal escape
+character cannot be the last character in the prompt, as the
+escape sequence is attached to the next character in the
+prompt. 0 unsets it.</p>
+<p style="margin-top: 1em">EL_REFRESH</p>
+<p style="margin-left:24%;">Re-display the current line on
+the next terminal line.</p>
+<p style="margin-top: 1em">EL_RPROMPT, <i>char
+*(*f)(EditLine *)</i></p>
+<p style="margin-left:24%;">Define right side prompt
+printing function as <i>f</i>, which is to return a string
+that contains the prompt.</p>
+<p style="margin-top: 1em">EL_RPROMPT_ESC, <i>char
+*(*f)(EditLine *)</i>, <i>char c</i></p>
+<p style="margin-left:24%;">Define the right prompt
+printing function but with a literal escape character.</p>
+<p style="margin-top: 1em">EL_TERMINAL, <i>const char
+*type</i></p>
+<p style="margin-left:24%;">Define terminal type of the tty
+to be <i>type</i>, or to TERM if <i>type</i> is NULL.</p>
+<p style="margin-top: 1em">EL_EDITOR, <i>const char
+*mode</i></p>
+<p style="margin-left:24%;">Set editing mode to
+<i>mode</i>, which must be one of “emacs” or
+“vi”.</p>
+<p style="margin-top: 1em">EL_SIGNAL, <i>int flag</i></p>
+<p style="margin-left:24%;">If <i>flag</i> is non-zero,
+<b>editline</b> will install its own signal handler for the
+following signals when reading command input: SIGCONT,
+SIGHUP, SIGINT, SIGQUIT, SIGSTOP, SIGTERM, SIGTSTP, and
+SIGWINCH. Otherwise, the current signal handlers will be
+used.</p>
+<p style="margin-top: 1em">EL_BIND, <i>const char *</i>,
+<i>...</i>, NULL</p>
+<p style="margin-left:24%;">Perform the <b>bind</b> builtin
+command. Refer to <i>editrc</i>(5) for more information.</p>
+<p style="margin-top: 1em">EL_ECHOTC, <i>const char *</i>,
+<i>...</i>, NULL</p>
+<p style="margin-left:24%;">Perform the <b>echotc</b>
+builtin command. Refer to <i>editrc</i>(5) for more
+information.</p>
+<p style="margin-top: 1em">EL_SETTC, <i>const char *</i>,
+<i>...</i>, NULL</p>
+<p style="margin-left:24%;">Perform the <b>settc</b>
+builtin command. Refer to <i>editrc</i>(5) for more
+information.</p>
+<p style="margin-top: 1em">EL_SETTY, <i>const char *</i>,
+<i>...</i>, NULL</p>
+<p style="margin-left:24%;">Perform the <b>setty</b>
+builtin command. Refer to <i>editrc</i>(5) for more
+information.</p>
+<p style="margin-top: 1em">EL_TELLTC, <i>const char *</i>,
+<i>...</i>, NULL</p>
+<p style="margin-left:24%;">Perform the <b>telltc</b>
+builtin command. Refer to <i>editrc</i>(5) for more
+information.</p>
+<p style="margin-top: 1em">EL_ADDFN, <i>const char
+*name</i>, <i>const char *help</i>, <i>unsigned char
+(*func)(EditLine *e, int ch)</i></p>
+<p style="margin-left:24%;">Add a user defined function,
+<b>func</b>(), referred to as <i>name</i> which is invoked
+when a key which is bound to <i>name</i> is entered.
+<i>help</i> is a description of <i>name</i>. At invocation
+time, <i>ch</i> is the key which caused the invocation. The
+return value of <b>func</b>() should be one of:</p>
+<p style="margin-top: 1em">CC_NORM</p>
+<p style="margin-left:42%; margin-top: 1em">Add a normal
+character.</p>
+<p style="margin-top: 1em">CC_NEWLINE</p>
+<p style="margin-left:42%; margin-top: 1em">End of line was
+entered.</p>
+<p style="margin-top: 1em">CC_EOF</p>
+<p style="margin-left:42%; margin-top: 1em">EOF was
+entered.</p>
+<p style="margin-top: 1em">CC_ARGHACK</p>
+<p style="margin-left:42%; margin-top: 1em">Expecting
+further command input as arguments, do nothing visually.</p>
+<p style="margin-top: 1em">CC_REFRESH</p>
+<p style="margin-left:42%; margin-top: 1em">Refresh
+display.</p>
+<p style="margin-top: 1em">CC_REFRESH_BEEP</p>
+<p style="margin-left:42%;">Refresh display, and beep.</p>
+<p style="margin-top: 1em">CC_CURSOR</p>
+<p style="margin-left:42%; margin-top: 1em">Cursor moved,
+so update and perform CC_REFRESH.</p>
+<p style="margin-top: 1em">CC_REDISPLAY</p>
+<p style="margin-left:42%; margin-top: 1em">Redisplay
+entire input line. This is useful if a key binding outputs
+extra information.</p>
+<p style="margin-top: 1em">CC_ERROR</p>
+<p style="margin-left:42%; margin-top: 1em">An error
+occurred. Beep, and flush tty.</p>
+<p style="margin-top: 1em">CC_FATAL</p>
+<p style="margin-left:42%; margin-top: 1em">Fatal error,
+reset tty to known state.</p>
+<p style="margin-top: 1em">EL_HIST, <i>History
+*(*func)(History *, int op, ...)</i>, <i>const char
+*ptr</i></p>
+<p style="margin-left:24%;">Defines which history function
+to use, which is usually <b>history</b>(). <i>ptr</i> should
+be the value returned by <b>history_init</b>().</p>
+<p style="margin-top: 1em">EL_EDITMODE, <i>int flag</i></p>
+<p style="margin-left:24%;">If <i>flag</i> is non-zero,
+editing is enabled (the default). Note that this is only an
+indication, and does not affect the operation of
+<b>editline</b>. At this time, it is the caller’s
+responsibility to check this (using <b>el_get</b>()) to
+determine if editing should be enabled or not.</p>
+<p style="margin-top: 1em">EL_UNBUFFERED, <i>int
+flag</i></p>
+<p style="margin-left:24%;">If <i>flag</i> is zero,
+unbuffered mode is disabled (the default). In unbuffered
+mode, <b>el_gets</b>() will return immediately after
+processing a single character.</p>
+<p style="margin-top: 1em">EL_SAFEREAD, <i>int flag</i></p>
+<p style="margin-left:24%;">If the <i>flag</i> argument is
+non-zero, then <b>editline</b> attempts to recover from read
+errors, ignoring the first interrupted error, and trying to
+reset the input file descriptor to reset non-blocking I/O.
+This is disabled by default, and desirable only when
+<b>editline</b> is used in shell-like applications.</p>
+<p style="margin-top: 1em">EL_GETCFN, <i>el_rfunc_t
+f</i></p>
+<p style="margin-left:24%;">Whenever reading a character,
+use the function</p>
+<p style="margin-left:32%;"><i>int</i></p>
+<p><b>f</b>(<i>EditLine *e</i>,
+<i>wchar_t *wc</i>)</p>
+<p style="margin-left:24%;">which stores the character in
+<i>wc</i> and returns 1 on success, 0 on end of file, or
+−1 on I/O or encoding errors. Functions internally
+using it include <b>el_wgets</b>(), <b>el_wgetc</b>(),
+<b>el_gets</b>(), and <b>el_getc</b>(). Initially, a builtin
+function is installed, and replacing it is discouraged
+because writing such a function is very error prone. The
+builtin function can be restored at any time by passing the
+special value EL_BUILTIN_GETCFN instead of a function
+pointer.</p>
+<p style="margin-top: 1em">EL_CLIENTDATA, <i>void
+*data</i></p>
+<p style="margin-left:24%;">Register <i>data</i> to be
+associated with this EditLine structure. It can be retrieved
+with the corresponding <b>el_get</b>() call.</p>
+<p style="margin-top: 1em">EL_SETFP, <i>int fd</i>, <i>FILE
+*fp</i></p>
+<p style="margin-left:24%;">Set the current <b>editline</b>
+file pointer for “input” <i>fd</i> = 0,
+“output” <i>fd</i> = 1, or “error”
+<i>fd</i> = 2 from <i>fp</i>.</p>
+<p style="margin-top: 1em"><b>el_get</b>()</p>
+<p style="margin-left:17%;">Get <b>editline</b> parameters.
+<i>op</i> determines which parameter to retrieve into
+<i>result</i>. Returns 0 if successful, −1
+otherwise.</p>
+<p style="margin-left:17%; margin-top: 1em">The following
+values for <i>op</i> are supported, along with actual type
+of <i>result</i>:</p>
+<p style="margin-top: 1em">EL_PROMPT, <i>char
+*(*f)(EditLine *)</i>, <i>char *c</i></p>
+<p style="margin-left:24%;">Set <i>f</i> to a pointer to
+the function that displays the prompt. If <i>c</i> is not
+NULL, set it to the start/stop literal prompt character.</p>
+<p style="margin-top: 1em">EL_RPROMPT, <i>char
+*(*f)(EditLine *)</i>, <i>char *c</i></p>
+<p style="margin-left:24%;">Set <i>f</i> to a pointer to
+the function that displays the prompt. If <i>c</i> is not
+NULL, set it to the start/stop literal prompt character.</p>
+<p style="margin-top: 1em">EL_EDITOR, <i>const char
+**n</i></p>
+<p style="margin-left:24%;">Set the name of the editor in
+<i>n</i>, which will be one of “emacs” or
+“vi”.</p>
+<p style="margin-top: 1em">EL_GETTC, <i>const char
+*name</i>, <i>void *value</i></p>
+<p style="margin-left:24%;">If <i>name</i> is a valid
+<i>termcap</i>(5) capability set <i>value</i> to the current
+value of that capability.</p>
+<p style="margin-top: 1em">EL_SIGNAL, <i>int *s</i></p>
+<p style="margin-left:24%;">Set <i>s</i> to non-zero if
+<b>editline</b> has installed private signal handlers (see
+<b>el_get</b>() above).</p>
+<p style="margin-top: 1em">EL_EDITMODE, <i>int *c</i></p>
+<p style="margin-left:24%;">Set <i>c</i> to non-zero if
+editing is enabled.</p>
+<p style="margin-top: 1em">EL_GETCFN, <i>el_rfunc_t
+*f</i></p>
+<p style="margin-left:24%;">Set <i>f</i> to a pointer to
+the function that reads characters, or to EL_BUILTIN_GETCFN
+if the builtin function is in use.</p>
+<p style="margin-top: 1em">EL_CLIENTDATA, <i>void
+**data</i></p>
+<p style="margin-left:24%;">Set <i>data</i> to the
+previously registered client data set by an <b>el_set</b>()
+call.</p>
+<p style="margin-top: 1em">EL_UNBUFFERED, <i>int *c</i></p>
+<p style="margin-left:24%;">Set <i>c</i> to non-zero if
+unbuffered mode is enabled.</p>
+<p style="margin-top: 1em">EL_SAFEREAD, <i>int *c</i></p>
+<p style="margin-left:24%;">Set <i>c</i> to non-zero if
+safe read is set.</p>
+<p style="margin-top: 1em">EL_GETFP, <i>int fd</i>, <i>FILE
+**fp</i></p>
+<p style="margin-left:24%;">Set <i>fp</i> to the current
+<b>editline</b> file pointer for “input”
+<i>fd</i> = 0, “output” <i>fd</i> = 1, or
+“error” <i>fd</i> = 2.</p>
+<p style="margin-top: 1em"><b>el_source</b>()</p>
+<p style="margin-left:17%;">Initialize <b>editline</b> by
+reading the contents of <i>file</i>. <b>el_parse</b>() is
+called for each line in <i>file</i>. If <i>file</i> is NULL,
+try <i>$EDITRC</i> and if that is not set
+<i>$HOME/.editrc</i>. Refer to <i>editrc</i>(5) for details
+on the format of <i>file</i>. <b>el_source</b>() returns 0
+on success and −1 on error.</p>
+<p style="margin-top: 1em"><b>el_resize</b>()</p>
+<p style="margin-left:17%;">Must be called if the terminal
+size changes. If EL_SIGNAL has been set with
+<b>el_set</b>(), then this is done automatically. Otherwise,
+it’s the responsibility of the application to call
+<b>el_resize</b>() on the appropriate occasions.</p>
+<p style="margin-top: 1em"><b>el_cursor</b>()</p>
+<p style="margin-left:17%;">Move the cursor to the right
+(if positive) or to the left (if negative) <i>count</i>
+characters. Returns the resulting offset of the cursor from
+the beginning of the line.</p>
+<p style="margin-top: 1em"><b>el_line</b>()</p>
+<p style="margin-left:17%;">Return the editing information
+for the current line in a <i>LineInfo</i> structure, which
+is defined as follows:</p>
+<p style="margin-left:17%; margin-top: 1em">typedef struct
+lineinfo { <br/>
+const char *buffer; /* address of buffer */ <br/>
+const char *cursor; /* address of cursor */ <br/>
+const char *lastchar; /* address of last character */ <br/>
+} LineInfo;</p>
+<p style="margin-left:17%; margin-top: 1em"><i>buffer</i>
+is not NUL terminated. This function may be called after
+<b>el_gets</b>() to obtain the <i>LineInfo</i> structure
+pertaining to line returned by that function, and from
+within user defined functions added with EL_ADDFN.</p>
+<p style="margin-top: 1em"><b>el_insertstr</b>()</p>
+<p style="margin-left:17%;">Insert <i>str</i> into the line
+at the cursor. Returns −1 if <i>str</i> is empty or
+won’t fit, and 0 otherwise.</p>
+<p style="margin-top: 1em"><b>el_deletestr</b>()</p>
+<p style="margin-left:17%;">Delete <i>count</i> characters
+before the cursor.</p>
+<p style="margin-top: 1em"><b>HISTORY LIST
+FUNCTIONS</b></p>
+<p style="margin-left:9%;">The history functions use a
+common data structure, <i>History</i>, which is created by
+<b>history_init</b>() and freed by <b>history_end</b>().</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions are available:</p>
+<p style="margin-top: 1em"><b>history_init</b>()</p>
+<p style="margin-left:17%;">Initialize the history list,
+and return a data structure to be used by all other history
+list functions, or NULL on failure.</p>
+<p style="margin-top: 1em"><b>history_end</b>()</p>
+<p style="margin-left:17%;">Clean up and finish with
+<i>h</i>, assumed to have been created with
+<b>history_init</b>().</p>
+<p style="margin-top: 1em"><b>history</b>()</p>
+<p style="margin-left:17%;">Perform operation <i>op</i> on
+the history list, with optional arguments as needed by the
+operation. <i>ev</i> is changed accordingly to operation.
+The following values for <i>op</i> are supported, along with
+the required argument list:</p>
+<p style="margin-top: 1em">H_SETSIZE, <i>int size</i></p>
+<p style="margin-left:24%;">Set size of history to
+<i>size</i> elements.</p>
+<p style="margin-top: 1em">H_GETSIZE</p>
+<p style="margin-left:24%;">Get number of events currently
+in history.</p>
+<p style="margin-top: 1em">H_END</p>
+<p style="margin-left:24%;">Cleans up and finishes with
+<i>h</i>, assumed to be created with
+<b>history_init</b>().</p>
+<p style="margin-top: 1em">H_CLEAR</p>
+<p style="margin-left:24%;">Clear the history.</p>
+<p style="margin-top: 1em">H_FUNC, <i>void *ptr</i>,
+<i>history_gfun_t first</i>, <i>history_gfun_t next</i>,
+<i>history_gfun_t last</i>, <i>history_gfun_t prev</i>,
+<i>history_gfun_t curr</i>, <i>history_sfun_t set</i>,
+<i>history_vfun_t clear</i>, <i>history_efun_t enter</i>,
+<i>history_efun_t add</i></p>
+<p style="margin-left:24%;">Define functions to perform
+various history operations. <i>ptr</i> is the argument given
+to a function when it’s invoked.</p>
+<p style="margin-top: 1em">H_FIRST</p>
+<p style="margin-left:24%;">Return the first element in the
+history.</p>
+<p style="margin-top: 1em">H_LAST</p>
+<p style="margin-left:24%;">Return the last element in the
+history.</p>
+<p style="margin-top: 1em">H_PREV</p>
+<p style="margin-left:24%;">Return the previous element in
+the history. It is newer than the current one.</p>
+<p style="margin-top: 1em">H_NEXT</p>
+<p style="margin-left:24%;">Return the next element in the
+history. It is older than the current one.</p>
+<p style="margin-top: 1em">H_CURR</p>
+<p style="margin-left:24%;">Return the current element in
+the history.</p>
+<p style="margin-top: 1em">H_SET, <i>int position</i></p>
+<p style="margin-left:24%;">Set the cursor to point to the
+requested element.</p>
+<p style="margin-top: 1em">H_ADD, <i>const char
+*str</i></p>
+<p style="margin-left:24%;">Append <i>str</i> to the
+current element of the history, or perform the H_ENTER
+operation with argument <i>str</i> if there is no current
+element.</p>
+<p style="margin-top: 1em">H_APPEND, <i>const char
+*str</i></p>
+<p style="margin-left:24%;">Append <i>str</i> to the last
+new element of the history.</p>
+<p style="margin-top: 1em">H_ENTER, <i>const char
+*str</i></p>
+<p style="margin-left:24%;">Add <i>str</i> as a new element
+to the history and, if necessary, removing the oldest entry
+to keep the list to the created size. If H_SETUNIQUE has
+been called with a non-zero argument, the element will not
+be entered into the history if its contents match the ones
+of the current history element. If the element is entered
+<b>history</b>() returns 1; if it is ignored as a duplicate
+returns 0. Finally <b>history</b>() returns −1 if an
+error occurred.</p>
+<p style="margin-top: 1em">H_PREV_STR, <i>const char
+*str</i></p>
+<p style="margin-left:24%;">Return the closest previous
+event that starts with <i>str</i>.</p>
+<p style="margin-top: 1em">H_NEXT_STR, <i>const char
+*str</i></p>
+<p style="margin-left:24%;">Return the closest next event
+that starts with <i>str</i>.</p>
+<p style="margin-top: 1em">H_PREV_EVENT, <i>int e</i></p>
+<p style="margin-left:24%;">Return the previous event
+numbered <i>e</i>.</p>
+<p style="margin-top: 1em">H_NEXT_EVENT, <i>int e</i></p>
+<p style="margin-left:24%;">Return the next event numbered
+<i>e</i>.</p>
+<p style="margin-top: 1em">H_LOAD, <i>const char
+*file</i></p>
+<p style="margin-left:24%;">Load the history list stored in
+<i>file</i>.</p>
+<p style="margin-top: 1em">H_SAVE, <i>const char
+*file</i></p>
+<p style="margin-left:24%;">Save the history list to
+<i>file</i>.</p>
+<p style="margin-top: 1em">H_SAVE_FP, <i>FILE *fp</i></p>
+<p style="margin-left:24%;">Save the history list to the
+opened <i>FILE</i> pointer <i>fp</i>.</p>
+<p style="margin-top: 1em">H_NSAVE_FP, <i>size_t n</i>,
+<i>FILE *fp</i></p>
+<p style="margin-left:24%;">Save the last <i>n</i> history
+entries to the opened <i>FILE</i> pointer <i>fp</i>.</p>
+<p style="margin-top: 1em">H_SETUNIQUE, <i>int
+unique</i></p>
+<p style="margin-left:24%;">Set flag that adjacent
+identical event strings should not be entered into the
+history.</p>
+<p style="margin-top: 1em">H_GETUNIQUE</p>
+<p style="margin-left:24%;">Retrieve the current setting if
+adjacent identical elements should be entered into the
+history.</p>
+<p style="margin-top: 1em">H_DEL, <i>int e</i></p>
+<p style="margin-left:24%;">Delete the event numbered
+<i>e</i>. This function is only provided for <b>readline</b>
+compatibility. The caller is responsible for free’ing
+the string in the returned <i>HistEvent</i>.</p>
+<p style="margin-left:17%; margin-top: 1em"><b>history</b>()
+returns &gt;= 0 if the operation <i>op</i> succeeds.
+Otherwise, −1 is returned and <i>ev</i> is updated to
+contain more details about the error.</p>
+<p style="margin-top: 1em"><b>TOKENIZATION
+FUNCTIONS</b></p>
+<p style="margin-left:9%;">The tokenization functions use a
+common data structure, <i>Tokenizer</i>, which is created by
+<b>tok_init</b>() and freed by <b>tok_end</b>().</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions are available:</p>
+<p style="margin-top: 1em"><b>tok_init</b>()</p>
+<p style="margin-left:17%;">Initialize the tokenizer, and
+return a data structure to be used by all other tokenizer
+functions. <i>IFS</i> contains the Input Field Separators,
+which defaults to ⟨ space⟩ , ⟨ tab⟩ ,
+and ⟨ newline⟩ if NULL.</p>
+<p style="margin-top: 1em"><b>tok_end</b>()</p>
+<p style="margin-left:17%;">Clean up and finish with
+<i>t</i>, assumed to have been created with
+<b>tok_init</b>().</p>
+<p style="margin-top: 1em"><b>tok_reset</b>()</p>
+<p style="margin-left:17%;">Reset the tokenizer state. Use
+after a line has been successfully tokenized by
+<b>tok_line</b>() or <b>tok_str</b>() and before a new line
+is to be tokenized.</p>
+<p style="margin-top: 1em"><b>tok_line</b>()</p>
+<p style="margin-left:17%;">Tokenize <i>li</i>, If
+successful, modify: <i>argv</i> to contain the words,
+<i>argc</i> to contain the number of words, <i>cursorc</i>
+(if not NULL) to contain the index of the word containing
+the cursor, and <i>cursoro</i> (if not NULL) to contain the
+offset within <i>argv[cursorc]</i> of the cursor.</p>
+<p style="margin-left:17%; margin-top: 1em">Returns 0 if
+successful, −1 for an internal error, 1 for an
+unmatched single quote, 2 for an unmatched double quote, and
+3 for a backslash quoted ⟨ newline⟩ . A positive
+exit code indicates that another line should be read and
+tokenization attempted again.</p>
+<p style="margin-top: 1em"><b>tok_str</b>()</p>
+<p style="margin-left:17%;">A simpler form of
+<b>tok_line</b>(); <i>str</i> is a NUL terminated string to
+tokenize.</p>
+<p style="margin-top: 1em"><b>SEE ALSO</b></p>
+<p style="margin-left:9%;"><i>sh</i>(1), <i>signal</i>(3),
+<i>termcap</i>(3), <i>editrc</i>(5), <i>termcap</i>(5),
+<i>editline</i>(7)</p>
+<p style="margin-top: 1em"><b>HISTORY</b></p>
+<p style="margin-left:9%;">The <b>editline</b> library
+first appeared in 4.4BSD. CC_REDISPLAY appeared in
+NetBSD 1.3. CC_REFRESH_BEEP, EL_EDITMODE and the
+readline emulation appeared in NetBSD 1.4. EL_RPROMPT
+appeared in NetBSD 1.5.</p>
+<p style="margin-top: 1em"><b>AUTHORS</b></p>
+<p style="margin-left:9%;">The <b>editline</b> library was
+written by Christos Zoulas. Luke Mewburn wrote this manual
+and implemented CC_REDISPLAY, CC_REFRESH_BEEP, EL_EDITMODE,
+and EL_RPROMPT. Jaromir Dolecek implemented the readline
+emulation. Johny Mattsson implemented wide-character
+support.</p>
+<p style="margin-top: 1em"><b>BUGS</b></p>
+<p style="margin-left:9%;">At this time, it is the
+responsibility of the caller to check the result of the
+EL_EDITMODE operation of <b>el_get</b>() (after an
+<b>el_source</b>() or <b>el_parse</b>()) to determine if
+<b>editline</b> should be used for further input. I.e.,
+EL_EDITMODE is purely an indication of the result of the
+most recent <i>editrc</i>(5) <b>edit</b> command. GNU August
+15, 2021 <i>EDITLINE</i>(3)</p>
+<hr/>
+</body>
+</html>

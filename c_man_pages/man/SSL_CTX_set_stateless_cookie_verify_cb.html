@@ -1,0 +1,206 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:20 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SET_STATELESS_COOKIE_GENERATE_CB</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SET_STATELESS_COOKIE_GENERATE_CB</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_set_stateless_cookie_generate_cb,
+SSL_CTX_set_stateless_cookie_verify_cb,
+SSL_CTX_set_cookie_generate_cb, SSL_CTX_set_cookie_verify_cb
+− Callback functions for stateless TLS1.3 cookies</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+void SSL_CTX_set_stateless_cookie_generate_cb( <br/>
+SSL_CTX *ctx, <br/>
+int (*gen_stateless_cookie_cb) (SSL *ssl, <br/>
+unsigned char *cookie, <br/>
+size_t *cookie_len)); <br/>
+void SSL_CTX_set_stateless_cookie_verify_cb( <br/>
+SSL_CTX *ctx, <br/>
+int (*verify_stateless_cookie_cb) (SSL *ssl, <br/>
+const unsigned char *cookie, <br/>
+size_t cookie_len)); <br/>
+void SSL_CTX_set_cookie_generate_cb(SSL_CTX *ctx, <br/>
+int (*app_gen_cookie_cb) (SSL *ssl, <br/>
+unsigned char <br/>
+*cookie, <br/>
+unsigned int <br/>
+*cookie_len)); <br/>
+void SSL_CTX_set_cookie_verify_cb(SSL_CTX *ctx, <br/>
+int (*app_verify_cookie_cb) (SSL *ssl, <br/>
+const unsigned <br/>
+char *cookie, <br/>
+unsigned int <br/>
+cookie_len));</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_stateless_cookie_generate_cb()</b>
+sets the callback used by <b>SSL_stateless</b>(3) to
+generate the application−controlled portion of the
+cookie provided to clients in the HelloRetryRequest
+transmitted as a response to a ClientHello with a missing or
+invalid cookie. <b>gen_stateless_cookie_cb()</b> must write
+at most SSL_COOKIE_LENGTH bytes into <b>cookie</b>, and must
+write the number of bytes written to <b>cookie_len</b>. If a
+cookie cannot be generated, a zero return value can be used
+to abort the handshake.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_stateless_cookie_verify_cb()</b>
+sets the callback used by <b>SSL_stateless</b>(3) to
+determine whether the application−controlled portion
+of a ClientHello cookie is valid. The cookie data is pointed
+to by <b>cookie</b> and is of length <b>cookie_len</b>. A
+nonzero return value from
+<b>verify_stateless_cookie_cb()</b> communicates that the
+cookie is valid. The integrity of the entire cookie,
+including the application−controlled portion, is
+automatically verified by HMAC before
+<b>verify_stateless_cookie_cb()</b> is called.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_cookie_generate_cb()</b>
+sets the callback used by <b>DTLSv1_listen</b>(3) to
+generate the cookie provided to clients in the
+HelloVerifyRequest transmitted as a response to a
+ClientHello with a missing or invalid cookie.
+<b>app_gen_cookie_cb()</b> must write at most
+DTLS1_COOKIE_LENGTH bytes into <b>cookie</b>, and must write
+the number of bytes written to <b>cookie_len</b>. If a
+cookie cannot be generated, a zero return value can be used
+to abort the handshake.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_cookie_verify_cb()</b>
+sets the callback used by <b>DTLSv1_listen</b>(3) to
+determine whether the cookie in a ClientHello is valid. The
+cookie data is pointed to by <b>cookie</b> and is of length
+<b>cookie_len</b>. A nonzero return value from
+<b>app_verify_cookie_cb()</b> communicates that the cookie
+is valid. The integrity of the cookie is not verified by
+OpenSSL. This is an application responsibility.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Neither function
+returns a value.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_stateless</b>(3), <b>DTLSv1_listen</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_stateless_cookie_generate_cb()</b>
+and <b>SSL_CTX_set_stateless_cookie_verify_cb()</b> were
+added in OpenSSL 1.1.1.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright 2018
+The OpenSSL Project Authors. All Rights Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:03 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Class::Struct</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Class::Struct</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#The struct() function">The struct() function</a><br/>
+<a href="#Class Creation at Compile Time">Class Creation at Compile Time</a><br/>
+<a href="#Element Types and Accessor Methods">Element Types and Accessor Methods</a><br/>
+<a href='#Initializing with "new"'>Initializing with "new"</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Author and Modification History">Author and Modification History</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Class::Struct
+− declare struct−like datatypes as Perl
+classes</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Class::Struct; <br/>
+# declare struct, based on array: <br/>
+struct( CLASS_NAME =&gt; [ ELEMENT_NAME =&gt; ELEMENT_TYPE,
+... ]); <br/>
+# declare struct, based on hash: <br/>
+struct( CLASS_NAME =&gt; { ELEMENT_NAME =&gt; ELEMENT_TYPE,
+... }); <br/>
+package CLASS_NAME; <br/>
+use Class::Struct; <br/>
+# declare struct, based on array, implicit class name: <br/>
+struct( ELEMENT_NAME =&gt; ELEMENT_TYPE, ... ); <br/>
+# Declare struct at compile time <br/>
+use Class::Struct CLASS_NAME =&gt; [ELEMENT_NAME =&gt;
+ELEMENT_TYPE, ...]; <br/>
+use Class::Struct CLASS_NAME =&gt; {ELEMENT_NAME =&gt;
+ELEMENT_TYPE, ...}; <br/>
+# declare struct at compile time, based on array, implicit
+<br/>
+# class name: <br/>
+package CLASS_NAME; <br/>
+use Class::Struct ELEMENT_NAME =&gt; ELEMENT_TYPE, ... ;
+<br/>
+package Myobj; <br/>
+use Class::Struct; <br/>
+# declare struct with four types of elements: <br/>
+struct( s =&gt; '$', a =&gt; '@', h =&gt; '%', c =&gt;
+'My_Other_Class' ); <br/>
+my $obj = Myobj−&gt;new; # constructor <br/>
+# scalar type accessor: <br/>
+my $element_value = $obj−&gt;s; # element value <br/>
+$obj−&gt;s('new value'); # assign to element <br/>
+# array type accessor: <br/>
+my $ary_ref = $obj−&gt;a; # reference to whole array
+<br/>
+my $ary_element_value = $obj−&gt;a(2); # array element
+value <br/>
+$obj−&gt;a(2, 'new value'); # assign to array element
+<br/>
+# hash type accessor: <br/>
+my $hash_ref = $obj−&gt;h; # reference to whole hash
+<br/>
+my $hash_element_value = $obj−&gt;h('x'); # hash
+element value <br/>
+$obj−&gt;h('x', 'new value'); # assign to hash element
+<br/>
+# class type accessor: <br/>
+my $element_value = $obj−&gt;c; # object reference
+<br/>
+$obj−&gt;c−&gt;method(...); # call method of
+object <br/>
+$obj−&gt;c(new My_Other_Class); # assign a new
+object</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Class::Struct"
+exports a single function, "struct". Given a list
+of element names and types, and optionally a class name,
+"struct" creates a Perl 5 class that implements a
+"struct-like" data structure.</p>
+<p style="margin-left:9%; margin-top: 1em">The new class is
+given a constructor method, "new", for creating
+struct objects.</p>
+<p style="margin-left:9%; margin-top: 1em">Each element in
+the struct data has an accessor method, which is used to
+assign to the element and to fetch its value. The default
+accessor can be overridden by declaring a "sub" of
+the same name in the package. (See Example 2.)</p>
+<p style="margin-left:9%; margin-top: 1em">Each
+element’s type can be scalar, array, hash, or
+class.</p>
+<h3>The struct() function
+<a name="The struct() function"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+"struct" function has three forms of
+parameter-list.</p>
+<p style="margin-left:9%; margin-top: 1em">struct(
+CLASS_NAME =&gt; [ ELEMENT_LIST ]); <br/>
+struct( CLASS_NAME =&gt; { ELEMENT_LIST }); <br/>
+struct( ELEMENT_LIST );</p>
+<p style="margin-left:9%; margin-top: 1em">The first and
+second forms explicitly identify the name of the class being
+created. The third form assumes the current package name as
+the class name.</p>
+<p style="margin-left:9%; margin-top: 1em">An object of a
+class created by the first and third forms is based on an
+array, whereas an object of a class created by the second
+form is based on a hash. The array-based forms will be
+somewhat faster and smaller; the hash-based forms are more
+flexible.</p>
+<p style="margin-left:9%; margin-top: 1em">The class
+created by "struct" must not be a subclass of
+another class other than "UNIVERSAL".</p>
+<p style="margin-left:9%; margin-top: 1em">It can, however,
+be used as a superclass for other classes. To facilitate
+this, the generated constructor method uses a two-argument
+blessing. Furthermore, if the class is hash-based, the key
+of each element is prefixed with the class name (see <i>Perl
+Cookbook</i>, Recipe 13.12).</p>
+<p style="margin-left:9%; margin-top: 1em">A function named
+"new" must not be explicitly defined in a class
+created by "struct".</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>ELEMENT_LIST</i> has the form</p>
+<p style="margin-left:9%; margin-top: 1em">NAME =&gt; TYPE,
+...</p>
+<p style="margin-left:9%; margin-top: 1em">Each name-type
+pair declares one element of the struct. Each element name
+will be defined as an accessor method unless a method by
+that name is explicitly defined; in the latter case, a
+warning is issued if the warning flag (<b>−w</b>) is
+set.</p>
+<h3>Class Creation at Compile Time
+<a name="Class Creation at Compile Time"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"Class::Struct"
+can create your class at compile time. The main reason for
+doing this is obvious, so your class acts like every other
+class in Perl. Creating your class at compile time will make
+the order of events similar to using any other class ( or
+Perl module ).</p>
+<p style="margin-left:9%; margin-top: 1em">There is no
+significant speed gain between compile time and run time
+class creation, there is just a new, more standard order of
+events.</p>
+<h3>Element Types and Accessor Methods
+<a name="Element Types and Accessor Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The four element
+types −− scalar, array, hash, and class
+−− are represented by strings −−
+'$', '@', '%', and a class name −− optionally
+preceded by a '*'.</p>
+<p style="margin-left:9%; margin-top: 1em">The accessor
+method provided by "struct" for an element depends
+on the declared type of the element. <br/>
+Scalar ('$' or '*$')</p>
+<p style="margin-left:14%;">The element is a scalar, and by
+default is initialized to "undef" (but see
+"Initializing with new").</p>
+<p style="margin-left:14%; margin-top: 1em">The
+accessor’s argument, if any, is assigned to the
+element.</p>
+<p style="margin-left:14%; margin-top: 1em">If the element
+type is '$', the value of the element (after assignment) is
+returned. If the element type is '*$', a reference to the
+element is returned.</p>
+<p style="margin-left:9%;">Array ('@' or '*@')</p>
+<p style="margin-left:14%;">The element is an array,
+initialized by default to "()".</p>
+<p style="margin-left:14%; margin-top: 1em">With no
+argument, the accessor returns a reference to the
+element’s whole array (whether or not the element was
+specified as '@' or '*@').</p>
+<p style="margin-left:14%; margin-top: 1em">With one or two
+arguments, the first argument is an index specifying one
+element of the array; the second argument, if present, is
+assigned to the array element. If the element type is '@',
+the accessor returns the array element value. If the element
+type is '*@', a reference to the array element is
+returned.</p>
+<p style="margin-left:14%; margin-top: 1em">As a special
+case, when the accessor is called with an array reference as
+the sole argument, this causes an assignment of the whole
+array element. The object reference is returned.</p>
+<p style="margin-left:9%;">Hash ('%' or '*%')</p>
+<p style="margin-left:14%;">The element is a hash,
+initialized by default to "()".</p>
+<p style="margin-left:14%; margin-top: 1em">With no
+argument, the accessor returns a reference to the
+element’s whole hash (whether or not the element was
+specified as '%' or '*%').</p>
+<p style="margin-left:14%; margin-top: 1em">With one or two
+arguments, the first argument is a key specifying one
+element of the hash; the second argument, if present, is
+assigned to the hash element. If the element type is '%',
+the accessor returns the hash element value. If the element
+type is '*%', a reference to the hash element is
+returned.</p>
+<p style="margin-left:14%; margin-top: 1em">As a special
+case, when the accessor is called with a hash reference as
+the sole argument, this causes an assignment of the whole
+hash element. The object reference is returned.</p>
+<p style="margin-left:9%;">Class ('Class_Name' or
+'*Class_Name')</p>
+<p style="margin-left:14%;">The element’s value must
+be a reference blessed to the named class or to one of its
+subclasses. The element is not initialized by default.</p>
+<p style="margin-left:14%; margin-top: 1em">The
+accessor’s argument, if any, is assigned to the
+element. The accessor will "croak" if this is not
+an appropriate object reference.</p>
+<p style="margin-left:14%; margin-top: 1em">If the element
+type does not start with a '*', the accessor returns the
+element value (after assignment). If the element type starts
+with a '*', a reference to the element itself is
+returned.</p>
+<h3>Initializing with "new"
+<a name='Initializing with "new"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"struct"
+always creates a constructor called "new". That
+constructor may take a list of initializers for the various
+elements of the new struct.</p>
+<p style="margin-left:9%; margin-top: 1em">Each initializer
+is a pair of values: <i>element name</i>" =&gt;
+"<i>value</i>. The initializer value for a scalar
+element is just a scalar value. The initializer for an array
+element is an array reference. The initializer for a hash is
+a hash reference.</p>
+<p style="margin-left:9%; margin-top: 1em">The initializer
+for a class element is an object of the corresponding class,
+or of one of it’s subclasses, or a reference to a hash
+containing named arguments to be passed to the
+element’s constructor.</p>
+<p style="margin-left:9%; margin-top: 1em">See Example 3
+below for an example of initialization.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Example 1</p>
+<p style="margin-left:14%;">Giving a struct element a class
+type that is also a struct is how structs are nested. Here,
+"Timeval" represents a time (seconds and
+microseconds), and "Rusage" has two elements, each
+of which is of type "Timeval".</p>
+<p style="margin-left:14%; margin-top: 1em">use
+Class::Struct; <br/>
+struct( Rusage =&gt; { <br/>
+ru_utime =&gt; 'Timeval', # user time used <br/>
+ru_stime =&gt; 'Timeval', # system time used <br/>
+}); <br/>
+struct( Timeval =&gt; [ <br/>
+tv_secs =&gt; '$', # seconds <br/>
+tv_usecs =&gt; '$', # microseconds <br/>
+]); <br/>
+# create an object: <br/>
+my $t =
+Rusage−&gt;new(ru_utime=&gt;Timeval−&gt;new(),
+<br/>
+ru_stime=&gt;Timeval−&gt;new()); <br/>
+# $t−&gt;ru_utime and $t−&gt;ru_stime are
+objects of type Timeval. <br/>
+# set $t−&gt;ru_utime to 100.0 sec and
+$t−&gt;ru_stime to 5.0 sec. <br/>
+$t−&gt;ru_utime−&gt;tv_secs(100); <br/>
+$t−&gt;ru_utime−&gt;tv_usecs(0); <br/>
+$t−&gt;ru_stime−&gt;tv_secs(5); <br/>
+$t−&gt;ru_stime−&gt;tv_usecs(0);</p>
+<p style="margin-left:9%;">Example 2</p>
+<p style="margin-left:14%;">An accessor function can be
+redefined in order to provide additional checking of values,
+etc. Here, we want the "count" element always to
+be nonnegative, so we redefine the "count"
+accessor accordingly.</p>
+<p style="margin-left:14%; margin-top: 1em">package MyObj;
+<br/>
+use Class::Struct; <br/>
+# declare the struct <br/>
+struct ( 'MyObj', { count =&gt; '$', stuff =&gt; '%' } );
+<br/>
+# override the default accessor method for 'count' <br/>
+sub count { <br/>
+my $self = shift; <br/>
+if ( @_ ) { <br/>
+die 'count must be nonnegative' if $_[0] &lt; 0; <br/>
+$self−&gt;{'MyObj::count'} = shift; <br/>
+warn "Too many args to count" if @_; <br/>
+} <br/>
+return $self−&gt;{'MyObj::count'}; <br/>
+} <br/>
+package main; <br/>
+$x = new MyObj; <br/>
+print "\$x−&gt;count(5) = ",
+$x−&gt;count(5), "\n"; <br/>
+# prints '$x−&gt;count(5) = 5' <br/>
+print "\$x−&gt;count = ",
+$x−&gt;count, "\n"; <br/>
+# prints '$x−&gt;count = 5' <br/>
+print "\$x−&gt;count(−5) = ",
+$x−&gt;count(−5), "\n"; <br/>
+# dies due to negative argument!</p>
+<p style="margin-left:9%;">Example 3</p>
+<p style="margin-left:14%;">The constructor of a generated
+class can be passed a list of
+<i>element</i>=&gt;<i>value</i> pairs, with which to
+initialize the struct. If no initializer is specified for a
+particular element, its default initialization is performed
+instead. Initializers for non-existent elements are silently
+ignored.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that the
+initializer for a nested class may be specified as an object
+of that class, or as a reference to a hash of initializers
+that are passed on to the nested struct’s
+constructor.</p>
+<p style="margin-left:14%; margin-top: 1em">use
+Class::Struct; <br/>
+struct Breed =&gt; <br/>
+{ <br/>
+name =&gt; '$', <br/>
+cross =&gt; '$', <br/>
+}; <br/>
+struct Cat =&gt; <br/>
+[ <br/>
+name =&gt; '$', <br/>
+kittens =&gt; '@', <br/>
+markings =&gt; '%', <br/>
+breed =&gt; 'Breed', <br/>
+]; <br/>
+my $cat = Cat−&gt;new( name =&gt; 'Socks', <br/>
+kittens =&gt; ['Monica', 'Kenneth'], <br/>
+markings =&gt; { socks=&gt;1, blaze=&gt;"white" },
+<br/>
+breed =&gt; Breed−&gt;new(name=&gt;'short−hair',
+cross=&gt;1), <br/>
+or: breed =&gt; {name=&gt;'short−hair', cross=&gt;1},
+<br/>
+); <br/>
+print "Once a cat called ", $cat−&gt;name,
+"\n"; <br/>
+print "(which was a ",
+$cat−&gt;breed−&gt;name, ")\n"; <br/>
+print "had 2 kittens: ", join(' and ',
+@{$cat−&gt;kittens}), "\n";</p>
+<h2>Author and Modification History
+<a name="Author and Modification History"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Modified by
+Damian Conway, 2001−09−10, v0.62.</p>
+<p style="margin-left:9%; margin-top: 1em">Modified
+implicit construction of nested objects. <br/>
+Now will also take an object ref instead of requiring a hash
+ref. <br/>
+Also default initializes nested object attributes to undef,
+rather <br/>
+than calling object constructor without args <br/>
+Original over−helpfulness was fraught with problems:
+<br/>
+* the class's constructor might not be called 'new' <br/>
+* the class might not have a hash−like−arguments
+constructor <br/>
+* the class might not have a no−argument constructor
+<br/>
+* "recursive" data structures didn't work well:
+<br/>
+package Person; <br/>
+struct { mother =&gt; 'Person', father =&gt; 'Person'};</p>
+<p style="margin-left:9%; margin-top: 1em">Modified by
+Casey West, 2000−11−08, v0.59.</p>
+<p style="margin-left:9%; margin-top: 1em">Added the
+ability for compile time class creation.</p>
+<p style="margin-left:9%; margin-top: 1em">Modified by
+Damian Conway, 1999−03−05, v0.58.</p>
+<p style="margin-left:9%; margin-top: 1em">Added handling
+of hash−like arg list to class ctor. <br/>
+Changed to two−argument blessing in ctor to support
+<br/>
+derivation from created classes. <br/>
+Added classname prefixes to keys in hash−based classes
+<br/>
+(refer to "Perl Cookbook", Recipe 13.12 for
+rationale). <br/>
+Corrected behaviour of accessors for '*@' and '*%' struct
+<br/>
+elements. Package now implements documented behaviour when
+<br/>
+returning a reference to an entire hash or array element.
+<br/>
+Previously these were returned as a reference to a reference
+<br/>
+to the element.</p>
+<p style="margin-left:9%; margin-top: 1em">Renamed to
+"Class::Struct" and modified by Jim Miner,
+1997−04−02.</p>
+<p style="margin-left:9%; margin-top: 1em">members()
+function removed. <br/>
+Documentation corrected and extended. <br/>
+Use of struct() in a subclass prohibited. <br/>
+User definition of accessor allowed. <br/>
+Treatment of '*' in element types corrected. <br/>
+Treatment of classes as element types corrected. <br/>
+Class name to struct() made optional. <br/>
+Diagnostic checks added.</p>
+<p style="margin-left:9%; margin-top: 1em">Originally
+"Class::Template" by Dean Roehrich.</p>
+<p style="margin-left:9%; margin-top: 1em"># Template.pm
+−−− struct/member template builder <br/>
+# 12mar95 <br/>
+# Dean Roehrich <br/>
+# <br/>
+# changes/bugs fixed since 28nov94 version: <br/>
+# − podified <br/>
+# changes/bugs fixed since 21nov94 version: <br/>
+# − Fixed examples. <br/>
+# changes/bugs fixed since 02sep94 version: <br/>
+# − Moved to Class::Template. <br/>
+# changes/bugs fixed since 20feb94 version: <br/>
+# − Updated to be a more proper module. <br/>
+# − Added "use strict". <br/>
+# − Bug in build_methods, was using @var when @$var
+needed. <br/>
+# − Now using my() rather than local(). <br/>
+# <br/>
+# Uses perl5 classes to create nested data types. <br/>
+# This is offered as one implementation of Tom
+Christiansen's <br/>
+# "structs.pl" idea.</p>
+<hr/>
+</body>
+</html>

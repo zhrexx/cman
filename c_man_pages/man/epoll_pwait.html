@@ -1,0 +1,359 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:42 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>epoll_wait</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">epoll_wait</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#epoll_pwait()">epoll_pwait()</a><br/>
+<a href="#epoll_pwait2()">epoll_pwait2()</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#C library/kernel differences">C library/kernel differences</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">epoll_wait,
+epoll_pwait, epoll_pwait2 − wait for an I/O event on
+an epoll file descriptor</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;sys/epoll.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+epoll_wait(int</b> <i>epfd</i><b>, struct epoll_event
+*</b><i>events</i><b>, <br/>
+int</b> <i>maxevents</i><b>, int</b> <i>timeout</i><b>);
+<br/>
+int epoll_pwait(int</b> <i>epfd</i><b>, struct epoll_event
+*</b><i>events</i><b>, <br/>
+int</b> <i>maxevents</i><b>, int</b> <i>timeout</i><b>, <br/>
+const sigset_t *_Nullable</b> <i>sigmask</i><b>); <br/>
+int epoll_pwait2(int</b> <i>epfd</i><b>, struct epoll_event
+*</b><i>events</i><b>, <br/>
+int</b> <i>maxevents</i><b>, const struct timespec
+*_Nullable</b> <i>timeout</i><b>, <br/>
+const sigset_t *_Nullable</b> <i>sigmask</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>epoll_wait</b>() system call waits for events on the
+<b>epoll</b>(7) instance referred to by the file descriptor
+<i>epfd</i>. The buffer pointed to by <i>events</i> is used
+to return information from the ready list about file
+descriptors in the interest list that have some events
+available. Up to <i>maxevents</i> are returned by
+<b>epoll_wait</b>(). The <i>maxevents</i> argument must be
+greater than zero.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>timeout</i> argument specifies the number of milliseconds
+that <b>epoll_wait</b>() will block. Time is measured
+against the <b>CLOCK_MONOTONIC</b> clock.</p>
+<p style="margin-left:9%; margin-top: 1em">A call to
+<b>epoll_wait</b>() will block until either:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="60%">
+<p>a file descriptor delivers an event;</p></td>
+<td width="27%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="60%">
+<p>the call is interrupted by a signal handler; or</p></td>
+<td width="27%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="60%">
+<p>the timeout expires.</p></td>
+<td width="27%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Note that the
+<i>timeout</i> interval will be rounded up to the system
+clock granularity, and kernel scheduling delays mean that
+the blocking interval may overrun by a small amount.
+Specifying a <i>timeout</i> of −1 causes
+<b>epoll_wait</b>() to block indefinitely, while specifying
+a <i>timeout</i> equal to zero causes <b>epoll_wait</b>() to
+return immediately, even if no events are available.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>struct
+epoll_event</i> is described in
+<b>epoll_event</b>(3type).</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>data</i>
+field of each returned <i>epoll_event</i> structure contains
+the same data as was specified in the most recent call to
+<b>epoll_ctl</b>(2) (<b>EPOLL_CTL_ADD</b>,
+<b>EPOLL_CTL_MOD</b>) for the corresponding open file
+descriptor.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>events</i> field is a bit mask that indicates the events
+that have occurred for the corresponding open file
+description. See <b>epoll_ctl</b>(2) for a list of the bits
+that may appear in this mask.</p>
+<h3>epoll_pwait()
+<a name="epoll_pwait()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The relationship
+between <b>epoll_wait</b>() and <b>epoll_pwait</b>() is
+analogous to the relationship between <b>select</b>(2) and
+<b>pselect</b>(2): like <b>pselect</b>(2),
+<b>epoll_pwait</b>() allows an application to safely wait
+until either a file descriptor becomes ready or until a
+signal is caught.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+<b>epoll_pwait</b>() call:</p>
+<p style="margin-left:14%; margin-top: 1em">ready =
+epoll_pwait(epfd, &amp;events, maxevents, timeout,
+&amp;sigmask);</p>
+<p style="margin-left:9%; margin-top: 1em">is equivalent to
+<i>atomically</i> executing the following calls:</p>
+<p style="margin-left:14%; margin-top: 1em">sigset_t
+origmask; <br/>
+pthread_sigmask(SIG_SETMASK, &amp;sigmask, &amp;origmask);
+<br/>
+ready = epoll_wait(epfd, &amp;events, maxevents, timeout);
+<br/>
+pthread_sigmask(SIG_SETMASK, &amp;origmask, NULL);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>sigmask</i> argument may be specified as NULL, in which
+case <b>epoll_pwait</b>() is equivalent to
+<b>epoll_wait</b>().</p>
+<h3>epoll_pwait2()
+<a name="epoll_pwait2()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>epoll_pwait2</b>() system call is equivalent to
+<b>epoll_pwait</b>() except for the <i>timeout</i> argument.
+It takes an argument of type <i>timespec</i> to be able to
+specify nanosecond resolution timeout. This argument
+functions the same as in <b>pselect</b>(2) and
+<b>ppoll</b>(2). If <i>timeout</i> is NULL, then
+<b>epoll_pwait2</b>() can block indefinitely.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>epoll_wait</b>() returns the number of file descriptors
+ready for the requested I/O operation, or zero if no file
+descriptor became ready during the requested <i>timeout</i>
+milliseconds. On failure, <b>epoll_wait</b>() returns
+−1 and <i>errno</i> is set to indicate the error.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EBADF</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p style="margin-top: 1em"><i>epfd</i> is not a valid file
+descriptor.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EFAULT</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The memory area pointed to by <i>events</i> is not
+accessible with write permissions.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINTR</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The call was interrupted by a signal handler before
+either (1) any of the requested events occurred or (2) the
+<i>timeout</i> expired; see <b>signal</b>(7).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><i>epfd</i> is not an <b>epoll</b> file descriptor, or
+<i>maxevents</i> is less than or equal to zero.</p></td></tr>
+</table>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>epoll_wait</b>()</p>
+<p style="margin-left:18%;">Linux 2.6, glibc 2.3.2.</p>
+<p style="margin-left:9%;"><b>epoll_pwait</b>()</p>
+<p style="margin-left:18%;">Linux 2.6.19, glibc 2.6.</p>
+<p style="margin-left:9%;"><b>epoll_pwait2</b>()</p>
+<p style="margin-left:18%;">Linux 5.11.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">While one thread
+is blocked in a call to <b>epoll_wait</b>(), it is possible
+for another thread to add a file descriptor to the
+waited-upon <b>epoll</b> instance. If the new file
+descriptor becomes ready, it will cause the
+<b>epoll_wait</b>() call to unblock.</p>
+<p style="margin-left:9%; margin-top: 1em">If more than
+<i>maxevents</i> file descriptors are ready when
+<b>epoll_wait</b>() is called, then successive
+<b>epoll_wait</b>() calls will round robin through the set
+of ready file descriptors. This behavior helps avoid
+starvation scenarios, where a process fails to notice that
+additional file descriptors are ready because it focuses on
+a set of file descriptors that are already known to be
+ready.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that it is
+possible to call <b>epoll_wait</b>() on an <b>epoll</b>
+instance whose interest list is currently empty (or whose
+interest list becomes empty because file descriptors are
+closed or removed from the interest in another thread). The
+call will block until some file descriptor is later added to
+the interest list (in another thread) and that file
+descriptor becomes ready.</p>
+<h3>C library/kernel differences
+<a name="C library/kernel differences"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The raw
+<b>epoll_pwait</b>() and <b>epoll_pwait2</b>() system calls
+have a sixth argument, <i>size_t sigsetsize</i>, which
+specifies the size in bytes of the <i>sigmask</i> argument.
+The glibc <b>epoll_pwait</b>() wrapper function specifies
+this argument as a fixed value (equal to
+<i>sizeof(sigset_t)</i>).</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Before Linux
+2.6.37, a <i>timeout</i> value larger than approximately
+<i>LONG_MAX / HZ</i> milliseconds is treated as −1
+(i.e., infinity). Thus, for example, on a system where
+<i>sizeof(long)</i> is 4 and the kernel <i>HZ</i> value is
+1000, this means that timeouts greater than 35.79 minutes
+are treated as infinity.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>epoll_create</b>(2),
+<b>epoll_ctl</b>(2), <b>epoll</b>(7)</p>
+<hr/>
+</body>
+</html>

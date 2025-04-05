@@ -1,0 +1,309 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:12 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CMS_VERIFY</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CMS_VERIFY</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#VERIFY PROCESS">VERIFY PROCESS</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CMS_verify,
+CMS_SignedData_verify, CMS_get0_signers − verify a CMS
+SignedData structure</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/cms.h&gt; <br/>
+int CMS_verify(CMS_ContentInfo *cms, STACK_OF(X509) *certs,
+X509_STORE *store, <br/>
+BIO *detached_data, BIO *out, unsigned int flags); <br/>
+BIO *CMS_SignedData_verify(CMS_SignedData *sd, BIO
+*detached_data, <br/>
+STACK_OF(X509) *scerts, X509_STORE *store, <br/>
+STACK_OF(X509) *extra, STACK_OF(X509_CRL) *crls, <br/>
+unsigned int flags, <br/>
+OSSL_LIB_CTX *libctx, const char *propq); <br/>
+STACK_OF(X509) *CMS_get0_signers(CMS_ContentInfo *cms);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_verify()</b>
+is very similar to <b>PKCS7_verify</b>(3). It verifies a
+<b>CMS SignedData</b> structure contained in a structure of
+type <b>CMS_ContentInfo</b>. <i>cms</i> points to the
+<b>CMS_ContentInfo</b> structure to verify. The optional
+<i>certs</i> parameter refers to a set of certificates in
+which to search for signing certificates. <i>cms</i> may
+contain extra untrusted CA certificates that may be used for
+chain building as well as CRLs that may be used for
+certificate validation. <i>store</i> may be NULL or point to
+the trusted certificate store to use for chain verification.
+<i>detached_data</i> refers to the signed data if the
+content is detached from <i>cms</i>. Otherwise
+<i>detached_data</i> should be NULL and the signed data must
+be in <i>cms</i>. The content is written to the BIO
+<i>out</i> unless it is NULL. <i>flags</i> is an optional
+set of flags, which can be used to modify the operation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_SignedData_verify()</b>
+is like <b>CMS_verify()</b> except that it operates on
+<b>CMS SignedData</b> input in the <i>sd</i> argument, it
+has some additional parameters described next, and on
+success it returns the verified content as a memory BIO. The
+optional <i>extra</i> parameter may be used to provide
+untrusted CA certificates that may be helpful for chain
+building in certificate validation. This list of
+certificates must not contain duplicates. The optional
+<i>crls</i> parameter may be used to provide extra CRLs.
+Also the list of CRLs must not contain duplicates. The
+optional parameters library context <i>libctx</i> and
+property query <i>propq</i> are used when retrieving
+algorithms from providers.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_get0_signers()</b>
+retrieves the signing certificate(s) from <i>cms</i>; it may
+only be called after a successful <b>CMS_verify()</b> or
+<b>CMS_SignedData_verify()</b> operation.</p>
+<h2>VERIFY PROCESS
+<a name="VERIFY PROCESS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Normally the
+verify process proceeds as follows.</p>
+<p style="margin-left:9%; margin-top: 1em">Initially some
+sanity checks are performed on <i>cms</i>. The type of
+<i>cms</i> must be SignedData. There must be at least one
+signature on the data and if the content is detached
+<i>detached_data</i> cannot be NULL.</p>
+<p style="margin-left:9%; margin-top: 1em">An attempt is
+made to locate all the signing certificate(s), first looking
+in the <i>certs</i> parameter (if it is not NULL) and then
+looking in any certificates contained in the <i>cms</i>
+structure unless <b>CMS_NOINTERN</b> is set. If any signing
+certificate cannot be located the operation fails.</p>
+<p style="margin-left:9%; margin-top: 1em">Each signing
+certificate is chain verified using the <i>smimesign</i>
+purpose and using the trusted certificate store <i>store</i>
+if supplied. Any internal certificates in the message, which
+may have been added using <b>CMS_add1_cert</b>(3), are used
+as untrusted CAs. If CRL checking is enabled in <i>store</i>
+and <b>CMS_NOCRL</b> is not set, any internal CRLs, which
+may have been added using <b>CMS_add1_crl</b>(3), are used
+in addition to attempting to look them up in <i>store</i>.
+If <i>store</i> is not NULL and any chain verify fails an
+error code is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">Finally the
+signed content is read (and written to <i>out</i> unless it
+is NULL) and the signature is checked.</p>
+<p style="margin-left:9%; margin-top: 1em">If all
+signatures verify correctly then the function is
+successful.</p>
+<p style="margin-left:9%; margin-top: 1em">Any of the
+following flags (ored together) can be passed in the
+<i>flags</i> parameter to change the default verify
+behaviour.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>CMS_NOINTERN</b> is set the certificates in the message
+itself are not searched when locating the signing
+certificate(s). This means that all the signing certificates
+must be in the <i>certs</i> parameter.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>CMS_NOCRL</b> is set and CRL checking is enabled in
+<i>store</i> then any CRLs in the message itself and
+provided via the <i>crls</i> parameter are ignored.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+<b>CMS_TEXT</b> flag is set MIME headers for type
+"text/plain" are deleted from the content. If the
+content is not of type "text/plain" then an error
+is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>CMS_NO_SIGNER_CERT_VERIFY</b> is set the signing
+certificates are not chain verified, unless <b>CMS_CADES</b>
+flag is also set.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>CMS_NO_ATTR_VERIFY</b> is set the signed attributes
+signature is not verified, unless CMS_CADES flag is also
+set.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>CMS_CADES</b> is set, each signer certificate is checked
+against the ESS signingCertificate or ESS
+signingCertificateV2 extension that is required in the
+signed attributes of the signature.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>CMS_NO_CONTENT_VERIFY</b> is set then the content digest
+is not checked.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">One application
+of <b>CMS_NOINTERN</b> is to only accept messages signed by
+a small number of certificates. The acceptable certificates
+would be passed in the <i>certs</i> parameter. In this case
+if the signer certificate is not one of the certificates
+supplied in <i>certs</i> then the verify will fail because
+the signer cannot be found.</p>
+<p style="margin-left:9%; margin-top: 1em">In some cases
+the standard techniques for looking up and validating
+certificates are not appropriate: for example an application
+may wish to lookup certificates in a database or perform
+customised verification. This can be achieved by setting and
+verifying the signer certificates manually using the signed
+data utility functions.</p>
+<p style="margin-left:9%; margin-top: 1em">Care should be
+taken when modifying the default verify behaviour, for
+example setting <b>CMS_NO_CONTENT_VERIFY</b> will totally
+disable all content verification and any modified content
+will be considered valid. This combination is however useful
+if one merely wishes to write the content to <i>out</i> and
+its validity is not considered important.</p>
+<p style="margin-left:9%; margin-top: 1em">Chain
+verification should arguably be performed using the signing
+time rather than the current time. However, since the
+signing time is supplied by the signer it cannot be trusted
+without additional evidence (such as a trusted
+timestamp).</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_verify()</b>
+returns 1 for a successful verification and 0 if an error
+occurred.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_SignedData_verify()</b>
+returns a memory BIO containing the verified content, or
+NULL on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_get0_signers()</b>
+returns all signers or NULL if an error occurred.</p>
+<p style="margin-left:9%; margin-top: 1em">The error can be
+obtained from <b>ERR_get_error</b>(3).</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The trusted
+certificate store is not searched for the signing
+certificate. This is primarily due to the inadequacies of
+the current <b>X509_STORE</b> functionality.</p>
+<p style="margin-left:9%; margin-top: 1em">The lack of
+single pass processing means that the signed content must
+all be held in memory if it is not detached.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS7_verify</b>(3),
+<b>CMS_add1_cert</b>(3), <b>CMS_add1_crl</b>(3),
+<b>OSSL_ESS_check_signing_certs</b>(3),
+<b>ERR_get_error</b>(3), <b>CMS_sign</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CMS_SignedData_verify()</b>
+was added in OpenSSL 3.2.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2008−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

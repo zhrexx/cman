@@ -1,0 +1,196 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:18 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SET_MAX_CERT_LIST</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SET_MAX_CERT_LIST</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_set_max_cert_list,
+SSL_CTX_get_max_cert_list, SSL_set_max_cert_list,
+SSL_get_max_cert_list − manipulate allowed size for
+the peer's certificate chain</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+long SSL_CTX_set_max_cert_list(SSL_CTX *ctx, long size);
+<br/>
+long SSL_CTX_get_max_cert_list(SSL_CTX *ctx); <br/>
+long SSL_set_max_cert_list(SSL *ssl, long size); <br/>
+long SSL_get_max_cert_list(SSL *ctx);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_max_cert_list()</b>
+sets the maximum size allowed for the peer's certificate
+chain for all SSL objects created from <b>ctx</b> to be
+&lt;size&gt; bytes. The SSL objects inherit the setting
+valid for <b>ctx</b> at the time <b>SSL_new</b>(3) is being
+called.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_get_max_cert_list()</b>
+returns the currently set maximum size for <b>ctx</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_max_cert_list()</b>
+sets the maximum size allowed for the peer's certificate
+chain for <b>ssl</b> to be &lt;size&gt; bytes. This setting
+stays valid until a new value is set.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_max_cert_list()</b>
+returns the currently set maximum size for <b>ssl</b>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">During the
+handshake process, the peer may send a certificate chain.
+The TLS/SSL standard does not give any maximum size of the
+certificate chain. The OpenSSL library handles incoming data
+by a dynamically allocated buffer. In order to prevent this
+buffer from growing without bounds due to data received from
+a faulty or malicious peer, a maximum size for the
+certificate chain is set.</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+value for the maximum certificate chain size is 100kB (30kB
+on the 16−bit DOS platform). This should be sufficient
+for usual certificate chains (OpenSSL's default maximum
+chain length is 10, see <b>SSL_CTX_set_verify</b>(3), and
+certificates without special extensions have a typical size
+of 1−2kB).</p>
+<p style="margin-left:9%; margin-top: 1em">For special
+applications it can be necessary to extend the maximum
+certificate chain size allowed to be sent by the peer, see
+e.g. the work on "Internet X.509 Public Key
+Infrastructure Proxy Certificate Profile" and "TLS
+Delegation Protocol" at http://www.ietf.org/ and
+http://www.globus.org/ .</p>
+<p style="margin-left:9%; margin-top: 1em">Under normal
+conditions it should never be necessary to set a value
+smaller than the default, as the buffer is handled
+dynamically and only uses the memory actually required by
+the data sent by the peer.</p>
+<p style="margin-left:9%; margin-top: 1em">If the maximum
+certificate chain size allowed is exceeded, the handshake
+will fail with a SSL_R_EXCESSIVE_MESSAGE_SIZE error.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_max_cert_list()</b>
+and <b>SSL_set_max_cert_list()</b> return the previously set
+value.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_get_max_cert_list()</b>
+and <b>SSL_get_max_cert_list()</b> return the currently set
+value.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_new</b>(3), <b>SSL_CTX_set_verify</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2001−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

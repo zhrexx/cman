@@ -1,0 +1,233 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:51 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_XFERINFOFUNCTION</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_XFERINFOFUNCTION</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_XFERINFOFUNCTION
+− progress meter callback</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">int
+progress_callback(void *clientp, <br/>
+curl_off_t dltotal, <br/>
+curl_off_t dlnow, <br/>
+curl_off_t ultotal, <br/>
+curl_off_t ulnow);</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_XFERINFOFUNCTION,
+<br/>
+progress_callback);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a pointer
+to your callback function, which should match the prototype
+shown above.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+gets called by libcurl instead of its internal equivalent
+with a frequent interval. While data is being transferred it
+gets called frequently, and during slow periods like when
+nothing is being transferred it can slow down to about one
+call per second.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>clientp</i>
+is the pointer set with <i>CURLOPT_XFERINFODATA(3)</i>, it
+is not used by libcurl but is only passed along from the
+application to the callback.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback
+gets told how much data libcurl is about to transfer and has
+already transferred, in number of bytes. <i>dltotal</i> is
+the total number of bytes libcurl expects to download in
+this transfer. <i>dlnow</i> is the number of bytes
+downloaded so far. <i>ultotal</i> is the total number of
+bytes libcurl expects to upload in this transfer.
+<i>ulnow</i> is the number of bytes uploaded so far.</p>
+<p style="margin-left:9%; margin-top: 1em">Unknown/unused
+argument values passed to the callback are set to zero (like
+if you only download data, the upload size remains 0). Many
+times the callback is called one or more times first, before
+it knows the data sizes so a program must be made to handle
+that.</p>
+<p style="margin-left:9%; margin-top: 1em">If your callback
+function returns CURL_PROGRESSFUNC_CONTINUE it makes libcurl
+to continue executing the default progress function.</p>
+<p style="margin-left:9%; margin-top: 1em">Returning any
+other non−zero value from this callback makes libcurl
+abort the transfer and return
+<i>CURLE_ABORTED_BY_CALLBACK</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">If you transfer
+data with the multi interface, this function is not called
+during periods of idleness unless you call the appropriate
+libcurl function that performs transfers.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>CURLOPT_NOPROGRESS(3)</i>
+must be set to 0 to make this function actually get
+called.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL − use
+the internal progress meter. That is rarely wanted by
+users.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">struct progress
+{ <br/>
+char *private; <br/>
+size_t size; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">static size_t
+progress_callback(void *clientp, <br/>
+curl_off_t dltotal, <br/>
+curl_off_t dlnow, <br/>
+curl_off_t ultotal, <br/>
+curl_off_t ulnow) <br/>
+{ <br/>
+struct progress *memory = clientp; <br/>
+printf("my ptr: %p\n", memory-&gt;private);</p>
+<p style="margin-left:9%; margin-top: 1em">/* use the
+values */</p>
+<p style="margin-left:9%; margin-top: 1em">return 0; /* all
+is good */ <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+struct progress data;</p>
+<p style="margin-left:9%; margin-top: 1em">/* pass struct
+to callback */ <br/>
+curl_easy_setopt(curl, CURLOPT_XFERINFODATA, &amp;data);</p>
+<p style="margin-left:9%; margin-top: 1em">/* enable
+progress callback getting called */ <br/>
+curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);</p>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_setopt(curl,
+CURLOPT_XFERINFOFUNCTION, progress_callback); <br/>
+} <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.32.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns
+CURLE_OK.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_NOPROGRESS</b>(3),
+<b>CURLOPT_XFERINFODATA</b>(3)</p>
+<hr/>
+</body>
+</html>

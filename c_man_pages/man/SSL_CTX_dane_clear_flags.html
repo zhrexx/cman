@@ -1,0 +1,550 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:11 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_DANE_ENABLE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_DANE_ENABLE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_dane_enable,
+SSL_CTX_dane_mtype_set, SSL_dane_enable, SSL_dane_tlsa_add,
+SSL_get0_dane_authority, SSL_get0_dane_tlsa,
+SSL_CTX_dane_set_flags, SSL_CTX_dane_clear_flags,
+SSL_dane_set_flags, SSL_dane_clear_flags − enable DANE
+TLS authentication of the remote TLS server in the local TLS
+client</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+int SSL_CTX_dane_enable(SSL_CTX *ctx); <br/>
+int SSL_CTX_dane_mtype_set(SSL_CTX *ctx, const EVP_MD *md,
+<br/>
+uint8_t mtype, uint8_t ord); <br/>
+int SSL_dane_enable(SSL *s, const char *basedomain); <br/>
+int SSL_dane_tlsa_add(SSL *s, uint8_t usage, uint8_t
+selector, <br/>
+uint8_t mtype, const unsigned char *data, size_t dlen); <br/>
+int SSL_get0_dane_authority(SSL *s, X509 **mcert, EVP_PKEY
+**mspki); <br/>
+int SSL_get0_dane_tlsa(SSL *s, uint8_t *usage, uint8_t
+*selector, <br/>
+uint8_t *mtype, const unsigned char **data, <br/>
+size_t *dlen); <br/>
+unsigned long SSL_CTX_dane_set_flags(SSL_CTX *ctx, unsigned
+long flags); <br/>
+unsigned long SSL_CTX_dane_clear_flags(SSL_CTX *ctx,
+unsigned long flags); <br/>
+unsigned long SSL_dane_set_flags(SSL *ssl, unsigned long
+flags); <br/>
+unsigned long SSL_dane_clear_flags(SSL *ssl, unsigned long
+flags);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+implement support for DANE TLSA (RFC6698 and RFC7671) peer
+authentication.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_dane_enable()</b>
+must be called first to initialize the shared state required
+for DANE support. Individual connections associated with the
+context can then enable per−connection DANE support as
+appropriate. DANE authentication is implemented in the
+<b>X509_verify_cert</b>(3) function, and applications that
+override <b>X509_verify_cert</b>(3) via
+<b>SSL_CTX_set_cert_verify_callback</b>(3) are responsible
+to authenticate the peer chain in whatever manner they see
+fit.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_dane_mtype_set()</b>
+may then be called zero or more times to adjust the
+supported digest algorithms. This must be done before any
+SSL handles are created for the context.</p>
+<p style="margin-left:9%; margin-top: 1em">The <b>mtype</b>
+argument specifies a DANE TLSA matching type and the
+<b>md</b> argument specifies the associated digest algorithm
+handle. The <b>ord</b> argument specifies a strength
+ordinal. Algorithms with a larger strength ordinal are
+considered more secure. Strength ordinals are used to
+implement RFC7671 digest algorithm agility. Specifying a
+<b>NULL</b> digest algorithm for a matching type disables
+support for that matching type. Matching type <b>Full</b>(0)
+cannot be modified or disabled.</p>
+<p style="margin-left:9%; margin-top: 1em">By default,
+matching type "SHA2−256(1)" (see RFC7218 for
+definitions of the DANE TLSA parameter acronyms) is mapped
+to EVP_sha256() with a strength ordinal of 1 and matching
+type "SHA2−512(2)" is mapped to EVP_sha512()
+with a strength ordinal of 2.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_dane_enable()</b>
+must be called before the SSL handshake is initiated with
+<b>SSL_connect</b>(3) if (and only if) you want to enable
+DANE for that connection. (The connection must be associated
+with a DANE−enabled SSL context). The
+<b>basedomain</b> argument specifies the RFC7671 TLSA base
+domain, which will be the primary peer reference identifier
+for certificate name checks. Additional server names can be
+specified via <b>SSL_add1_host</b>(3). The <b>basedomain</b>
+is used as the default SNI hint if none has yet been
+specified via <b>SSL_set_tlsext_host_name</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_dane_tlsa_add()</b>
+may then be called one or more times, to load each of the
+TLSA records that apply to the remote TLS peer. (This too
+must be done prior to the beginning of the SSL handshake).
+The arguments specify the fields of the TLSA record. The
+<b>data</b> field is provided in binary (wire RDATA) form,
+not the hexadecimal ASCII presentation form, with an
+explicit length passed via <b>dlen</b>. The library takes a
+copy of the <b>data</b> buffer contents and the caller may
+free the original <b>data</b> buffer when convenient. A
+return value of 0 indicates that "unusable" TLSA
+records (with invalid or unsupported parameters) were
+provided. A negative return value indicates an internal
+error in processing the record.</p>
+<p style="margin-left:9%; margin-top: 1em">The caller is
+expected to check the return value of each
+<b>SSL_dane_tlsa_add()</b> call and take appropriate action
+if none are usable or an internal error is encountered in
+processing some records.</p>
+<p style="margin-left:9%; margin-top: 1em">If no TLSA
+records are added successfully, DANE authentication is not
+enabled, and authentication will be based on any configured
+traditional trust−anchors; authentication success in
+this case does not mean that the peer was
+DANE−authenticated.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get0_dane_authority()</b>
+can be used to get more detailed information about the
+matched DANE trust−anchor after successful connection
+completion. The return value is negative if DANE
+verification failed (or was not enabled), 0 if an EE TLSA
+record directly matched the leaf certificate, or a positive
+number indicating the depth at which a TA record matched an
+issuer certificate. The complete verified chain can be
+retrieved via <b>SSL_get0_verified_chain</b>(3). The return
+value is an index into this verified chain, rather than the
+list of certificates sent by the peer as returned by
+<b>SSL_get_peer_cert_chain</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+<b>mcert</b> argument is not <b>NULL</b> and a TLSA record
+matched a chain certificate, a pointer to the matching
+certificate is returned via <b>mcert</b>. The returned
+address is a short−term internal reference to the
+certificate and must not be freed by the application.
+Applications that want to retain access to the certificate
+can call <b>X509_up_ref</b>(3) to obtain a long−term
+reference which must then be freed via <b>X509_free</b>(3)
+once no longer needed.</p>
+<p style="margin-left:9%; margin-top: 1em">If no TLSA
+records directly matched any elements of the certificate
+chain, but a <b>DANE−TA</b>(2) <b>SPKI</b>(1)
+<b>Full</b>(0) record provided the public key that signed an
+element of the chain, then that key is returned via
+<b>mspki</b> argument (if not NULL). In this case the return
+value is the depth of the top−most element of the
+validated certificate chain. As with <b>mcert</b> this is a
+short−term internal reference, and
+<b>EVP_PKEY_up_ref</b>(3) and <b>EVP_PKEY_free</b>(3) can be
+used to acquire and release long−term references
+respectively.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get0_dane_tlsa()</b>
+can be used to retrieve the fields of the TLSA record that
+matched the peer certificate chain. The return value
+indicates the match depth or failure to match just as with
+<b>SSL_get0_dane_authority()</b>. When the return value is
+nonnegative, the storage pointed to by the <b>usage</b>,
+<b>selector</b>, <b>mtype</b> and <b>data</b> parameters is
+updated to the corresponding TLSA record fields. The
+<b>data</b> field is in binary wire form, and is therefore
+not NUL−terminated, its length is returned via the
+<b>dlen</b> parameter. If any of these parameters is NULL,
+the corresponding field is not returned. The <b>data</b>
+parameter is set to a short−term internal−copy
+of the associated data field and must not be freed by the
+application. Applications that need long−term access
+to this field need to copy the content.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_dane_set_flags()</b>
+and <b>SSL_dane_set_flags()</b> can be used to enable
+optional DANE verification features.
+<b>SSL_CTX_dane_clear_flags()</b> and
+<b>SSL_dane_clear_flags()</b> can be used to disable the
+same features. The <b>flags</b> argument is a bit−mask
+of the features to enable or disable. The <b>flags</b> set
+for an <b>SSL_CTX</b> context are copied to each <b>SSL</b>
+handle associated with that context at the time the handle
+is created. Subsequent changes in the context's <b>flags</b>
+have no effect on the <b>flags</b> set for the handle.</p>
+<p style="margin-left:9%; margin-top: 1em">At present, the
+only available option is
+<b>DANE_FLAG_NO_DANE_EE_NAMECHECKS</b> which can be used to
+disable server name checks when authenticating via
+<b>DANE−EE</b>(3) TLSA records. For some applications,
+primarily web browsers, it is not safe to disable name
+checks due to "unknown key share" attacks, in
+which a malicious server can convince a client that a
+connection to a victim server is instead a secure connection
+to the malicious server. The malicious server may then be
+able to violate cross−origin scripting restrictions.
+Thus, despite the text of RFC7671, name checks are by
+default enabled for <b>DANE−EE</b>(3) TLSA records,
+and can be disabled in applications where it is safe to do
+so. In particular, SMTP and XMPP clients should set this
+option as SRV and MX records already make it possible for a
+remote domain to redirect client connections to any server
+of its choice, and in any case SMTP and XMPP clients do not
+execute scripts downloaded from remote servers.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The functions
+<b>SSL_CTX_dane_enable()</b>,
+<b>SSL_CTX_dane_mtype_set()</b>, <b>SSL_dane_enable()</b>
+and <b>SSL_dane_tlsa_add()</b> return a positive value on
+success. Negative return values indicate resource problems
+(out of memory, etc.) in the SSL library, while a return
+value of <b>0</b> indicates incorrect usage or invalid
+input, such as an unsupported TLSA record certificate usage,
+selector or matching type. Invalid input also includes
+malformed data, either a digest length that does not match
+the digest algorithm, or a Full(0) (binary ASN.1 DER form)
+certificate or a public key that fails to parse.</p>
+<p style="margin-left:9%; margin-top: 1em">The functions
+<b>SSL_get0_dane_authority()</b> and
+<b>SSL_get0_dane_tlsa()</b> return a negative value when
+DANE authentication failed or was not enabled, a nonnegative
+value indicates the chain depth at which the TLSA record
+matched a chain certificate, or the depth of the
+top−most certificate, when the TLSA record is a full
+public key that is its signer.</p>
+<p style="margin-left:9%; margin-top: 1em">The functions
+<b>SSL_CTX_dane_set_flags()</b>,
+<b>SSL_CTX_dane_clear_flags()</b>,
+<b>SSL_dane_set_flags()</b> and
+<b>SSL_dane_clear_flags()</b> return the <b>flags</b> in
+effect before they were called.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Suppose
+"smtp.example.com" is the MX host of the domain
+"example.com", and has DNSSEC−validated TLSA
+records. The calls below will perform DANE authentication
+and arrange to match either the MX hostname or the
+destination domain name in the SMTP server certificate.
+Wildcards are supported, but must match the entire label.
+The actual name matched in the certificate (which might be a
+wildcard) is retrieved, and must be copied by the
+application if it is to be retained beyond the lifetime of
+the SSL connection.</p>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX *ctx;
+<br/>
+SSL *ssl; <br/>
+int (*verify_cb)(int ok, X509_STORE_CTX *sctx) = NULL; <br/>
+int num_usable = 0; <br/>
+const char *nexthop_domain = "example.com"; <br/>
+const char *dane_tlsa_domain = "smtp.example.com";
+<br/>
+uint8_t usage, selector, mtype; <br/>
+if ((ctx = SSL_CTX_new(TLS_client_method())) == NULL) <br/>
+/* error */ <br/>
+if (SSL_CTX_dane_enable(ctx) &lt;= 0) <br/>
+/* error */ <br/>
+if ((ssl = SSL_new(ctx)) == NULL) <br/>
+/* error */ <br/>
+if (SSL_dane_enable(ssl, dane_tlsa_domain) &lt;= 0) <br/>
+/* error */ <br/>
+/* <br/>
+* For many applications it is safe to skip DANE−EE(3)
+namechecks. Do not <br/>
+* disable the checks unless "unknown key share"
+attacks pose no risk for <br/>
+* your application. <br/>
+*/ <br/>
+SSL_dane_set_flags(ssl, DANE_FLAG_NO_DANE_EE_NAMECHECKS);
+<br/>
+if (!SSL_add1_host(ssl, nexthop_domain)) <br/>
+/* error */ <br/>
+SSL_set_hostflags(ssl,
+X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS); <br/>
+for (... each TLSA record ...) { <br/>
+unsigned char *data; <br/>
+size_t len; <br/>
+int ret; <br/>
+/* set usage, selector, mtype, data, len */ <br/>
+/* <br/>
+* Opportunistic DANE TLS clients support only
+DANE−TA(2) or DANE−EE(3). <br/>
+* They treat all other certificate usages, and in particular
+PKIX−TA(0) <br/>
+* and PKIX−EE(1), as unusable. <br/>
+*/ <br/>
+switch (usage) { <br/>
+default: <br/>
+case 0: /* PKIX−TA(0) */ <br/>
+case 1: /* PKIX−EE(1) */ <br/>
+continue; <br/>
+case 2: /* DANE−TA(2) */ <br/>
+case 3: /* DANE−EE(3) */ <br/>
+break; <br/>
+} <br/>
+ret = SSL_dane_tlsa_add(ssl, usage, selector, mtype, data,
+len); <br/>
+/* free data as appropriate */ <br/>
+if (ret &lt; 0) <br/>
+/* handle SSL library internal error */ <br/>
+else if (ret == 0) <br/>
+/* handle unusable TLSA record */ <br/>
+else <br/>
+++num_usable; <br/>
+} <br/>
+/* <br/>
+* At this point, the verification mode is still the default
+SSL_VERIFY_NONE. <br/>
+* Opportunistic DANE clients use unauthenticated TLS when
+all TLSA records <br/>
+* are unusable, so continue the handshake even if
+authentication fails. <br/>
+*/ <br/>
+if (num_usable == 0) { <br/>
+/* Log all records unusable? */ <br/>
+/* Optionally set verify_cb to a suitable non−NULL
+callback. */ <br/>
+SSL_set_verify(ssl, SSL_VERIFY_NONE, verify_cb); <br/>
+} else { <br/>
+/* At least one usable record. We expect to verify the peer
+*/ <br/>
+/* Optionally set verify_cb to a suitable non−NULL
+callback. */ <br/>
+/* <br/>
+* Below we elect to fail the handshake when peer
+verification fails. <br/>
+* Alternatively, use the permissive SSL_VERIFY_NONE
+verification mode, <br/>
+* complete the handshake, check the verification status, and
+if not <br/>
+* verified disconnect gracefully at the application layer,
+especially if <br/>
+* application protocol supports informing the server that
+authentication <br/>
+* failed. <br/>
+*/ <br/>
+SSL_set_verify(ssl, SSL_VERIFY_PEER, verify_cb); <br/>
+} <br/>
+/* <br/>
+* Load any saved session for resumption, making sure that
+the previous <br/>
+* session applied the same security and authentication
+requirements that <br/>
+* would be expected of a fresh connection. <br/>
+*/ <br/>
+/* Perform SSL_connect() handshake and handle errors here */
+<br/>
+if (SSL_session_reused(ssl)) { <br/>
+if (SSL_get_verify_result(ssl) == X509_V_OK) { <br/>
+/* <br/>
+* Resumed session was originally verified, this connection
+is <br/>
+* authenticated. <br/>
+*/ <br/>
+} else { <br/>
+/* <br/>
+* Resumed session was not originally verified, this
+connection is not <br/>
+* authenticated. <br/>
+*/ <br/>
+} <br/>
+} else if (SSL_get_verify_result(ssl) == X509_V_OK) { <br/>
+const char *peername = SSL_get0_peername(ssl); <br/>
+EVP_PKEY *mspki = NULL; <br/>
+int depth = SSL_get0_dane_authority(ssl, NULL, &amp;mspki);
+<br/>
+if (depth &gt;= 0) { <br/>
+(void) SSL_get0_dane_tlsa(ssl, &amp;usage, &amp;selector,
+&amp;mtype, NULL, NULL); <br/>
+printf("DANE TLSA %d %d %d ", usage, selector,
+mtype); <br/>
+if (SSL_get0_peer_rpk(ssl) == NULL) <br/>
+printf("%s certificate at depth %d\n", <br/>
+(mspki != NULL) ? "signed the peer" : <br/>
+mdpth ? "matched the TA" : "matched the
+EE", mdpth); <br/>
+else <br/>
+printf(bio, "matched the peer raw public key\n");
+<br/>
+} <br/>
+if (peername != NULL) { <br/>
+/* Name checks were in scope and matched the peername */
+<br/>
+printf("Verified peername: %s\n", peername); <br/>
+} <br/>
+} else { <br/>
+/* <br/>
+* Not authenticated, presumably all TLSA rrs unusable, but
+possibly a <br/>
+* callback suppressed connection termination despite the
+presence of <br/>
+* usable TLSA RRs none of which matched. Do whatever is
+appropriate for <br/>
+* fresh unauthenticated connections. <br/>
+*/ <br/>
+}</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">It is expected
+that the majority of clients employing DANE TLS will be
+doing "opportunistic DANE TLS" in the sense of
+RFC7672 and RFC7435. That is, they will use DANE
+authentication when DNSSEC−validated TLSA records are
+published for a given peer, and otherwise will use
+unauthenticated TLS or even cleartext.</p>
+<p style="margin-left:9%; margin-top: 1em">Such
+applications should generally treat any TLSA records
+published by the peer with usages <b>PKIX−TA</b>(0)
+and <b>PKIX−EE</b>(1) as "unusable", and
+should not include them among the TLSA records used to
+authenticate peer connections. In addition, some TLSA
+records with supported usages may be "unusable" as
+a result of invalid or unsupported parameters.</p>
+<p style="margin-left:9%; margin-top: 1em">When a peer has
+TLSA records, but none are "usable", an
+opportunistic application must avoid cleartext, but cannot
+authenticate the peer, and so should generally proceed with
+an unauthenticated connection. Opportunistic applications
+need to note the return value of each call to
+<b>SSL_dane_tlsa_add()</b>, and if all return 0 (due to
+invalid or unsupported parameters) disable peer
+authentication by calling <b>SSL_set_verify</b>(3) with
+<b>mode</b> equal to <b>SSL_VERIFY_NONE</b>.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_new</b>(3), <b>SSL_add1_host</b>(3),
+<b>SSL_set_hostflags</b>(3),
+<b>SSL_set_tlsext_host_name</b>(3),
+<b>SSL_set_verify</b>(3),
+<b>SSL_CTX_set_cert_verify_callback</b>(3),
+<b>SSL_get0_verified_chain</b>(3),
+<b>SSL_get_peer_cert_chain</b>(3),
+<b>SSL_get_verify_result</b>(3), <b>SSL_connect</b>(3),
+<b>SSL_get0_peername</b>(3), <b>X509_verify_cert</b>(3),
+<b>X509_up_ref</b>(3), <b>X509_free</b>(3),
+<b>EVP_get_digestbyname</b>(3), <b>EVP_PKEY_up_ref</b>(3),
+<b>EVP_PKEY_free</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+were added in OpenSSL 1.1.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2016−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

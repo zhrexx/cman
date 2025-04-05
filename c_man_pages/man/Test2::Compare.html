@@ -1,0 +1,339 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:04 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Compare</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Compare</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#WRITING A VARIANT OF IS/LIKE">WRITING A VARIANT OF IS/LIKE</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Compare
+− Test2 extension for writing deep comparison
+tools.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This library is
+the driving force behind deep comparison tools such as
+Test2::Tools::Compare::is() and
+Test2::Tools::ClassicCompare::is_deeply().</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">package
+Test2::Tools::MyCheck; <br/>
+use Test2::Compare::MyCheck; <br/>
+use Test2::Compare qw/compare/; <br/>
+sub MyCheck { <br/>
+my ($got, $exp, $name, @diag) = @_; <br/>
+my $ctx = context(); <br/>
+my $delta = compare($got, $exp, \&amp;convert); <br/>
+if ($delta) { <br/>
+$ctx−&gt;fail($name, $delta−&gt;diag, @diag);
+<br/>
+} <br/>
+else { <br/>
+$ctx−&gt;ok(1, $name); <br/>
+} <br/>
+$ctx−&gt;release; <br/>
+return !$delta; <br/>
+} <br/>
+sub convert { <br/>
+my $thing = shift; <br/>
+return $thing if blessed($thing) &amp;&amp;
+$thing−&gt;isa('Test2::Compare::MyCheck'); <br/>
+return Test2::Compare::MyCheck−&gt;new(stuff =&gt;
+$thing); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">See
+Test2::Compare::Base for details about writing a custom
+check.</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">$delta =
+compare($got, $expect, \&amp;convert)</p>
+<p style="margin-left:14%;">This will compare the
+structures in $got with those in $expect, The convert sub
+should convert vanilla structures inside $expect into
+checks. If there are differences in the structures they will
+be reported back as an Test2::Compare::Delta tree.</p>
+<p style="margin-left:9%;">$build = <b>get_build()</b></p>
+<p style="margin-left:14%;">Get the current global build,
+if any.</p>
+<p style="margin-left:9%;">push_build($build)</p>
+<p style="margin-left:14%;">Set the current global
+build.</p>
+<p style="margin-left:9%;">$build = pop_build($build)</p>
+<p style="margin-left:14%;">Unset the current global build.
+This will throw an exception if the build passed in is
+different from the current global.</p>
+<p style="margin-left:9%;">build($class, sub { ... })</p>
+<p style="margin-left:14%;">Run the provided codeblock with
+a new instance of $class as the current build. Returns the
+new build.</p>
+<p style="margin-left:9%;">$check = convert($thing) <br/>
+$check = convert($thing, $config)</p>
+<p style="margin-left:14%;">This convert function is used
+by strict_convert() and relaxed_convert() under the hood. It
+can also be used as the basis for other convert
+functions.</p>
+<p style="margin-left:14%; margin-top: 1em">If you want to
+use it with a custom configuration you should wrap it in
+another sub like so:</p>
+<p style="margin-left:14%; margin-top: 1em">sub my_convert
+{ <br/>
+my $thing_to_convert = shift; <br/>
+return convert( <br/>
+$thing_to_convert, <br/>
+{ ... } <br/>
+); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">Or the short
+variant:</p>
+<p style="margin-left:14%; margin-top: 1em">sub my_convert
+{ convert($_[0], { ... }) }</p>
+<p style="margin-left:14%; margin-top: 1em">There are
+several configuration options, here they are with the
+default setting listed first: <br/>
+implicit_end =&gt; 1</p>
+<p style="margin-left:19%;">This option toggles array/hash
+boundaries. If this is true then no extra hash keys or array
+indexes will be allowed. This setting effects generated
+compare objects as well as any passed in.</p>
+<p style="margin-left:14%;">use_regex =&gt; 1</p>
+<p style="margin-left:19%;">This option toggles regex
+matching. When true (default) regexes are converted to
+checks such that values must match the regex. When false
+regexes will be compared to see if they are identical
+regexes.</p>
+<p style="margin-left:14%;">use_code =&gt; 0</p>
+<p style="margin-left:19%;">This option toggles code
+matching. When false (default) coderefs in structures must
+be the same coderef as specified. When true coderefs will be
+run to verify the value being checked.</p>
+<p style="margin-left:9%;">$check =
+strict_convert($thing)</p>
+<p style="margin-left:14%;">Convert $thing to an
+Test2::Compare::* object. This will behave strictly which
+means it uses these settings: <br/>
+implicit_end =&gt; 1</p>
+<p style="margin-left:19%;">Array bounds will be checked
+when this object is used in a comparison. No unexpected hash
+keys can be present.</p>
+<p style="margin-left:14%;">use_code =&gt; 0</p>
+<p style="margin-left:19%;">Sub references will be compared
+as refs (IE are these sub refs the same ref?)</p>
+<p style="margin-left:14%;">use_regex =&gt; 0</p>
+<p style="margin-left:19%;">Regexes will be compared
+directly (IE are the regexes the same?)</p>
+<p style="margin-left:9%;">$compare =
+relaxed_convert($thing)</p>
+<p style="margin-left:14%;">Convert $thing to an
+Test2::Compare::* object. This will be relaxed which means
+it uses these settings: <br/>
+implicit_end =&gt; 0</p>
+<p style="margin-left:19%;">Array bounds will not be
+checked when this object is used in a comparison. Unexpected
+hash keys can be present.</p>
+<p style="margin-left:14%;">use_code =&gt; 1</p>
+<p style="margin-left:19%;">Sub references will be run to
+verify a value.</p>
+<p style="margin-left:14%;">use_regex =&gt; 1</p>
+<p style="margin-left:19%;">Values will be checked against
+any regexes provided.</p>
+<h2>WRITING A VARIANT OF IS/LIKE
+<a name="WRITING A VARIANT OF IS/LIKE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::Compare qw/compare convert/; <br/>
+sub my_like($$;$@) { <br/>
+my ($got, $exp, $name, @diag) = @_; <br/>
+my $ctx = context(); <br/>
+# A custom converter that does the same thing as the one
+used by like() <br/>
+my $convert = sub { <br/>
+my $thing = shift; <br/>
+return convert( <br/>
+$thing, <br/>
+{ <br/>
+implicit_end =&gt; 0, <br/>
+use_code =&gt; 1, <br/>
+use_regex =&gt; 1, <br/>
+} <br/>
+); <br/>
+}; <br/>
+my $delta = compare($got, $exp, $convert); <br/>
+if ($delta) { <br/>
+$ctx−&gt;fail($name, $delta−&gt;diag, @diag);
+<br/>
+} <br/>
+else { <br/>
+$ctx−&gt;ok(1, $name); <br/>
+} <br/>
+$ctx−&gt;release; <br/>
+return !$delta; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">The work of a
+comparison tool is done by 3 entities: <b><br/>
+compare()</b></p>
+<p style="margin-left:14%;">The compare() function takes
+the structure you got, the specification you want to check
+against, and a "\&amp;convert" sub that will
+convert anything that is not an instance of an
+Test2::Compare::Base subclass into one.</p>
+<p style="margin-left:14%; margin-top: 1em">This tool will
+use the "\&amp;convert" function on the
+specification, and then produce an Test2::Compare::Delta
+structure that outlines all the ways the structure you got
+deviates from the specification.</p>
+<p style="margin-left:9%;">\&amp;convert</p>
+<p style="margin-left:14%;">Converts anything that is not
+an instance of an Test2::Compare::Base subclass, and turns
+it into one. The objects this produces are able to check
+that a structure matches a specification.</p>
+<p style="margin-left:9%;">$delta</p>
+<p style="margin-left:14%;">An instance of
+Test2::Compare::Delta is ultimately returned. This object
+represents all the ways in with the structure you got
+deviated from the specification. The delta is a tree and may
+contain child deltas for nested structures.</p>
+<p style="margin-left:14%; margin-top: 1em">The delta is
+capable of rendering itself as a table, use "@lines =
+$delta−&gt;diag" to get the table (lines in
+@lines will not be terminated with "\n").</p>
+<p style="margin-left:9%; margin-top: 1em">The convert()
+function provided by this package contains all the
+specification behavior of like() and is(). It is intended to
+be wrapped in a sub that passes in a configuration hash,
+which allows you to control the behavior.</p>
+<p style="margin-left:9%; margin-top: 1em">You are free to
+write your own "$check = compare($thing)"
+function, it just needs to accept a single argument, and
+produce a single instance of an Test2::Compare::Base
+subclass.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2−Suite can be found at
+<i>https://github.com/Test−More/test−more/</i>.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<i>http://dev.perl.org/licenses/</i></p>
+<hr/>
+</body>
+</html>

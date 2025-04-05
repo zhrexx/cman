@@ -1,0 +1,258 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:39 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>arch_prctl</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">arch_prctl</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">arch_prctl
+− set architecture-specific thread state</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;asm/prctl.h&gt;</b> /* Definition of <b>ARCH_*</b>
+constants */ <b><br/>
+#include &lt;sys/syscall.h&gt;</b> /* Definition of
+<b>SYS_*</b> constants */ <b><br/>
+#include &lt;unistd.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+syscall(SYS_arch_prctl, int</b> <i>op</i><b>, unsigned
+long</b> <i>addr</i><b>); <br/>
+int syscall(SYS_arch_prctl, int</b> <i>op</i><b>, unsigned
+long *</b><i>addr</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>Note</i>:
+glibc provides no wrapper for <b>arch_prctl</b>(),
+necessitating the use of <b>syscall</b>(2).</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>arch_prctl</b>()
+sets architecture-specific process or thread state.
+<i>op</i> selects an operation and passes argument
+<i>addr</i> to it; <i>addr</i> is interpreted as either an
+<i>unsigned long</i> for the "set" operations, or
+as an <i>unsigned long *</i>, for the "get"
+operations.</p>
+<p style="margin-left:9%; margin-top: 1em">Subfunctions for
+both x86 and x86-64 are: <b><br/>
+ARCH_SET_CPUID</b> (since Linux 4.12)</p>
+<p style="margin-left:18%;">Enable (<i>addr != 0</i>) or
+disable (<i>addr == 0</i>) the <i>cpuid</i> instruction for
+the calling thread. The instruction is enabled by default.
+If disabled, any execution of a <i>cpuid</i> instruction
+will instead generate a <b>SIGSEGV</b> signal. This feature
+can be used to emulate <i>cpuid</i> results that differ from
+what the underlying hardware would have produced (e.g., in a
+paravirtualization setting).</p>
+<p style="margin-left:18%; margin-top: 1em">The
+<b>ARCH_SET_CPUID</b> setting is preserved across
+<b>fork</b>(2) and <b>clone</b>(2) but reset to the default
+(i.e., <i>cpuid</i> enabled) on <b>execve</b>(2).</p>
+<p style="margin-left:9%;"><b>ARCH_GET_CPUID</b> (since
+Linux 4.12)</p>
+<p style="margin-left:18%;">Return the setting of the flag
+manipulated by <b>ARCH_SET_CPUID</b> as the result of the
+system call (1 for enabled, 0 for disabled). <i>addr</i> is
+ignored.</p>
+<p style="margin-left:9%;">Subfunctions for x86-64 only
+are: <b><br/>
+ARCH_SET_FS</b></p>
+<p style="margin-left:18%;">Set the 64-bit base for the
+<i>FS</i> register to <i>addr</i>.</p>
+<p style="margin-left:9%;"><b>ARCH_GET_FS</b></p>
+<p style="margin-left:18%;">Return the 64-bit base value
+for the <i>FS</i> register of the calling thread in the
+<i>unsigned long</i> pointed to by <i>addr</i>.</p>
+<p style="margin-left:9%;"><b>ARCH_SET_GS</b></p>
+<p style="margin-left:18%;">Set the 64-bit base for the
+<i>GS</i> register to <i>addr</i>.</p>
+<p style="margin-left:9%;"><b>ARCH_GET_GS</b></p>
+<p style="margin-left:18%;">Return the 64-bit base value
+for the <i>GS</i> register of the calling thread in the
+<i>unsigned long</i> pointed to by <i>addr</i>.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>arch_prctl</b>() returns 0; on error, −1 is
+returned, and <i>errno</i> is set to indicate the error.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EFAULT</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p style="margin-top: 1em"><i>addr</i> points to an
+unmapped address or is outside the process address
+space.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><i>op</i> is not a valid operation.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENODEV</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><b>ARCH_SET_CPUID</b> was requested, but the underlying
+hardware does not support CPUID faulting.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EPERM</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><i>addr</i> is outside the process address space.</p></td></tr>
+</table>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux/x86-64.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>arch_prctl</b>()
+is supported only on Linux/x86-64 for 64-bit programs
+currently.</p>
+<p style="margin-left:9%; margin-top: 1em">The 64-bit base
+changes when a new 32-bit segment selector is loaded.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>ARCH_SET_GS</b>
+is disabled in some kernels.</p>
+<p style="margin-left:9%; margin-top: 1em">Context switches
+for 64-bit segment bases are rather expensive. As an
+optimization, if a 32-bit TLS base address is used,
+<b>arch_prctl</b>() may use a real TLS entry as if
+<b>set_thread_area</b>(2) had been called, instead of
+manipulating the segment base register directly. Memory in
+the first 2 GB of address space can be allocated by
+using <b>mmap</b>(2) with the <b>MAP_32BIT</b> flag.</p>
+<p style="margin-left:9%; margin-top: 1em">Because of the
+aforementioned optimization, using <b>arch_prctl</b>() and
+<b>set_thread_area</b>(2) in the same thread is dangerous,
+as they may overwrite each other’s TLS entries.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>FS</i> may be
+already used by the threading library. Programs that use
+<b>ARCH_SET_FS</b> directly are very likely to crash.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>mmap</b>(2),
+<b>modify_ldt</b>(2), <b>prctl</b>(2),
+<b>set_thread_area</b>(2)</p>
+<p style="margin-left:9%; margin-top: 1em">AMD X86-64
+Programmer’s manual</p>
+<hr/>
+</body>
+</html>

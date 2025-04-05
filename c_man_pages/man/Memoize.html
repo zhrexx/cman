@@ -1,0 +1,922 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:22 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Memoize</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Memoize</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#DETAILS">DETAILS</a><br/>
+<a href="#OPTIONS">OPTIONS</a><br/>
+<a href="#INSTALL">INSTALL</a><br/>
+<a href="#NORMALIZER">NORMALIZER</a><br/>
+<a href='#"SCALAR_CACHE", "LIST_CACHE"'>"SCALAR_CACHE", "LIST_CACHE"</a><br/>
+<a href="#OTHER FACILITIES">OTHER FACILITIES</a><br/>
+<a href='#"unmemoize"'>"unmemoize"</a><br/>
+<a href='#"flush_cache"'>"flush_cache"</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#PERSISTENT CACHE SUPPORT">PERSISTENT CACHE SUPPORT</a><br/>
+<a href="#EXPIRATION SUPPORT">EXPIRATION SUPPORT</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#THANK YOU">THANK YOU</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Memoize −
+Make functions faster by trading space for time</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Memoize;
+<br/>
+memoize('slow_function'); <br/>
+slow_function(arguments); # Is faster than it was before</p>
+<p style="margin-left:9%; margin-top: 1em">This is normally
+all you need to know. However, many options are
+available:</p>
+<p style="margin-left:9%; margin-top: 1em">memoize(function,
+options...);</p>
+<p style="margin-left:9%; margin-top: 1em">Options
+include:</p>
+<p style="margin-left:9%; margin-top: 1em">NORMALIZER =&gt;
+function <br/>
+INSTALL =&gt; new_name <br/>
+SCALAR_CACHE =&gt; 'MEMORY' <br/>
+SCALAR_CACHE =&gt; ['HASH', \%cache_hash ] <br/>
+SCALAR_CACHE =&gt; 'FAULT' <br/>
+SCALAR_CACHE =&gt; 'MERGE' <br/>
+LIST_CACHE =&gt; 'MEMORY' <br/>
+LIST_CACHE =&gt; ['HASH', \%cache_hash ] <br/>
+LIST_CACHE =&gt; 'FAULT' <br/>
+LIST_CACHE =&gt; 'MERGE'</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>Memoizing</i>
+a function makes it faster by trading space for time. It
+does this by caching the return values of the function in a
+table. If you call the function again with the same
+arguments, "memoize" jumps in and gives you the
+value out of the table, instead of letting the function
+compute the value all over again.</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Here is an
+extreme example. Consider the Fibonacci sequence, defined by
+the following function:</p>
+<p style="margin-left:9%; margin-top: 1em"># Compute
+Fibonacci numbers <br/>
+sub fib { <br/>
+my $n = shift; <br/>
+return $n if $n &lt; 2; <br/>
+fib($n−1) + fib($n−2); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">This function is
+very slow. Why? To compute fib(14), it first wants to
+compute fib(13) and fib(12), and add the results. But to
+compute fib(13), it first has to compute fib(12) and
+fib(11), and then it comes back and computes fib(12) all
+over again even though the answer is the same. And both of
+the times that it wants to compute fib(12), it has to
+compute fib(11) from scratch, and then it has to do it again
+each time it wants to compute fib(13). This function does so
+much recomputing of old results that it takes a really long
+time to run−−−fib(14) makes 1,200 extra
+recursive calls to itself, to compute and recompute things
+that it already computed.</p>
+<p style="margin-left:9%; margin-top: 1em">This function is
+a good candidate for memoization. If you memoize the
+"fib" function above, it will compute fib(14)
+exactly once, the first time it needs to, and then save the
+result in a table. Then if you ask for fib(14) again, it
+gives you the result out of the table. While computing
+fib(14), instead of computing fib(12) twice, it does it
+once; the second time it needs the value it gets it from the
+table. It doesn’t compute fib(11) four times; it
+computes it once, getting it from the table the next three
+times. Instead of making 1,200 recursive calls to
+"fib", it makes 15. This makes the function about
+150 times faster.</p>
+<p style="margin-left:9%; margin-top: 1em">You could do the
+memoization yourself, by rewriting the function, like
+this:</p>
+<p style="margin-left:9%; margin-top: 1em"># Compute
+Fibonacci numbers, memoized version <br/>
+{ my @fib; <br/>
+sub fib { <br/>
+my $n = shift; <br/>
+return $fib[$n] if defined $fib[$n]; <br/>
+return $fib[$n] = $n if $n &lt; 2; <br/>
+$fib[$n] = fib($n−1) + fib($n−2); <br/>
+} <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Or you could use
+this module, like this:</p>
+<p style="margin-left:9%; margin-top: 1em">use Memoize;
+<br/>
+memoize('fib'); <br/>
+# Rest of the fib function just like the original
+version.</p>
+<p style="margin-left:9%; margin-top: 1em">This makes it
+easy to turn memoizing on and off.</p>
+<p style="margin-left:9%; margin-top: 1em">Here’s an
+even simpler example: I wrote a simple ray tracer; the
+program would look in a certain direction, figure out what
+it was looking at, and then convert the "color"
+value (typically a string like "red") of that
+object to a red, green, and blue pixel value, like this:</p>
+<p style="margin-left:9%; margin-top: 1em">for ($direction
+= 0; $direction &lt; 300; $direction++) { <br/>
+# Figure out which object is in direction $direction <br/>
+$color = $object−&gt;{color}; <br/>
+($r, $g, $b) = @{&amp;ColorToRGB($color)}; <br/>
+... <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Since there are
+relatively few objects in a picture, there are only a few
+colors, which get looked up over and over again. Memoizing
+"ColorToRGB" sped up the program by several
+percent.</p>
+<h2>DETAILS
+<a name="DETAILS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+exports exactly one function, "memoize". The rest
+of the functions in this package are None of Your
+Business.</p>
+<p style="margin-left:9%; margin-top: 1em">You should
+say</p>
+<p style="margin-left:9%; margin-top: 1em">memoize(function)</p>
+<p style="margin-left:9%; margin-top: 1em">where
+"function" is the name of the function you want to
+memoize, or a reference to it. "memoize" returns a
+reference to the new, memoized version of the function, or
+"undef" on a non-fatal error. At present, there
+are no non-fatal errors, but there might be some in the
+future.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+"function" was the name of a function, then
+"memoize" hides the old version and installs the
+new memoized version under the old name, so that
+&amp;function(...) actually invokes the memoized
+version.</p>
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">There are some
+optional options you can pass to "memoize" to
+change the way it behaves a little. To supply options,
+invoke "memoize" like this:</p>
+<p style="margin-left:9%; margin-top: 1em">memoize(function,
+NORMALIZER =&gt; function, <br/>
+INSTALL =&gt; newname, <br/>
+SCALAR_CACHE =&gt; option, <br/>
+LIST_CACHE =&gt; option <br/>
+);</p>
+<p style="margin-left:9%; margin-top: 1em">Each of these
+options is optional; you can include some, all, or none of
+them.</p>
+<h3>INSTALL
+<a name="INSTALL"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If you supply a
+function name with "INSTALL", memoize will install
+the new, memoized version of the function under the name you
+give. For example,</p>
+<p style="margin-left:9%; margin-top: 1em">memoize('fib',
+INSTALL =&gt; 'fastfib')</p>
+<p style="margin-left:9%; margin-top: 1em">installs the
+memoized version of "fib" as "fastfib";
+without the "INSTALL" option it would have
+replaced the old "fib" with the memoized
+version.</p>
+<p style="margin-left:9%; margin-top: 1em">To prevent
+"memoize" from installing the memoized version
+anywhere, use "INSTALL =&gt; undef".</p>
+<h3>NORMALIZER
+<a name="NORMALIZER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Suppose your
+function looks like this:</p>
+<p style="margin-left:9%; margin-top: 1em"># Typical call:
+f('aha!', A =&gt; 11, B =&gt; 12); <br/>
+sub f { <br/>
+my $a = shift; <br/>
+my %hash = @_; <br/>
+$hash{B} ||= 2; # B defaults to 2 <br/>
+$hash{C} ||= 7; # C defaults to 7 <br/>
+# Do something with $a, %hash <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Now, the
+following calls to your function are all completely
+equivalent:</p>
+<p style="margin-left:9%; margin-top: 1em">f(OUCH); <br/>
+f(OUCH, B =&gt; 2); <br/>
+f(OUCH, C =&gt; 7); <br/>
+f(OUCH, B =&gt; 2, C =&gt; 7); <br/>
+f(OUCH, C =&gt; 7, B =&gt; 2); <br/>
+(etc.)</p>
+<p style="margin-left:9%; margin-top: 1em">However, unless
+you tell "Memoize" that these calls are
+equivalent, it will not know that, and it will compute the
+values for these invocations of your function separately,
+and store them separately.</p>
+<p style="margin-left:9%; margin-top: 1em">To prevent this,
+supply a "NORMALIZER" function that turns the
+program arguments into a string in a way that equivalent
+arguments turn into the same string. A
+"NORMALIZER" function for "f" above
+might look like this:</p>
+<p style="margin-left:9%; margin-top: 1em">sub normalize_f
+{ <br/>
+my $a = shift; <br/>
+my %hash = @_; <br/>
+$hash{B} ||= 2; <br/>
+$hash{C} ||= 7; <br/>
+join(',', $a, map ($_ =&gt; $hash{$_}) sort keys %hash);
+<br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Each of the
+argument lists above comes out of the
+"normalize_f" function looking exactly the same,
+like this:</p>
+<p style="margin-left:9%; margin-top: 1em">OUCH,B,2,C,7</p>
+<p style="margin-left:9%; margin-top: 1em">You would tell
+"Memoize" to use this normalizer this way:</p>
+<p style="margin-left:9%; margin-top: 1em">memoize('f',
+NORMALIZER =&gt; 'normalize_f');</p>
+<p style="margin-left:9%; margin-top: 1em">"memoize"
+knows that if the normalized version of the arguments is the
+same for two argument lists, then it can safely look up the
+value that it computed for one argument list and return it
+as the result of calling the function with the other
+argument list, even if the argument lists look
+different.</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+normalizer just concatenates the arguments with character 28
+in between. (In ASCII, this is called FS or
+control−\.) This always works correctly for functions
+with only one string argument, and also when the arguments
+never contain character 28. However, it can confuse certain
+argument lists:</p>
+<p style="margin-left:9%; margin-top: 1em">normalizer("a\034",
+"b") <br/>
+normalizer("a", "\034b") <br/>
+normalizer("a\034\034b")</p>
+<p style="margin-left:9%; margin-top: 1em">for example.</p>
+<p style="margin-left:9%; margin-top: 1em">Since hash keys
+are strings, the default normalizer will not distinguish
+between "undef" and the empty string. It also
+won’t work when the function’s arguments are
+references. For example, consider a function "g"
+which gets two arguments: A number, and a reference to an
+array of numbers:</p>
+<p style="margin-left:9%; margin-top: 1em">g(13,
+[1,2,3,4,5,6,7]);</p>
+<p style="margin-left:9%; margin-top: 1em">The default
+normalizer will turn this into something like
+"13\034ARRAY(0x436c1f)". That would be all right,
+except that a subsequent array of numbers might be stored at
+a different location even though it contains the same data.
+If this happens, "Memoize" will think that the
+arguments are different, even though they are equivalent. In
+this case, a normalizer like this is appropriate:</p>
+<p style="margin-left:9%; margin-top: 1em">sub normalize {
+join ' ', $_[0], @{$_[1]} }</p>
+<p style="margin-left:9%; margin-top: 1em">For the example
+above, this produces the key "13 1 2 3 4 5 6
+7".</p>
+<p style="margin-left:9%; margin-top: 1em">Another use for
+normalizers is when the function depends on data other than
+those in its arguments. Suppose you have a function which
+returns a value which depends on the current hour of the
+day:</p>
+<p style="margin-left:9%; margin-top: 1em">sub on_duty {
+<br/>
+my ($problem_type) = @_; <br/>
+my $hour = (localtime)[2]; <br/>
+open my $fh, "$DIR/$problem_type" or die...; <br/>
+my $line; <br/>
+while ($hour−− &gt; 0) <br/>
+$line = &lt;$fh&gt;; <br/>
+} <br/>
+return $line; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">At 10:23, this
+function generates the 10th line of a data file; at 3:45 PM
+it generates the 15th line instead. By default,
+"Memoize" will only see the $problem_type
+argument. To fix this, include the current hour in the
+normalizer:</p>
+<p style="margin-left:9%; margin-top: 1em">sub normalize {
+join ' ', (localtime)[2], @_ }</p>
+<p style="margin-left:9%; margin-top: 1em">The calling
+context of the function (scalar or list context) is
+propagated to the normalizer. This means that if the
+memoized function will treat its arguments differently in
+list context than it would in scalar context, you can have
+the normalizer function select its behavior based on the
+results of "wantarray". Even if called in a list
+context, a normalizer should still return a single
+string.</p>
+<h3>"SCALAR_CACHE", "LIST_CACHE"
+<a name='"SCALAR_CACHE", "LIST_CACHE"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Normally,
+"Memoize" caches your function’s return
+values into an ordinary Perl hash variable. However, you
+might like to have the values cached on the disk, so that
+they persist from one run of your program to the next, or
+you might like to associate some other interesting semantics
+with the cached values.</p>
+<p style="margin-left:9%; margin-top: 1em">There’s a
+slight complication under the hood of "Memoize":
+There are actually <i>two</i> caches, one for scalar values
+and one for list values. When your function is called in
+scalar context, its return value is cached in one hash, and
+when your function is called in list context, its value is
+cached in the other hash. You can control the caching
+behavior of both contexts independently with these
+options.</p>
+<p style="margin-left:9%; margin-top: 1em">The argument to
+"LIST_CACHE" or "SCALAR_CACHE" must
+either be one of the following four strings:</p>
+<p style="margin-left:9%; margin-top: 1em">MEMORY <br/>
+FAULT <br/>
+MERGE <br/>
+HASH</p>
+<p style="margin-left:9%; margin-top: 1em">or else it must
+be a reference to an array whose first element is one of
+these four strings, such as "[HASH,
+arguments...]". <br/>
+"MEMORY"</p>
+<p style="margin-left:14%;">"MEMORY" means that
+return values from the function will be cached in an
+ordinary Perl hash variable. The hash variable will not
+persist after the program exits. This is the default.</p>
+<p style="margin-left:9%;">"HASH"</p>
+<p style="margin-left:14%;">"HASH" allows you to
+specify that a particular hash that you supply will be used
+as the cache. You can tie this hash beforehand to give it
+any behavior you want.</p>
+<p style="margin-left:14%; margin-top: 1em">A tied hash can
+have any semantics at all. It is typically tied to an
+on-disk database, so that cached values are stored in the
+database and retrieved from it again when needed, and the
+disk file typically persists after your program has exited.
+See "perltie" for more complete details about
+"tie".</p>
+<p style="margin-left:14%; margin-top: 1em">A typical
+example is:</p>
+<p style="margin-left:14%; margin-top: 1em">use DB_File;
+<br/>
+tie my %cache =&gt; 'DB_File', $filename, O_RDWR|O_CREAT,
+0666; <br/>
+memoize 'function', SCALAR_CACHE =&gt; [HASH =&gt;
+\%cache];</p>
+<p style="margin-left:14%; margin-top: 1em">This has the
+effect of storing the cache in a "DB_File"
+database whose name is in $filename. The cache will persist
+after the program has exited. Next time the program runs, it
+will find the cache already populated from the previous run
+of the program. Or you can forcibly populate the cache by
+constructing a batch program that runs in the background and
+populates the cache file. Then when you come to run your
+real program the memoized function will be fast because all
+its results have been precomputed.</p>
+<p style="margin-left:14%; margin-top: 1em">Another reason
+to use "HASH" is to provide your own hash
+variable. You can then inspect or modify the contents of the
+hash to gain finer control over the cache management.</p>
+<p style="margin-left:9%;">"TIE"</p>
+<p style="margin-left:14%;">This option is no longer
+supported. It is still documented only to aid in the
+debugging of old programs that use it. Old programs should
+be converted to use the "HASH" option instead.</p>
+<p style="margin-left:14%; margin-top: 1em">memoize ...
+['TIE', PACKAGE, ARGS...]</p>
+<p style="margin-left:14%; margin-top: 1em">is merely a
+shortcut for</p>
+<p style="margin-left:14%; margin-top: 1em">require
+PACKAGE; <br/>
+{ tie my %cache, PACKAGE, ARGS...; <br/>
+memoize ... [HASH =&gt; \%cache]; <br/>
+}</p>
+<p style="margin-left:9%;">"FAULT"</p>
+<p style="margin-left:14%;">"FAULT" means that
+you never expect to call the function in scalar (or list)
+context, and that if "Memoize" detects such a
+call, it should abort the program. The error message is one
+of</p>
+<p style="margin-left:14%; margin-top: 1em">`foo' function
+called in forbidden list context at line ... <br/>
+`foo' function called in forbidden scalar context at line
+...</p>
+<p style="margin-left:9%;">"MERGE"</p>
+<p style="margin-left:14%;">"MERGE" normally
+means that the memoized function does not distinguish
+between list and scalar context, and that return values in
+both contexts should be stored together. Both
+"LIST_CACHE =&gt; MERGE" and "SCALAR_CACHE
+=&gt; MERGE" mean the same thing.</p>
+<p style="margin-left:14%; margin-top: 1em">Consider this
+function:</p>
+<p style="margin-left:14%; margin-top: 1em">sub complicated
+{ <br/>
+# ... time−consuming calculation of $result <br/>
+return $result; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"complicated" function will return the same
+numeric $result regardless of whether it is called in list
+or in scalar context.</p>
+<p style="margin-left:14%; margin-top: 1em">Normally, the
+following code will result in two calls to
+"complicated", even if "complicated" is
+memoized:</p>
+<p style="margin-left:14%; margin-top: 1em">$x =
+complicated(142); <br/>
+($y) = complicated(142); <br/>
+$z = complicated(142);</p>
+<p style="margin-left:14%; margin-top: 1em">The first call
+will cache the result, say 37, in the scalar cache; the
+second will cache the list "(37)" in the list
+cache. The third call doesn’t call the real
+"complicated" function; it gets the value 37 from
+the scalar cache.</p>
+<p style="margin-left:14%; margin-top: 1em">Obviously, the
+second call to "complicated" is a waste of time,
+and storing its return value is a waste of space. Specifying
+"LIST_CACHE =&gt; MERGE" will make
+"memoize" use the same cache for scalar and list
+context return values, so that the second call uses the
+scalar cache that was populated by the first call.
+"complicated" ends up being called only once, and
+both subsequent calls return 37 from the cache, regardless
+of the calling context.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>List values
+in scalar context</i></p>
+<p style="margin-left:9%; margin-top: 1em">Consider this
+function:</p>
+<p style="margin-left:9%; margin-top: 1em">sub iota {
+return reverse (1..$_[0]) }</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+normally returns a list. Suppose you memoize it and merge
+the caches:</p>
+<p style="margin-left:9%; margin-top: 1em">memoize 'iota',
+SCALAR_CACHE =&gt; 'MERGE'; <br/>
+@i7 = iota(7); <br/>
+$i7 = iota(7);</p>
+<p style="margin-left:9%; margin-top: 1em">Here the first
+call caches the list (1,2,3,4,5,6,7). The second call does
+not really make sense. "Memoize" cannot guess what
+behavior "iota" should have in scalar context
+without actually calling it in scalar context. Normally
+"Memoize" <i>would</i> call "iota" in
+scalar context and cache the result, but the
+"SCALAR_CACHE =&gt; 'MERGE'" option says not to do
+that, but to use the cache list-context value instead. But
+it cannot return a list of seven elements in a scalar
+context. In this case $i7 will receive the <b>first
+element</b> of the cached list value, namely 7.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Merged disk
+caches</i></p>
+<p style="margin-left:9%; margin-top: 1em">Another use for
+"MERGE" is when you want both kinds of return
+values stored in the same disk file; this saves you from
+having to deal with two disk files instead of one. You can
+use a normalizer function to keep the two sets of return
+values separate. For example:</p>
+<p style="margin-left:9%; margin-top: 1em">local
+$MLDBM::UseDB = 'DB_File'; <br/>
+tie my %cache =&gt; 'MLDBM', $filename, ...; <br/>
+memoize 'myfunc', <br/>
+NORMALIZER =&gt; 'n', <br/>
+SCALAR_CACHE =&gt; [HASH =&gt; \%cache], <br/>
+LIST_CACHE =&gt; 'MERGE', <br/>
+; <br/>
+sub n { <br/>
+my $context = wantarray() ? 'L' : 'S'; <br/>
+# ... now compute the hash key from the arguments ... <br/>
+$hashkey = "$context:$hashkey"; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">This normalizer
+function will store scalar context return values in the disk
+file under keys that begin with "S:", and list
+context return values under keys that begin with
+"L:".</p>
+<h2>OTHER FACILITIES
+<a name="OTHER FACILITIES"></a>
+</h2>
+<h3>"unmemoize"
+<a name='"unmemoize"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">There’s an
+"unmemoize" function that you can import if you
+want to. Why would you want to? Here’s an example:
+Suppose you have your cache tied to a DBM file, and you want
+to make sure that the cache is written out to disk if
+someone interrupts the program. If the program exits
+normally, this will happen anyway, but if someone types
+control-C or something then the program will terminate
+immediately without synchronizing the database. So what you
+can do instead is</p>
+<p style="margin-left:9%; margin-top: 1em">$SIG{INT} = sub
+{ unmemoize 'function' };</p>
+<p style="margin-left:9%; margin-top: 1em">"unmemoize"
+accepts a reference to, or the name of a previously memoized
+function, and undoes whatever it did to provide the memoized
+version in the first place, including making the name refer
+to the unmemoized version if appropriate. It returns a
+reference to the unmemoized version of the function.</p>
+<p style="margin-left:9%; margin-top: 1em">If you ask it to
+unmemoize a function that was never memoized, it croaks.</p>
+<h3>"flush_cache"
+<a name='"flush_cache"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">flush_cache(function)
+will flush out the caches, discarding <i>all</i> the cached
+data. The argument may be a function name or a reference to
+a function. For finer control over when data is discarded or
+expired, see the documentation for
+"Memoize::Expire", included in this package.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that if the
+cache is a tied hash, "flush_cache" will attempt
+to invoke the "CLEAR" method on the hash. If there
+is no "CLEAR" method, this will cause a run-time
+error.</p>
+<p style="margin-left:9%; margin-top: 1em">An alternative
+approach to cache flushing is to use the "HASH"
+option (see above) to request that "Memoize" use a
+particular hash variable as its cache. Then you can examine
+or modify the hash at any time in any way you desire. You
+may flush the cache by using "%hash = ()".</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Memoization is
+not a cure-all:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Do not memoize a function whose behavior depends on
+program state other than its own arguments, such as global
+variables, the time of day, or file input. These functions
+will not produce correct results when memoized. For a
+particularly easy example:</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">sub f { <br/>
+time; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">This function
+takes no arguments, and as far as "Memoize" is
+concerned, it always returns the same result.
+"Memoize" is wrong, of course, and the memoized
+version of this function will call "time" once to
+get the current time, and it will return that same time
+every time you call it after that.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="57%">
+<p style="margin-top: 1em">Do not memoize a function with
+side effects.</p></td>
+<td width="29%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">sub f { <br/>
+my ($a, $b) = @_; <br/>
+my $s = $a + $b; <br/>
+print "$a + $b = $s.\n"; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">This function
+accepts two arguments, adds them, and prints their sum. Its
+return value is the number of characters it printed, but you
+probably didn’t care about that. But
+"Memoize" doesn’t understand that. If you
+memoize this function, you will get the result you expect
+the first time you ask it to print the sum of 2 and 3, but
+subsequent calls will return 1 (the return value of
+"print") without actually printing anything.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">Do not memoize a function that
+returns a data structure that is modified by its caller.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Consider these
+functions: "getusers" returns a list of users
+somehow, and then "main" throws away the first
+user on the list and prints the rest:</p>
+<p style="margin-left:14%; margin-top: 1em">sub main { <br/>
+my $userlist = getusers(); <br/>
+shift @$userlist; <br/>
+foreach $u (@$userlist) { <br/>
+print "User $u\n"; <br/>
+} <br/>
+} <br/>
+sub getusers { <br/>
+my @users; <br/>
+# Do something to get a list of users; <br/>
+\@users; # Return reference to list. <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">If you memoize
+"getusers" here, it will work right exactly once.
+The reference to the users list will be stored in the memo
+table. "main" will discard the first element from
+the referenced list. The next time you invoke
+"main", "Memoize" will not call
+"getusers"; it will just return the same reference
+to the same list it got last time. But this time the list
+has already had its head removed; "main" will
+erroneously remove another element from it. The list will
+get shorter and shorter every time you call
+"main".</p>
+<p style="margin-left:14%; margin-top: 1em">Similarly,
+this:</p>
+<p style="margin-left:14%; margin-top: 1em">$u1 =
+getusers(); <br/>
+$u2 = getusers(); <br/>
+pop @$u1;</p>
+<p style="margin-left:14%; margin-top: 1em">will modify $u2
+as well as $u1, because both variables are references to the
+same array. Had "getusers" not been memoized, $u1
+and $u2 would have referred to different arrays.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="49%">
+<p style="margin-top: 1em">Do not memoize a very simple
+function.</p> </td>
+<td width="37%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Recently
+someone mentioned to me that the Memoize module made his
+program run slower instead of faster. It turned out that he
+was memoizing the following function:</p>
+<p style="margin-left:14%; margin-top: 1em">sub square {
+<br/>
+$_[0] * $_[0]; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">I pointed out
+that "Memoize" uses a hash, and that looking up a
+number in the hash is necessarily going to take a lot longer
+than a single multiplication. There really is no way to
+speed up the "square" function.</p>
+<p style="margin-left:14%; margin-top: 1em">Memoization is
+not magical.</p>
+<h2>PERSISTENT CACHE SUPPORT
+<a name="PERSISTENT CACHE SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You can tie the
+cache tables to any sort of tied hash that you want to, as
+long as it supports "TIEHASH", "FETCH",
+"STORE", and "EXISTS". For example,</p>
+<p style="margin-left:9%; margin-top: 1em">tie my %cache
+=&gt; 'GDBM_File', $filename, O_RDWR|O_CREAT, 0666; <br/>
+memoize 'function', SCALAR_CACHE =&gt; [HASH =&gt;
+\%cache];</p>
+<p style="margin-left:9%; margin-top: 1em">works just fine.
+For some storage methods, you need a little glue.</p>
+<p style="margin-left:9%; margin-top: 1em">"SDBM_File"
+doesn’t supply an "EXISTS" method, so
+included in this package is a glue module called
+"Memoize::SDBM_File" which does provide one. Use
+this instead of plain "SDBM_File" to store your
+cache table on disk in an "SDBM_File"
+database:</p>
+<p style="margin-left:9%; margin-top: 1em">tie my %cache
+=&gt; 'Memoize::SDBM_File', $filename, O_RDWR|O_CREAT, 0666;
+<br/>
+memoize 'function', SCALAR_CACHE =&gt; [HASH =&gt;
+\%cache];</p>
+<p style="margin-left:9%; margin-top: 1em">"NDBM_File"
+has the same problem and the same solution. (Use
+"Memoize::NDBM_File instead of plain
+NDBM_File.")</p>
+<p style="margin-left:9%; margin-top: 1em">"Storable"
+isn’t a tied hash class at all. You can use it to
+store a hash to disk and retrieve it again, but you
+can’t modify the hash while it’s on the disk. So
+if you want to store your cache table in a
+"Storable" database, use
+"Memoize::Storable", which puts a hashlike
+front-end onto "Storable". The hash table is
+actually kept in memory, and is loaded from your
+"Storable" file at the time you memoize the
+function, and stored back at the time you unmemoize the
+function (or when your program exits):</p>
+<p style="margin-left:9%; margin-top: 1em">tie my %cache
+=&gt; 'Memoize::Storable', $filename; <br/>
+memoize 'function', SCALAR_CACHE =&gt; [HASH =&gt; \%cache];
+<br/>
+tie my %cache =&gt; 'Memoize::Storable', $filename,
+'nstore'; <br/>
+memoize 'function', SCALAR_CACHE =&gt; [HASH =&gt;
+\%cache];</p>
+<p style="margin-left:9%; margin-top: 1em">Include the
+"nstore" option to have the "Storable"
+database written in <i>network order</i>. (See Storable for
+more details about this.)</p>
+<p style="margin-left:9%; margin-top: 1em">The
+flush_cache() function will raise a run-time error unless
+the tied package provides a "CLEAR" method.</p>
+<h2>EXPIRATION SUPPORT
+<a name="EXPIRATION SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See
+Memoize::Expire, which is a plug-in module that adds
+expiration functionality to Memoize. If you don’t like
+the kinds of policies that Memoize::Expire implements, it is
+easy to write your own plug-in module to implement whatever
+policy you desire. Memoize comes with several examples. An
+expiration manager that implements a LRU policy is available
+on CPAN as Memoize::ExpireLRU.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The test suite
+is much better, but always needs improvement.</p>
+<p style="margin-left:9%; margin-top: 1em">There is some
+problem with the way "goto &amp;f" works under
+threaded Perl, perhaps because of the lexical scoping of @_.
+This is a bug in Perl, and until it is resolved, memoized
+functions will see a slightly different caller() and will
+perform a little more slowly on threaded perls than
+unthreaded perls.</p>
+<p style="margin-left:9%; margin-top: 1em">Some versions of
+"DB_File" won’t let you store data under a
+key of length 0. That means that if you have a function
+"f" which you memoized and the cache is in a
+"DB_File" database, then the value of f()
+("f" called with no arguments) will not be
+memoized. If this is a big problem, you can supply a
+normalizer function that prepends "x" to every
+key.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">At
+&lt;https://perl.plover.com/MiniMemoize/&gt; there is an
+article about memoization and about the internals of Memoize
+that appeared in The Perl Journal, issue #13.</p>
+<p style="margin-left:9%; margin-top: 1em">Mark-Jason
+Dominus’s book <i>Higher-Order Perl</i> (2005, ISBN
+1558607013, published by Morgan Kaufmann) discusses
+memoization (and many other topics) in tremendous detail. It
+is available on-line for free. For more information, visit
+&lt;https://hop.perl.plover.com/&gt;.</p>
+<h2>THANK YOU
+<a name="THANK YOU"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Many thanks to
+Florian Ragwitz for administration and packaging assistance,
+to John Tromp for bug reports, to Jonathan Roy for bug
+reports and suggestions, to Michael Schwern for other bug
+reports and patches, to Mike Cariaso for helping me to
+figure out the Right Thing to Do About Expiration, to Joshua
+Gerth, Joshua Chamas, Jonathan Roy (again), Mark D.
+Anderson, and Andrew Johnson for more suggestions about
+expiration, to Brent Powers for the Memoize::ExpireLRU
+module, to Ariel Scolnicov for delightful messages about the
+Fibonacci function, to Dion Almaer for thought-provoking
+suggestions about the default normalizer, to Walt Mankowski
+and Kurt Starsinic for much help investigating problems
+under threaded Perl, to Alex Dudkevich for reporting the bug
+in prototyped functions and for checking my patch, to Tony
+Bass for many helpful suggestions, to Jonathan Roy (again)
+for finding a use for unmemoize(), to Philippe Verdret for
+enlightening discussion of "Hook::PrePostCall", to
+Nat Torkington for advice I ignored, to Chris Nandor for
+portability advice, to Randal Schwartz for suggesting the
+’"flush_cache" function, and to Jenda
+Krynicky for being a light in the world.</p>
+<p style="margin-left:9%; margin-top: 1em">Special thanks
+to Jarkko Hietaniemi, the 5.8.0 pumpking, for including this
+module in the core and for his patient and helpful guidance
+during the integration process.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Mark Jason
+Dominus</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2012 by Mark Jason Dominus.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

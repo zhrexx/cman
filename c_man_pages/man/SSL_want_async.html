@@ -1,0 +1,236 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:39 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_WANT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_WANT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#QUIC−SPECIFIC CONSIDERATIONS">QUIC−SPECIFIC CONSIDERATIONS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_want,
+SSL_want_nothing, SSL_want_read, SSL_want_write,
+SSL_want_x509_lookup, SSL_want_retry_verify, SSL_want_async,
+SSL_want_async_job, SSL_want_client_hello_cb − obtain
+state information TLS/SSL I/O operation</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+int SSL_want(const SSL *ssl); <br/>
+int SSL_want_nothing(const SSL *ssl); <br/>
+int SSL_want_read(const SSL *ssl); <br/>
+int SSL_want_write(const SSL *ssl); <br/>
+int SSL_want_x509_lookup(const SSL *ssl); <br/>
+int SSL_want_retry_verify(const SSL *ssl); <br/>
+int SSL_want_async(const SSL *ssl); <br/>
+int SSL_want_async_job(const SSL *ssl); <br/>
+int SSL_want_client_hello_cb(const SSL *ssl);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_want()</b>
+returns state information for the SSL object <b>ssl</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The other
+SSL_want_*() calls are shortcuts for the possible states
+returned by <b>SSL_want()</b>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_want()</b>
+examines the internal state information of the SSL object.
+Its return values are similar to that of
+<b>SSL_get_error</b>(3). Unlike <b>SSL_get_error</b>(3),
+which also evaluates the error queue, the results are
+obtained by examining an internal state flag only. The
+information must therefore only be used for normal operation
+under nonblocking I/O. Error conditions are not handled and
+must be treated using <b>SSL_get_error</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The result
+returned by <b>SSL_want()</b> should always be consistent
+with the result of <b>SSL_get_error</b>(3).</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+return values can currently occur for <b>SSL_want()</b>:
+<br/>
+SSL_NOTHING</p>
+<p style="margin-left:14%;">There is no data to be written
+or to be read.</p>
+<p style="margin-left:9%;">SSL_WRITING</p>
+<p style="margin-left:14%;">There are data in the SSL
+buffer that must be written to the underlying <b>BIO</b>
+layer in order to complete the actual SSL_*() operation. A
+call to <b>SSL_get_error</b>(3) should return
+<b>SSL_ERROR_WANT_WRITE</b>.</p>
+<p style="margin-left:9%;">SSL_READING</p>
+<p style="margin-left:14%;">More data must be read from the
+underlying <b>BIO</b> layer in order to complete the actual
+SSL_*() operation. A call to <b>SSL_get_error</b>(3) should
+return <b>SSL_ERROR_WANT_READ</b>.</p>
+<p style="margin-left:9%;">SSL_X509_LOOKUP</p>
+<p style="margin-left:14%;">The operation did not complete
+because an application callback set by
+<b>SSL_CTX_set_client_cert_cb()</b> has asked to be called
+again. A call to <b>SSL_get_error</b>(3) should return
+<b>SSL_ERROR_WANT_X509_LOOKUP</b>.</p>
+<p style="margin-left:9%;">SSL_RETRY_VERIFY</p>
+<p style="margin-left:14%;">The operation did not complete
+because a certificate verification callback has asked to be
+called again via <b>SSL_set_retry_verify</b>(3). A call to
+<b>SSL_get_error</b>(3) should return
+<b>SSL_ERROR_WANT_RETRY_VERIFY</b>.</p>
+<p style="margin-left:9%;">SSL_ASYNC_PAUSED</p>
+<p style="margin-left:14%;">An asynchronous operation
+partially completed and was then paused. See
+<b>SSL_get_all_async_fds</b>(3). A call to
+<b>SSL_get_error</b>(3) should return
+<b>SSL_ERROR_WANT_ASYNC</b>.</p>
+<p style="margin-left:9%;">SSL_ASYNC_NO_JOBS</p>
+<p style="margin-left:14%;">The asynchronous job could not
+be started because there were no async jobs available in the
+pool (see <b>ASYNC_init_thread</b>(3)). A call to
+<b>SSL_get_error</b>(3) should return
+<b>SSL_ERROR_WANT_ASYNC_JOB</b>.</p>
+<p style="margin-left:9%;">SSL_CLIENT_HELLO_CB</p>
+<p style="margin-left:14%;">The operation did not complete
+because an application callback set by
+<b>SSL_CTX_set_client_hello_cb()</b> has asked to be called
+again. A call to <b>SSL_get_error</b>(3) should return
+<b>SSL_ERROR_WANT_CLIENT_HELLO_CB</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_want_nothing()</b>,
+<b>SSL_want_read()</b>, <b>SSL_want_write()</b>,
+<b>SSL_want_x509_lookup()</b>,
+<b>SSL_want_retry_verify()</b>, <b>SSL_want_async()</b>,
+<b>SSL_want_async_job()</b>, and
+<b>SSL_want_client_hello_cb()</b> return 1 when the
+corresponding condition is true or 0 otherwise.</p>
+<h2>QUIC−SPECIFIC CONSIDERATIONS
+<a name="QUIC−SPECIFIC CONSIDERATIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For QUIC, these
+functions relate only to the TLS handshake layer.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_get_error</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_want_client_hello_cb()</b> function and the
+SSL_CLIENT_HELLO_CB return value were added in OpenSSL
+1.1.1.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2001−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

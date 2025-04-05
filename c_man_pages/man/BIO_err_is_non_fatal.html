@@ -1,0 +1,370 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:37 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BIO_SENDMMSG</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">BIO_SENDMMSG</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">BIO_sendmmsg,
+BIO_recvmmsg, BIO_dgram_set_local_addr_enable,
+BIO_dgram_get_local_addr_enable,
+BIO_dgram_get_local_addr_cap, BIO_err_is_non_fatal −
+send and receive multiple datagrams in a single call</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/bio.h&gt; <br/>
+typedef struct bio_msg_st { <br/>
+void *data; <br/>
+size_t data_len; <br/>
+BIO_ADDR *peer, *local; <br/>
+uint64_t flags; <br/>
+} BIO_MSG; <br/>
+int BIO_sendmmsg(BIO *b, BIO_MSG *msg, <br/>
+size_t stride, size_t num_msg, uint64_t flags, <br/>
+size_t *msgs_processed); <br/>
+int BIO_recvmmsg(BIO *b, BIO_MSG *msg, <br/>
+size_t stride, size_t num_msg, uint64_t flags, <br/>
+size_t *msgs_processed); <br/>
+int BIO_dgram_set_local_addr_enable(BIO *b, int enable);
+<br/>
+int BIO_dgram_get_local_addr_enable(BIO *b, int *enable);
+<br/>
+int BIO_dgram_get_local_addr_cap(BIO *b); <br/>
+int BIO_err_is_non_fatal(unsigned int errcode);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_sendmmsg()</b>
+and <b>BIO_recvmmsg()</b> functions can be used to send and
+receive multiple messages in a single call to a BIO. They
+are analogous to <b>sendmmsg</b>(2) and <b>recvmmsg</b>(2)
+on operating systems which provide those functions.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>BIO_MSG</b> structure provides a subset of the
+functionality of the <b>struct msghdr</b> structure defined
+by POSIX. These functions accept an array of <b>BIO_MSG</b>
+structures. On any particular invocation, these functions
+may process all of the passed structures, some of them, or
+none of them. This is indicated by the value stored in
+<i>*msgs_processed</i>, which expresses the number of
+messages processed.</p>
+<p style="margin-left:9%; margin-top: 1em">The caller
+should set the <i>data</i> member of a <b>BIO_MSG</b> to a
+buffer containing the data to send, or to be filled with a
+received message. <i>data_len</i> should be set to the size
+of the buffer in bytes. If the given <b>BIO_MSG</b> is
+processed (in other words, if the integer returned by the
+function is greater than or equal to that <b>BIO_MSG</b>'s
+array index), <i>data_len</i> will be modified to specify
+the actual amount of data sent or received.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>flags</i>
+field of a <b>BIO_MSG</b> provides input per−message
+flags to the invocation. If the invocation processes that
+<b>BIO_MSG</b>, the <i>flags</i> field is written with
+output per−message flags, or zero if no such flags are
+applicable.</p>
+<p style="margin-left:9%; margin-top: 1em">Currently, no
+input or output per−message flags are defined and this
+field should be set to zero before calling
+<b>BIO_sendmmsg()</b> or <b>BIO_recvmmsg()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>flags</i>
+argument to <b>BIO_sendmmsg()</b> and <b>BIO_recvmmsg()</b>
+provides global flags which affect the entire invocation. No
+global flags are currently defined and this argument should
+be set to zero.</p>
+<p style="margin-left:9%; margin-top: 1em">When these
+functions are used to send and receive datagrams, the
+<i>peer</i> field of a <b>BIO_MSG</b> allows the destination
+address of sent datagrams to be specified on a
+per−datagram basis, and the source address of received
+datagrams to be determined. The <i>peer</i> field should be
+set to point to a <b>BIO_ADDR</b>, which will be read by
+<b>BIO_sendmmsg()</b> and used as the destination address
+for sent datagrams, and written by <b>BIO_recvmmsg()</b>
+with the source address of received datagrams.</p>
+<p style="margin-left:9%; margin-top: 1em">Similarly, the
+<i>local</i> field of a <b>BIO_MSG</b> allows the source
+address of sent datagrams to be specified on a
+per−datagram basis, and the destination address of
+received datagrams to be determined. Unlike <i>peer</i>,
+support for <i>local</i> must be explicitly enabled on a
+<b>BIO</b> before it can be used; see
+<b>BIO_dgram_set_local_addr_enable()</b>. If <i>local</i> is
+non−NULL in a <b>BIO_MSG</b> and support for
+<i>local</i> has not been enabled, processing of that
+<b>BIO_MSG</b> fails.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>peer</i> and
+<i>local</i> should be set to NULL if they are not required.
+Support for <i>local</i> may not be available on all
+platforms; on these platforms, these functions always fail
+if <i>local</i> is non−NULL.</p>
+<p style="margin-left:9%; margin-top: 1em">If <i>local</i>
+is specified and local address support is enabled, but the
+operating system does not report a local address for a
+specific received message, the <b>BIO_ADDR</b> it points to
+will be cleared (address family set to
+"AF_UNSPEC"). This is known to happen on Windows
+when a packet is received which was sent by the local
+system, regardless of whether the packet's destination
+address was the loopback address or the IP address of a
+local non−loopback interface. This is also known to
+happen on macOS in some circumstances, such as for packets
+sent before local address support was enabled for a
+receiving socket. These are OS−specific limitations.
+As such, users of this API using local address support
+should expect to sometimes receive a cleared local
+<b>BIO_ADDR</b> instead of the correct value.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>stride</i> argument must be set to sizeof(BIO_MSG). This
+argument facilitates backwards compatibility if fields are
+added to <b>BIO_MSG</b>. Callers must zero−initialize
+<b>BIO_MSG</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>num_msg</i>
+should be sent to the maximum number of messages to send or
+receive, which is also the length of the array pointed to by
+<i>msg</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>msgs_processed</i>
+must be non−NULL and points to an integer written with
+the number of messages successfully processed; see the
+RETURN VALUES section for further discussion.</p>
+<p style="margin-left:9%; margin-top: 1em">Unlike most BIO
+functions, these functions explicitly support
+multi−threaded use. Multiple concurrent writers and
+multiple concurrent readers of the same BIO are permitted in
+any combination. As such, these functions do not clear, set,
+or otherwise modify BIO retry flags. The return value must
+be used to determine whether an operation should be retried;
+see below.</p>
+<p style="margin-left:9%; margin-top: 1em">The support for
+concurrent use extends to <b>BIO_sendmmsg()</b> and
+<b>BIO_recvmmsg()</b> only, and no other function may be
+called on a given BIO while any call to
+<b>BIO_sendmmsg()</b> or <b>BIO_recvmmsg()</b> is in
+progress, or vice versa.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_dgram_set_local_addr_enable()</b>
+and <b>BIO_dgram_get_local_addr_enable()</b> control whether
+local address support is enabled. To enable local address
+support, call <b>BIO_dgram_set_local_addr_enable()</b> with
+an argument of 1. The call will fail if local address
+support is not available for the platform.
+<b>BIO_dgram_get_local_addr_enable()</b> retrieves the value
+set by <b>BIO_dgram_set_local_addr_enable()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_dgram_get_local_addr_cap()</b>
+determines if the <b>BIO</b> is capable of supporting local
+addresses.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_err_is_non_fatal()</b>
+determines if a packed error code represents an error which
+is transient in nature.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Some
+implementations of the <b>BIO_sendmmsg()</b> and
+<b>BIO_recvmmsg()</b> BIO methods might always process at
+most one message at a time, for example when OS−level
+functionality to transmit or receive multiple messages at a
+time is not available.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success, the
+functions <b>BIO_sendmmsg()</b> and <b>BIO_recvmmsg()</b>
+return 1 and write the number of messages successfully
+processed (which need not be nonzero) to
+<i>msgs_processed</i>. Where a positive value n is written
+to <i>msgs_processed</i>, all entries in the <b>BIO_MSG</b>
+array from 0 through n−1 inclusive have their
+<i>data_len</i> and <i>flags</i> fields updated with the
+results of the operation on that message. If the call was to
+<b>BIO_recvmmsg()</b> and the <i>peer</i> or <i>local</i>
+fields of that message are non−NULL, the
+<b>BIO_ADDR</b> structures they point to are written with
+the relevant address.</p>
+<p style="margin-left:9%; margin-top: 1em">On failure, the
+functions <b>BIO_sendmmsg()</b> and <b>BIO_recvmmsg()</b>
+return 0 and write zero to <i>msgs_processed</i>. Thus
+<i>msgs_processed</i> is always written regardless of the
+outcome of the function call.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>BIO_sendmmsg()</b> and <b>BIO_recvmmsg()</b> fail, they
+always raise an <b>ERR_LIB_BIO</b> error using
+<b>ERR_raise</b>(3). Any error may be raised, but the
+following in particular may be noted: <b><br/>
+BIO_R_LOCAL_ADDR_NOT_AVAILABLE</b></p>
+<p style="margin-left:12%;">The <i>local</i> field was set
+to a non−NULL value, but local address support is not
+available or not enabled on the BIO.</p>
+<p style="margin-left:9%;"><b>BIO_R_PEER_ADDR_NOT_AVAILABLE</b></p>
+<p style="margin-left:12%;">The <i>peer</i> field was set
+to a non−NULL value, but peer address support is not
+available on the BIO.</p>
+<p style="margin-left:9%;"><b>BIO_R_UNSUPPORTED_METHOD</b></p>
+<p style="margin-left:12%;">The <b>BIO_sendmmsg()</b> or
+<b>BIO_recvmmsg()</b> method is not supported on the
+BIO.</p>
+<p style="margin-left:9%;"><b>BIO_R_NON_FATAL</b></p>
+<p style="margin-left:12%;">The call failed due to a
+transient, non−fatal error (for example, because the
+BIO is in nonblocking mode and the call would otherwise have
+blocked).</p>
+<p style="margin-left:12%; margin-top: 1em">Implementations
+of this interface which do not make system calls and thereby
+pass through system error codes using <b>ERR_LIB_SYS</b>
+(for example, memory−based implementations) should
+issue this reason code to indicate a transient failure.
+However, users of this interface should not test for this
+reason code directly, as there are multiple possible packed
+error codes representing a transient failure; use
+<b>BIO_err_is_non_fatal()</b> instead (discussed below).</p>
+<p style="margin-left:9%;">Socket errors</p>
+<p style="margin-left:12%;">OS−level socket errors
+are reported using an error with library code
+<b>ERR_LIB_SYS</b>; for a packed error code <b>errcode</b>
+where "ERR_SYSTEM_ERROR(errcode) == 1", the
+OS−level socket error code can be retrieved using
+ERR_GET_REASON(errcode). The packed error code can be
+retrieved by calling <b>ERR_peek_last_error</b>(3) after the
+call to <b>BIO_sendmmsg()</b> or <b>BIO_recvmmsg()</b>
+returns 0.</p>
+<p style="margin-left:9%;">Non−fatal errors</p>
+<p style="margin-left:12%;">Whether an error is transient
+can be determined by passing the packed error code to
+<b>BIO_err_is_non_fatal()</b>. Callers should do this
+instead of testing the reason code directly, as there are
+many possible error codes which can indicate a transient
+error, many of which are system specific.</p>
+<p style="margin-left:9%; margin-top: 1em">Third parties
+implementing custom BIOs supporting the
+<b>BIO_sendmmsg()</b> or <b>BIO_recvmmsg()</b> methods
+should note that it is a required part of the API contract
+that an error is always raised when either of these
+functions return 0.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_dgram_set_local_addr_enable()</b>
+returns 1 if local address support was successfully enabled
+or disabled and 0 otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_dgram_get_local_addr_enable()</b>
+returns 1 if the local address support enable flag was
+successfully retrieved.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_dgram_get_local_addr_cap()</b>
+returns 1 if the <b>BIO</b> can support local addresses.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_err_is_non_fatal()</b>
+returns 1 if the passed packed error code represents an
+error which is transient in nature.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+were added in OpenSSL 3.2.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2000−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

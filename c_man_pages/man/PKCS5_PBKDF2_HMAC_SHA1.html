@@ -1,0 +1,192 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:52 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PKCS5_PBKDF2_HMAC</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">PKCS5_PBKDF2_HMAC</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">PKCS5_PBKDF2_HMAC,
+PKCS5_PBKDF2_HMAC_SHA1 − password based derivation
+routines with salt and iteration count</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+int PKCS5_PBKDF2_HMAC(const char *pass, int passlen, <br/>
+const unsigned char *salt, int saltlen, int iter, <br/>
+const EVP_MD *digest, <br/>
+int keylen, unsigned char *out); <br/>
+int PKCS5_PBKDF2_HMAC_SHA1(const char *pass, int passlen,
+<br/>
+const unsigned char *salt, int saltlen, int iter, <br/>
+int keylen, unsigned char *out);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS5_PBKDF2_HMAC()</b>
+derives a key from a password using a salt and iteration
+count as specified in RFC 2898.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pass</b> is
+the password used in the derivation of length
+<b>passlen</b>. <b>pass</b> is an optional parameter and can
+be NULL. If <b>passlen</b> is −1, then the function
+will calculate the length of <b>pass</b> using
+<b>strlen()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>salt</b> is
+the salt used in the derivation of length <b>saltlen</b>. If
+the <b>salt</b> is NULL, then <b>saltlen</b> must be 0. The
+function will not attempt to calculate the length of the
+<b>salt</b> because it is not assumed to be NULL
+terminated.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>iter</b> is
+the iteration count and its value should be greater than or
+equal to 1. RFC 2898 suggests an iteration count of at least
+1000. Any <b>iter</b> value less than 1 is invalid; such
+values will result in failure and raise the
+PROV_R_INVALID_ITERATION_COUNT error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>digest</b> is
+the message digest function used in the derivation.
+<b>PKCS5_PBKDF2_HMAC_SHA1()</b> calls
+<b>PKCS5_PBKDF2_HMAC()</b> with <b>EVP_sha1()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The derived key
+will be written to <b>out</b>. The size of the <b>out</b>
+buffer is specified via <b>keylen</b>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A typical
+application of this function is to derive keying material
+for an encryption algorithm from a password in the
+<b>pass</b>, a salt in <b>salt</b>, and an iteration
+count.</p>
+<p style="margin-left:9%; margin-top: 1em">Increasing the
+<b>iter</b> parameter slows down the algorithm which makes
+it harder for an attacker to perform a brute force attack
+using a large number of candidate passwords.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+make no assumption regarding the given password. It will
+simply be treated as a byte sequence.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS5_PBKDF2_HMAC()</b>
+and <b>PBKCS5_PBKDF2_HMAC_SHA1()</b> return 1 on success or
+0 on error.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>evp</b>(7),
+<b>RAND_bytes</b>(3), <b>EVP_BytesToKey</b>(3),
+<b>passphrase−encoding</b>(7)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2014−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

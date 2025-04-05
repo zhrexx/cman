@@ -1,0 +1,468 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:46 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>getdents</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">getdents</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#getdents()">getdents()</a><br/>
+<a href="#getdents64()">getdents64()</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Program source">Program source</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">getdents,
+getdents64 − get directory entries</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;sys/syscall.h&gt;</b> /* Definition of <b>SYS_*</b>
+constants */ <b><br/>
+#include &lt;unistd.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>long
+syscall(SYS_getdents, unsigned int</b> <i>fd</i><b>, struct
+linux_dirent *</b><i>dirp</i><b>, <br/>
+unsigned int</b> <i>count</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>#define
+_GNU_SOURCE</b> /* See feature_test_macros(7) */ <b><br/>
+#include &lt;dirent.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>ssize_t
+getdents64(int</b> <i>fd</i><b>, void</b>
+<i>dirp</i><b>[.</b><i>count</i><b>], size_t</b>
+<i>count</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>Note</i>:
+glibc provides no wrapper for <b>getdents</b>(),
+necessitating the use of <b>syscall</b>(2).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Note</i>:
+There is no definition of <i>struct linux_dirent</i> in
+glibc; see NOTES.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These are not
+the interfaces you are interested in. Look at
+<b>readdir</b>(3) for the POSIX-conforming C library
+interface. This page documents the bare kernel system call
+interfaces.</p>
+<h3>getdents()
+<a name="getdents()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The system call
+<b>getdents</b>() reads several <i>linux_dirent</i>
+structures from the directory referred to by the open file
+descriptor <i>fd</i> into the buffer pointed to by
+<i>dirp</i>. The argument <i>count</i> specifies the size of
+that buffer.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>linux_dirent</i> structure is declared as follows:</p>
+<p style="margin-left:14%; margin-top: 1em">struct
+linux_dirent { <br/>
+unsigned long d_ino; /* Inode number */ <br/>
+unsigned long d_off; /* Not an offset; see below */ <br/>
+unsigned short d_reclen; /* Length of this
+<i>linux_dirent</i> */ <br/>
+char d_name[]; /* Filename (null−terminated) */ <br/>
+/* length is actually (d_reclen − 2 − <br/>
+offsetof(struct linux_dirent, d_name)) */ <br/>
+/* <br/>
+char pad; // Zero padding byte <br/>
+char d_type; // File type (only since Linux <br/>
+// 2.6.4); offset is (d_reclen − 1) <br/>
+*/ <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em"><i>d_ino</i> is
+an inode number. <i>d_off</i> is a filesystem-specific value
+with no specific meaning to user space, though on older
+filesystems it used to be the distance from the start of the
+directory to the start of the next <i>linux_dirent</i>; see
+<b>readdir</b>(3)<b>.</b> <i>d_reclen</i> is the size of
+this entire <i>linux_dirent</i>. <i>d_name</i> is a
+null-terminated filename.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>d_type</i> is
+a byte at the end of the structure that indicates the file
+type. It contains one of the following values (defined in
+<i>&lt;dirent.h&gt;</i>):</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>DT_BLK</b></p></td>
+<td width="2%"></td>
+<td width="38%">
+<p>This is a block device.</p></td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>DT_CHR</b></p></td>
+<td width="2%"></td>
+<td width="38%">
+<p>This is a character device.</p></td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>DT_DIR</b></p></td>
+<td width="2%"></td>
+<td width="38%">
+<p>This is a directory.</p></td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>DT_FIFO</b></p></td>
+<td width="2%"></td>
+<td width="38%">
+<p>This is a named pipe (FIFO).</p></td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>DT_LNK</b></p></td>
+<td width="2%"></td>
+<td width="38%">
+<p>This is a symbolic link.</p></td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>DT_REG</b></p></td>
+<td width="2%"></td>
+<td width="38%">
+<p>This is a regular file.</p></td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>DT_SOCK</b></p></td>
+<td width="2%"></td>
+<td width="38%">
+<p>This is a UNIX domain socket.</p></td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>DT_UNKNOWN</b></p></td>
+<td width="2%"></td>
+<td width="38%">
+<p>The file type is unknown.</p></td>
+<td width="38%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>d_type</i> field is implemented since Linux 2.6.4. It
+occupies a space that was previously a zero-filled padding
+byte in the <i>linux_dirent</i> structure. Thus, on kernels
+up to and including Linux 2.6.3, attempting to access this
+field always provides the value 0 (<b>DT_UNKNOWN</b>).</p>
+<p style="margin-left:9%; margin-top: 1em">Currently, only
+some filesystems (among them: Btrfs, ext2, ext3, and ext4)
+have full support for returning the file type in
+<i>d_type</i>. All applications must properly handle a
+return of <b>DT_UNKNOWN</b>.</p>
+<h3>getdents64()
+<a name="getdents64()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The original
+Linux <b>getdents</b>() system call did not handle large
+filesystems and large file offsets. Consequently, Linux 2.4
+added <b>getdents64</b>(), with wider types for the
+<i>d_ino</i> and <i>d_off</i> fields. In addition,
+<b>getdents64</b>() supports an explicit <i>d_type</i>
+field.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>getdents64</b>() system call is like <b>getdents</b>(),
+except that its second argument is a pointer to a buffer
+containing structures of the following type:</p>
+<p style="margin-left:14%; margin-top: 1em">struct
+linux_dirent64 { <br/>
+ino64_t d_ino; /* 64−bit inode number */ <br/>
+off64_t d_off; /* Not an offset; see getdents() */ <br/>
+unsigned short d_reclen; /* Size of this dirent */ <br/>
+unsigned char d_type; /* File type */ <br/>
+char d_name[]; /* Filename (null−terminated) */ <br/>
+};</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success, the
+number of bytes read is returned. On end of directory, 0 is
+returned. On error, −1 is returned, and <i>errno</i>
+is set to indicate the error.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EBADF</b></p></td>
+<td width="1%"></td>
+<td width="77%">
+<p style="margin-top: 1em">Invalid file descriptor
+<i>fd</i>.</p> </td>
+<td width="5%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EFAULT</b></p></td>
+<td width="1%"></td>
+<td width="77%">
+<p>Argument points outside the calling process’s
+address space.</p></td>
+<td width="5%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="77%">
+<p>Result buffer is too small.</p></td>
+<td width="5%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOENT</b></p></td>
+<td width="1%"></td>
+<td width="77%">
+<p>No such directory.</p></td>
+<td width="5%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><b>ENOTDIR</b></p>
+<p style="margin-left:18%;">File descriptor does not refer
+to a directory.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">None.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SVr4. <b><br/>
+getdents64</b>()</p>
+<p style="margin-left:18%;">glibc 2.30.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">glibc does not
+provide a wrapper for <b>getdents</b>(); call
+<b>getdents</b>() using <b>syscall</b>(2). In that case you
+will need to define the <i>linux_dirent</i> or
+<i>linux_dirent64</i> structure yourself.</p>
+<p style="margin-left:9%; margin-top: 1em">Probably, you
+want to use <b>readdir</b>(3) instead of these system
+calls.</p>
+<p style="margin-left:9%; margin-top: 1em">These calls
+supersede <b>readdir</b>(2).</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The program
+below demonstrates the use of <b>getdents</b>(). The
+following output shows an example of what we see when
+running this program on an ext2 directory:</p>
+<p style="margin-left:14%; margin-top: 1em">$ <b>./a.out
+/testfs/</b> <br/>
+
+-−−−−−−−−−−−−−−
+nread=120
+−−−−−−−−−−−−−−−
+<br/>
+inode# file type d_reclen d_off d_name <br/>
+2 directory 16 12 . <br/>
+2 directory 16 24 .. <br/>
+11 directory 24 44 lost+found <br/>
+12 regular 16 56 a <br/>
+228929 directory 16 68 sub <br/>
+16353 directory 16 80 sub2 <br/>
+130817 directory 16 4096 sub3</p>
+<h3>Program source
+<a name="Program source"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">#define
+_GNU_SOURCE <br/>
+#include &lt;dirent.h&gt; /* Defines DT_* constants */ <br/>
+#include &lt;err.h&gt; <br/>
+#include &lt;fcntl.h&gt; <br/>
+#include &lt;stdint.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;sys/syscall.h&gt; <br/>
+#include &lt;sys/types.h&gt; <br/>
+#include &lt;unistd.h&gt; <br/>
+struct linux_dirent { <br/>
+unsigned long d_ino; <br/>
+off_t d_off; <br/>
+unsigned short d_reclen; <br/>
+char d_name[]; <br/>
+}; <br/>
+#define BUF_SIZE 1024 <br/>
+int <br/>
+main(int argc, char *argv[]) <br/>
+{ <br/>
+int fd; <br/>
+char d_type; <br/>
+char buf[BUF_SIZE]; <br/>
+long nread; <br/>
+struct linux_dirent *d; <br/>
+fd = open(argc &gt; 1 ? argv[1] : ".", O_RDONLY |
+O_DIRECTORY); <br/>
+if (fd == −1) <br/>
+err(EXIT_FAILURE, "open"); <br/>
+for (;;) { <br/>
+nread = syscall(SYS_getdents, fd, buf, BUF_SIZE); <br/>
+if (nread == −1) <br/>
+err(EXIT_FAILURE, "getdents"); <br/>
+if (nread == 0) <br/>
+break; <br/>
+
+printf("−−−−−−−−−−−−−−−
+nread=%ld
+−−−−−−−−−−−−−−−\n",
+nread); <br/>
+printf("inode# file type d_reclen d_off
+d_name\n"); <br/>
+for (size_t bpos = 0; bpos &lt; nread;) { <br/>
+d = (struct linux_dirent *) (buf + bpos); <br/>
+printf("%8lu ", d−&gt;d_ino); <br/>
+d_type = *(buf + bpos + d−&gt;d_reclen − 1);
+<br/>
+printf("%−10s ", (d_type == DT_REG) ?
+"regular" : <br/>
+(d_type == DT_DIR) ? "directory" : <br/>
+(d_type == DT_FIFO) ? "FIFO" : <br/>
+(d_type == DT_SOCK) ? "socket" : <br/>
+(d_type == DT_LNK) ? "symlink" : <br/>
+(d_type == DT_BLK) ? "block dev" : <br/>
+(d_type == DT_CHR) ? "char dev" :
+"???"); <br/>
+printf("%4d %10jd %s\n", d−&gt;d_reclen,
+<br/>
+(intmax_t) d−&gt;d_off, d−&gt;d_name); <br/>
+bpos += d−&gt;d_reclen; <br/>
+} <br/>
+} <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>readdir</b>(2),
+<b>readdir</b>(3), <b>inode</b>(7)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:47 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Encode::Encoding</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Encode::Encoding</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Methods you should implement">Methods you should implement</a><br/>
+<a href="#Other methods defined in Encode::Encodings">Other methods defined in Encode::Encodings</a><br/>
+<a href="#Example: Encode::ROT13">Example: Encode::ROT13</a><br/>
+<a href="#Why the heck Encode API is different?">Why the heck Encode API is different?</a><br/>
+<a href="#Compiled Encodings">Compiled Encodings</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode::Encoding
+− Encode Implementation Base Class</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">package
+Encode::MyEncoding; <br/>
+use parent qw(Encode::Encoding); <br/>
+__PACKAGE__−&gt;Define(qw(myCanonical myAlias));</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">As mentioned in
+Encode, encodings are (in the current implementation at
+least) defined as objects. The mapping of encoding name to
+object is via the %Encode::Encoding hash. Though you can
+directly manipulate this hash, it is strongly encouraged to
+use this base class module and add <b>encode()</b> and
+<b>decode()</b> methods.</p>
+<h3>Methods you should implement
+<a name="Methods you should implement"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">You are strongly
+encouraged to implement methods below, at least either
+<b>encode()</b> or <b>decode()</b>. <br/>
+−&gt;encode($string [,$check])</p>
+<p style="margin-left:14%;">MUST return the octet sequence
+representing <i>$string</i>.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="80%">
+<p>If <i>$check</i> is true, it SHOULD modify
+<i>$string</i> in place to remove the converted part (i.e.
+the whole string unless there is an error). If
+<b>perlio_ok()</b> is true, SHOULD becomes MUST.</p></td>
+<td width="3%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="80%">
+<p>If an error occurs, it SHOULD return the octet sequence
+for the fragment of string that has been converted and
+modify $string in−place to remove the converted part
+leaving it starting with the problem fragment. If
+<b>perlio_ok()</b> is true, SHOULD becomes MUST.</p></td>
+<td width="3%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="80%">
+<p>If <i>$check</i> is false then "encode" MUST
+make a "best effort" to convert the string −
+for example, by using a replacement character.</p></td>
+<td width="3%">
+</td></tr>
+</table>
+<p style="margin-left:9%;">−&gt;decode($octets
+[,$check])</p>
+<p style="margin-left:14%;">MUST return the string that
+<i>$octets</i> represents.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="83%">
+<p>If <i>$check</i> is true, it SHOULD modify
+<i>$octets</i> in place to remove the converted part (i.e.
+the whole sequence unless there is an error). If
+<b>perlio_ok()</b> is true, SHOULD becomes MUST.</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="83%">
+<p>If an error occurs, it SHOULD return the fragment of
+string that has been converted and modify $octets
+in−place to remove the converted part leaving it
+starting with the problem fragment. If <b>perlio_ok()</b> is
+true, SHOULD becomes MUST.</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="83%">
+<p>If <i>$check</i> is false then "decode" should
+make a "best effort" to convert the string −
+for example by using Unicode's "\x{FFFD}" as a
+replacement character.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">If you want your
+encoding to work with encoding pragma, you should also
+implement the method below. <br/>
+−&gt;cat_decode($destination, $octets, $offset,
+$terminator [,$check])</p>
+<p style="margin-left:14%;">MUST decode <i>$octets</i> with
+<i>$offset</i> and concatenate it to <i>$destination</i>.
+Decoding will terminate when $terminator (a string) appears
+in output. <i>$offset</i> will be modified to the last
+$octets position at end of decode. Returns true if
+$terminator appears output, else returns false.</p>
+<h3>Other methods defined in Encode::Encodings
+<a name="Other methods defined in Encode::Encodings"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">You do not have
+to override methods shown below unless you have to. <br/>
+−&gt;name</p>
+<p style="margin-left:14%;">Predefined As:</p>
+<p style="margin-left:14%; margin-top: 1em">sub name {
+return shift−&gt;{'Name'} }</p>
+<p style="margin-left:14%; margin-top: 1em">MUST return the
+string representing the canonical name of the encoding.</p>
+<p style="margin-left:9%;">−&gt;mime_name</p>
+<p style="margin-left:14%;">Predefined As:</p>
+<p style="margin-left:14%; margin-top: 1em">sub mime_name{
+<br/>
+return
+Encode::MIME::Name::get_mime_name(shift−&gt;name);
+<br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">MUST return the
+string representing the IANA charset name of the
+encoding.</p>
+<p style="margin-left:9%;">−&gt;renew</p>
+<p style="margin-left:14%;">Predefined As:</p>
+<p style="margin-left:14%; margin-top: 1em">sub renew {
+<br/>
+my $self = shift; <br/>
+my $clone = bless { %$self } =&gt; ref($self); <br/>
+$clone−&gt;{renewed}++; <br/>
+return $clone; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">This method
+reconstructs the encoding object if necessary. If you need
+to store the state during encoding, this is where you clone
+your object.</p>
+<p style="margin-left:14%; margin-top: 1em">PerlIO ALWAYS
+calls this method to make sure it has its own private
+encoding object.</p>
+<p style="margin-left:9%;">−&gt;renewed</p>
+<p style="margin-left:14%;">Predefined As:</p>
+<p style="margin-left:14%; margin-top: 1em">sub renewed {
+$_[0]−&gt;{renewed} || 0 }</p>
+<p style="margin-left:14%; margin-top: 1em">Tells whether
+the object is renewed (and how many times). Some modules
+emit "Use of uninitialized value in null
+operation" warning unless the value is numeric so
+return 0 for false.</p>
+<p style="margin-left:9%;">−&gt;<b>perlio_ok()</b></p>
+<p style="margin-left:14%;">Predefined As:</p>
+<p style="margin-left:14%; margin-top: 1em">sub perlio_ok {
+<br/>
+return eval { require PerlIO::encoding } ? 1 : 0; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">If your
+encoding does not support PerlIO for some reasons, just;</p>
+<p style="margin-left:14%; margin-top: 1em">sub perlio_ok {
+0 }</p>
+<p style="margin-left:9%;">−&gt;<b>needs_lines()</b></p>
+<p style="margin-left:14%;">Predefined As:</p>
+<p style="margin-left:14%; margin-top: 1em">sub needs_lines
+{ 0 };</p>
+<p style="margin-left:14%; margin-top: 1em">If your
+encoding can work with PerlIO but needs line buffering, you
+MUST define this method so it returns true. 7bit
+ISO−2022 encodings are one example that needs this.
+When this method is missing, false is assumed.</p>
+<h3>Example: Encode::ROT13
+<a name="Example: Encode::ROT13"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">package
+Encode::ROT13; <br/>
+use strict; <br/>
+use parent qw(Encode::Encoding); <br/>
+__PACKAGE__−&gt;Define('rot13'); <br/>
+sub encode($$;$){ <br/>
+my ($obj, $str, $chk) = @_; <br/>
+$str =˜
+tr/A−Za−z/N−ZA−Mn−za−m/;
+<br/>
+$_[1] = '' if $chk; # this is what in−place edit means
+<br/>
+return $str; <br/>
+} <br/>
+# Jr pna or ynml yvxr guvf; <br/>
+*decode = \&amp;encode; <br/>
+1;</p>
+<h2>Why the heck Encode API is different?
+<a name="Why the heck Encode API is different?"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">It should be
+noted that the <i>$check</i> behaviour is different from the
+outer public API. The logic is that the
+"unchecked" case is useful when the encoding is
+part of a stream which may be reporting errors (e.g.
+STDERR). In such cases, it is desirable to get everything
+through somehow without causing additional errors which
+obscure the original one. Also, the encoding is best placed
+to know what the correct replacement character is, so if
+that is the desired behaviour then letting low level code do
+it is the most efficient.</p>
+<p style="margin-left:9%; margin-top: 1em">By contrast, if
+<i>$check</i> is true, the scheme above allows the encoding
+to do as much as it can and tell the layer above how much
+that was. What is lacking at present is a mechanism to
+report what went wrong. The most likely interface will be an
+additional method call to the object, or perhaps (to avoid
+forcing per−stream objects on otherwise stateless
+encodings) an additional parameter.</p>
+<p style="margin-left:9%; margin-top: 1em">It is also
+highly desirable that encoding classes inherit from
+"Encode::Encoding" as a base class. This allows
+that class to define additional behaviour for all encoding
+objects.</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Encode::MyEncoding; <br/>
+use parent qw(Encode::Encoding); <br/>
+__PACKAGE__−&gt;Define(qw(myCanonical myAlias));</p>
+<p style="margin-left:9%; margin-top: 1em">to create an
+object with "bless {Name =&gt; ...}, $class", and
+call define_encoding. They inherit their "name"
+method from "Encode::Encoding".</p>
+<h3>Compiled Encodings
+<a name="Compiled Encodings"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">For the sake of
+speed and efficiency, most of the encodings are now
+supported via a <i>compiled form</i>: XS modules generated
+from UCM files. Encode provides the enc2xs tool to achieve
+that. Please see enc2xs for more details.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">perlmod,
+enc2xs</p>
+<hr/>
+</body>
+</html>

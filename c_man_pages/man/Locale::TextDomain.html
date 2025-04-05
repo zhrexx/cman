@@ -1,0 +1,888 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:13 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Locale::TextDomain</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Locale::TextDomain</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Textdomains">Textdomains</a><br/>
+<a href="#Binding textdomains to directories">Binding textdomains to directories</a><br/>
+<a href="#USAGE">USAGE</a><br/>
+<a href="#EXPORTED FUNCTIONS">EXPORTED FUNCTIONS</a><br/>
+<a href="#EXPORTED VARIABLES">EXPORTED VARIABLES</a><br/>
+<a href="#CLASS METHODS">CLASS METHODS</a><br/>
+<a href="#PERFORMANCE">PERFORMANCE</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Locale::TextDomain
+− Perl Interface to Uniforum Message Translation</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Locale::TextDomain ('my−package', @locale_dirs); <br/>
+use Locale::TextDomain qw (my−package); <br/>
+my $translated = __"Hello World!\n"; <br/>
+my $alt = $__{"Hello World!\n"}; <br/>
+my $alt2 = $__−&gt;{"Hello World!\n"}; <br/>
+my @list = (N__"Hello", <br/>
+N__"World"); <br/>
+printf (__n ("one file read", <br/>
+"%d files read", <br/>
+$num_files), <br/>
+$num_files); <br/>
+print __nx ("one file read", "{num} files
+read", $num_files, <br/>
+num =&gt; $num_files); <br/>
+my $translated_context = __p ("Verb, to view",
+"View"); <br/>
+printf (__np ("Files read from filesystems", <br/>
+"one file read", <br/>
+"%d files read", <br/>
+$num_files), <br/>
+$num_files); <br/>
+print __npx ("Files read from filesystems", <br/>
+"one file read", <br/>
+"{num} files read", <br/>
+$num_files, <br/>
+num =&gt; $num_files);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The module
+<b>Locale::TextDomain</b>(3pm) provides a high−level
+interface to Perl message translation.</p>
+<h3>Textdomains
+<a name="Textdomains"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">When you request
+a translation for a given string, the system used in
+libintl−perl follows a standard strategy to find a
+suitable message catalog containing the translation: Unless
+you explicitely define a name for the message catalog,
+libintl−perl will assume that your catalog is called
+'messages' (unless you have changed the default value to
+something else via <b>Locale::Messages</b>(3pm), method
+<b>textdomain()</b>).</p>
+<p style="margin-left:9%; margin-top: 1em">You might think
+that his default strategy leaves room for optimization and
+you are right. It would be a lot smarter if multiple
+software packages, all with their individual message
+catalogs, could be installed on one system, and it should
+also be possible that third−party components of your
+software (like Perl modules) can load their message
+catalogs, too, without interfering with yours.</p>
+<p style="margin-left:9%; margin-top: 1em">The solution is
+clear, you have to assign a unique name to your message
+database, and you have to specify that name at
+run−time. That unique name is the so−called
+<i>textdomain</i> of your software package. The name is
+actually arbitrary but you should follow these
+best−practice guidelines to ensure maximum
+interoperability: <br/>
+File System Safety</p>
+<p style="margin-left:19%;">In practice, textdomains get
+mapped into file names, and you should therefore make sure
+that the textdomain you choose is a valid filename on every
+system that will run your software.</p>
+<p style="margin-left:9%;">Case−sensitivity</p>
+<p style="margin-left:19%;">Textdomains are always
+case−sensitive (i. e. 'Package' and 'PACKAGE' are not
+the same). However, since the message catalogs will be
+stored on file systems, that may or may not distinguish case
+when looking up file names, you should avoid potential
+conflicts here.</p>
+<p style="margin-left:9%;">Textdomain Should Match CPAN
+Name</p>
+<p style="margin-left:19%;">If your software is listed as a
+module on CPAN, you should simply choose the name on CPAN as
+your textdomain. The textdomain for libintl−perl is
+hence 'libintl−perl'. But please replace all periods
+('.') in your package name with an underscore because
+...</p>
+<p style="margin-left:9%;">Internet Domain Names as a
+Fallback</p>
+<p style="margin-left:19%;">... if your software is
+<i>not</i> a module listed on CPAN, as a last resort you
+should use the Java(tm) package scheme, i. e. choose an
+internet domain that you are owner of (or ask the owner of
+an internet domain) and concatenate your preferred
+textdomain with the reversed internet domain. Example: Your
+company runs the web−site 'www.foobar.org' and is the
+owner of the domain 'foobar.org'. The textdomain for your
+company's software 'barfoos' should hence be
+'org.foobar.barfoos'.</p>
+<p style="margin-left:9%; margin-top: 1em">If your software
+is likely to be installed in different versions on the same
+system, it is probably a good idea to append some version
+information to your textdomain.</p>
+<p style="margin-left:9%; margin-top: 1em">Other systems
+are less strict with the naming scheme for textdomains but
+the phenomena known as Perl is actually a plethora of small,
+specialized modules and it is probably wisest to postulate
+some namespace model in order to avoid chaos.</p>
+<h3>Binding textdomains to directories
+<a name="Binding textdomains to directories"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Once the system
+knows the <i>textdomain</i> of the message that you want to
+get translated into the user's language, it still has to
+find the correct message catalog. By default,
+libintl−perl will look up the string in the
+translation database found in the directories
+<i>/usr/share/locale</i> and <i>/usr/local/share/locale</i>
+(in that order).</p>
+<p style="margin-left:9%; margin-top: 1em">It is neither
+guaranteed that these directories exist on the target
+machine, nor can you be sure that the installation routine
+has write access to these locations. You can therefore
+instruct libintl−perl to search other directories
+prior to the default directories. Specifying a differnt
+search directory is called <i>binding</i> a textdomain to a
+directory.</p>
+<p style="margin-left:9%; margin-top: 1em">Beginning with
+version 1.20, <b>Locale::TextDomain</b> extends the default
+strategy by a Perl−specific approach. If
+File::ShareDir is installed, it will look in the
+subdirectories named <i>locale</i> and <i>LocaleData</i> (in
+that order) in the directory returned by
+"File::ShareDir::dist_dir ($textdomain)" (if
+File::ShareDir is installed), and check for a database
+containing the message for your textdomain there. This
+allows you to install your database in the
+Perl−specific shared directory using Module::Install's
+"install_share" directive or the Dist::Zilla
+ShareDir plugin.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+File::ShareDir is not availabe, or if Locale::TextDomain
+fails to find the translation files in the File::ShareDir
+directory, it will next look in every directory found in the
+standard include path @INC, and check for a database
+containing the message for your textdomain there. Example:
+If the path <i>/usr/lib/perl/5.8.0/site_perl</i> is in your
+@INC, you can install your translation files in
+<i>/usr/lib/perl/5.8.0/site_perl/LocaleData</i>, and they
+will be found at run−time.</p>
+<h2>USAGE
+<a name="USAGE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">It is crucial to
+remember that you use <b>Locale::TextDomain</b>(3) as
+specified in the section "SYNOPSIS", that means
+you have to <b>use</b> it, not <b>require</b> it. The module
+behaves quite differently compared to other modules.</p>
+<p style="margin-left:9%; margin-top: 1em">The most
+significant difference is the meaning of the list passed as
+an argument to the <b>use()</b> function. It actually works
+like this:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Locale::TextDomain (TEXTDOMAIN, DIRECTORY, ...)</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+argument (the first string passed to <b>use()</b>) is the
+textdomain of your package, optionally followed by a list of
+directories to search <i>instead</i> of the
+Perl−specific directories (see above:
+<i>/LocaleData</i> appended to a <i>File::ShareDir</i>
+directory and every path in @INC).</p>
+<p style="margin-left:9%; margin-top: 1em">If you are the
+author of a package 'barfoos', you will probably put the
+line</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Locale::TextDomain 'barfoos';</p>
+<p style="margin-left:9%; margin-top: 1em">resp. for
+non−CPAN modules</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Locale::TextDomain 'org.foobar.barfoos';</p>
+<p style="margin-left:9%; margin-top: 1em">in every module
+of your package that contains translatable strings. If your
+module has been installed properly, including the message
+catalogs, it will then be able to retrieve these
+translations at run−time.</p>
+<p style="margin-left:9%; margin-top: 1em">If you have not
+installed the translation database in a directory
+<i>LocaleData</i> in the File::ShareDir directory or the
+standard include path @INC (or in the system directories
+<i>/usr/share/locale</i> resp.
+<i>/usr/local/share/locale</i>), you have to explicitely
+specify a search path by giving the names of directories (as
+strings!) as additional arguments to <b>use()</b>:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Locale::TextDomain qw (barfoos ./dir1 ./dir2);</p>
+<p style="margin-left:9%; margin-top: 1em">Alternatively
+you can call the function <b>bindtextdomain()</b> with
+suitable arguments (see the entry for
+<b>bindtextdomain()</b> in "FUNCTIONS" in
+Locale::Messages). If you do so, you should pass
+"undef" as an additional argument in order to
+avoid unnecessary lookups:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Locale::TextDomain ('barfoos', undef);</p>
+<p style="margin-left:9%; margin-top: 1em">You see that the
+arguments given to <b>use()</b> have nothing to do with what
+is imported into your namespace, but they are rather
+arguments to <b>textdomain()</b>, resp.
+<b>bindtextdomain()</b>. Does that mean that
+<b>Locale::TextDomain</b> exports nothing into your
+namespace? Umh, not exactly ... in fact it imports
+<i>all</i> functions listed below into your namespace, and
+hence you should not define conflicting functions (and
+variables) yourself.</p>
+<p style="margin-left:9%; margin-top: 1em">So, why has
+Locale::TextDomain to be different from other modules? If
+you have ever written software in C and prepared it for
+internationalization (i18n), you will probably have defined
+some preprocessor macros like:</p>
+<p style="margin-left:9%; margin-top: 1em">#define
+_(String) dgettext ("my−textdomain", String)
+<br/>
+#define N_(String) String</p>
+<p style="margin-left:9%; margin-top: 1em">You only have to
+define that once in C, and the textdomain for your package
+is automatically inserted into all gettext functions. In
+Perl there is no such mechanism (at least it is not
+portable, option −P) and using the gettext functions
+could become quite cumbersome without some extra
+fiddling:</p>
+<p style="margin-left:9%; margin-top: 1em">print dgettext
+("my−textdomain", "Hello
+world!\n");</p>
+<p style="margin-left:9%; margin-top: 1em">This is no fun.
+In C it would merely be a</p>
+<p style="margin-left:9%; margin-top: 1em">printf
+(_("Hello world!\n"));</p>
+<p style="margin-left:9%; margin-top: 1em">Perl has to be
+more concise and shorter than C ... see the next section for
+how you can use <b>Locale::TextDomain</b> to end up in Perl
+with a mere</p>
+<p style="margin-left:9%; margin-top: 1em">print
+__"Hello World!\n";</p>
+<h2>EXPORTED FUNCTIONS
+<a name="EXPORTED FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All functions
+have quite funny names on purpose. In fact the purpose for
+that is quite clear: They should be short,
+operator−like, and they should not yell for conflicts
+with existing functions in <i>your</i> namespace. You will
+understand it, when you internationalize your first Perl
+program or module. Preparing it is more like marking strings
+as being translatable than inserting function calls. Here we
+go: <b><br/>
+__ MSGID</b></p>
+<p style="margin-left:14%;"><b>NOTE:</b> This is a
+<i>double</i> underscore!</p>
+<p style="margin-left:14%; margin-top: 1em">The basic and
+most−used function. It is a short−cut for a call
+to <b>gettext()</b> resp. <b>dgettext()</b>, and simply
+returns the translation for <b>MSGID</b>. If your old code
+reads like this:</p>
+<p style="margin-left:14%; margin-top: 1em">print
+"permission denied";</p>
+<p style="margin-left:14%; margin-top: 1em">You will now
+write:</p>
+<p style="margin-left:14%; margin-top: 1em">print
+__"permission denied";</p>
+<p style="margin-left:14%; margin-top: 1em">That's all, the
+string will be output in the user's preferred language,
+provided that you have installed a translation for it.</p>
+<p style="margin-left:14%; margin-top: 1em">Of course you
+can also use parentheses:</p>
+<p style="margin-left:14%; margin-top: 1em">print
+__("permission denied");</p>
+<p style="margin-left:14%; margin-top: 1em">Or even:</p>
+<p style="margin-left:14%; margin-top: 1em">print
+(__("permission denied"));</p>
+<p style="margin-left:14%; margin-top: 1em">In my eyes, the
+first version without parentheses looks best.</p>
+<p style="margin-left:9%;"><b>__x MSGID, ID1 =&gt; VAL1,
+ID2 =&gt; VAL2, ...</b></p>
+<p style="margin-left:14%;">One of the nicest features in
+Perl is its capability to interpolate variables into
+strings:</p>
+<p style="margin-left:14%; margin-top: 1em">print
+"This is the $color $thing.\n";</p>
+<p style="margin-left:14%; margin-top: 1em">This nice
+feature might con you into thinking that you could now
+write</p>
+<p style="margin-left:14%; margin-top: 1em">print
+__"This is the $color $thing.\n";</p>
+<p style="margin-left:14%; margin-top: 1em">Alas, that
+would be nice, but it is not possible. Remember that the
+function __() serves both as an operator for translating
+strings <i>and</i> as a mark for translatable strings. If
+the above string would get extracted from your Perl code,
+the un−interpolated form would end up in the message
+catalog because when parsing your code it is unpredictable
+what values the variables $thing and $color will have at
+run−time (this fact is most probably one of the
+reasons you have written your program for).</p>
+<p style="margin-left:14%; margin-top: 1em">However, at
+run−time, Perl will have interpolated the values
+already <i>before</i> __() (resp. the underlying
+<b>gettext()</b> function) has seen the original string.
+Consequently something like "This is the red
+car.\n" will be looked up in the message catalog, it
+will not be found (because only "This is the $color
+$thing.\n" is included in the database), and the
+original, untranslated string will be returned. Honestly,
+because this is almost always an error, the
+<b>xgettext</b>(1) program will bail out with a fatal error
+when it comes across that string in your code.</p>
+<p style="margin-left:14%; margin-top: 1em">There are two
+workarounds for that:</p>
+<p style="margin-left:14%; margin-top: 1em">printf
+__"This is the %s %s.\n", $color, $thing;</p>
+<p style="margin-left:14%; margin-top: 1em">But that has
+several disadvantages: Your translator will only see the
+isolated string, and without the surrounding code it is
+almost impossible to interpret it correctly. Of course, GNU
+emacs and other software capable of editing PO translation
+files will allow you to examine the context in the source
+code, but it is more likely that your translator will look
+for a less challenging translation project when she
+frequently comes across such messages.</p>
+<p style="margin-left:14%; margin-top: 1em">And even if she
+does understand the underlying programming, what if she has
+to reorder the color and the thing like in French:</p>
+<p style="margin-left:14%; margin-top: 1em">msgid
+"This is the red car.\n"; <br/>
+msgstr "Cela est la voiture rouge.\n"</p>
+<p style="margin-left:14%; margin-top: 1em">Zut alors!
+While it is possible to reorder the arguments to
+<b>printf()</b> and friends, it requires a syntax that is is
+nothing that you want to learn.</p>
+<p style="margin-left:14%; margin-top: 1em">So what? The
+Perl backend to GNU gettext has defined an alternative
+format for interpolatable strings:</p>
+<p style="margin-left:14%; margin-top: 1em">"This is
+the {color} {thing}.\n";</p>
+<p style="margin-left:14%; margin-top: 1em">Instead of Perl
+variables you use place−holders (legal Perl variables
+are also legal place−holders) in curly braces, and
+then you call</p>
+<p style="margin-left:14%; margin-top: 1em">print __x
+("This is the {color} {thing}.\n", <br/>
+thing =&gt; $thang, <br/>
+color =&gt; $color);</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+_<b>_x()</b> will take the additional hash and replace all
+occurencies of the hash keys in curly braces with the
+corresponding values. Simple, readable, understandable to
+translators, what else would you want? And if the translator
+forgets, misspells or otherwise messes up some
+"variables", the <b>msgfmt</b>(1) program, that is
+used to compile the textual translation file into its binary
+representation will even choke on these errors and refuse to
+compile the translation.</p>
+<p style="margin-left:9%;"><b>__n MSGID, MSGID_PLURAL,
+COUNT</b></p>
+<p style="margin-left:14%;">Whew! That looks complicated
+... It is best explained with an example. We'll have another
+look at your vintage code:</p>
+<p style="margin-left:14%; margin-top: 1em">if
+($files_deleted &gt; 1) { <br/>
+print "All files have been deleted.\n"; <br/>
+} else { <br/>
+print "One file has been deleted.\n"; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">Your intent is
+clear, you wanted to avoid the cumbersome "1 files
+deleted". This is okay for English, but other languages
+have more than one plural form. For example in Russian it
+makes a difference whether you want to say 1 file, 3 files
+or 6 files. You will use three different forms of the noun
+'file' in each case. [Note: Yep, very smart you are, the
+Russian word for 'file' is in fact the English word, and it
+is an invariable noun, but if you know that, you will also
+understand the rest despite this little simplification
+...].</p>
+<p style="margin-left:14%; margin-top: 1em">That is the
+reason for the existance of the function <b>ngettext()</b>,
+that _<b>_n()</b> is a short−cut for:</p>
+<p style="margin-left:14%; margin-top: 1em">print
+__n"One file has been deleted.\n", <br/>
+"All files have been deleted.\n", <br/>
+$files_deleted;</p>
+<p style="margin-left:14%; margin-top: 1em">Alternatively:</p>
+<p style="margin-left:14%; margin-top: 1em">print __n
+("One file has been deleted.\n", <br/>
+"All files have been deleted.\n", <br/>
+$files_deleted);</p>
+<p style="margin-left:14%; margin-top: 1em">The effect is
+always the same: libintl−perl will find out which
+plural form to pick for your user's language, and the output
+string will always look okay.</p>
+<p style="margin-left:9%;"><b>__nx MSGID, MSGID_PLURAL,
+COUNT, VAR1 =&gt; VAL1, VAR2 =&gt; VAL2, ...</b></p>
+<p style="margin-left:14%;">Bringing it all together:</p>
+<p style="margin-left:14%; margin-top: 1em">print __nx
+("One file has been deleted.\n", <br/>
+"{count} files have been deleted.\n", <br/>
+$num_files, <br/>
+count =&gt; $num_files);</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+_<b>_nx()</b> picks the correct plural form (also for
+English!) <i>and</i> it is capable of interpolating
+variables into strings.</p>
+<p style="margin-left:14%; margin-top: 1em">Have a close
+look at the order of arguments: The first argument is the
+string in the singular, the second one is the plural string.
+The third one is an integer indicating the number of items.
+This third argument is <i>only</i> used to pick the correct
+translation. The optionally following arguments make up the
+hash used for interpolation. In the beginning it is often a
+little confusing that the variable holding the number of
+items will usually be repeated somewhere in the
+interpolation hash.</p>
+<p style="margin-left:9%;"><b>__xn MSGID, MSGID_PLURAL,
+COUNT, VAR1 =&gt; VAL1, VAR2 =&gt; VAL2, ...</b></p>
+<p style="margin-left:14%;">Does exactly the same thing as
+_<b>_nx()</b>. In fact it is a common typo promoted to a
+feature.</p>
+<p style="margin-left:9%;"><b>__p MSGCTXT, MSGID</b></p>
+<p style="margin-left:14%;">This is much like __. The
+"p" stands for "particular", and the
+MSGCTXT is used to provide context to the translator. This
+may be neccessary when your string is short, and could stand
+for multiple things. For example:</p>
+<p style="margin-left:14%; margin-top: 1em">print
+__p"Verb, to view", "View"; <br/>
+print __p"Noun, a view", "View";</p>
+<p style="margin-left:14%; margin-top: 1em">The above may
+be "View" entries in a menu, where
+View−&gt;Source and File−&gt;View are different
+forms of "View", and likely need to be translated
+differently.</p>
+<p style="margin-left:14%; margin-top: 1em">A typical usage
+are GUI programs. Imagine a program with a main menu and the
+notorious "Open" entry in the "File"
+menu. Now imagine, there is another menu entry
+Preferences−&gt;Advanced−&gt;Policy where you
+have a choice between the alternatives "Open" and
+"Closed". In English, "Open" is the
+adequate text at both places. In other languages, it is very
+likely that you need two different translations. Therefore,
+you would now write:</p>
+<p style="margin-left:14%; margin-top: 1em">__p"File|",
+"Open"; <br/>
+__p"Preferences|Advanced|Policy",
+"Open";</p>
+<p style="margin-left:14%; margin-top: 1em">In English, or
+if no translation can be found, the second argument (MSGID)
+is returned.</p>
+<p style="margin-left:14%; margin-top: 1em">This function
+was introduced in libintl−perl 1.17.</p>
+<p style="margin-left:9%;"><b>__px MSGCTXT, MSGID, VAR1
+=&gt; VAL1, VAR2 =&gt; VAL2, ...</b></p>
+<p style="margin-left:14%;">Like _<b>_p()</b>, but supports
+variable substitution in the string, like _<b>_x()</b>.</p>
+<p style="margin-left:14%; margin-top: 1em">print
+__px("Verb, to view", "View {file}",
+file =&gt; $filename);</p>
+<p style="margin-left:14%; margin-top: 1em">See
+_<b>_p()</b> and _<b>_x()</b> for more details.</p>
+<p style="margin-left:14%; margin-top: 1em">This function
+was introduced in libintl−perl 1.17.</p>
+<p style="margin-left:9%;"><b>__np MSGCTXT, MSGID,
+MSGID_PLURAL, COUNT</b></p>
+<p style="margin-left:14%;">This adds context to plural
+calls. It should not be needed very often, if at all, due to
+the _<b>_nx()</b> function. The type of variable
+substitution used in other gettext libraries (using
+sprintf−like sybols, like %s or %1) sometimes required
+context. For a (bad) example of this:</p>
+<p style="margin-left:14%; margin-top: 1em">printf
+(__np("[count] files have been deleted", <br/>
+"One file has been deleted.\n", <br/>
+"%s files have been deleted.\n", <br/>
+$num_files), <br/>
+$num_files);</p>
+<p style="margin-left:14%; margin-top: 1em">NOTE: The above
+usage is discouraged. Just use the _<b>_nx()</b> call, which
+provides inline context via the key names.</p>
+<p style="margin-left:14%; margin-top: 1em">This function
+was introduced in libintl−perl 1.17.</p>
+<p style="margin-left:9%;"><b>__npx MSGCTXT, MSGID,
+MSGID_PLURAL, COUNT, VAR1 =&gt; VAL1, VAR2 =&gt; VAL2, <br/>
+...</b></p>
+<p style="margin-left:14%;">This is provided for
+comleteness. It adds the variable interpolation into the
+string to the previous method, _<b>_np()</b>.</p>
+<p style="margin-left:14%; margin-top: 1em">It's usage
+would be like so:</p>
+<p style="margin-left:14%; margin-top: 1em">print __npx
+("Files being permenantly removed", <br/>
+"One file has been deleted.\n", <br/>
+"{count} files have been deleted.\n", <br/>
+$num_files, <br/>
+count =&gt; $num_files);</p>
+<p style="margin-left:14%; margin-top: 1em">I cannot think
+of any situations requiring this, but we can easily support
+it, so here it is.</p>
+<p style="margin-left:14%; margin-top: 1em">This function
+was introduced in libintl−perl 1.17.</p>
+<p style="margin-left:9%;"><b>N__(ARG1)</b></p>
+<p style="margin-left:14%;">A no−op function that
+simply echoes its arguments to the caller. Take the
+following piece of Perl:</p>
+<p style="margin-left:14%; margin-top: 1em">my @options = (
+<br/>
+"Open", <br/>
+"Save", <br/>
+"Save As", <br/>
+); <br/>
+... <br/>
+my $option = $options[1];</p>
+<p style="margin-left:14%; margin-top: 1em">Now say that
+you want to have this translatable. You could sometimes
+simply do:</p>
+<p style="margin-left:14%; margin-top: 1em">my @options = (
+<br/>
+__"Open", <br/>
+__"Save", <br/>
+__"Save As", <br/>
+); <br/>
+... <br/>
+my $option = $options[1];</p>
+<p style="margin-left:14%; margin-top: 1em">But often times
+this will not be what you want, for example when you also
+need the unmodified original string. Sometimes it may not
+even work, for example, when the preferred user language is
+not yet determined at the time that the list is
+initialized.</p>
+<p style="margin-left:14%; margin-top: 1em">In these cases
+you would write:</p>
+<p style="margin-left:14%; margin-top: 1em">my @options = (
+<br/>
+N__"Open", <br/>
+N__"Save", <br/>
+N__"Save As", <br/>
+); <br/>
+... <br/>
+my $option = __($options[1]); <br/>
+# or: my $option = dgettext ('my−domain',
+$options[1]);</p>
+<p style="margin-left:14%; margin-top: 1em">Now all the
+strings in @options will be left alone, since N__() returns
+its arguments (one ore more) unmodified. Nevertheless, the
+string extractor will be able to recognize the strings as
+being translatable. And you can still get the translation
+later by passing the variable instead of the string to one
+of the above translation functions.</p>
+<p style="margin-left:9%;"><b>N__n (MSGID, MSGID_PLURAL,
+COUNT)</b></p>
+<p style="margin-left:14%;">Does exactly the same as N__().
+You will use this form if you have to mark the strings as
+having plural forms.</p>
+<p style="margin-left:9%;"><b>N__p (MSGCTXT, MSGID)</b></p>
+<p style="margin-left:14%;">Marks <b>MSGID</b> as N__()
+does, but in the context <b>MSGCTXT</b>.</p>
+<p style="margin-left:9%;"><b>N__np (MSGCTXT, MSGID,
+MSGID_PLURAL, COUNT)</b></p>
+<p style="margin-left:14%;">Marks <b>MSGID</b> as
+N_<b>_n()</b> does, but in the context <b>MSGCTXT</b>.</p>
+<h2>EXPORTED VARIABLES
+<a name="EXPORTED VARIABLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The module
+exports several variables into your namespace:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p><b>%__</b></p></td>
+<td width="1%"></td>
+<td width="83%">
+<p>A tied hash. Its keys are your original messages, the
+values are their translations:</p></td>
+<td width="3%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">my $title =
+"&lt;h1&gt;$__{'My Homepage'}&lt;/h1&gt;";</p>
+<p style="margin-left:14%; margin-top: 1em">This is much
+better for your translation team than</p>
+<p style="margin-left:14%; margin-top: 1em">my $title =
+__"&lt;h1&gt;My Homepage&lt;/h1&gt;";</p>
+<p style="margin-left:14%; margin-top: 1em">In the second
+case the HTML code will make it into the translation
+database and your translators have to be aware of HTML
+syntax when translating strings.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Warning:</b>
+Do <i>not</i> use this hash outside of double−quoted
+strings! The code in the tied hash object relies on the
+correct working of the function <b>caller()</b> (see
+"perldoc −f caller"), and this function will
+report incorrect results if the tied hash value is the
+argument to a function from another package, for
+example:</p>
+<p style="margin-left:14%; margin-top: 1em">my $result =
+Other::Package::do_it ($__{'Some string'});</p>
+<p style="margin-left:14%; margin-top: 1em">The tied hash
+code will see "Other::Package" as the calling
+package, instead of your own package. Consequently it will
+look up the message in the wrong text domain. There is no
+workaround for this bug. Therefore:</p>
+<p style="margin-left:14%; margin-top: 1em">Never use the
+tied hash interpolated strings!</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p style="margin-top: 1em"><b>$__</b></p></td>
+<td width="1%"></td>
+<td width="53%">
+<p style="margin-top: 1em">A reference to "%__",
+in case you prefer:</p></td>
+<td width="33%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">my $title =
+"&lt;h1&gt;$__−&gt;{'My
+Homepage'}&lt;/h1&gt;";</p>
+<h2>CLASS METHODS
+<a name="CLASS METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+class methods are defined: <b><br/>
+options</b></p>
+<p style="margin-left:14%;">Returns a space−separated
+list of all '−−keyword' and all
+'−−flag' options for <b>xgettext(1)</b>, when
+extracing strings from Perl source files localized with
+<b>Locale::TextDomain</b>.</p>
+<p style="margin-left:14%; margin-top: 1em">The option
+should rather be called <b>xgettextDefaultOptions</b>. With
+regard to the typical use−case, a shorter name has
+been picked:</p>
+<p style="margin-left:14%; margin-top: 1em">xgettext `perl
+−MLocale::TextDomain −e 'print
+Locale::TextDomain−&gt;options'`</p>
+<p style="margin-left:14%; margin-top: 1em">See
+&lt;https://www.gnu.org/software/gettext/manual/html_node/xgettext−Invocation.html&gt;
+for more information about the xgettext options
+'−−keyword' and '−−flag'.</p>
+<p style="margin-left:14%; margin-top: 1em">If you want to
+disable the use of the xgettext default keywords, you should
+pass an option '−−keyword=""' to
+xgettext before the options returned by this method.</p>
+<p style="margin-left:14%; margin-top: 1em">If you doubt
+the usefulness of this method, check the output on the
+command−line:</p>
+<p style="margin-left:14%; margin-top: 1em">perl
+−MLocale::TextDomain −e 'print
+Locale::TextDomain−&gt;options'</p>
+<p style="margin-left:14%; margin-top: 1em">Nothing that
+you want to type yourself.</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in libintl−perl 1.28.</p>
+<p style="margin-left:9%;"><b>keywords</b></p>
+<p style="margin-left:14%;">Returns a space−separated
+list of all '−−keyword' options for
+<b>xgettext(1)</b> so that all translatable strings are
+properly extracted.</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in libintl−perl 1.28.</p>
+<p style="margin-left:9%;"><b>flags</b></p>
+<p style="margin-left:14%;">Returns a space−separated
+list of all '−−flag' options for
+<b>xgettext(1)</b> so that extracted strings are properly
+flagged.</p>
+<p style="margin-left:14%; margin-top: 1em">This method was
+added in libintl−perl 1.28.</p>
+<h2>PERFORMANCE
+<a name="PERFORMANCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Message
+translation can be a time−consuming task. Take this
+little example:</p>
+<p style="margin-left:9%; margin-top: 1em">1: use
+Locale::TextDomain ('my−domain'); <br/>
+2: use POSIX (:locale_h); <br/>
+3: <br/>
+4: setlocale (LC_ALL, ''); <br/>
+5: print __"Hello world!\n";</p>
+<p style="margin-left:9%; margin-top: 1em">This will
+usually be quite fast, but in pathological cases it may run
+for several seconds. A worst−case scenario would be a
+Chinese user at a terminal that understands the codeset
+Big5−HKSCS. Your translator for Chinese has however
+chosen to encode the translations in the codeset
+EUC−TW.</p>
+<p style="margin-left:9%; margin-top: 1em">What will happen
+at run−time? First, the library will search and load a
+(maybe large) message catalog for your textdomain
+'my−domain'. Then it will look up the translation for
+"Hello world!\n", it will find that it is encoded
+in EUC−TW. Since that differs from the output codeset
+Big5−HKSCS, it will first load a conversion table
+containing several ten−thousands of codepoints for
+EUC−TW, then it does the same with the smaller, but
+still very large conversion table for Big5−HKSCS, it
+will convert the translation on the fly from EUC−TW
+into Big5−HKSCS, and finally it will return the
+converted translation.</p>
+<p style="margin-left:9%; margin-top: 1em">A
+worst−case scenario but realistic. And for these five
+lines of codes, there is not much you can do to make it any
+faster. You should understand, however, <i>when</i> the
+different steps will take place, so that you can arrange
+your code for it.</p>
+<p style="margin-left:9%; margin-top: 1em">You have learned
+in the section "DESCRIPTION" that line 1 is
+responsible for locating your message database. However, the
+<b>use()</b> will do nothing more than remembering your
+settings. It will not search any directories, it will not
+load any catalogs or conversion tables.</p>
+<p style="margin-left:9%; margin-top: 1em">Somewhere in
+your code you will always have a call to
+<b>POSIX::setlocale()</b>, and the performance of this call
+may be time−consuming, depending on the architecture
+of your system. On some systems, this will consume very
+little time, on others it will only consume a considerable
+amount of time for the first call, and on others it may
+always be time−consuming. Since you cannot know, how
+<b>setlocale()</b> is implemented on the target system, you
+should reduce the calls to <b>setlocale()</b> to a
+minimum.</p>
+<p style="margin-left:9%; margin-top: 1em">Line 5 requests
+the translation for your string. Only now, the library will
+actually load the message catalog, and only now will it load
+eventually needed conversion tables. And from now on, all
+this information will be cached in memory. This strategy is
+used throughout libintl−perl, and you may describe it
+as 'load−on−first−access'. Getting the
+next translation will consume very little resources.</p>
+<p style="margin-left:9%; margin-top: 1em">However,
+although the translation retrieval is somewhat obfuscated by
+an operator−like function call, it is still a function
+call, and in fact it even involves a chain of function
+calls. Consequently, the following example is probably bad
+practice:</p>
+<p style="margin-left:9%; margin-top: 1em">foreach (1 ..
+100_000) { <br/>
+print __"Hello world!\n"; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">This example
+introduces a lot of overhead into your program. Better do
+this:</p>
+<p style="margin-left:9%; margin-top: 1em">my $string =
+__"Hello world!\n"; <br/>
+foreach (1 .. 100_000) { <br/>
+print $string; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">The translation
+will never change, there is no need to retrieve it over and
+over again. Although libintl−perl will of course cache
+the translation read from the file system, you can still
+avoid the overhead for the function calls.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2002−2017 Guido Flohr
+&lt;http://www.guido-flohr.net/&gt;
+(&lt;mailto:guido.flohr@cantanea.com&gt;), all rights
+reserved. See the source code for details!code for
+details!</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Locale::Messages</b>(3pm),
+<b>Locale::gettext_pp</b>(3pm), <b>perl</b>(1),
+<b>gettext</b>(1), <b>gettext</b>(3)</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:13 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TIFFERROR</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">TIFFERROR</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTE">NOTE</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TIFFError
+− library error handling interface</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<pre style="margin-left:13%; margin-top: 1em">#include &lt;tiffio.h&gt;
+#include &lt;stdarg.h&gt;</pre>
+<p style="margin-left:9%;"><b>void TIFFError(const char
+*module, const char *fmt, ...) <br/>
+void TIFFErrorExt(thandle_t fd, const char *module, const
+char *fmt, <br/>
+...) <br/>
+void TIFFErrorExtR(TIFF *tif, const char *module, const char
+*fmt, ...) <br/>
+typedef void (*TIFFErrorHandler)(const char *module, const
+char *fmt, <br/>
+va_list ap) <br/>
+typedef void (*TIFFErrorHandlerExt)(thandle_t fd, const char
+*module, <br/>
+const char *fmt, va_list ap) <br/>
+typedef int (*TIFFErrorHandlerExtR)(TIFF *tif, void
+*user_data, const <br/>
+char *module, const char *fmt, va_list ap)</b> <i><br/>
+TIFFErrorHandler</i>
+<b>TIFFSetErrorHandler(</b><i>TIFFErrorHandler</i>
+<b>handler)</b> <i><br/>
+TIFFErrorHandlerExt</i>
+<b>TIFFSetErrorHandlerExt(</b><i>TIFFErrorHandlerExt</i>
+<b>handler)</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b><i>TIFFError()</i></b>
+invokes the library−wide error handler function to
+(normally) write an error message to <b>stderr</b>. The
+<i>fmt</i> parameter is a <b>printf()</b> format string, and
+any number arguments can be supplied. The <i>module</i>
+parameter is interpreted as a string that, if
+non−zero, should be printed before the message; it
+typically is used to identify the software module in which
+an error is detected.</p>
+<p style="margin-left:9%; margin-top: 1em">Applications
+that desire to capture control in the event of an error
+should use <i>TIFFSetErrorHandler()</i> to override the
+default error handler. A <b>NULL</b> (0) error handler
+function may be installed to suppress error messages.</p>
+<p style="margin-left:9%; margin-top: 1em">Two more
+application−specific error handler callbacks are
+available, each with different call parameters and passing
+parameters to the handler. Each handler is also linked with
+an error message function, i.e. <i>TIFFErrorExt()</i> and
+<i>TIFFErrorExtR()</i> if the application intends to call
+the handler with those extended parameters.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFErrorExt()</i>
+provides a file handle as parameter. Within <b>libtiff</b>
+<i>TIFFErrorExt()</i> is called passing
+<b>tif−&gt;tif_clientdata</b> as <i>fd</i>, which
+represents the TIFF file handle (file descriptor). The
+application−specific and library−wide handler
+for <i>TIFFErrorExt()</i> is setup with
+<i>TIFFSetErrorHandlerExt()</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFErrorExtR()</i>
+(introduced with libtiff 4.5) is called with its TIFF handle
+and thus provides access to a per−TIFF handle
+(re−entrant) error handler. That means for different
+TIFF handles, different error handlers can be setup. This
+application−specific handler can be setup when a TIFF
+file is opened with one of the following functions:
+<i>TIFFOpenExt()</i>, <i>TIFFOpenWExt()</i>,
+<i>TIFFFdOpenExt()</i> or <i>TIFFClientOpenExt()</i>.
+Furthermore, a <b>custom defined data structure</b>
+<i>user_data</i> for the error handler can be given
+along.</p>
+<h2>NOTE
+<a name="NOTE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Both functions
+<i>TIFFError()</i> and <i>TIFFErrorExt()</i> each attempt to
+call both handler functions if they are defined. First
+<i>TIFFErrorHandler()</i> is called and then
+<i>TIFFErrorHandlerExt()</i>. However, <i>TIFFError()</i>
+passes a “0” as a file handle to
+<i>TIFFErrorHandlerExt()</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFErrorExtR()</i>
+tries first to call the per−TIFF handle defined error
+handler. If <i>TIFFErrorHandlerExtR()</i> is not defined or
+returns 0, <i>TIFFErrorHandler()</i> and then
+<i>TIFFErrorHandlerExt()</i> are called. From libtiff 4.5
+onwards <i>TIFFErrorExtR()</i> is used within the
+<b>libtiff</b> library where the TIFF handle is available.
+Otherwise, <i>TIFFErrorExt()</i> is used!</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFSetErrorHandler()</i>
+and <i>TIFFSetErrorHandlerExt()</i> returns a reference to
+the previous error handler function.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFErrorHandlerExtR()</i>
+returns an integer as “stop” to control the call
+of further error handler functions within
+<i>TIFFErrorExtR()</i>:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="1%"></td>
+<td width="85%">
+<p>0: both functions <i>TIFFErrorHandler()</i> and
+<i>TIFFErrorHandlerExt()</i> are called.</p></td></tr>
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="1%"></td>
+<td width="85%">
+<p>non−zero: no further error message function is
+called.</p> </td></tr>
+</table>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>TIFFWarning</i>
+(3tiff), <i>TIFFOpen</i> (3tiff), <i>libtiff</i> (3tiff),
+printf (3)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">LibTIFF
+contributors</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">1988-2022,
+LibTIFF contributors</p>
+<hr/>
+</body>
+</html>

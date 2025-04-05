@@ -1,0 +1,246 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:46 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_READFUNCTION</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_READFUNCTION</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_READFUNCTION
+− read callback for data uploads</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">size_t
+read_callback(char *buffer, size_t size, size_t nitems, void
+*userdata);</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_READFUNCTION,
+read_callback);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a pointer
+to your callback function, as the prototype shows above.</p>
+<p style="margin-left:9%; margin-top: 1em">This callback
+function gets called by libcurl as soon as it needs to read
+data in order to send it to the peer − like if you ask
+it to upload or post data to the server. The data area
+pointed at by the pointer <i>buffer</i> should be filled up
+with at most <i>size</i> multiplied with <i>nitems</i>
+number of bytes by your function. <i>size</i> is always
+1.</p>
+<p style="margin-left:9%; margin-top: 1em">Set the
+<i>userdata</i> argument with the <i>CURLOPT_READDATA(3)</i>
+option.</p>
+<p style="margin-left:9%; margin-top: 1em">Your function
+must return the actual number of bytes that it stored in the
+data area pointed at by the pointer <i>buffer</i>. Returning
+0 signals end−of−file to the library and causes
+it to stop the current transfer.</p>
+<p style="margin-left:9%; margin-top: 1em">If you stop the
+current transfer by returning 0
+"pre−maturely" (i.e before the server
+expected it, like when you have said you would upload N
+bytes and you upload less than N bytes), you may experience
+that the server "hangs" waiting for the rest of
+the data that is not sent.</p>
+<p style="margin-left:9%; margin-top: 1em">The read
+callback may return <i>CURL_READFUNC_ABORT</i> to stop the
+current operation immediately, resulting in a
+<i>CURLE_ABORTED_BY_CALLBACK</i> error code from the
+transfer.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback can
+return <i>CURL_READFUNC_PAUSE</i> to cause reading from this
+connection to pause. See <i>curl_easy_pause(3)</i> for
+further details.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Bugs</b>:
+when doing TFTP uploads, you must return the exact amount of
+data that the callback wants, or it is considered the final
+packet by the server end and the transfer ends there.</p>
+<p style="margin-left:9%; margin-top: 1em">If you set this
+callback pointer to NULL, or do not set it at all, the
+default internal read function is used. It is doing an
+fread() on the FILE * userdata set with
+<i>CURLOPT_READDATA(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">You can set the
+total size of the data you are sending by using
+<i>CURLOPT_INFILESIZE_LARGE(3)</i> or
+<i>CURLOPT_POSTFIELDSIZE_LARGE(3)</i>, depending on the type
+of transfer. For some transfer types it may be required and
+it allows for better error checking.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">fread(3)</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">size_t
+read_callback(char *ptr, size_t size, size_t nmemb, void
+*userdata) <br/>
+{ <br/>
+FILE *readhere = (FILE *)userdata; <br/>
+curl_off_t nread;</p>
+<p style="margin-left:9%; margin-top: 1em">/* copy as much
+data as possible into the ’ptr’ buffer, but no
+more than <br/>
+’size’ * ’nmemb’ bytes! */ <br/>
+size_t retcode = fread(ptr, size, nmemb, readhere);</p>
+<p style="margin-left:9%; margin-top: 1em">nread =
+(curl_off_t)retcode;</p>
+<p style="margin-left:9%; margin-top: 1em">fprintf(stderr,
+"*** We read %" CURL_FORMAT_CURL_OFF_T <br/>
+" bytes from file\n", nread); <br/>
+return retcode; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int main(int
+argc, char **argv) <br/>
+{ <br/>
+FILE *file = fopen(argv[1], "rb"); <br/>
+CURLcode result;</p>
+<p style="margin-left:9%; margin-top: 1em">CURL *curl =
+curl_easy_init(); <br/>
+if(curl) { <br/>
+/* set callback to use */ <br/>
+curl_easy_setopt(curl, CURLOPT_READFUNCTION,
+read_callback);</p>
+<p style="margin-left:9%; margin-top: 1em">/* pass in
+suitable argument to callback */ <br/>
+curl_easy_setopt(curl, CURLOPT_READDATA, (void *)file);</p>
+<p style="margin-left:9%; margin-top: 1em">result =
+curl_easy_perform(curl); <br/>
+} <br/>
+}</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURL_READFUNC_PAUSE
+return code was added in 7.18.0 and CURL_READFUNC_ABORT was
+added in 7.12.1.</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.1</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This returns
+CURLE_OK.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_POST</b>(3),
+<b>CURLOPT_READDATA</b>(3), <b>CURLOPT_SEEKFUNCTION</b>(3),
+<b>CURLOPT_UPLOAD</b>(3),
+<b>CURLOPT_UPLOAD_BUFFERSIZE</b>(3),
+<b>CURLOPT_WRITEFUNCTION</b>(3)</p>
+<hr/>
+</body>
+</html>

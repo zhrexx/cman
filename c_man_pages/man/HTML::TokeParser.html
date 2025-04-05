@@ -1,0 +1,330 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:12 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>HTML::TokeParser</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">HTML::TokeParser</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">HTML::TokeParser
+− Alternative HTML::Parser interface</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">require
+HTML::TokeParser; <br/>
+$p = HTML::TokeParser−&gt;new("index.html")
+|| <br/>
+die "Can't open: $!"; <br/>
+$p−&gt;empty_element_tags(1); # configure its
+behaviour <br/>
+while (my $token = $p−&gt;get_token) { <br/>
+#... <br/>
+}</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+"HTML::TokeParser" is an alternative interface to
+the "HTML::Parser" class. It is an
+"HTML::PullParser" subclass with a predeclared set
+of token types. If you wish the tokens to be reported
+differently you probably want to use the
+"HTML::PullParser" directly.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+methods are available: <br/>
+$p = HTML::TokeParser−&gt;new( $filename, %opt ); <br/>
+$p = HTML::TokeParser−&gt;new( $filehandle, %opt );
+<br/>
+$p = HTML::TokeParser−&gt;new( \$document, %opt );</p>
+<p style="margin-left:14%;">The object constructor argument
+is either a file name, a file handle object, or the complete
+document to be parsed. Extra options can be provided as
+key/value pairs and are processed as documented by the base
+classes.</p>
+<p style="margin-left:14%; margin-top: 1em">If the argument
+is a plain scalar, then it is taken as the name of a file to
+be opened and parsed. If the file can't be opened for
+reading, then the constructor will return "undef"
+and $! will tell you why it failed.</p>
+<p style="margin-left:14%; margin-top: 1em">If the argument
+is a reference to a plain scalar, then this scalar is taken
+to be the literal document to parse. The value of this
+scalar should not be changed before all tokens have been
+extracted.</p>
+<p style="margin-left:14%; margin-top: 1em">Otherwise the
+argument is taken to be some object that the
+"HTML::TokeParser" can <b>read()</b> from when it
+needs more data. Typically it will be a filehandle of some
+kind. The stream will be <b>read()</b> until EOF, but not
+closed.</p>
+<p style="margin-left:14%; margin-top: 1em">A newly
+constructed "HTML::TokeParser" differ from its
+base classes by having the "unbroken_text"
+attribute enabled by default. See HTML::Parser for a
+description of this and other attributes that influence how
+the document is parsed. It is often a good idea to enable
+"empty_element_tags" behaviour.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that the
+parsing result will likely not be valid if raw undecoded
+UTF−8 is used as a source. When parsing UTF−8
+encoded files turn on UTF−8 decoding:</p>
+<p style="margin-left:14%; margin-top: 1em">open(my $fh,
+"&lt;:utf8", "index.html") || die
+"Can't open 'index.html': $!"; <br/>
+my $p = HTML::TokeParser−&gt;new( $fh ); <br/>
+# ...</p>
+<p style="margin-left:14%; margin-top: 1em">If a $filename
+is passed to the constructor the file will be opened in raw
+mode and the parsing result will only be valid if its
+content is Latin−1 or pure ASCII.</p>
+<p style="margin-left:14%; margin-top: 1em">If parsing from
+an UTF−8 encoded string buffer decode it first:</p>
+<p style="margin-left:14%; margin-top: 1em">utf8::decode($document);
+<br/>
+my $p = HTML::TokeParser−&gt;new( \$document ); <br/>
+# ...</p>
+<p style="margin-left:9%;">$p−&gt;get_token</p>
+<p style="margin-left:14%;">This method will return the
+next <i>token</i> found in the HTML document, or
+"undef" at the end of the document. The token is
+returned as an array reference. The first element of the
+array will be a string denoting the type of this token:
+"S" for start tag, "E" for end tag,
+"T" for text, "C" for comment,
+"D" for declaration, and "PI" for
+process instructions. The rest of the token array depend on
+the type like this:</p>
+<p style="margin-left:14%; margin-top: 1em">["S",
+$tag, $attr, $attrseq, $text] <br/>
+["E", $tag, $text] <br/>
+["T", $text, $is_data] <br/>
+["C", $text] <br/>
+["D", $text] <br/>
+["PI", $token0, $text]</p>
+<p style="margin-left:14%; margin-top: 1em">where $attr is
+a hash reference, $attrseq is an array reference and the
+rest are plain scalars. The "Argspec" in
+HTML::Parser explains the details.</p>
+<p style="margin-left:9%;">$p−&gt;unget_token(
+@tokens )</p>
+<p style="margin-left:14%;">If you find you have read too
+many tokens you can push them back, so that they are
+returned the next time $p−&gt;get_token is called.</p>
+<p style="margin-left:9%;">$p−&gt;get_tag <br/>
+$p−&gt;get_tag( @tags )</p>
+<p style="margin-left:14%;">This method returns the next
+start or end tag (skipping any other tokens), or
+"undef" if there are no more tags in the document.
+If one or more arguments are given, then we skip tokens
+until one of the specified tag types is found. For
+example:</p>
+<p style="margin-left:14%; margin-top: 1em">$p−&gt;get_tag("font",
+"/font");</p>
+<p style="margin-left:14%; margin-top: 1em">will find the
+next start or end tag for a font−element.</p>
+<p style="margin-left:14%; margin-top: 1em">The tag
+information is returned as an array reference in the same
+form as for $p−&gt;get_token above, but the type code
+(first element) is missing. A start tag will be returned
+like this:</p>
+<p style="margin-left:14%; margin-top: 1em">[$tag, $attr,
+$attrseq, $text]</p>
+<p style="margin-left:14%; margin-top: 1em">The tagname of
+end tags are prefixed with "/", i.e. end tag is
+returned like this:</p>
+<p style="margin-left:14%; margin-top: 1em">["/$tag",
+$text]</p>
+<p style="margin-left:9%;">$p−&gt;get_text <br/>
+$p−&gt;get_text( @endtags )</p>
+<p style="margin-left:14%;">This method returns all text
+found at the current position. It will return a zero length
+string if the next token is not text. Any entities will be
+converted to their corresponding character.</p>
+<p style="margin-left:14%; margin-top: 1em">If one or more
+arguments are given, then we return all text occurring
+before the first of the specified tags found. For
+example:</p>
+<p style="margin-left:14%; margin-top: 1em">$p−&gt;get_text("p",
+"br");</p>
+<p style="margin-left:14%; margin-top: 1em">will return the
+text up to either a paragraph of line break element.</p>
+<p style="margin-left:14%; margin-top: 1em">The text might
+span tags that should be <i>textified</i>. This is
+controlled by the $p−&gt;{textify} attribute, which is
+a hash that defines how certain tags can be treated as text.
+If the name of a start tag matches a key in this hash then
+this tag is converted to text. The hash value is used to
+specify which tag attribute to obtain the text from. If this
+tag attribute is missing, then the upper case name of the
+tag enclosed in brackets is returned, e.g.
+"[IMG]". The hash value can also be a subroutine
+reference. In this case the routine is called with the start
+tag token content as its argument and the return value is
+treated as the text.</p>
+<p style="margin-left:14%; margin-top: 1em">The default
+$p−&gt;{textify} value is:</p>
+<p style="margin-left:14%; margin-top: 1em">{img =&gt;
+"alt", applet =&gt; "alt"}</p>
+<p style="margin-left:14%; margin-top: 1em">This means that
+&lt;IMG&gt; and &lt;APPLET&gt; tags are treated as text, and
+that the text to substitute can be found in the ALT
+attribute.</p>
+<p style="margin-left:9%;">$p−&gt;get_trimmed_text
+<br/>
+$p−&gt;get_trimmed_text( @endtags )</p>
+<p style="margin-left:14%;">Same as $p−&gt;get_text
+above, but will collapse any sequences of white space to a
+single space character. Leading and trailing white space is
+removed.</p>
+<p style="margin-left:9%;">$p−&gt;get_phrase</p>
+<p style="margin-left:14%;">This will return all text found
+at the current position ignoring any phrasal−level
+tags. Text is extracted until the first non
+phrasal−level tag. Textification of tags is the same
+as for <b>get_text()</b>. This method will collapse white
+space in the same way as <b>get_trimmed_text()</b> does.</p>
+<p style="margin-left:14%; margin-top: 1em">The definition
+of &lt;i&gt;phrasal−level tags&lt;/i&gt; is obtained
+from the HTML::Tagset module.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This example
+extracts all links from a document. It will print one line
+for each link, containing the URL and the textual
+description between the &lt;A&gt;...&lt;/A&gt; tags:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+HTML::TokeParser; <br/>
+$p =
+HTML::TokeParser−&gt;new(shift||"index.html");
+<br/>
+while (my $token = $p−&gt;get_tag("a")) {
+<br/>
+my $url = $token−&gt;[1]{href} || "−";
+<br/>
+my $text = $p−&gt;get_trimmed_text("/a");
+<br/>
+print "$url\t$text\n"; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">This example
+extract the &lt;TITLE&gt; from the document:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+HTML::TokeParser; <br/>
+$p =
+HTML::TokeParser−&gt;new(shift||"index.html");
+<br/>
+if ($p−&gt;get_tag("title")) { <br/>
+my $title = $p−&gt;get_trimmed_text; <br/>
+print "Title: $title\n"; <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">HTML::PullParser,
+HTML::Parser</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+1998−2005 Gisle Aas.</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

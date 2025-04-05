@@ -1,0 +1,295 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:04 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Locale::Maketext::Simple</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Locale::Maketext::Simple</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#OPTIONS">OPTIONS</a><br/>
+<a href="#Class">Class</a><br/>
+<a href="#Path">Path</a><br/>
+<a href="#Style">Style</a><br/>
+<a href="#Export">Export</a><br/>
+<a href="#Subclass">Subclass</a><br/>
+<a href="#Decode">Decode</a><br/>
+<a href="#Encoding">Encoding</a><br/>
+<a href="#ACKNOWLEDGMENTS">ACKNOWLEDGMENTS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href='#The "MIT" License'>The "MIT" License</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Locale::Maketext::Simple
+− Simple interface to Locale::Maketext::Lexicon</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This document
+describes version 0.18 of Locale::Maketext::Simple, released
+Septermber 8, 2006.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Minimal setup
+(looks for <i>auto/Foo/*.po</i> and
+<i>auto/Foo/*.mo</i>):</p>
+<p style="margin-left:9%; margin-top: 1em">package Foo;
+<br/>
+use Locale::Maketext::Simple; # exports 'loc' <br/>
+loc_lang('fr'); # set language to French <br/>
+sub hello { <br/>
+print loc("Hello, [_1]!", "World"); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">More
+sophisticated example:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Foo::Bar; <br/>
+use Locale::Maketext::Simple ( <br/>
+Class =&gt; 'Foo', # search in auto/Foo/ <br/>
+Style =&gt; 'gettext', # %1 instead of [_1] <br/>
+Export =&gt; 'maketext', # maketext() instead of loc() <br/>
+Subclass =&gt; 'L10N', # Foo::L10N instead of Foo::I18N <br/>
+Decode =&gt; 1, # decode entries to unicode−strings
+<br/>
+Encoding =&gt; 'locale', # but encode lexicons in current
+locale <br/>
+# (needs Locale::Maketext::Lexicon 0.36) <br/>
+); <br/>
+sub japh { <br/>
+print maketext("Just another %1 hacker",
+"Perl"); <br/>
+}</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is a
+simple wrapper around <b>Locale::Maketext::Lexicon</b>,
+designed to alleviate the need of creating <i>Language
+Classes</i> for module authors.</p>
+<p style="margin-left:9%; margin-top: 1em">The language
+used is chosen from the loc_lang call. If a lookup is not
+possible, the i−default language will be used. If the
+lookup is not in the i−default language, then the key
+will be returned.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>Locale::Maketext::Lexicon</b> is not present, it
+implements a minimal localization function by simply
+interpolating "[_1]" with the first argument,
+"[_2]" with the second, etc. Interpolated function
+like "[quant,_1]" are treated as "[_1]",
+with the sole exception of "[tense,_1,X]", which
+will append "ing" to "_1" when X is
+"present", or appending "ed" to
+&lt;_1&gt; otherwise.</p>
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All options are
+passed either via the "use" statement, or via an
+explicit "import".</p>
+<h3>Class
+<a name="Class"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default,
+<b>Locale::Maketext::Simple</b> draws its source from the
+calling package’s <i>auto/</i> directory; you can
+override this behaviour by explicitly specifying another
+package as "Class".</p>
+<h3>Path
+<a name="Path"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If your PO and
+MO files are under a path elsewhere than "auto/",
+you may specify it using the "Path" option.</p>
+<h3>Style
+<a name="Style"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default, this
+module uses the "maketext" style of
+"[_1]" and "[quant,_1]" for
+interpolation. Alternatively, you can specify the
+"gettext" style, which uses %1 and %quant(%1) for
+interpolation.</p>
+<p style="margin-left:9%; margin-top: 1em">This option is
+case-insensitive.</p>
+<h3>Export
+<a name="Export"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default, this
+module exports a single function, "loc", into its
+caller’s namespace. You can set it to another name, or
+set it to an empty string to disable exporting.</p>
+<h3>Subclass
+<a name="Subclass"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">By default, this
+module creates an "::I18N" subclass under the
+caller’s package (or the package specified by
+"Class"), and stores lexicon data in its
+subclasses. You can assign a name other than
+"I18N" via this option.</p>
+<h3>Decode
+<a name="Decode"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If set to a true
+value, source entries will be converted into
+utf8−strings (available in Perl 5.6.1 or later). This
+feature needs the <b>Encode</b> or <b>Encode::compat</b>
+module.</p>
+<h3>Encoding
+<a name="Encoding"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Specifies an
+encoding to store lexicon entries, instead of
+utf8−strings. If set to "locale", the
+encoding from the current locale setting is used. Implies a
+true value for "Decode".</p>
+<h2>ACKNOWLEDGMENTS
+<a name="ACKNOWLEDGMENTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Thanks to Jos I.
+Boumans for suggesting this module to be written.</p>
+<p style="margin-left:9%; margin-top: 1em">Thanks to
+Chia-Liang Kao for suggesting "Path" and
+"loc_lang".</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Locale::Maketext,
+Locale::Maketext::Lexicon</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Audrey Tang
+&lt;cpan@audreyt.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright 2003,
+2004, 2005, 2006 by Audrey Tang
+&lt;cpan@audreyt.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This software is
+released under the MIT license cited below. Additionally,
+when this software is distributed with <b>Perl Kit, Version
+5</b>, you may also redistribute it and/or modify it under
+the same terms as Perl itself.</p>
+<h3>The "MIT" License
+<a name='The "MIT" License'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Permission is
+hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files
+(the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom
+the Software is furnished to do so, subject to the following
+conditions:</p>
+<p style="margin-left:9%; margin-top: 1em">The above
+copyright notice and this permission notice shall be
+included in all copies or substantial portions of the
+Software.</p>
+<p style="margin-left:9%; margin-top: 1em">THE SOFTWARE IS
+PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<hr/>
+</body>
+</html>

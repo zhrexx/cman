@@ -1,0 +1,240 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:24 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_GET_CIPHERS</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_GET_CIPHERS</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_get1_supported_ciphers,
+SSL_get_client_ciphers, SSL_get_ciphers,
+SSL_CTX_get_ciphers, SSL_bytes_to_cipher_list,
+SSL_get_cipher_list, SSL_get_shared_ciphers − get list
+of available SSL_CIPHERs</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+STACK_OF(SSL_CIPHER) *SSL_get_ciphers(const SSL *ssl); <br/>
+STACK_OF(SSL_CIPHER) *SSL_CTX_get_ciphers(const SSL_CTX
+*ctx); <br/>
+STACK_OF(SSL_CIPHER) *SSL_get1_supported_ciphers(SSL *s);
+<br/>
+STACK_OF(SSL_CIPHER) *SSL_get_client_ciphers(const SSL
+*ssl); <br/>
+int SSL_bytes_to_cipher_list(SSL *s, const unsigned char
+*bytes, size_t len, <br/>
+int isv2format, STACK_OF(SSL_CIPHER) **sk, <br/>
+STACK_OF(SSL_CIPHER) **scsvs); <br/>
+const char *SSL_get_cipher_list(const SSL *ssl, int
+priority); <br/>
+char *SSL_get_shared_ciphers(const SSL *s, char *buf, int
+size);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_ciphers()</b>
+returns the stack of available SSL_CIPHERs for <b>ssl</b>,
+sorted by preference. If <b>ssl</b> is NULL or no ciphers
+are available, NULL is returned.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_get_ciphers()</b>
+returns the stack of available SSL_CIPHERs for
+<b>ctx</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get1_supported_ciphers()</b>
+returns the stack of enabled SSL_CIPHERs for <b>ssl</b> as
+would be sent in a ClientHello (that is, sorted by
+preference). The list depends on settings like the cipher
+list, the supported protocol versions, the security level,
+and the enabled signature algorithms. SRP and PSK ciphers
+are only enabled if the appropriate callbacks or settings
+have been applied. The list of ciphers that would be sent in
+a ClientHello can differ from the list of ciphers that would
+be acceptable when acting as a server. For example,
+additional ciphers may be usable by a server if there is a
+gap in the list of supported protocols, and some ciphers may
+not be usable by a server if there is not a suitable
+certificate configured. If <b>ssl</b> is NULL or no ciphers
+are available, NULL is returned.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_client_ciphers()</b>
+returns the stack of available SSL_CIPHERs matching the list
+received from the client on <b>ssl</b>. If <b>ssl</b> is
+NULL, no ciphers are available, or <b>ssl</b> is not
+operating in server mode, NULL is returned.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_bytes_to_cipher_list()</b>
+treats the supplied <b>len</b> octets in <b>bytes</b> as a
+wire−protocol cipher suite specification (in the
+three−octet−per−cipher SSLv2 wire format
+if <b>isv2format</b> is nonzero; otherwise the
+two−octet SSLv3/TLS wire format), and parses the
+cipher suites supported by the library into the returned
+stacks of SSL_CIPHER objects sk and Signalling
+Cipher−Suite Values scsvs. Unsupported cipher suites
+are ignored. Returns 1 on success and 0 on failure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_cipher_list()</b>
+returns a pointer to the name of the SSL_CIPHER listed for
+<b>ssl</b> with <b>priority</b>. If <b>ssl</b> is NULL, no
+ciphers are available, or there are less ciphers than
+<b>priority</b> available, NULL is returned.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_shared_ciphers()</b>
+creates a colon separated and NUL terminated list of
+SSL_CIPHER names that are available in both the client and
+the server. <b>buf</b> is the buffer that should be
+populated with the list of names and <b>size</b> is the size
+of that buffer. A pointer to <b>buf</b> is returned on
+success or NULL on error. If the supplied buffer is not
+large enough to contain the complete list of names then a
+truncated list of names will be returned. Note that just
+because a ciphersuite is available (i.e. it is configured in
+the cipher list) and shared by both the client and the
+server it does not mean that it is enabled (see the
+description of <b>SSL_get1_supported_ciphers()</b> above).
+This function will return available shared ciphersuites
+whether or not they are enabled. This is a server side
+function only and must only be called after the completion
+of the initial handshake.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The details of
+the ciphers obtained by <b>SSL_get_ciphers()</b>,
+<b>SSL_CTX_get_ciphers() SSL_get1_supported_ciphers()</b>
+and <b>SSL_get_client_ciphers()</b> can be obtained using
+the <b>SSL_CIPHER_get_name</b>(3) family of functions.</p>
+<p style="margin-left:9%; margin-top: 1em">Call
+<b>SSL_get_cipher_list()</b> with <b>priority</b> starting
+from 0 to obtain the sorted list of available ciphers, until
+NULL is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">Note:
+<b>SSL_get_ciphers()</b>, <b>SSL_CTX_get_ciphers()</b> and
+<b>SSL_get_client_ciphers()</b> return a pointer to an
+internal cipher stack, which will be freed later on when the
+SSL or SSL_SESSION object is freed. Therefore, the calling
+code <b>MUST NOT</b> free the return value itself.</p>
+<p style="margin-left:9%; margin-top: 1em">The stack
+returned by <b>SSL_get1_supported_ciphers()</b> should be
+freed using <b>sk_SSL_CIPHER_free()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The stacks
+returned by <b>SSL_bytes_to_cipher_list()</b> should be
+freed using <b>sk_SSL_CIPHER_free()</b>.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See
+DESCRIPTION</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_CTX_set_cipher_list</b>(3),
+<b>SSL_CIPHER_get_name</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2000−2018 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

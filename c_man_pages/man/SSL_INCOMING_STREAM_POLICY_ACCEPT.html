@@ -1,0 +1,211 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:29 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_SET_INCOMING_STREAM_POLICY</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_SET_INCOMING_STREAM_POLICY</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_set_incoming_stream_policy,
+SSL_INCOMING_STREAM_POLICY_AUTO,
+SSL_INCOMING_STREAM_POLICY_ACCEPT,
+SSL_INCOMING_STREAM_POLICY_REJECT − manage the QUIC
+incoming stream policy</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+#define SSL_INCOMING_STREAM_POLICY_AUTO <br/>
+#define SSL_INCOMING_STREAM_POLICY_ACCEPT <br/>
+#define SSL_INCOMING_STREAM_POLICY_REJECT <br/>
+int SSL_set_incoming_stream_policy(SSL *conn, int policy,
+<br/>
+uint64_t app_error_code);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_incoming_stream_policy()</b>
+policy changes the incoming stream policy for a QUIC
+connection. Depending on the policy configured, OpenSSL QUIC
+may automatically reject incoming streams initiated by the
+peer. This is intended to ensure that legacy applications
+using single−stream operation with a default stream on
+a QUIC connection SSL object are not passed
+remotely−initiated streams by a peer which those
+applications are not prepared to handle.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>app_error_code</i>
+is an application error code which will be used in any QUIC
+<b>STOP_SENDING</b> or <b>RESET_STREAM</b> frames generated
+to implement the policy. The default application error code
+is 0.</p>
+<p style="margin-left:9%; margin-top: 1em">The valid values
+for <i>policy</i> are: <br/>
+SSL_INCOMING_STREAM_POLICY_AUTO</p>
+<p style="margin-left:14%;">This is the default setting.
+Incoming streams are accepted according to the following
+rules:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>If the default stream mode (configured using
+<b>SSL_set_default_stream_mode</b>(3)) is set to
+<b>SSL_DEFAULT_STREAM_MODE_AUTO_BIDI</b> (the default) or
+<b>SSL_DEFAULT_STREAM_MODE_AUTO_UNI</b>, the incoming stream
+is rejected.</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>Otherwise (where the default stream mode is
+<b>SSL_DEFAULT_STREAM_MODE_NONE</b>), the application is
+assumed to be stream aware, and the incoming stream is
+accepted.</p> </td></tr>
+</table>
+<p style="margin-left:9%;">SSL_INCOMING_STREAM_POLICY_ACCEPT</p>
+<p style="margin-left:14%;">Always accept incoming streams,
+allowing them to be dequeued using
+<b>SSL_accept_stream</b>(3).</p>
+<p style="margin-left:9%;">SSL_INCOMING_STREAM_POLICY_REJECT</p>
+<p style="margin-left:14%;">Always reject incoming
+streams.</p>
+<p style="margin-left:9%; margin-top: 1em">Where an
+incoming stream is rejected, it is rejected immediately and
+it is not possible to gain access to the stream using
+<b>SSL_accept_stream</b>(3). The stream is rejected using
+QUIC <b>STOP_SENDING</b> and <b>RESET_STREAM</b> frames as
+appropriate.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns 1 on
+success and 0 on failure.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+fails if called on a QUIC stream SSL object, or on a
+non−QUIC SSL object.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_default_stream_mode</b>(3),
+<b>SSL_accept_stream</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_incoming_stream_policy()</b>
+was added in OpenSSL 3.2.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2002−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

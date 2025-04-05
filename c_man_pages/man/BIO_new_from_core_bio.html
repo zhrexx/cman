@@ -1,0 +1,185 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:40 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BIO_S_CORE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">BIO_S_CORE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">BIO_s_core,
+BIO_new_from_core_bio − OSSL_CORE_BIO functions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/bio.h&gt; <br/>
+const BIO_METHOD *BIO_s_core(void); <br/>
+BIO *BIO_new_from_core_bio(OSSL_LIB_CTX *libctx,
+OSSL_CORE_BIO *corebio);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_s_core()</b>
+returns the core BIO method function.</p>
+<p style="margin-left:9%; margin-top: 1em">A core BIO is
+treated as source/sink BIO which communicates to some
+external BIO. This is primarily useful to provider authors.
+A number of calls from libcrypto into a provider supply an
+OSSL_CORE_BIO parameter. This represents a BIO within
+libcrypto, but cannot be used directly by a provider.
+Instead it should be wrapped using a
+<b>BIO_s_core()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">Once a BIO is
+constructed based on <b>BIO_s_core()</b>, the associated
+OSSL_CORE_BIO object should be set on it using
+<b>BIO_set_data</b>(3). Note that the BIO will only operate
+correctly if it is associated with a library context
+constructed using <b>OSSL_LIB_CTX_new_from_dispatch</b>(3).
+To associate the BIO with a library context construct it
+using <b>BIO_new_ex</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_new_from_core_bio()</b>
+is a convenience function that constructs a new BIO based on
+<b>BIO_s_core()</b> and that is associated with the given
+library context. It then also sets the OSSL_CORE_BIO object
+on the BIO using <b>BIO_set_data</b>(3).</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_s_core()</b>
+return a core BIO <b>BIO_METHOD</b> structure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_new_from_core_bio()</b>
+returns a BIO structure on success or NULL on failure. A
+failure will most commonly be because the library context
+was not constructed using
+<b>OSSL_LIB_CTX_new_from_dispatch</b>(3).</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_s_core()</b>
+and <b>BIO_new_from_core_bio()</b> were added in OpenSSL
+3.0.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Create a core
+BIO and write some data to it:</p>
+<p style="margin-left:9%; margin-top: 1em">int
+some_function(OSSL_LIB_CTX *libctx, OSSL_CORE_BIO *corebio)
+{ <br/>
+BIO *cbio = BIO_new_from_core_bio(libctx, corebio); <br/>
+if (cbio == NULL) <br/>
+return 0; <br/>
+BIO_puts(cbio, "Hello World\n"); <br/>
+BIO_free(cbio); <br/>
+return 1; <br/>
+}</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2021−2022 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

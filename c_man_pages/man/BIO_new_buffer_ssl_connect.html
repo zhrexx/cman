@@ -1,0 +1,430 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:40 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BIO_F_SSL</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">BIO_F_SSL</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">BIO_do_handshake,
+BIO_f_ssl, BIO_set_ssl, BIO_get_ssl, BIO_set_ssl_mode,
+BIO_set_ssl_renegotiate_bytes, BIO_get_num_renegotiates,
+BIO_set_ssl_renegotiate_timeout, BIO_new_ssl,
+BIO_new_ssl_connect, BIO_new_buffer_ssl_connect,
+BIO_ssl_copy_session_id, BIO_ssl_shutdown − SSL
+BIO</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/bio.h&gt; <br/>
+#include &lt;openssl/ssl.h&gt; <br/>
+const BIO_METHOD *BIO_f_ssl(void); <br/>
+long BIO_set_ssl(BIO *b, SSL *ssl, long c); <br/>
+long BIO_get_ssl(BIO *b, SSL **sslp); <br/>
+long BIO_set_ssl_mode(BIO *b, long client); <br/>
+long BIO_set_ssl_renegotiate_bytes(BIO *b, long num); <br/>
+long BIO_set_ssl_renegotiate_timeout(BIO *b, long seconds);
+<br/>
+long BIO_get_num_renegotiates(BIO *b); <br/>
+BIO *BIO_new_ssl(SSL_CTX *ctx, int client); <br/>
+BIO *BIO_new_ssl_connect(SSL_CTX *ctx); <br/>
+BIO *BIO_new_buffer_ssl_connect(SSL_CTX *ctx); <br/>
+int BIO_ssl_copy_session_id(BIO *to, BIO *from); <br/>
+void BIO_ssl_shutdown(BIO *bio); <br/>
+long BIO_do_handshake(BIO *b);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_f_ssl()</b>
+returns the SSL BIO method. This is a filter BIO which is a
+wrapper round the OpenSSL SSL routines adding a BIO
+"flavour" to SSL I/O.</p>
+<p style="margin-left:9%; margin-top: 1em">I/O performed on
+an SSL BIO communicates using the SSL protocol with the SSLs
+read and write BIOs. If an SSL connection is not established
+then an attempt is made to establish one on the first I/O
+call.</p>
+<p style="margin-left:9%; margin-top: 1em">If a BIO is
+appended to an SSL BIO using <b>BIO_push()</b> it is
+automatically used as the SSL BIOs read and write BIOs.</p>
+<p style="margin-left:9%; margin-top: 1em">Calling
+<b>BIO_reset()</b> on an SSL BIO closes down any current SSL
+connection by calling <b>SSL_shutdown()</b>.
+<b>BIO_reset()</b> is then sent to the next BIO in the
+chain: this will typically disconnect the underlying
+transport. The SSL BIO is then reset to the initial accept
+or connect state.</p>
+<p style="margin-left:9%; margin-top: 1em">If the close
+flag is set when an SSL BIO is freed then the internal SSL
+structure is also freed using <b>SSL_free()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_set_ssl()</b>
+sets the internal SSL pointer of SSL BIO <b>b</b> to
+<b>ssl</b> using the close flag <b>c</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_ssl()</b>
+retrieves the SSL pointer of SSL BIO <b>b</b>, it can then
+be manipulated using the standard SSL library functions.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_set_ssl_mode()</b>
+sets the SSL BIO mode to <b>client</b>. If <b>client</b> is
+1 client mode is set. If <b>client</b> is 0 server mode is
+set.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_set_ssl_renegotiate_bytes()</b>
+sets the renegotiate byte count of SSL BIO <b>b</b> to
+<b>num</b>. When set after every <b>num</b> bytes of I/O
+(read and write) the SSL session is automatically
+renegotiated. <b>num</b> must be at least 512 bytes.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_set_ssl_renegotiate_timeout()</b>
+sets the renegotiate timeout of SSL BIO <b>b</b> to
+<b>seconds</b>. When the renegotiate timeout elapses the
+session is automatically renegotiated.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_num_renegotiates()</b>
+returns the total number of session renegotiations due to
+I/O or timeout of SSL BIO <b>b</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_new_ssl()</b>
+allocates an SSL BIO using SSL_CTX <b>ctx</b> and using
+client mode if <b>client</b> is non zero.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_new_ssl_connect()</b>
+creates a new BIO chain consisting of an SSL BIO (using
+<b>ctx</b>) followed by a connect BIO.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_new_buffer_ssl_connect()</b>
+creates a new BIO chain consisting of a buffering BIO, an
+SSL BIO (using <b>ctx</b>), and a connect BIO.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_ssl_copy_session_id()</b>
+copies an SSL session id between BIO chains <b>from</b> and
+<b>to</b>. It does this by locating the SSL BIOs in each
+chain and calling <b>SSL_copy_session_id()</b> on the
+internal SSL pointer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_ssl_shutdown()</b>
+closes down an SSL connection on BIO chain <b>bio</b>. It
+does this by locating the SSL BIO in the chain and calling
+<b>SSL_shutdown()</b> on its internal SSL pointer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_do_handshake()</b>
+attempts to complete an SSL handshake on the supplied BIO
+and establish the SSL connection. For non−SSL BIOs the
+connection is done typically at TCP level. If domain name
+resolution yields multiple IP addresses all of them are
+tried after <b>connect()</b> failures. The function returns
+1 if the connection was established successfully. A zero or
+negative value is returned if the connection could not be
+established. The call <b>BIO_should_retry()</b> should be
+used for nonblocking connect BIOs to determine if the call
+should be retried. If a connection has already been
+established this call has no effect.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL BIOs are
+exceptional in that if the underlying transport is non
+blocking they can still request a retry in exceptional
+circumstances. Specifically this will happen if a session
+renegotiation takes place during a <b>BIO_read_ex()</b>
+operation, one case where this happens is when step up
+occurs.</p>
+<p style="margin-left:9%; margin-top: 1em">The SSL flag
+SSL_AUTO_RETRY can be set to disable this behaviour. That is
+when this flag is set an SSL BIO using a blocking transport
+will never request a retry.</p>
+<p style="margin-left:9%; margin-top: 1em">Since unknown
+<b>BIO_ctrl()</b> operations are sent through filter BIOs
+the servers name and port can be set using
+<b>BIO_set_host()</b> on the BIO returned by
+<b>BIO_new_ssl_connect()</b> without having to locate the
+connect BIO first.</p>
+<p style="margin-left:9%; margin-top: 1em">Applications do
+not have to call <b>BIO_do_handshake()</b> but may wish to
+do so to separate the handshake process from other I/O
+processing.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_set_ssl()</b>,
+<b>BIO_get_ssl()</b>, <b>BIO_set_ssl_mode()</b>,
+<b>BIO_set_ssl_renegotiate_bytes()</b>,
+<b>BIO_set_ssl_renegotiate_timeout()</b>,
+<b>BIO_get_num_renegotiates()</b>, and
+<b>BIO_do_handshake()</b> are implemented as macros.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_ssl_copy_session_id()</b>
+is not currently supported on QUIC SSL objects and fails if
+called on such an object.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_f_ssl()</b>
+returns the SSL <b>BIO_METHOD</b> structure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_set_ssl()</b>,
+<b>BIO_get_ssl()</b>, <b>BIO_set_ssl_mode()</b>,
+<b>BIO_set_ssl_renegotiate_bytes()</b>,
+<b>BIO_set_ssl_renegotiate_timeout()</b> and
+<b>BIO_get_num_renegotiates()</b> return 1 on success or a
+value which is less than or equal to 0 if an error
+occurred.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_new_ssl()</b>,
+<b>BIO_new_ssl_connect()</b> and
+<b>BIO_new_buffer_ssl_connect()</b> return a valid
+<b>BIO</b> structure on success or <b>NULL</b> if an error
+occurred.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_ssl_copy_session_id()</b>
+returns 1 on success or 0 on error, or if called on a QUIC
+SSL object.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_do_handshake()</b>
+returns 1 if the connection was established successfully. A
+zero or negative value is returned if the connection could
+not be established.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This SSL/TLS
+client example attempts to retrieve a page from an SSL/TLS
+web server. The I/O routines are identical to those of the
+unencrypted example in <b>BIO_s_connect</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">BIO *sbio, *out;
+<br/>
+int len; <br/>
+char tmpbuf[1024]; <br/>
+SSL_CTX *ctx; <br/>
+SSL *ssl; <br/>
+/* XXX Seed the PRNG if needed. */ <br/>
+ctx = SSL_CTX_new(TLS_client_method()); <br/>
+/* XXX Set verify paths and mode here. */ <br/>
+sbio = BIO_new_ssl_connect(ctx); <br/>
+BIO_get_ssl(sbio, &amp;ssl); <br/>
+if (ssl == NULL) { <br/>
+fprintf(stderr, "Can't locate SSL pointer\n");
+<br/>
+ERR_print_errors_fp(stderr); <br/>
+exit(1); <br/>
+} <br/>
+/* XXX We might want to do other things with ssl here */
+<br/>
+/* An empty host part means the loopback address */ <br/>
+BIO_set_conn_hostname(sbio, ":https"); <br/>
+out = BIO_new_fp(stdout, BIO_NOCLOSE); <br/>
+if (BIO_do_connect(sbio) &lt;= 0) { <br/>
+fprintf(stderr, "Error connecting to server\n");
+<br/>
+ERR_print_errors_fp(stderr); <br/>
+exit(1); <br/>
+} <br/>
+/* XXX Could examine ssl here to get connection info */ <br/>
+BIO_puts(sbio, "GET / HTTP/1.0\n\n"); <br/>
+for (;;) { <br/>
+len = BIO_read(sbio, tmpbuf, 1024); <br/>
+if (len &lt;= 0) <br/>
+break; <br/>
+BIO_write(out, tmpbuf, len); <br/>
+} <br/>
+BIO_free_all(sbio); <br/>
+BIO_free(out);</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a simple
+server example. It makes use of a buffering BIO to allow
+lines to be read from the SSL BIO using BIO_gets. It creates
+a pseudo web page containing the actual request from a
+client and also echoes the request to standard output.</p>
+<p style="margin-left:9%; margin-top: 1em">BIO *sbio,
+*bbio, *acpt, *out; <br/>
+int len; <br/>
+char tmpbuf[1024]; <br/>
+SSL_CTX *ctx; <br/>
+SSL *ssl; <br/>
+/* XXX Seed the PRNG if needed. */ <br/>
+ctx = SSL_CTX_new(TLS_server_method()); <br/>
+if (!SSL_CTX_use_certificate_file(ctx,
+"server.pem", SSL_FILETYPE_PEM) <br/>
+|| !SSL_CTX_use_PrivateKey_file(ctx, "server.pem",
+SSL_FILETYPE_PEM) <br/>
+|| !SSL_CTX_check_private_key(ctx)) { <br/>
+fprintf(stderr, "Error setting up SSL_CTX\n");
+<br/>
+ERR_print_errors_fp(stderr); <br/>
+exit(1); <br/>
+} <br/>
+/* XXX Other things like set verify locations, EDH temp
+callbacks. */ <br/>
+/* New SSL BIO setup as server */ <br/>
+sbio = BIO_new_ssl(ctx, 0); <br/>
+BIO_get_ssl(sbio, &amp;ssl); <br/>
+if (ssl == NULL) { <br/>
+fprintf(stderr, "Can't locate SSL pointer\n");
+<br/>
+ERR_print_errors_fp(stderr); <br/>
+exit(1); <br/>
+} <br/>
+bbio = BIO_new(BIO_f_buffer()); <br/>
+sbio = BIO_push(bbio, sbio); <br/>
+acpt = BIO_new_accept("4433"); <br/>
+/* <br/>
+* By doing this when a new connection is established <br/>
+* we automatically have sbio inserted into it. The <br/>
+* BIO chain is now 'swallowed' by the accept BIO and <br/>
+* will be freed when the accept BIO is freed. <br/>
+*/ <br/>
+BIO_set_accept_bios(acpt, sbio); <br/>
+out = BIO_new_fp(stdout, BIO_NOCLOSE); <br/>
+/* First call to BIO_do_accept() sets up accept BIO */ <br/>
+if (BIO_do_accept(acpt) &lt;= 0) { <br/>
+fprintf(stderr, "Error setting up accept BIO\n");
+<br/>
+ERR_print_errors_fp(stderr); <br/>
+exit(1); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">/* Second call
+to <b>BIO_do_accept()</b> waits for incoming connection */
+<br/>
+if (BIO_do_accept(acpt) &lt;= 0) { <br/>
+fprintf(stderr, "Error accepting connection\n");
+<br/>
+ERR_print_errors_fp(stderr); <b><br/>
+exit</b>(1); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">/* We only want
+one connection so remove and free accept BIO */ <br/>
+sbio = BIO_pop(acpt); <br/>
+BIO_free_all(acpt); <br/>
+if (BIO_do_handshake(sbio) &lt;= 0) { <br/>
+fprintf(stderr, "Error in SSL handshake\n"); <br/>
+ERR_print_errors_fp(stderr); <br/>
+exit(1); <br/>
+} <br/>
+BIO_puts(sbio, "HTTP/1.0 200 OK\r\nContent−type:
+text/plain\r\n\r\n"); <br/>
+BIO_puts(sbio, "\r\nConnection Established\r\nRequest
+headers:\r\n"); <br/>
+BIO_puts(sbio,
+"−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−\r\n");
+<br/>
+for (;;) { <br/>
+len = BIO_gets(sbio, tmpbuf, 1024); <br/>
+if (len &lt;= 0) <br/>
+break; <br/>
+BIO_write(sbio, tmpbuf, len); <br/>
+BIO_write(out, tmpbuf, len); <br/>
+/* Look for blank line signifying end of headers*/ <br/>
+if (tmpbuf[0] == '\r' || tmpbuf[0] == '\n') <br/>
+break; <br/>
+} <br/>
+BIO_puts(sbio,
+"−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−\r\n");
+<br/>
+BIO_puts(sbio, "\r\n"); <br/>
+BIO_flush(sbio); <br/>
+BIO_free_all(sbio);</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">In OpenSSL
+before 1.0.0 the <b>BIO_pop()</b> call was handled
+incorrectly, the I/O BIO reference count was incorrectly
+incremented (instead of decremented) and dissociated with
+the SSL BIO even if the SSL BIO was not explicitly being
+popped (e.g. a pop higher up the chain). Applications which
+included workarounds for this bug (e.g. freeing BIOs more
+than once) should be modified to handle this fix or they may
+free up an already freed BIO.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2000−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

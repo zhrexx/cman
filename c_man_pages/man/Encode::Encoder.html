@@ -1,0 +1,276 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:47 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Encode::Encoder</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Encode::Encoder</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#ABSTRACT">ABSTRACT</a><br/>
+<a href="#Description">Description</a><br/>
+<a href="#Predefined Methods">Predefined Methods</a><br/>
+<a href="#Example: base64 transcoder">Example: base64 transcoder</a><br/>
+<a href="#Operator Overloading">Operator Overloading</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode::Encoder
+−− Object Oriented Encoder</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Encode::Encoder; <br/>
+# Encode::encode("ISO−8859−1", $data);
+<br/>
+Encode::Encoder−&gt;new($data)−&gt;iso_8859_1; #
+OOP way <br/>
+# shortcut <br/>
+use Encode::Encoder qw(encoder); <br/>
+encoder($data)−&gt;iso_8859_1; <br/>
+# you can stack them! <br/>
+encoder($data)−&gt;iso_8859_1−&gt;base64; #
+provided base64() is defined <br/>
+# you can use it as a decoder as well <br/>
+
+encoder($base64)−&gt;bytes('base64')−&gt;latin1;
+<br/>
+# stringified <br/>
+print encoder($data)−&gt;utf8−&gt;latin1; #
+prints the string in latin1 <br/>
+# numified <br/>
+encoder("\x{abcd}\x{ef}g")−&gt;utf8 == 6; #
+true. bytes::length($data)</p>
+<h2>ABSTRACT
+<a name="ABSTRACT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Encode::Encoder</b>
+allows you to use Encode in an object−oriented style.
+This is not only more intuitive than a functional approach,
+but also handier when you want to stack encodings. Suppose
+you want your UTF−8 string converted to Latin1 then
+Base64: you can simply say</p>
+<p style="margin-left:9%; margin-top: 1em">my $base64 =
+encoder($utf8)−&gt;latin1−&gt;base64;</p>
+<p style="margin-left:9%; margin-top: 1em">instead of</p>
+<p style="margin-left:9%; margin-top: 1em">my $latin1 =
+encode("latin1", $utf8); <br/>
+my $base64 = encode_base64($utf8);</p>
+<p style="margin-left:9%; margin-top: 1em">or the lazier
+and more convoluted</p>
+<p style="margin-left:9%; margin-top: 1em">my $base64 =
+encode_base64(encode("latin1", $utf8));</p>
+<h2>Description
+<a name="Description"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Here is how to
+use this module.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>There are at least two instance variables stored in a
+hash reference, {data} and {encoding}.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>When there is no method, it takes the method name as the
+name of the encoding and encodes the instance <i>data</i>
+with <i>encoding</i>. If successful, the instance
+<i>encoding</i> is set accordingly.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>You can retrieve the result via −&gt;data but
+usually you don't have to because the stringify operator
+("") is overridden to do exactly that.</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<h3>Predefined Methods
+<a name="Predefined Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This module
+predefines the methods below: <br/>
+$e = Encode::Encoder−&gt;new([$data, $encoding]);</p>
+<p style="margin-left:14%;">returns an encoder object. Its
+data is initialized with $data if present, and its encoding
+is set to $encoding if present.</p>
+<p style="margin-left:14%; margin-top: 1em">When $encoding
+is omitted, it defaults to utf8 if $data is already in utf8
+or "" (empty string) otherwise.</p>
+<p style="margin-left:9%;"><b>encoder()</b></p>
+<p style="margin-left:14%;">is an alias of
+Encode::Encoder−&gt;<b>new()</b>. This one is exported
+on demand.</p>
+<p style="margin-left:9%;">$e−&gt;data([$data])</p>
+<p style="margin-left:14%;">When $data is present, sets the
+instance data to $data and returns the object itself.
+Otherwise, the current instance data is returned.</p>
+<p style="margin-left:9%;">$e−&gt;encoding([$encoding])</p>
+<p style="margin-left:14%;">When $encoding is present, sets
+the instance encoding to $encoding and returns the object
+itself. Otherwise, the current instance encoding is
+returned.</p>
+<p style="margin-left:9%;">$e−&gt;bytes([$encoding])</p>
+<p style="margin-left:14%;">decodes instance data from
+$encoding, or the instance encoding if omitted. If the
+conversion is successful, the instance encoding will be set
+to "".</p>
+<p style="margin-left:14%; margin-top: 1em">The name
+<i>bytes</i> was deliberately picked to avoid namespace
+tainting −− this module may be used as a base
+class so method names that appear in Encode::Encoding are
+avoided.</p>
+<h3>Example: base64 transcoder
+<a name="Example: base64 transcoder"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This module is
+designed to work with Encode::Encoding. To make the Base64
+transcoder example above really work, you could write a
+module like this:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Encode::Base64; <br/>
+use parent 'Encode::Encoding'; <br/>
+__PACKAGE__−&gt;Define('base64'); <br/>
+use MIME::Base64; <br/>
+sub encode{ <br/>
+my ($obj, $data) = @_; <br/>
+return encode_base64($data); <br/>
+} <br/>
+sub decode{ <br/>
+my ($obj, $data) = @_; <br/>
+return decode_base64($data); <br/>
+} <br/>
+1; <br/>
+__END__</p>
+<p style="margin-left:9%; margin-top: 1em">And your caller
+module would be something like this:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Encode::Encoder; <br/>
+use Encode::Base64; <br/>
+# now you can really do the following <br/>
+encoder($data)−&gt;iso_8859_1−&gt;base64; <br/>
+
+encoder($base64)−&gt;bytes('base64')−&gt;latin1;</p>
+<h3>Operator Overloading
+<a name="Operator Overloading"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This module
+overloads two operators, stringify ("") and numify
+(0+).</p>
+<p style="margin-left:9%; margin-top: 1em">Stringify dumps
+the data inside the object.</p>
+<p style="margin-left:9%; margin-top: 1em">Numify returns
+the number of bytes in the instance data.</p>
+<p style="margin-left:9%; margin-top: 1em">They come in
+handy when you want to print or find the size of data.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode,
+Encode::Encoding</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:58 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Lexical::SealRequireHints</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Lexical::SealRequireHints</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#PERL VERSION DIFFERENCES">PERL VERSION DIFFERENCES</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Lexical::SealRequireHints
+− prevent leakage of lexical hints</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Lexical::SealRequireHints;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+works around two historical bugs in Perl's handling of the
+"%ˆH" (lexical hints) variable. One bug
+causes lexical state in one file to leak into another that
+is "require"d/"use"d/"do"ed
+from it. This bug, [perl #68590], was present from Perl 5.6
+up to Perl 5.10, fixed in Perl 5.11.0. The second bug causes
+lexical state (normally a blank "%ˆH" once
+the first bug is fixed) to leak outwards from
+"utf8.pm", if it is automatically loaded during
+Unicode regular expression matching, into whatever source is
+compiling at the time of the regexp match. This bug, [perl
+#73174], was present from Perl 5.8.7 up to Perl 5.11.5,
+fixed in Perl 5.12.0.</p>
+<p style="margin-left:9%; margin-top: 1em">Both of these
+bugs seriously damage the usability of any module relying on
+"%ˆH" for lexical scoping, on the affected
+Perl versions. It is in practice essential to work around
+these bugs when using such modules. On versions of Perl that
+require such a workaround, this module globally changes the
+behaviour of "require", including "use"
+and the implicit "require" performed in Unicode
+regular expression matching, and of "do", so that
+they no longer exhibit these bugs.</p>
+<p style="margin-left:9%; margin-top: 1em">The workaround
+supplied by this module takes effect the first time its
+"import" method is called. Typically this will be
+done by means of a "use" statement. This should be
+done as early as possible, because it only affects
+"require"/"use"/"do"
+statements that are compiled after the workaround goes into
+effect. For "use" statements, and
+"require" and "do" statements that are
+executed immediately and only once, it suffices to invoke
+the workaround when loading the first module that will set
+up vulnerable lexical state. Delayed−action
+"require" and "do" statements, however,
+are more troublesome, and can require the workaround to be
+loaded much earlier. Ultimately, an affected Perl program
+may need to load the workaround as very nearly its first
+action. Invoking this module multiple times, from multiple
+modules, is not a problem: the workaround is only applied
+once, and applies to everything subsequently compiled.</p>
+<p style="margin-left:9%; margin-top: 1em">This module is
+implemented in XS, with a pure Perl backup version for
+systems that can't handle XS modules. The XS version has a
+better chance of playing nicely with other modules that
+modify "require" or "do" handling. The
+pure Perl version can't work at all on some Perl versions;
+users of those versions must use the XS. On all Perl
+versions suffering the underlying hint leakage bug, pure
+Perl hooking of "require" breaks the use of
+"require" without an explicit parameter
+(implicitly using $_).</p>
+<h2>PERL VERSION DIFFERENCES
+<a name="PERL VERSION DIFFERENCES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The history of
+the "%ˆH" bugs is complex. Here is a
+chronological statement of the relevant changes. <br/>
+Perl 5.6.0</p>
+<p style="margin-left:14%;">"%ˆH"
+introduced. It exists only as a hash at compile time. It is
+not localised by "require"/"do", so
+lexical hints leak into every module loaded, which is bug
+[perl #68590].</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"CORE::GLOBAL" mechanism doesn't work cleanly for
+"require", because overriding "require"
+loses the necessary special parsing of bareword arguments to
+it. As a result, pure Perl code can't properly globally
+affect the behaviour of "require". Pure Perl code
+can localise "%ˆH" itself for any particular
+"require" invocation, but a global fix is only
+possible through XS.</p>
+<p style="margin-left:9%;">Perl 5.7.2</p>
+<p style="margin-left:14%;">The "CORE::GLOBAL"
+mechanism now works cleanly for "require", so pure
+Perl code can globally affect the behaviour of
+"require" to achieve a global fix for the bug.</p>
+<p style="margin-left:9%;">Perl 5.8.7</p>
+<p style="margin-left:14%;">When "utf8.pm" is
+automatically loaded during Unicode regular expression
+matching, "%ˆH" now leaks outward from it
+into whatever source is compiling at the time of the regexp
+match, which is bug [perl #73174]. It often goes unnoticed,
+because [perl #68590] makes "%ˆH" leak into
+"utf8.pm" which then doesn't modify it, so what
+leaks out tends to be identical to what leaked in. If [perl
+#68590] is worked around, however, "%ˆH"
+tends to be (correctly) blank inside "utf8.pm",
+and this bug therefore blanks it for the outer module.</p>
+<p style="margin-left:9%;">Perl 5.9.4</p>
+<p style="margin-left:14%;">"%ˆH" now exists
+in two forms. In addition to the relatively ordinary hash
+that is modified during compilation, the value that it had
+at each point in compilation is recorded in the compiled op
+tree, for later examination at runtime. It is in a special
+representation−sharing format, and writes to
+"%ˆH" are meant to be performed on both
+forms. "require"/"do" does not localise
+the runtime form of "%ˆH" (and still doesn't
+localise the compile−time form).</p>
+<p style="margin-left:14%; margin-top: 1em">A couple of
+special "%ˆH" entries are erroneously written
+only to the runtime form.</p>
+<p style="margin-left:14%; margin-top: 1em">Pure Perl code,
+although it can localise the compile−time
+"%ˆH" by normal means, can't adequately
+localise the runtime "%ˆH", except by using a
+string eval stack frame. This makes a satisfactory global
+fix for the leakage bug impossible in pure Perl.</p>
+<p style="margin-left:9%;">Perl 5.10.1</p>
+<p style="margin-left:14%;">"require"/"do"
+now properly localise the runtime form of
+"%ˆH", but still not the compile−time
+form.</p>
+<p style="margin-left:14%; margin-top: 1em">A global fix is
+once again possible in pure Perl, because the fix only needs
+to localise the compile−time form.</p>
+<p style="margin-left:9%;">Perl 5.11.0</p>
+<p style="margin-left:14%;">"require"/"do"
+now properly localise both forms of "%ˆH",
+fixing [perl #68590]. This makes [perl #73174] apparent
+without any workaround for [perl #68590].</p>
+<p style="margin-left:14%; margin-top: 1em">The special
+"%ˆH" entries are now correctly written to
+both forms of the hash.</p>
+<p style="margin-left:9%;">Perl 5.12.0</p>
+<p style="margin-left:14%;">The automatic loading of
+"utf8.pm" during Unicode regular expression
+matching now properly restores "%ˆH", fixing
+[perl #73174].</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The operation of
+this module depends on influencing the compilation of
+"require" and "do". As a result, it
+cannot prevent lexical state leakage through a
+"require"/"do" statement that was
+compiled before this module was invoked. Where problems
+occur, this module must be invoked earlier.</p>
+<p style="margin-left:9%; margin-top: 1em">On all Perl
+versions that need a fix for the lexical hint leakage bug,
+the pure Perl implementation of this module unavoidably
+breaks the use of "require" without an explicit
+parameter (implicitly using $_). This is due to another bug
+in the Perl core, fixed in Perl 5.15.5, and is inherent to
+the mechanism by which pure Perl code can hook
+"require". The use of implicit $_ with
+"require" is rare, so although this state of
+affairs is faulty it will actually work for most programs.
+Perl versions 5.12.0 and greater, despite having the
+"require" hooking bug, don't actually exhibit a
+problem with the pure Perl version of this module, because
+with the lexical hint leakage bug fixed there is no need for
+this module to hook "require".</p>
+<p style="margin-left:9%; margin-top: 1em">There is a bug
+on Perl versions 5.15.5 to 5.15.7 affecting "do"
+which, among other effects, causes "%ˆH" to
+leak into "do"ed files. It is not the same bug
+that affected Perl 5.6 to 5.11. This module currently does
+not work around this bug at all, but its test suite does
+detect it. As a result, this module fails its test suite on
+those Perl versions. This could change in future versions of
+this module.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">perlpragma</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Andrew Main
+(Zefram) &lt;zefram@fysh.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2009, 2010, 2011, 2012, 2015, 2016, 2017, 2023 Andrew Main
+(Zefram) &lt;zefram@fysh.org&gt;</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

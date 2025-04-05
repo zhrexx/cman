@@ -1,0 +1,603 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:51 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>EVP_RAND</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">EVP_RAND</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Types">Types</a><br/>
+<a href="#Algorithm implementation fetching">Algorithm implementation fetching</a><br/>
+<a href="#Context manipulation functions">Context manipulation functions</a><br/>
+<a href="#Random Number Generator Functions">Random Number Generator Functions</a><br/>
+<a href="#Information functions">Information functions</a><br/>
+<a href="#PARAMETERS">PARAMETERS</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">EVP_RAND,
+EVP_RAND_fetch, EVP_RAND_free, EVP_RAND_up_ref,
+EVP_RAND_CTX, EVP_RAND_CTX_new, EVP_RAND_CTX_free,
+EVP_RAND_CTX_up_ref, EVP_RAND_instantiate,
+EVP_RAND_uninstantiate, EVP_RAND_generate, EVP_RAND_reseed,
+EVP_RAND_nonce, EVP_RAND_enable_locking,
+EVP_RAND_verify_zeroization, EVP_RAND_get_strength,
+EVP_RAND_get_state, EVP_RAND_get0_provider,
+EVP_RAND_CTX_get0_rand, EVP_RAND_is_a, EVP_RAND_get0_name,
+EVP_RAND_names_do_all, EVP_RAND_get0_description,
+EVP_RAND_CTX_get_params, EVP_RAND_CTX_set_params,
+EVP_RAND_do_all_provided, EVP_RAND_get_params,
+EVP_RAND_gettable_ctx_params, EVP_RAND_settable_ctx_params,
+EVP_RAND_CTX_gettable_params, EVP_RAND_CTX_settable_params,
+EVP_RAND_gettable_params, EVP_RAND_STATE_UNINITIALISED,
+EVP_RAND_STATE_READY, EVP_RAND_STATE_ERROR − EVP RAND
+routines</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+typedef struct evp_rand_st EVP_RAND; <br/>
+typedef struct evp_rand_ctx_st EVP_RAND_CTX; <br/>
+EVP_RAND *EVP_RAND_fetch(OSSL_LIB_CTX *libctx, const char
+*algorithm, <br/>
+const char *properties); <br/>
+int EVP_RAND_up_ref(EVP_RAND *rand); <br/>
+void EVP_RAND_free(EVP_RAND *rand); <br/>
+EVP_RAND_CTX *EVP_RAND_CTX_new(EVP_RAND *rand, EVP_RAND_CTX
+*parent); <br/>
+void EVP_RAND_CTX_free(EVP_RAND_CTX *ctx); <br/>
+int EVP_RAND_CTX_up_ref(EVP_RAND_CTX *ctx); <br/>
+EVP_RAND *EVP_RAND_CTX_get0_rand(EVP_RAND_CTX *ctx); <br/>
+int EVP_RAND_get_params(EVP_RAND *rand, OSSL_PARAM
+params[]); <br/>
+int EVP_RAND_CTX_get_params(EVP_RAND_CTX *ctx, OSSL_PARAM
+params[]); <br/>
+int EVP_RAND_CTX_set_params(EVP_RAND_CTX *ctx, const
+OSSL_PARAM params[]); <br/>
+const OSSL_PARAM *EVP_RAND_gettable_params(const EVP_RAND
+*rand); <br/>
+const OSSL_PARAM *EVP_RAND_gettable_ctx_params(const
+EVP_RAND *rand); <br/>
+const OSSL_PARAM *EVP_RAND_settable_ctx_params(const
+EVP_RAND *rand); <br/>
+const OSSL_PARAM *EVP_RAND_CTX_gettable_params(EVP_RAND_CTX
+*ctx); <br/>
+const OSSL_PARAM *EVP_RAND_CTX_settable_params(EVP_RAND_CTX
+*ctx); <br/>
+const char *EVP_RAND_get0_name(const EVP_RAND *rand); <br/>
+const char *EVP_RAND_get0_description(const EVP_RAND *rand);
+<br/>
+int EVP_RAND_is_a(const EVP_RAND *rand, const char *name);
+<br/>
+const OSSL_PROVIDER *EVP_RAND_get0_provider(const EVP_RAND
+*rand); <br/>
+void EVP_RAND_do_all_provided(OSSL_LIB_CTX *libctx, <br/>
+void (*fn)(EVP_RAND *rand, void *arg), <br/>
+void *arg); <br/>
+int EVP_RAND_names_do_all(const EVP_RAND *rand, <br/>
+void (*fn)(const char *name, void *data), <br/>
+void *data); <br/>
+int EVP_RAND_instantiate(EVP_RAND_CTX *ctx, unsigned int
+strength, <br/>
+int prediction_resistance, <br/>
+const unsigned char *pstr, size_t pstr_len, <br/>
+const OSSL_PARAM params[]); <br/>
+int EVP_RAND_uninstantiate(EVP_RAND_CTX *ctx); <br/>
+int EVP_RAND_generate(EVP_RAND_CTX *ctx, unsigned char *out,
+size_t outlen, <br/>
+unsigned int strength, int prediction_resistance, <br/>
+const unsigned char *addin, size_t addin_len); <br/>
+int EVP_RAND_reseed(EVP_RAND_CTX *ctx, int
+prediction_resistance, <br/>
+const unsigned char *ent, size_t ent_len, <br/>
+const unsigned char *addin, size_t addin_len); <br/>
+int EVP_RAND_nonce(EVP_RAND_CTX *ctx, unsigned char *out,
+size_t outlen); <br/>
+int EVP_RAND_enable_locking(EVP_RAND_CTX *ctx); <br/>
+int EVP_RAND_verify_zeroization(EVP_RAND_CTX *ctx); <br/>
+unsigned int EVP_RAND_get_strength(EVP_RAND_CTX *ctx); <br/>
+int EVP_RAND_get_state(EVP_RAND_CTX *ctx); <br/>
+#define EVP_RAND_STATE_UNINITIALISED 0 <br/>
+#define EVP_RAND_STATE_READY 1 <br/>
+#define EVP_RAND_STATE_ERROR 2</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The EVP RAND
+routines are a high−level interface to random number
+generators both deterministic and not. If you just want to
+generate random bytes then you don't need to use these
+functions: just call <b>RAND_bytes()</b> or
+<b>RAND_priv_bytes()</b>. If you want to do more, these
+calls should be used instead of the older RAND and RAND_DRBG
+functions.</p>
+<p style="margin-left:9%; margin-top: 1em">After creating a
+<b>EVP_RAND_CTX</b> for the required algorithm using
+<b>EVP_RAND_CTX_new()</b>, inputs to the algorithm are
+supplied either by passing them as part of the
+<b>EVP_RAND_instantiate()</b> call or using calls to
+<b>EVP_RAND_CTX_set_params()</b> before calling
+<b>EVP_RAND_instantiate()</b>. Finally, call
+<b>EVP_RAND_generate()</b> to produce cryptographically
+secure random bytes.</p>
+<h3>Types
+<a name="Types"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND</b>
+is a type that holds the implementation of a RAND.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_CTX</b>
+is a context type that holds the algorithm inputs.
+<b>EVP_RAND_CTX</b> structures are reference counted.</p>
+<h3>Algorithm implementation fetching
+<a name="Algorithm implementation fetching"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_fetch()</b>
+fetches an implementation of a RAND <i>algorithm</i>, given
+a library context <i>libctx</i> and a set of
+<i>properties</i>. See "ALGORITHM FETCHING" in
+<b>crypto</b>(7) for further information.</p>
+<p style="margin-left:9%; margin-top: 1em">The returned
+value must eventually be freed with
+<b>EVP_RAND_free</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_up_ref()</b>
+increments the reference count of an already fetched
+RAND.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_free()</b>
+frees a fetched algorithm. NULL is a valid parameter, for
+which this function is a no−op.</p>
+<h3>Context manipulation functions
+<a name="Context manipulation functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_CTX_new()</b>
+creates a new context for the RAND implementation
+<i>rand</i>. If not NULL, <i>parent</i> specifies the seed
+source for this implementation. Not all random number
+generators need to have a seed source specified. If a parent
+is required, a NULL <i>parent</i> will utilise the operating
+system entropy sources. It is recommended to minimise the
+number of random number generators that rely on the
+operating system for their randomness because this is often
+scarce.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_CTX_free()</b>
+frees up the context <i>ctx</i>. If <i>ctx</i> is NULL,
+nothing is done.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_CTX_get0_rand()</b>
+returns the <b>EVP_RAND</b> associated with the context
+<i>ctx</i>.</p>
+<h3>Random Number Generator Functions
+<a name="Random Number Generator Functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_instantiate()</b>
+processes any parameters in <i>params</i> and then
+instantiates the RAND <i>ctx</i> with a minimum security
+strength of &lt;strength&gt; and personalisation string
+<i>pstr</i> of length &lt;pstr_len&gt;. If
+<i>prediction_resistance</i> is specified, fresh entropy
+from a live source will be sought. This call operates as per
+NIST SP 800−90A and SP 800−90C.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_uninstantiate()</b>
+uninstantiates the RAND <i>ctx</i> as per NIST SP
+800−90A and SP 800−90C. Subsequent to this call,
+the RAND cannot be used to generate bytes. It can only be
+freed or instantiated again.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_generate()</b>
+produces random bytes from the RAND <i>ctx</i> with the
+additional input <i>addin</i> of length <i>addin_len</i>.
+The bytes produced will meet the security <i>strength</i>.
+If <i>prediction_resistance</i> is specified, fresh entropy
+from a live source will be sought. This call operates as per
+NIST SP 800−90A and SP 800−90C.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_reseed()</b>
+reseeds the RAND with new entropy. Entropy <i>ent</i> of
+length <i>ent_len</i> bytes can be supplied as can
+additional input <i>addin</i> of length <i>addin_len</i>
+bytes. In the FIPS provider, both are treated as additional
+input as per NIST SP−800−90Ar1, Sections 9.1 and
+9.2. Additional seed material is also drawn from the RAND's
+parent or the operating system. If
+<i>prediction_resistance</i> is specified, fresh entropy
+from a live source will be sought. This call operates as per
+NIST SP 800−90A and SP 800−90C.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_nonce()</b>
+creates a nonce in <i>out</i> of maximum length
+<i>outlen</i> bytes from the RAND <i>ctx</i>. The function
+returns the length of the generated nonce. If <i>out</i> is
+NULL, the length is still returned but no generation takes
+place. This allows a caller to dynamically allocate a buffer
+of the appropriate size.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_enable_locking()</b>
+enables locking for the RAND <i>ctx</i> and all of its
+parents. After this <i>ctx</i> will operate in a thread safe
+manner, albeit more slowly. This function is not itself
+thread safe if called with the same <i>ctx</i> from multiple
+threads. Typically locking should be enabled before a
+<i>ctx</i> is shared across multiple threads.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_get_params()</b>
+retrieves details about the implementation <i>rand</i>. The
+set of parameters given with <i>params</i> determine exactly
+what parameters should be retrieved. Note that a parameter
+that is unknown in the underlying context is simply
+ignored.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_CTX_get_params()</b>
+retrieves chosen parameters, given the context <i>ctx</i>
+and its underlying context. The set of parameters given with
+<i>params</i> determine exactly what parameters should be
+retrieved. Note that a parameter that is unknown in the
+underlying context is simply ignored.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_CTX_set_params()</b>
+passes chosen parameters to the underlying context, given a
+context <i>ctx</i>. The set of parameters given with
+<i>params</i> determine exactly what parameters are passed
+down. Note that a parameter that is unknown in the
+underlying context is simply ignored. Also, what happens
+when a needed parameter isn't passed down is defined by the
+implementation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_gettable_params()</b>
+returns an <b>OSSL_PARAM</b>(3) array that describes the
+retrievable and settable parameters.
+<b>EVP_RAND_gettable_params()</b> returns parameters that
+can be used with <b>EVP_RAND_get_params()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_gettable_ctx_params()</b>
+and <b>EVP_RAND_CTX_gettable_params()</b> return constant
+<b>OSSL_PARAM</b>(3) arrays that describe the retrievable
+parameters that can be used with
+<b>EVP_RAND_CTX_get_params()</b>.
+<b>EVP_RAND_gettable_ctx_params()</b> returns the parameters
+that can be retrieved from the algorithm, whereas
+<b>EVP_RAND_CTX_gettable_params()</b> returns the parameters
+that can be retrieved in the context's current state.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_settable_ctx_params()</b>
+and <b>EVP_RAND_CTX_settable_params()</b> return constant
+<b>OSSL_PARAM</b>(3) arrays that describe the settable
+parameters that can be used with
+<b>EVP_RAND_CTX_set_params()</b>.
+<b>EVP_RAND_settable_ctx_params()</b> returns the parameters
+that can be retrieved from the algorithm, whereas
+<b>EVP_RAND_CTX_settable_params()</b> returns the parameters
+that can be retrieved in the context's current state.</p>
+<h3>Information functions
+<a name="Information functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_get_strength()</b>
+returns the security strength of the RAND <i>ctx</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_get_state()</b>
+returns the current state of the RAND <i>ctx</i>. States
+defined by the OpenSSL RNGs are:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>EVP_RAND_STATE_UNINITIALISED: this RNG is currently
+uninitialised. The instantiate call will change this to the
+ready state.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>EVP_RAND_STATE_READY: this RNG is currently ready to
+generate output.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>EVP_RAND_STATE_ERROR: this RNG is in an error state.</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_is_a()</b>
+returns 1 if <i>rand</i> is an implementation of an
+algorithm that's identifiable with <i>name</i>, otherwise
+0.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_get0_provider()</b>
+returns the provider that holds the implementation of the
+given <i>rand</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_do_all_provided()</b>
+traverses all RAND implemented by all activated providers in
+the given library context <i>libctx</i>, and for each of the
+implementations, calls the given function <i>fn</i> with the
+implementation method and the given <i>arg</i> as
+argument.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_get0_name()</b>
+returns the canonical name of <i>rand</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_names_do_all()</b>
+traverses all names for <i>rand</i>, and calls <i>fn</i>
+with each name and <i>data</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_get0_description()</b>
+returns a description of the rand, meant for display and
+human consumption. The description is at the discretion of
+the rand implementation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_verify_zeroization()</b>
+confirms if the internal DRBG state is currently zeroed.
+This is used by the FIPS provider to support the mandatory
+self tests.</p>
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The standard
+parameter names are: <br/>
+"state" (<b>OSSL_RAND_PARAM_STATE</b>)
+&lt;integer&gt;</p>
+<p style="margin-left:14%;">Returns the state of the random
+number generator.</p>
+<p style="margin-left:9%;">"strength"
+(<b>OSSL_RAND_PARAM_STRENGTH</b>) &lt;unsigned
+integer&gt;</p>
+<p style="margin-left:14%;">Returns the bit strength of the
+random number generator.</p>
+<p style="margin-left:9%; margin-top: 1em">For rands that
+are also deterministic random bit generators (DRBGs), these
+additional parameters are recognised. Not all parameters are
+relevant to, or are understood by all DRBG rands: <br/>
+"reseed_requests"
+(<b>OSSL_DRBG_PARAM_RESEED_REQUESTS</b>) &lt;unsigned
+integer&gt;</p>
+<p style="margin-left:14%;">Reads or set the number of
+generate requests before reseeding the associated RAND
+ctx.</p>
+<p style="margin-left:9%;">"reseed_time_interval"
+(<b>OSSL_DRBG_PARAM_RESEED_TIME_INTERVAL</b>)
+&lt;integer&gt;</p>
+<p style="margin-left:14%;">Reads or set the number of
+elapsed seconds before reseeding the associated RAND
+ctx.</p>
+<p style="margin-left:9%;">"max_request"
+(<b>OSSL_RAND_PARAM_MAX_REQUEST</b>) &lt;unsigned
+integer&gt;</p>
+<p style="margin-left:14%;">Specifies the maximum number of
+bytes that can be generated in a single call to
+OSSL_FUNC_rand_generate.</p>
+<p style="margin-left:9%;">"min_entropylen"
+(<b>OSSL_DRBG_PARAM_MIN_ENTROPYLEN</b>) &lt;unsigned
+integer&gt; <br/>
+"max_entropylen"
+(<b>OSSL_DRBG_PARAM_MAX_ENTROPYLEN</b>) &lt;unsigned
+integer&gt;</p>
+<p style="margin-left:14%;">Specify the minimum and maximum
+number of bytes of random material that can be used to seed
+the DRBG.</p>
+<p style="margin-left:9%;">"min_noncelen"
+(<b>OSSL_DRBG_PARAM_MIN_NONCELEN</b>) &lt;unsigned
+integer&gt; <br/>
+"max_noncelen"
+(<b>OSSL_DRBG_PARAM_MAX_NONCELEN</b>) &lt;unsigned
+integer&gt;</p>
+<p style="margin-left:14%;">Specify the minimum and maximum
+number of bytes of nonce that can be used to seed the
+DRBG.</p>
+<p style="margin-left:9%;">"max_perslen"
+(<b>OSSL_DRBG_PARAM_MAX_PERSLEN</b>) &lt;unsigned
+integer&gt; <br/>
+"max_adinlen" (<b>OSSL_DRBG_PARAM_MAX_ADINLEN</b>)
+&lt;unsigned integer&gt;</p>
+<p style="margin-left:14%;">Specify the minimum and maximum
+number of bytes of personalisation string that can be used
+with the DRBG.</p>
+<p style="margin-left:9%;">"reseed_counter"
+(<b>OSSL_DRBG_PARAM_RESEED_COUNTER</b>) &lt;unsigned
+integer&gt;</p>
+<p style="margin-left:14%;">Specifies the number of times
+the DRBG has been seeded or reseeded.</p>
+<p style="margin-left:9%;">"properties"
+(<b>OSSL_RAND_PARAM_PROPERTIES</b>) &lt;UTF8 string&gt; <br/>
+"mac" (<b>OSSL_RAND_PARAM_MAC</b>) &lt;UTF8
+string&gt; <br/>
+"digest" (<b>OSSL_RAND_PARAM_DIGEST</b>) &lt;UTF8
+string&gt; <br/>
+"cipher" (<b>OSSL_RAND_PARAM_CIPHER</b>) &lt;UTF8
+string&gt;</p>
+<p style="margin-left:14%;">For RAND implementations that
+use an underlying computation MAC, digest or cipher, these
+parameters set what the algorithm should be.</p>
+<p style="margin-left:14%; margin-top: 1em">The value is
+always the name of the intended algorithm, or the properties
+in the case of <b>OSSL_RAND_PARAM_PROPERTIES</b>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The use of a
+nonzero value for the <i>prediction_resistance</i> argument
+to <b>EVP_RAND_instantiate()</b>, <b>EVP_RAND_generate()</b>
+or <b>EVP_RAND_reseed()</b> should be used sparingly. In the
+default setup, this will cause all public and private DRBGs
+to be reseeded on next use. Since, by default, public and
+private DRBGs are allocated on a per thread basis, this can
+result in significant overhead for highly
+multi−threaded applications. For normal
+use−cases, the default "reseed_requests" and
+"reseed_time_interval" thresholds ensure
+sufficient prediction resistance over time and you can
+reduce those values if you think they are too high.
+Explicitly requesting prediction resistance is intended for
+more special use−cases like generating long−term
+secrets.</p>
+<p style="margin-left:9%; margin-top: 1em">An
+<b>EVP_RAND_CTX</b> needs to have locking enabled if it acts
+as the parent of more than one child and the children can be
+accessed concurrently. This must be done by explicitly
+calling <b>EVP_RAND_enable_locking()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The RAND
+life−cycle is described in
+<b>life_cycle−rand</b>(7). In the future, the
+transitions described there will be enforced. When this is
+done, it will not be considered a breaking change to the
+API.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_fetch()</b>
+returns a pointer to a newly fetched <b>EVP_RAND</b>, or
+NULL if allocation failed.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_get0_provider()</b>
+returns a pointer to the provider for the RAND, or NULL on
+error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_CTX_get0_rand()</b>
+returns a pointer to the <b>EVP_RAND</b> associated with the
+context.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_get0_name()</b>
+returns the name of the random number generation
+algorithm.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_up_ref()</b>
+returns 1 on success, 0 on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_names_do_all()</b>
+returns 1 if the callback was called for all names. A return
+value of 0 means that the callback was not called for any
+names.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_CTX_new()</b>
+returns either the newly allocated <b>EVP_RAND_CTX</b>
+structure or NULL if an error occurred.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_CTX_free()</b>
+does not return a value.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_CTX_up_ref()</b>
+returns 1 on success, 0 on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_nonce()</b>
+returns the length of the nonce.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_get_strength()</b>
+returns the strength of the random number generator in
+bits.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_gettable_params()</b>,
+<b>EVP_RAND_gettable_ctx_params()</b> and
+<b>EVP_RAND_settable_ctx_params()</b> return an array of
+OSSL_PARAMs.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_verify_zeroization()</b>
+returns 1 if the internal DRBG state is currently zeroed,
+and 0 if not.</p>
+<p style="margin-left:9%; margin-top: 1em">The remaining
+functions return 1 for success and 0 or a negative value for
+failure.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>RAND_bytes</b>(3),
+<b>EVP_RAND−CTR−DRBG</b>(7),
+<b>EVP_RAND−HASH−DRBG</b>(7),
+<b>EVP_RAND−HMAC−DRBG</b>(7),
+<b>EVP_RAND−TEST−RAND</b>(7),
+<b>provider−rand</b>(7),
+<b>life_cycle−rand</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_RAND_CTX_up_ref()</b>
+was added in OpenSSL 3.1.</p>
+<p style="margin-left:9%; margin-top: 1em">The remaining
+functions were added in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2020−2024 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

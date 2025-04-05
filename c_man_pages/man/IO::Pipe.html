@@ -1,0 +1,194 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:42 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>IO::Pipe</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">IO::Pipe</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CONSTRUCTOR">CONSTRUCTOR</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Pipe −
+supply object methods for pipes</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use IO::Pipe;
+<br/>
+$pipe = IO::Pipe−&gt;new(); <br/>
+if($pid = fork()) { # Parent <br/>
+$pipe−&gt;reader(); <br/>
+while(&lt;$pipe&gt;) { <br/>
+... <br/>
+} <br/>
+} <br/>
+elsif(defined $pid) { # Child <br/>
+$pipe−&gt;writer(); <br/>
+print $pipe ... <br/>
+} <br/>
+or <br/>
+$pipe = IO::Pipe−&gt;new(); <br/>
+$pipe−&gt;reader(qw(ls −l)); <br/>
+while(&lt;$pipe&gt;) { <br/>
+... <br/>
+}</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"IO::Pipe"
+provides an interface to creating pipes between
+processes.</p>
+<h2>CONSTRUCTOR
+<a name="CONSTRUCTOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">new ( [READER,
+WRITER] )</p>
+<p style="margin-left:14%;">Creates an
+"IO::Pipe", which is a reference to a newly
+created symbol (see the Symbol package).
+"IO::Pipe::new" optionally takes two arguments,
+which should be objects blessed into "IO::Handle",
+or a subclass thereof. These two objects will be used for
+the system call to "pipe". If no arguments are
+given then method "handles" is called on the new
+"IO::Pipe" object.</p>
+<p style="margin-left:14%; margin-top: 1em">These two
+handles are held in the array part of the GLOB until either
+"reader" or "writer" is called.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">reader
+([ARGS])</p>
+<p style="margin-left:14%;">The object is re-blessed into a
+sub-class of "IO::Handle", and becomes a handle at
+the reading end of the pipe. If "ARGS" are given
+then "fork" is called and "ARGS" are
+passed to exec.</p>
+<p style="margin-left:9%;">writer ([ARGS])</p>
+<p style="margin-left:14%;">The object is re-blessed into a
+sub-class of "IO::Handle", and becomes a handle at
+the writing end of the pipe. If "ARGS" are given
+then "fork" is called and "ARGS" are
+passed to exec.</p>
+<p style="margin-left:9%;">handles ()</p>
+<p style="margin-left:14%;">This method is called during
+construction by "IO::Pipe::new" on the newly
+created "IO::Pipe" object. It returns an array of
+two objects blessed into "IO::Pipe::End", or a
+subclass thereof.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Handle</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Graham Barr.
+Currently maintained by the Perl Porters. Please report all
+bugs at &lt;https://github.com/Perl/perl5/issues&gt;.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+1996−8 Graham Barr &lt;gbarr@pobox.com&gt;. All rights
+reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as
+Perl itself.</p>
+<hr/>
+</body>
+</html>

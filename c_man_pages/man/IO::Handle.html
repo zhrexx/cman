@@ -1,0 +1,374 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:42 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>IO::Handle</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">IO::Handle</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CONSTRUCTOR">CONSTRUCTOR</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#NOTE">NOTE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Handle
+− supply object methods for I/O handles</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use IO::Handle;
+<br/>
+my $io = IO::Handle−&gt;new(); <br/>
+if ($io−&gt;fdopen(fileno(STDIN),"r")) {
+<br/>
+print $io−&gt;getline; <br/>
+$io−&gt;close; <br/>
+} <br/>
+my $io = IO::Handle−&gt;new(); <br/>
+if ($io−&gt;fdopen(fileno(STDOUT),"w")) {
+<br/>
+$io−&gt;print("Some text\n"); <br/>
+} <br/>
+# setvbuf is not available by default on Perls 5.8.0 and
+later. <br/>
+use IO::Handle '_IOLBF'; <br/>
+$io−&gt;setvbuf(my $buffer_var, _IOLBF, 1024); <br/>
+undef $io; # automatically closes the file if it's open <br/>
+autoflush STDOUT 1;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"IO::Handle"
+is the base class for all other IO handle classes. It is not
+intended that objects of "IO::Handle" would be
+created directly, but instead "IO::Handle" is
+inherited from by several other classes in the IO
+hierarchy.</p>
+<p style="margin-left:9%; margin-top: 1em">If you are
+reading this documentation, looking for a replacement for
+the "FileHandle" package, then I suggest you read
+the documentation for "IO::File" too.</p>
+<h2>CONSTRUCTOR
+<a name="CONSTRUCTOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">new ()</p>
+<p style="margin-left:14%;">Creates a new
+"IO::Handle" object.</p>
+<p style="margin-left:9%;">new_from_fd ( FD, MODE )</p>
+<p style="margin-left:14%;">Creates an
+"IO::Handle" like "new" does. It
+requires two parameters, which are passed to the method
+"fdopen"; if the fdopen fails, the object is
+destroyed. Otherwise, it is returned to the caller.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See perlfunc for
+complete descriptions of each of the following supported
+"IO::Handle" methods, which are just front ends
+for the corresponding built-in functions:</p>
+<p style="margin-left:9%; margin-top: 1em">$io−&gt;close
+<br/>
+$io−&gt;eof <br/>
+$io−&gt;fcntl( FUNCTION, SCALAR ) <br/>
+$io−&gt;fileno <br/>
+$io−&gt;format_write( [FORMAT_NAME] ) <br/>
+$io−&gt;getc <br/>
+$io−&gt;ioctl( FUNCTION, SCALAR ) <br/>
+$io−&gt;read ( BUF, LEN, [OFFSET] ) <br/>
+$io−&gt;print ( ARGS ) <br/>
+$io−&gt;printf ( FMT, [ARGS] ) <br/>
+$io−&gt;say ( ARGS ) <br/>
+$io−&gt;stat <br/>
+$io−&gt;sysread ( BUF, LEN, [OFFSET] ) <br/>
+$io−&gt;syswrite ( BUF, [LEN, [OFFSET]] ) <br/>
+$io−&gt;truncate ( LEN )</p>
+<p style="margin-left:9%; margin-top: 1em">See perlvar for
+complete descriptions of each of the following supported
+"IO::Handle" methods. All of them return the
+previous value of the attribute and takes an optional single
+argument that when given will set the value. If no argument
+is given the previous value is unchanged (except for
+$io−&gt;autoflush will actually turn ON autoflush by
+default).</p>
+<p style="margin-left:9%; margin-top: 1em">$io−&gt;autoflush
+( [BOOL] ) $| <br/>
+$io−&gt;format_page_number( [NUM] ) $% <br/>
+$io−&gt;format_lines_per_page( [NUM] ) $= <br/>
+$io−&gt;format_lines_left( [NUM] ) $− <br/>
+$io−&gt;format_name( [STR] ) $˜ <br/>
+$io−&gt;format_top_name( [STR] ) $ˆ <br/>
+$io−&gt;input_line_number( [NUM]) $.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+methods are not supported on a per-filehandle basis.</p>
+<p style="margin-left:9%; margin-top: 1em">IO::Handle−&gt;format_line_break_characters(
+[STR] ) $: <br/>
+IO::Handle−&gt;format_formfeed( [STR]) $ˆL <br/>
+IO::Handle−&gt;output_field_separator( [STR] ) $, <br/>
+IO::Handle−&gt;output_record_separator( [STR] ) $\
+<br/>
+IO::Handle−&gt;input_record_separator( [STR] ) $/</p>
+<p style="margin-left:9%; margin-top: 1em">Furthermore, for
+doing normal I/O you might need these: <br/>
+$io−&gt;fdopen ( FD, MODE )</p>
+<p style="margin-left:14%;">"fdopen" is like an
+ordinary "open" except that its first parameter is
+not a filename but rather a file handle name, an IO::Handle
+object, or a file descriptor number. (For the documentation
+of the "open" method, see IO::File.)</p>
+<p style="margin-left:9%;">$io−&gt;opened</p>
+<p style="margin-left:14%;">Returns true if the object is
+currently a valid file descriptor, false otherwise.</p>
+<p style="margin-left:9%;">$io−&gt;getline</p>
+<p style="margin-left:14%;">This works like &lt;$io&gt;
+described in "I/O Operators" in perlop except that
+it’s more readable and can be safely called in a list
+context but still returns just one line. If used as the
+conditional within a "while" or C−style
+"for" loop, however, you will need to emulate the
+functionality of &lt;$io&gt; with "defined($_ =
+$io−&gt;getline)".</p>
+<p style="margin-left:9%;">$io−&gt;getlines</p>
+<p style="margin-left:14%;">This works like &lt;$io&gt;
+when called in a list context to read all the remaining
+lines in a file, except that it’s more readable. It
+will also <b>croak()</b> if accidentally called in a scalar
+context.</p>
+<p style="margin-left:9%;">$io−&gt;ungetc ( ORD )</p>
+<p style="margin-left:14%;">Pushes a character with the
+given ordinal value back onto the given handle’s input
+stream. Only one character of pushback per handle is
+guaranteed.</p>
+<p style="margin-left:9%;">$io−&gt;write ( BUF, LEN
+[, OFFSET ] )</p>
+<p style="margin-left:14%;">This "write" is
+somewhat like "write" found in C, in that it is
+the opposite of read. The wrapper for the perl
+"write" function is called
+"format_write". However, whilst the C
+"write" function returns the number of bytes
+written, this "write" function simply returns true
+if successful (like "print"). A more C−like
+"write" is "syswrite" (see above).</p>
+<p style="margin-left:9%;">$io−&gt;error</p>
+<p style="margin-left:14%;">Returns a true value if the
+given handle has experienced any errors since it was opened
+or since the last call to "clearerr", or if the
+handle is invalid. It only returns false for a valid handle
+with no outstanding errors.</p>
+<p style="margin-left:9%;">$io−&gt;clearerr</p>
+<p style="margin-left:14%;">Clear the given handle’s
+error indicator. Returns −1 if the handle is invalid,
+0 otherwise.</p>
+<p style="margin-left:9%;">$io−&gt;sync</p>
+<p style="margin-left:14%;">"sync" synchronizes a
+file’s in-memory state with that on the physical
+medium. "sync" does not operate at the perlio api
+level, but operates on the file descriptor (similar to
+sysread, sysseek and systell). This means that any data held
+at the perlio api level will not be synchronized. To
+synchronize data that is buffered at the perlio api level
+you must use the flush method. "sync" is not
+implemented on all platforms. Returns "0 but true"
+on success, "undef" on error, "undef"
+for an invalid handle. See <b>fsync</b>(3c).</p>
+<p style="margin-left:9%;">$io−&gt;flush</p>
+<p style="margin-left:14%;">"flush" causes perl
+to flush any buffered data at the perlio api level. Any
+unread data in the buffer will be discarded, and any
+unwritten data will be written to the underlying file
+descriptor. Returns "0 but true" on success,
+"undef" on error.</p>
+<p style="margin-left:9%;">$io−&gt;printflush ( ARGS
+)</p>
+<p style="margin-left:14%;">Turns on autoflush, print ARGS
+and then restores the autoflush status of the
+"IO::Handle" object. Returns the return value from
+print.</p>
+<p style="margin-left:9%;">$io−&gt;blocking ( [ BOOL
+] )</p>
+<p style="margin-left:14%;">If called with an argument
+"blocking" will turn on non-blocking IO if
+"BOOL" is false, and turn it off if
+"BOOL" is true.</p>
+<p style="margin-left:14%; margin-top: 1em">"blocking"
+will return the value of the previous setting, or the
+current setting if "BOOL" is not given.</p>
+<p style="margin-left:14%; margin-top: 1em">If an error
+occurs "blocking" will return undef and $! will be
+set.</p>
+<p style="margin-left:9%;">binmode( [LAYER] )</p>
+<p style="margin-left:14%;">"binmode" sets
+"binmode" on the underlying "IO" object,
+as documented in "perldoc −f binmode".</p>
+<p style="margin-left:14%; margin-top: 1em">"binmode"
+accepts one optional parameter, which is the layer to be
+passed on to the "binmode" call.</p>
+<p style="margin-left:9%; margin-top: 1em">If the C
+functions <b>setbuf()</b> and/or <b>setvbuf()</b> are
+available, then "IO::Handle::setbuf" and
+"IO::Handle::setvbuf" set the buffering policy for
+an IO::Handle. The calling sequences for the Perl functions
+are the same as their C counterparts−−including
+the constants "_IOFBF", "_IOLBF", and
+"_IONBF" for <b>setvbuf()</b>−−except
+that the buffer parameter specifies a scalar variable to use
+as a buffer. You should only change the buffer before any
+I/O, or immediately after calling flush.</p>
+<p style="margin-left:9%; margin-top: 1em">WARNING: The
+<b>IO::Handle::setvbuf()</b> is not available by default on
+Perls 5.8.0 and later because <b>setvbuf()</b> is rather
+specific to using the stdio library, while Perl prefers the
+new perlio subsystem instead.</p>
+<p style="margin-left:9%; margin-top: 1em">WARNING: A
+variable used as a buffer by "setbuf" or
+"setvbuf" <b>must not be modified</b> in any way
+until the IO::Handle is closed or "setbuf" or
+"setvbuf" is called again, or memory corruption
+may result! Remember that the order of global destruction is
+undefined, so even if your buffer variable remains in scope
+until program termination, it may be undefined before the
+file IO::Handle is closed. Note that you need to import the
+constants "_IOFBF", "_IOLBF", and
+"_IONBF" explicitly. Like C, setbuf returns
+nothing. setvbuf returns "0 but true", on success,
+"undef" on failure.</p>
+<p style="margin-left:9%; margin-top: 1em">Lastly, there is
+a special method for working under <b>−T</b> and
+setuid/gid scripts: <br/>
+$io−&gt;untaint</p>
+<p style="margin-left:14%;">Marks the object as
+taint-clean, and as such data read from it will also be
+considered taint-clean. Note that this is a very trusting
+action to take, and appropriate consideration for the data
+source and potential vulnerability should be kept in mind.
+Returns 0 on success, −1 if setting the taint-clean
+flag failed. (eg invalid handle)</p>
+<h2>NOTE
+<a name="NOTE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">An
+"IO::Handle" object is a reference to a
+symbol/GLOB reference (see the Symbol package). Some modules
+that inherit from "IO::Handle" may want to keep
+object related variables in the hash table part of the GLOB.
+In an attempt to prevent modules trampling on each other I
+propose the that any such module should prefix its variables
+with its own name separated by _’s. For example the
+IO::Socket module keeps a "timeout" variable in
+’io_socket_timeout’.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">perlfunc,
+"I/O Operators" in perlop, IO::File</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Due to backwards
+compatibility, all filehandles resemble objects of class
+"IO::Handle", or actually classes derived from
+that class. They actually aren’t. Which means you
+can’t derive your own class from
+"IO::Handle" and inherit those methods.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Derived from
+FileHandle.pm by Graham Barr
+&lt;<i>gbarr@pobox.com</i>&gt;</p>
+<hr/>
+</body>
+</html>

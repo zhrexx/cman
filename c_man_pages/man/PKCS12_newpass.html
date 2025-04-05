@@ -1,0 +1,230 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:50 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PKCS12_NEWPASS</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">PKCS12_NEWPASS</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">PKCS12_newpass
+− change the password of a PKCS12 structure</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/pkcs12.h&gt; <br/>
+int PKCS12_newpass(PKCS12 *p12, const char *oldpass, const
+char *newpass);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_newpass()</b>
+changes the password of a PKCS12 structure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>p12</b> is a
+pointer to a PKCS12 structure. <b>oldpass</b> is the
+existing password and <b>newpass</b> is the new
+password.</p>
+<p style="margin-left:9%; margin-top: 1em">Each of
+<b>oldpass</b> and <b>newpass</b> is independently
+interpreted as a string in the UTF−8 encoding. If it
+is not valid UTF−8, it is assumed to be
+ISO8859−1 instead.</p>
+<p style="margin-left:9%; margin-top: 1em">In particular,
+this means that passwords in the locale character set (or
+code page on Windows) must potentially be converted to
+UTF−8 before use. This may include passwords from
+local text files, or input from the terminal or command
+line. Refer to the documentation of <b>UI_OpenSSL</b>(3),
+for example.</p>
+<p style="margin-left:9%; margin-top: 1em">If the PKCS#12
+structure does not have a password, then you must use the
+empty string "" for <b>oldpass</b>. Using NULL for
+<b>oldpass</b> will result in a <b>PKCS12_newpass()</b>
+failure.</p>
+<p style="margin-left:9%; margin-top: 1em">If the wrong
+password is used for <b>oldpass</b> then the function will
+fail, with a MAC verification error. In rare cases the
+PKCS12 structure does not contain a MAC: in this case it
+will usually fail with a decryption padding error.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_newpass()</b>
+returns 1 on success or 0 on failure. Applications can
+retrieve the most recent error from <b>PKCS12_newpass()</b>
+with <b>ERR_get_error()</b>.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This example
+loads a PKCS#12 file, changes its password and writes out
+the result to a new file.</p>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;openssl/pem.h&gt; <br/>
+#include &lt;openssl/err.h&gt; <br/>
+#include &lt;openssl/pkcs12.h&gt; <br/>
+int main(int argc, char **argv) <br/>
+{ <br/>
+FILE *fp; <br/>
+PKCS12 *p12; <br/>
+if (argc != 5) { <br/>
+fprintf(stderr, "Usage: pkread p12file password newpass
+opfile\n"); <br/>
+return 1; <br/>
+} <br/>
+if ((fp = fopen(argv[1], "rb")) == NULL) { <br/>
+fprintf(stderr, "Error opening file %s\n",
+argv[1]); <br/>
+return 1; <br/>
+} <br/>
+p12 = d2i_PKCS12_fp(fp, NULL); <br/>
+fclose(fp); <br/>
+if (p12 == NULL) { <br/>
+fprintf(stderr, "Error reading PKCS#12 file\n");
+<br/>
+ERR_print_errors_fp(stderr); <br/>
+return 1; <br/>
+} <br/>
+if (PKCS12_newpass(p12, argv[2], argv[3]) == 0) { <br/>
+fprintf(stderr, "Error changing password\n"); <br/>
+ERR_print_errors_fp(stderr); <br/>
+PKCS12_free(p12); <br/>
+return 1; <br/>
+} <br/>
+if ((fp = fopen(argv[4], "wb")) == NULL) { <br/>
+fprintf(stderr, "Error opening file %s\n",
+argv[4]); <br/>
+PKCS12_free(p12); <br/>
+return 1; <br/>
+} <br/>
+i2d_PKCS12_fp(fp, p12); <br/>
+PKCS12_free(p12); <br/>
+fclose(fp); <br/>
+return 0; <br/>
+}</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The password
+format is a NULL terminated ASCII string which is converted
+to Unicode form internally. As a result some passwords
+cannot be supplied to this function.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>PKCS12_create</b>(3),
+<b>ERR_get_error</b>(3),
+<b>passphrase−encoding</b>(7)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2016−2018 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

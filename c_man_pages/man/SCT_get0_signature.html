@@ -1,0 +1,402 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SCT_NEW</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SCT_NEW</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SCT_new,
+SCT_new_from_base64, SCT_free, SCT_LIST_free,
+SCT_get_version, SCT_set_version, SCT_get_log_entry_type,
+SCT_set_log_entry_type, SCT_get0_log_id, SCT_set0_log_id,
+SCT_set1_log_id, SCT_get_timestamp, SCT_set_timestamp,
+SCT_get_signature_nid, SCT_set_signature_nid,
+SCT_get0_signature, SCT_set0_signature, SCT_set1_signature,
+SCT_get0_extensions, SCT_set0_extensions,
+SCT_set1_extensions, SCT_get_source, SCT_set_source −
+A Certificate Transparency Signed Certificate Timestamp</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ct.h&gt; <br/>
+typedef enum { <br/>
+CT_LOG_ENTRY_TYPE_NOT_SET = −1, <br/>
+CT_LOG_ENTRY_TYPE_X509 = 0, <br/>
+CT_LOG_ENTRY_TYPE_PRECERT = 1 <br/>
+} ct_log_entry_type_t; <br/>
+typedef enum { <br/>
+SCT_VERSION_NOT_SET = −1, <br/>
+SCT_VERSION_V1 = 0 <br/>
+} sct_version_t; <br/>
+typedef enum { <br/>
+SCT_SOURCE_UNKNOWN, <br/>
+SCT_SOURCE_TLS_EXTENSION, <br/>
+SCT_SOURCE_X509V3_EXTENSION, <br/>
+SCT_SOURCE_OCSP_STAPLED_RESPONSE <br/>
+} sct_source_t; <br/>
+SCT *SCT_new(void); <br/>
+SCT *SCT_new_from_base64(unsigned char version, <br/>
+const char *logid_base64, <br/>
+ct_log_entry_type_t entry_type, <br/>
+uint64_t timestamp, <br/>
+const char *extensions_base64, <br/>
+const char *signature_base64); <br/>
+void SCT_free(SCT *sct); <br/>
+void SCT_LIST_free(STACK_OF(SCT) *a); <br/>
+sct_version_t SCT_get_version(const SCT *sct); <br/>
+int SCT_set_version(SCT *sct, sct_version_t version); <br/>
+ct_log_entry_type_t SCT_get_log_entry_type(const SCT *sct);
+<br/>
+int SCT_set_log_entry_type(SCT *sct, ct_log_entry_type_t
+entry_type); <br/>
+size_t SCT_get0_log_id(const SCT *sct, unsigned char
+**log_id); <br/>
+int SCT_set0_log_id(SCT *sct, unsigned char *log_id, size_t
+log_id_len); <br/>
+int SCT_set1_log_id(SCT *sct, const unsigned char *log_id,
+size_t log_id_len); <br/>
+uint64_t SCT_get_timestamp(const SCT *sct); <br/>
+void SCT_set_timestamp(SCT *sct, uint64_t timestamp); <br/>
+int SCT_get_signature_nid(const SCT *sct); <br/>
+int SCT_set_signature_nid(SCT *sct, int nid); <br/>
+size_t SCT_get0_signature(const SCT *sct, unsigned char
+**sig); <br/>
+void SCT_set0_signature(SCT *sct, unsigned char *sig, size_t
+sig_len); <br/>
+int SCT_set1_signature(SCT *sct, const unsigned char *sig,
+size_t sig_len); <br/>
+size_t SCT_get0_extensions(const SCT *sct, unsigned char
+**ext); <br/>
+void SCT_set0_extensions(SCT *sct, unsigned char *ext,
+size_t ext_len); <br/>
+int SCT_set1_extensions(SCT *sct, const unsigned char *ext,
+size_t ext_len); <br/>
+sct_source_t SCT_get_source(const SCT *sct); <br/>
+int SCT_set_source(SCT *sct, sct_source_t source);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Signed
+Certificate Timestamps (SCTs) are defined by RFC 6962,
+Section 3.2. They constitute a promise by a Certificate
+Transparency (CT) log to publicly record a certificate. By
+cryptographically verifying that a log did indeed issue an
+SCT, some confidence can be gained that the certificate is
+publicly known.</p>
+<p style="margin-left:9%; margin-top: 1em">An internal
+representation of an SCT can be created in one of two ways.
+The first option is to create a blank SCT, using
+<b>SCT_new()</b>, and then populate it using:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="52%">
+<p><b>SCT_set_version()</b> to set the SCT version.</p></td>
+<td width="36%">
+</td></tr>
+</table>
+<p style="margin-left:12%; margin-top: 1em">Only
+SCT_VERSION_V1 is currently supported.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p style="margin-top: 1em"><b>SCT_set_log_entry_type()</b>
+to set the type of certificate the SCT was issued for:</p></td>
+<td width="3%">
+</td></tr>
+</table>
+<p style="margin-left:12%; margin-top: 1em"><b>CT_LOG_ENTRY_TYPE_X509</b>
+for a normal certificate. <b>CT_LOG_ENTRY_TYPE_PRECERT</b>
+for a pre−certificate.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p style="margin-top: 1em"><b>SCT_set0_log_id()</b> or
+<b>SCT_set1_log_id()</b> to set the LogID of the CT log that
+the SCT came from.</p></td></tr>
+</table>
+<p style="margin-left:12%; margin-top: 1em">The former
+takes ownership, whereas the latter makes a copy. See RFC
+6962, Section 3.2 for the definition of LogID.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p style="margin-top: 1em"><b>SCT_set_timestamp()</b> to
+set the time the SCT was issued (time in milliseconds since
+the Unix Epoch).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p><b>SCT_set_signature_nid()</b> to set the NID of the
+signature.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p><b>SCT_set0_signature()</b> or
+<b>SCT_set1_signature()</b> to set the raw signature
+value.</p> </td></tr>
+</table>
+<p style="margin-left:12%; margin-top: 1em">The former
+takes ownership, whereas the latter makes a copy.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="2%"></td>
+<td width="75%">
+<p style="margin-top: 1em"><b>SCT_set0_extensions()</b> or
+<b>SCT_set1_extensions</b> to provide SCT extensions.</p></td>
+<td width="13%">
+</td></tr>
+</table>
+<p style="margin-left:12%; margin-top: 1em">The former
+takes ownership, whereas the latter makes a copy.</p>
+<p style="margin-left:9%; margin-top: 1em">Alternatively,
+the SCT can be pre−populated from the following data
+using <b>SCT_new_from_base64()</b>:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p style="margin-top: 1em">The SCT version (only
+SCT_VERSION_V1 is currently supported).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>The LogID (see RFC 6962, Section 3.2), base64
+encoded.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>The type of certificate the SCT was issued for:
+<b>CT_LOG_ENTRY_TYPE_X509</b> for a normal certificate.
+<b>CT_LOG_ENTRY_TYPE_PRECERT</b> for a
+pre−certificate.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>The time that the SCT was issued (time in milliseconds
+since the Unix Epoch).</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>The SCT extensions, base64 encoded.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>The SCT signature, base64 encoded.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_set_source()</b>
+can be used to record where the SCT was found (TLS
+extension, X.509 certificate extension or OCSP response).
+This is not required for verifying the SCT.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_free()</b>
+frees the specified SCT. If the argument is NULL, nothing is
+done.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_LIST_free()</b>
+frees the specified stack of SCTs. If the argument is NULL,
+nothing is done.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Some of the
+setters return int, instead of void. These will all return 1
+on success, 0 on failure. They will not make changes on
+failure.</p>
+<p style="margin-left:9%; margin-top: 1em">All of the
+setters will reset the validation status of the SCT to
+SCT_VALIDATION_STATUS_NOT_SET (see
+<b>SCT_validate</b>(3)).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_set_source()</b>
+will call <b>SCT_set_log_entry_type()</b> if the type of
+certificate the SCT was issued for can be inferred from
+where the SCT was found. For example, an SCT found in an
+X.509 extension must have been issued for a pre−
+certificate.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_set_source()</b>
+will not refuse unknown values.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_set_version()</b>
+returns 1 if the specified version is supported, 0
+otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_set_log_entry_type()</b>
+returns 1 if the specified log entry type is supported, 0
+otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_set0_log_id()</b>
+and <b>SCT_set1_log_id</b> return 1 if the specified LogID
+is a valid SHA−256 hash, 0 otherwise. Additionally,
+<b>SCT_set1_log_id</b> returns 0 if malloc fails.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_set_signature_nid</b>
+returns 1 if the specified NID is supported, 0
+otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_set1_extensions</b>
+and <b>SCT_set1_signature</b> return 1 if the supplied
+buffer is copied successfully, 0 otherwise (i.e. if malloc
+fails).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_set_source</b>
+returns 1 on success, 0 otherwise.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ct</b>(7),
+<b>SCT_validate</b>(3), <b>OBJ_nid2obj</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+were added in OpenSSL 1.1.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2016−2024 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

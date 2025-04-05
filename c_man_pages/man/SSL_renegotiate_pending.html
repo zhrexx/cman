@@ -1,0 +1,252 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:31 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_KEY_UPDATE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_KEY_UPDATE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#USAGE WITH QUIC">USAGE WITH QUIC</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_key_update,
+SSL_get_key_update_type, SSL_renegotiate,
+SSL_renegotiate_abbreviated, SSL_renegotiate_pending −
+initiate and obtain information about updating connection
+keys</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+int SSL_key_update(SSL *s, int updatetype); <br/>
+int SSL_get_key_update_type(const SSL *s); <br/>
+int SSL_renegotiate(SSL *s); <br/>
+int SSL_renegotiate_abbreviated(SSL *s); <br/>
+int SSL_renegotiate_pending(const SSL *s);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_key_update()</b>
+schedules an update of the keys for the current TLS
+connection. If the <b>updatetype</b> parameter is set to
+<b>SSL_KEY_UPDATE_NOT_REQUESTED</b> then the sending keys
+for this connection will be updated and the peer will be
+informed of the change. If the <b>updatetype</b> parameter
+is set to <b>SSL_KEY_UPDATE_REQUESTED</b> then the sending
+keys for this connection will be updated and the peer will
+be informed of the change along with a request for the peer
+to additionally update its sending keys. It is an error if
+<b>updatetype</b> is set to <b>SSL_KEY_UPDATE_NONE</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_key_update()</b>
+must only be called after the initial handshake has been
+completed and TLSv1.3 or QUIC has been negotiated, at the
+same time, the application needs to ensure that the writing
+of data has been completed. The key update will not take
+place until the next time an IO operation such as
+<b>SSL_read_ex()</b> or <b>SSL_write_ex()</b> takes place on
+the connection. Alternatively <b>SSL_do_handshake()</b> can
+be called to force the update to take place immediately.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_key_update_type()</b>
+can be used to determine whether a key update operation has
+been scheduled but not yet performed. The type of the
+pending key update operation will be returned if there is
+one, or SSL_KEY_UPDATE_NONE otherwise.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_renegotiate()</b>
+and <b>SSL_renegotiate_abbreviated()</b> should only be
+called for connections that have negotiated TLSv1.2 or less.
+Calling them on any other connection will result in an
+error.</p>
+<p style="margin-left:9%; margin-top: 1em">When called from
+the client side, <b>SSL_renegotiate()</b> schedules a
+completely new handshake over an existing SSL/TLS
+connection. The next time an IO operation such as
+<b>SSL_read_ex()</b> or <b>SSL_write_ex()</b> takes place on
+the connection a check will be performed to confirm that it
+is a suitable time to start a renegotiation. If so, then it
+will be initiated immediately. OpenSSL will not attempt to
+resume any session associated with the connection in the new
+handshake.</p>
+<p style="margin-left:9%; margin-top: 1em">When called from
+the client side, <b>SSL_renegotiate_abbreviated()</b> works
+in the same was as <b>SSL_renegotiate()</b> except that
+OpenSSL will attempt to resume the session associated with
+the current connection in the new handshake.</p>
+<p style="margin-left:9%; margin-top: 1em">When called from
+the server side, <b>SSL_renegotiate()</b> and
+<b>SSL_renegotiate_abbreviated()</b> behave identically.
+They both schedule a request for a new handshake to be sent
+to the client. The next time an IO operation is performed
+then the same checks as on the client side are performed and
+then, if appropriate, the request is sent. The client may or
+may not respond with a new handshake and it may or may not
+attempt to resume an existing session. If a new handshake is
+started then this will be handled transparently by calling
+any OpenSSL IO function.</p>
+<p style="margin-left:9%; margin-top: 1em">If an OpenSSL
+client receives a renegotiation request from a server then
+again this will be handled transparently through calling any
+OpenSSL IO function. For a TLS connection the client will
+attempt to resume the current session in the new handshake.
+For historical reasons, DTLS clients will not attempt to
+resume the session in the new handshake.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_renegotiate_pending()</b> function returns 1 if a
+renegotiation or renegotiation request has been scheduled
+but not yet acted on, or 0 otherwise.</p>
+<h2>USAGE WITH QUIC
+<a name="USAGE WITH QUIC"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_key_update()</b>
+can also be used to perform a key update when using QUIC.
+The function must be called on a QUIC connection SSL object.
+This is normally done automatically when needed. Since a
+locally initiated QUIC key update always causes a peer to
+also trigger a key update, passing
+<b>SSL_KEY_UPDATE_NOT_REQUESTED</b> as <b>updatetype</b> has
+the same effect as passing
+<b>SSL_KEY_UPDATE_REQUESTED</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The QUIC
+connection must have been fully established before a key
+update can be performed, and other QUIC protocol rules
+govern how frequently QUIC key update can be performed.
+<b>SSL_key_update()</b> will fail if these requirements are
+not met.</p>
+<p style="margin-left:9%; margin-top: 1em">Because QUIC key
+updates are always handled immediately,
+<b>SSL_get_key_update_type()</b> always returns
+SSL_KEY_UPDATE_NONE when called on a QUIC connection SSL
+object.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_key_update()</b>,
+<b>SSL_renegotiate()</b> and
+<b>SSL_renegotiate_abbreviated()</b> return 1 on success or
+0 on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_key_update_type()</b>
+returns the update type of the pending key update operation
+or SSL_KEY_UPDATE_NONE if there is none.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_renegotiate_pending()</b>
+returns 1 if a renegotiation or renegotiation request has
+been scheduled but not yet acted on, or 0 otherwise.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_read_ex</b>(3), <b>SSL_write_ex</b>(3),
+<b>SSL_do_handshake</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_key_update()</b> and <b>SSL_get_key_update_type()</b>
+functions were added in OpenSSL 1.1.1.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2017−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

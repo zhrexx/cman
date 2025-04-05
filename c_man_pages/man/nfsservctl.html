@@ -1,0 +1,178 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:51 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>nfsservctl</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">nfsservctl</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">nfsservctl
+− syscall interface to kernel nfs daemon</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;linux/nfsd/syscall.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>long
+nfsservctl(int</b> <i>cmd</i><b>, struct nfsctl_arg
+*</b><i>argp</i><b>, <br/>
+union nfsctl_res *</b><i>resp</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b><i>Note</i></b>:
+Since Linux 3.1, this system call no longer exists. It has
+been replaced by a set of files in the <i>nfsd</i>
+filesystem; see <b>nfsd</b>(7).</p>
+<p style="margin-left:14%; margin-top: 1em">/* <br/>
+* These are the commands understood by nfsctl(). <br/>
+*/ <br/>
+#define NFSCTL_SVC 0 /* This is a server process. */ <br/>
+#define NFSCTL_ADDCLIENT 1 /* Add an NFS client. */ <br/>
+#define NFSCTL_DELCLIENT 2 /* Remove an NFS client. */ <br/>
+#define NFSCTL_EXPORT 3 /* Export a filesystem. */ <br/>
+#define NFSCTL_UNEXPORT 4 /* Unexport a filesystem. */ <br/>
+#define NFSCTL_UGIDUPDATE 5 /* Update a client's UID/GID map
+<br/>
+(only in Linux 2.4.x and earlier). */ <br/>
+#define NFSCTL_GETFH 6 /* Get a file handle (used by
+mountd(8)) <br/>
+(only in Linux 2.4.x and earlier). */ <br/>
+struct nfsctl_arg { <br/>
+int ca_version; /* safeguard */ <br/>
+union { <br/>
+struct nfsctl_svc u_svc; <br/>
+struct nfsctl_client u_client; <br/>
+struct nfsctl_export u_export; <br/>
+struct nfsctl_uidmap u_umap; <br/>
+struct nfsctl_fhparm u_getfh; <br/>
+unsigned int u_debug; <br/>
+} u; <br/>
+} <br/>
+union nfsctl_res { <br/>
+struct knfs_fh cr_getfh; <br/>
+unsigned int cr_debug; <br/>
+};</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success, zero
+is returned. On error, −1 is returned, and
+<i>errno</i> is set to indicate the error.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Removed in Linux
+3.1. Removed in glibc 2.28.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>nfsd</b>(7)</p>
+<hr/>
+</body>
+</html>

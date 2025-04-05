@@ -1,0 +1,220 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:42 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>IO::Socket::SSL::PublicSuffix</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">IO::Socket::SSL::PublicSuffix</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Method">Method</a><br/>
+<a href="#FILES">FILES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Socket::SSL::PublicSuffix
+− provide access to Mozilla's list of effective TLD
+names</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"># use builtin
+default <br/>
+use IO::Socket::SSL::PublicSuffix; <br/>
+$ps = IO::Socket::SSL::PublicSuffix−&gt;default; <br/>
+# load from string <br/>
+$ps =
+IO::Socket::SSL::PublicSuffix−&gt;from_string("*.uk\n*");
+<br/>
+# load from file or file handle <br/>
+$ps =
+IO::Socket::SSL::PublicSuffix−&gt;from_file($filename);
+<br/>
+$ps =
+IO::Socket::SSL::PublicSuffix−&gt;from_file(\*STDIN);
+<br/>
+# −−− string in −&gt; string out
+<br/>
+# $rest −&gt; whatever.host <br/>
+# $tld −&gt; co.uk <br/>
+my ($rest,$tld) =
+$ps−&gt;public_suffix('whatever.host.co.uk'); <br/>
+my $tld =
+$ps−&gt;public_suffix('whatever.host.co.uk'); <br/>
+# $root_domain −&gt; host.co.uk <br/>
+my $root_domain =
+$ps−&gt;public_suffix('whatever.host.co.uk', 1); <br/>
+# −−− array in −&gt; array out <br/>
+# $rest −&gt; [qw(whatever host)] <br/>
+# $tld −&gt; [qw(co uk)] <br/>
+my ($rest,$tld) = $ps−&gt;public_suffix([qw(whatever
+host co uk)]); <br/>
+−−−− <br/>
+# To update this file with the current list: <br/>
+perl −MIO::Socket::SSL::PublicSuffix −e
+'IO::Socket::SSL::PublicSuffix::update_self_from_url()'</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module uses
+the list of effective top level domain names from the
+mozilla project to determine the public top level domain for
+a given hostname.</p>
+<h3>Method
+<a name="Method"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">class−&gt;default(%args)</p>
+<p style="margin-left:14%;">Returns object with builtin
+default. "min_suffix" can be given in %args to
+specify the minimal suffix, default is 1.</p>
+<p style="margin-left:9%;">class−&gt;from_string(string,%args)</p>
+<p style="margin-left:14%;">Returns object with
+configuration from string. See method "default"
+for %args.</p>
+<p style="margin-left:9%;">class−&gt;from_file( file
+name| file handle, %args )</p>
+<p style="margin-left:14%;">Returns object with
+configuration from file or file handle. See method
+"default" for %args.</p>
+<p style="margin-left:9%;">$self−&gt;public_suffix(
+$host|\@host, [ $add ] )</p>
+<p style="margin-left:14%;">In array context the function
+returns the non−tld part and the tld part of the given
+hostname, in scalar context only the tld part. It adds $add
+parts of the non−tld part to the tld, e.g. with
+"$add=1" it will return the root domain.</p>
+<p style="margin-left:14%; margin-top: 1em">If there were
+no explicit matches against the public suffix configuration
+it will fall back to a suffix of length 1.</p>
+<p style="margin-left:14%; margin-top: 1em">The function
+accepts a string or an array−ref (e.g. host split by
+"."). In the first case it will return string(s),
+in the latter case array−ref(s).</p>
+<p style="margin-left:14%; margin-top: 1em">International
+hostnames or labels can be in ASCII (IDNA form starting with
+"xn−−") or unicode. In the latter case
+an IDNA handling library needs to be available. URI is
+preferred, but Net::IDN:::Encode, Net::LibIDN are still
+supported.</p>
+<p style="margin-left:9%;">($self|class)−&gt;can_idn</p>
+<p style="margin-left:14%;">Returns true if IDN support is
+available.</p>
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">http://publicsuffix.org/list/effective_tld_names.dat</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Domain::PublicSuffix,
+Mozilla::PublicSuffix</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Q: Why yet
+another module, we already have
+L&lt;Domain::PublicSuffix&gt; and <br/>
+L&lt;Mozilla::PublicSuffix&gt;. <br/>
+A: Because the public suffix data change more often than
+these modules do, <br/>
+IO::Socket::SSL needs this list and it is more easy this way
+to keep it <br/>
+up−to−date.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Steffen
+Ullrich</p>
+<hr/>
+</body>
+</html>

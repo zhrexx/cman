@@ -1,0 +1,280 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:11 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OSSL_DECODER_CTX_NEW_FOR_PKEY</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OSSL_DECODER_CTX_NEW_FOR_PKEY</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Input Types">Input Types</a><br/>
+<a href="#Input Structures">Input Structures</a><br/>
+<a href="#Selections">Selections</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OSSL_DECODER_CTX_new_for_pkey,
+OSSL_DECODER_CTX_set_passphrase,
+OSSL_DECODER_CTX_set_pem_password_cb,
+OSSL_DECODER_CTX_set_passphrase_ui,
+OSSL_DECODER_CTX_set_passphrase_cb − Decoder routines
+to decode EVP_PKEYs</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/decoder.h&gt; <br/>
+OSSL_DECODER_CTX * <br/>
+OSSL_DECODER_CTX_new_for_pkey(EVP_PKEY **pkey, <br/>
+const char *input_type, <br/>
+const char *input_struct, <br/>
+const char *keytype, int selection, <br/>
+OSSL_LIB_CTX *libctx, const char *propquery); <br/>
+int OSSL_DECODER_CTX_set_passphrase(OSSL_DECODER_CTX *ctx,
+<br/>
+const unsigned char *kstr, <br/>
+size_t klen); <br/>
+int OSSL_DECODER_CTX_set_pem_password_cb(OSSL_DECODER_CTX
+*ctx, <br/>
+pem_password_cb *cb, <br/>
+void *cbarg); <br/>
+int OSSL_DECODER_CTX_set_passphrase_ui(OSSL_DECODER_CTX
+*ctx, <br/>
+const UI_METHOD *ui_method, <br/>
+void *ui_data); <br/>
+int OSSL_DECODER_CTX_set_passphrase_cb(OSSL_DECODER_CTX
+*ctx, <br/>
+OSSL_PASSPHRASE_CALLBACK *cb, <br/>
+void *cbarg);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_DECODER_CTX_new_for_pkey()</b>
+is a utility function that creates a
+<b>OSSL_DECODER_CTX</b>, finds all applicable decoder
+implementations and sets them up, so all the caller has to
+do next is call functions like
+<b>OSSL_DECODER_from_bio</b>(3). The caller may use the
+optional <i>input_type</i>, <i>input_struct</i>,
+<i>keytype</i> and <i>selection</i> to specify what the
+input is expected to contain. The <i>pkey</i> must reference
+an <b>EVP_PKEY *</b> variable that will be set to the newly
+created <b>EVP_PKEY</b> on successful decoding. The
+referenced variable must be initialized to NULL before
+calling the function.</p>
+<p style="margin-left:9%; margin-top: 1em">Internally
+<b>OSSL_DECODER_CTX_new_for_pkey()</b> searches for all
+available <b>EVP_KEYMGMT</b>(3) implementations, and then
+builds a list of all potential decoder implementations that
+may be able to process the encoded input into data suitable
+for <b>EVP_PKEY</b>s. All these implementations are
+implicitly fetched using <i>libctx</i> and
+<i>propquery</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The search of
+decoder implementations can be limited with
+<i>input_type</i> and <i>input_struct</i> which specifies a
+starting input type and input structure. NULL is valid for
+both of them and signifies that the decoder implementations
+will find out the input type on their own. They are set with
+<b>OSSL_DECODER_CTX_set_input_type</b>(3) and
+<b>OSSL_DECODER_CTX_set_input_structure</b>(3). See
+"Input Types" and "Input Structures"
+below for further information.</p>
+<p style="margin-left:9%; margin-top: 1em">The search of
+decoder implementations can also be limited with
+<i>keytype</i> and <i>selection</i>, which specifies the
+expected resulting keytype and contents. NULL and zero are
+valid and signify that the decoder implementations will find
+out the keytype and key contents on their own from the input
+they get.</p>
+<p style="margin-left:9%; margin-top: 1em">If no suitable
+decoder implementation is found,
+<b>OSSL_DECODER_CTX_new_for_pkey()</b> still creates a
+<b>OSSL_DECODER_CTX</b>, but with no associated decoder
+(<b>OSSL_DECODER_CTX_get_num_decoders</b>(3) returns zero).
+This helps the caller to distinguish between an error when
+creating the <b>OSSL_ENCODER_CTX</b> and missing encoder
+implementation, and allows it to act accordingly.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_DECODER_CTX_set_passphrase()</b>
+gives the implementation a pass phrase to use when
+decrypting the encoded private key. Alternatively, a pass
+phrase callback may be specified with the following
+functions.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_DECODER_CTX_set_pem_password_cb()</b>,
+<b>OSSL_DECODER_CTX_set_passphrase_ui()</b> and
+<b>OSSL_DECODER_CTX_set_passphrase_cb()</b> set up a
+callback method that the implementation can use to prompt
+for a pass phrase, giving the caller the choice of preferred
+pass phrase callback form. These are called indirectly,
+through an internal <b>OSSL_PASSPHRASE_CALLBACK</b>(3)
+function.</p>
+<p style="margin-left:9%; margin-top: 1em">The internal
+<b>OSSL_PASSPHRASE_CALLBACK</b>(3) function caches the pass
+phrase, to be reused in all decodings that are performed in
+the same decoding run (for example, within one
+<b>OSSL_DECODER_from_bio</b>(3) call).</p>
+<h3>Input Types
+<a name="Input Types"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Available input
+types depend on the implementations that available providers
+offer, and provider documentation should have the
+details.</p>
+<p style="margin-left:9%; margin-top: 1em">Among the known
+input types that OpenSSL decoder implementations offer for
+<b>EVP_PKEY</b>s are "DER", "PEM",
+"MSBLOB" and "PVK". See
+<b>openssl−glossary</b>(7) for further information on
+what these input types mean.</p>
+<h3>Input Structures
+<a name="Input Structures"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Available input
+structures depend on the implementations that available
+providers offer, and provider documentation should have the
+details.</p>
+<p style="margin-left:9%; margin-top: 1em">Among the known
+input structures that OpenSSL decoder implementations offer
+for <b>EVP_PKEY</b>s are "pkcs8" and
+"SubjectPublicKeyInfo".</p>
+<p style="margin-left:9%; margin-top: 1em">OpenSSL decoder
+implementations also support the input structure
+"type−specific". This is the structure used
+for keys encoded according to key type specific
+specifications. For example, RSA keys encoded according to
+PKCS#1.</p>
+<h3>Selections
+<a name="Selections"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>selection</i>
+can be any one of the values described in
+"Selections" in <b>EVP_PKEY_fromdata</b>(3).
+Additionally <i>selection</i> can also be set to <b>0</b> to
+indicate that the code will auto detect the selection.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_DECODER_CTX_new_for_pkey()</b>
+returns a pointer to a <b>OSSL_DECODER_CTX</b>, or NULL if
+it couldn't be created.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_DECODER_CTX_set_passphrase()</b>,
+<b>OSSL_DECODER_CTX_set_pem_password_cb()</b>,
+<b>OSSL_DECODER_CTX_set_passphrase_ui()</b> and
+<b>OSSL_DECODER_CTX_set_passphrase_cb()</b> all return 1 on
+success, or 0 on failure.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>provider</b>(7),
+<b>OSSL_DECODER</b>(3), <b>OSSL_DECODER_CTX</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The functions
+described here were added in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2020−2024 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

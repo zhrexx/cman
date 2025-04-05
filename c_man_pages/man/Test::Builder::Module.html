@@ -1,0 +1,205 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:10 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test::Builder::Module</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test::Builder::Module</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Importing">Importing</a><br/>
+<a href="#Builder">Builder</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test::Builder::Module
+− Base class for test modules</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"># Emulates
+Test::Simple <br/>
+package Your::Module; <br/>
+my $CLASS = __PACKAGE__; <br/>
+use parent 'Test::Builder::Module'; <br/>
+@EXPORT = qw(ok); <br/>
+sub ok ($;$) { <br/>
+my $tb = $CLASS−&gt;builder; <br/>
+return $tb−&gt;ok(@_); <br/>
+} <br/>
+1;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This is a
+superclass for Test::Builder−based modules. It
+provides a handful of common functionality and a method of
+getting at the underlying Test::Builder object.</p>
+<h3>Importing
+<a name="Importing"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Test::Builder::Module
+is a subclass of Exporter which means your module is also a
+subclass of Exporter. @EXPORT, @EXPORT_OK, etc... all act
+normally.</p>
+<p style="margin-left:9%; margin-top: 1em">A few methods
+are provided to do the "use Your::Module tests =&gt;
+23" part for you.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>import</i></p>
+<p style="margin-left:9%; margin-top: 1em">Test::Builder::Module
+provides an import() method which acts in the same basic way
+as Test::More's, setting the plan and controlling exporting
+of functions and variables. This allows your module to set
+the plan independent of Test::More.</p>
+<p style="margin-left:9%; margin-top: 1em">All arguments
+passed to import() are passed onto
+"Your::Module−&gt;builder−&gt;plan()"
+with the exception of "import =&gt;[qw(things to
+import)]".</p>
+<p style="margin-left:9%; margin-top: 1em">use Your::Module
+import =&gt; [qw(this that)], tests =&gt; 23;</p>
+<p style="margin-left:9%; margin-top: 1em">says to import
+the functions this() and that() as well as set the plan to
+be 23 tests.</p>
+<p style="margin-left:9%; margin-top: 1em">import() also
+sets the exported_to() attribute of your builder to be the
+caller of the import() function.</p>
+<p style="margin-left:9%; margin-top: 1em">Additional
+behaviors can be added to your import() method by overriding
+import_extra().</p>
+<p style="margin-left:9%; margin-top: 1em"><i>import_extra</i></p>
+<p style="margin-left:9%; margin-top: 1em">Your::Module−&gt;import_extra(\@import_args);</p>
+<p style="margin-left:9%; margin-top: 1em">import_extra()
+is called by import(). It provides an opportunity for you to
+add behaviors to your module based on its import list.</p>
+<p style="margin-left:9%; margin-top: 1em">Any extra
+arguments which shouldn't be passed on to plan() should be
+stripped off by this method.</p>
+<p style="margin-left:9%; margin-top: 1em">See Test::More
+for an example of its use.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NOTE</b> This
+mechanism is <i>VERY ALPHA AND LIKELY TO CHANGE</i> as it
+feels like a bit of an ugly hack in its current form.</p>
+<h3>Builder
+<a name="Builder"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Test::Builder::Module
+provides some methods of getting at the underlying
+Test::Builder object.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>builder</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $builder =
+Your::Class−&gt;builder;</p>
+<p style="margin-left:9%; margin-top: 1em">This method
+returns the Test::Builder object associated with
+Your::Class. It is not a constructor so you can call it as
+often as you like.</p>
+<p style="margin-left:9%; margin-top: 1em">This is the
+preferred way to get the Test::Builder object. You should
+<i>not</i> get it via
+"Test::Builder−&gt;new" as was previously
+recommended.</p>
+<p style="margin-left:9%; margin-top: 1em">The object
+returned by builder() may change at runtime so you should
+call builder() inside each function rather than store it in
+a global.</p>
+<p style="margin-left:9%; margin-top: 1em">sub ok { <br/>
+my $builder = Your::Class−&gt;builder; <br/>
+return $builder−&gt;ok(@_); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Manual::Tooling::TestBuilder
+describes the improved options for writing testing modules
+provided by Test2.</p>
+<hr/>
+</body>
+</html>

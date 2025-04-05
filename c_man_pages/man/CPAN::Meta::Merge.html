@@ -1,0 +1,232 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:19 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CPAN::Meta::Merge</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CPAN::Meta::Merge</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#new">new</a><br/>
+<a href="#merge(@fragments)">merge(@fragments)</a><br/>
+<a href="#MERGE STRATEGIES">MERGE STRATEGIES</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CPAN::Meta::Merge
+− Merging CPAN Meta fragments</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version
+2.150010</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">my $merger =
+CPAN::Meta::Merge−&gt;new(default_version =&gt;
+"2"); <br/>
+my $meta = $merger−&gt;merge($base, @additional);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>new
+<a name="new"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This creates a
+CPAN::Meta::Merge object. It takes one mandatory named
+argument, "version", declaring the version of the
+meta−spec that must be used for the merge. It can
+optionally take an "extra_mappings" argument that
+allows one to add additional merging functions for specific
+elements.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"extra_mappings" arguments takes a hash ref with
+the same type of structure as described in CPAN::Meta::Spec,
+except with its values as one of the defined merge
+strategies or a code ref to a merging function.</p>
+<p style="margin-left:9%; margin-top: 1em">my $merger =
+CPAN::Meta::Merge−&gt;new( <br/>
+default_version =&gt; '2', <br/>
+extra_mappings =&gt; { <br/>
+'optional_features' =&gt; \&amp;custom_merge_function, <br/>
+'x_custom' =&gt; 'set_addition', <br/>
+'x_meta_meta' =&gt; { <br/>
+name =&gt; 'identical', <br/>
+tags =&gt; 'set_addition', <br/>
+} <br/>
+} <br/>
+);</p>
+<h3>merge(@fragments)
+<a name="merge(@fragments)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Merge all
+@fragments together. It will accept both CPAN::Meta objects
+and (possibly incomplete) hashrefs of metadata.</p>
+<h2>MERGE STRATEGIES
+<a name="MERGE STRATEGIES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"merge"
+uses various strategies to combine different elements of the
+CPAN::Meta objects. The following strategies can be used
+with the extra_mappings argument of "new": <br/>
+identical</p>
+<p style="margin-left:14%;">The elements must be
+identical</p>
+<p style="margin-left:9%;">set_addition</p>
+<p style="margin-left:14%;">The union of two array refs</p>
+<p style="margin-left:14%; margin-top: 1em">[ a, b ] U [ a,
+c] = [ a, b, c ]</p>
+<p style="margin-left:9%;">uniq_map</p>
+<p style="margin-left:14%;">Key value pairs from the right
+hash are merged to the left hash. Key collisions are only
+allowed if their values are the same. This merge function
+will recurse into nested hash refs following the same merge
+rules.</p>
+<p style="margin-left:9%;">improvise</p>
+<p style="margin-left:14%;">This merge strategy will try to
+pick the appropriate predefined strategy based on what
+element type. Array refs will try to use the
+"set_addition" strategy, Hash refs will try to use
+the "uniq_map" strategy, and everything else will
+try the "identical" strategy.</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p style="margin-top: 1em">David Golden
+&lt;dagolden@cpan.org&gt;</p> </td>
+<td width="45%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p>Ricardo Signes &lt;rjbs@cpan.org&gt;</p></td>
+<td width="45%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="41%">
+<p>Adam Kennedy &lt;adamk@cpan.org&gt;</p></td>
+<td width="45%">
+</td></tr>
+</table>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2010 by David Golden, Ricardo Signes, Adam
+Kennedy and Contributors.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

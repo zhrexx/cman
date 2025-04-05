@@ -1,0 +1,873 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:11 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Text::Unidecode</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Text::Unidecode</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DESIGN PHILOSOPHY">DESIGN PHILOSOPHY</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#DESIGN GOALS AND CONSTRAINTS">DESIGN GOALS AND CONSTRAINTS</a><br/>
+<a href="#A POD ENCODING TEST">A POD ENCODING TEST</a><br/>
+<a href="#TODO">TODO</a><br/>
+<a href="#MOTTO">MOTTO</a><br/>
+<a href="#WHEN YOU DON'T LIKE WHAT UNIDECODE DOES">WHEN YOU DON'T LIKE WHAT UNIDECODE DOES</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#THANKS">THANKS</a><br/>
+<a href="#PORTS">PORTS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#DISCLAIMER">DISCLAIMER</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#O HAI!">O HAI!</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Text::Unidecode
+−− plain ASCII transliterations of Unicode
+text</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use utf8; <br/>
+use Text::Unidecode; <br/>
+print unidecode( <br/>
+"北 亰 \n" <br/>
+# Chinese characters for Beijing (U+5317 U+4EB0) <br/>
+); <br/>
+# That prints: Bei Jing</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">It often happens
+that you have non−Roman text data in Unicode, but you
+can't display it−− usually because you're trying
+to show it to a user via an application that doesn't support
+Unicode, or because the fonts you need aren't accessible.
+You could represent the Unicode characters as
+"???????" or "\15BA\15A0\1610...", but
+that's nearly useless to the user who actually wants to read
+what the text says.</p>
+<p style="margin-left:9%; margin-top: 1em">What
+Text::Unidecode provides is a function, unidecode(...) that
+takes Unicode data and tries to represent it in
+US−ASCII characters (i.e., the universally displayable
+characters between 0x00 and 0x7F). The representation is
+almost always an attempt at
+<i>transliteration</i>−− i.e., conveying, in
+Roman letters, the pronunciation expressed by the text in
+some other writing system. (See the example in the
+synopsis.)</p>
+<p style="margin-left:9%; margin-top: 1em">NOTE:</p>
+<p style="margin-left:9%; margin-top: 1em">To make sure
+your perldoc/Pod viewing setup for viewing this page is
+working: The six−letter word
+"résumé" should look like
+"resume" with an "/" accent on each
+"e".</p>
+<p style="margin-left:9%; margin-top: 1em">For further
+tests, and help if that doesn't work, see below, "A POD
+ENCODING TEST".</p>
+<h2>DESIGN PHILOSOPHY
+<a name="DESIGN PHILOSOPHY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Unidecode's
+ability to transliterate from a given language is limited by
+two factors:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>The amount and quality of data in the written form of
+the original language</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">So if you have
+Hebrew data that has no vowel points in it, then Unidecode
+cannot guess what vowels should appear in a pronunciation. S
+f y hv n vwls n th npt, y wn't gt ny vwls n th tpt. (This is
+a specific application of the general principle of
+"Garbage In, Garbage Out".)</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="53%">
+<p style="margin-top: 1em">Basic limitations in the
+Unidecode design</p></td>
+<td width="33%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Writing a real
+and clever transliteration algorithm for any single language
+usually requires a lot of time, and at least a passable
+knowledge of the language involved. But Unicode text can
+convey more languages than I could possibly learn (much less
+create a transliterator for) in the entire rest of my
+lifetime. So I put a cap on how intelligent Unidecode could
+be, by insisting that it support only
+context−<i>in</i>sensitive transliteration. That means
+missing the finer details of any given writing system, while
+still hopefully being useful.</p>
+<p style="margin-left:9%; margin-top: 1em">Unidecode, in
+other words, is quick and dirty. Sometimes the output is not
+so dirty at all: Russian and Greek seem to work passably;
+and while Thaana (Divehi, AKA Maldivian) is a definitely
+non−Western writing system, setting up a mapping from
+it to Roman letters seems to work pretty well. But sometimes
+the output is <i>very dirty:</i> Unidecode does quite badly
+on Japanese and Thai.</p>
+<p style="margin-left:9%; margin-top: 1em">If you want a
+smarter transliteration for a particular language than
+Unidecode provides, then you should look for (or write) a
+transliteration algorithm specific to that language, and
+apply it instead of (or at least before) applying
+Unidecode.</p>
+<p style="margin-left:9%; margin-top: 1em">In other words,
+Unidecode's approach is broad (knowing about dozens of
+writing systems), but shallow (not being meticulous about
+any of them).</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Text::Unidecode
+provides one function, unidecode(...), which is exported by
+default. It can be used in a variety of calling contexts:
+<br/>
+"$out = unidecode( $in );" # scalar context</p>
+<p style="margin-left:14%;">This returns a copy of $in,
+transliterated.</p>
+<p style="margin-left:9%;">"$out = unidecode( @in
+);" # scalar context</p>
+<p style="margin-left:14%;">This is the same as "$out
+= unidecode(join "", @in);"</p>
+<p style="margin-left:9%;">"@out = unidecode( @in
+);" # list context</p>
+<p style="margin-left:14%;">This returns a list consisting
+of copies of @in, each transliterated. This is the same as
+"@out = map scalar(unidecode($_)), @in;"</p>
+<p style="margin-left:9%;">"unidecode( @items );"
+# void context <br/>
+"unidecode( @bar, $foo, @baz );" # void
+context</p>
+<p style="margin-left:14%;">Each item on input is replaced
+with its transliteration. This is the same as
+"for(@bar, $foo, @baz) { $_ = unidecode($_) }"</p>
+<p style="margin-left:9%; margin-top: 1em">You should make
+a minimum of assumptions about the output of unidecode(...).
+For example, if you assume an all−alphabetic (Unicode)
+string passed to unidecode(...) will return an
+all−alphabetic string, you're wrong−− some
+alphabetic Unicode characters are transliterated as strings
+containing punctuation (e.g., the Armenian letter
+"Թ" (U+0539), currently transliterates as
+"T`" (capital−T then a backtick).</p>
+<p style="margin-left:9%; margin-top: 1em">However, these
+are the assumptions you <i>can</i> make:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>Each character 0x0000 − 0x007F transliterates as
+itself. That is, unidecode(...) is 7−bit pure.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>The output of unidecode(...) always consists entirely of
+US−ASCII characters−− i.e., characters
+0x0000 − 0x007F.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>All Unicode characters translate to a sequence of (any
+number of) characters that are newline ("\n") or
+in the range 0x0020−0x007E. That is, no Unicode
+character translates to "\x01", for example.
+(Although if you have a "\x01" on input, you'll
+get a "\x01" in output.)</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>Yes, some transliterations produce a "\n" but
+it's just a few, and only with good reason. Note that the
+value of newline ("\n") varies from platform to
+platform−− see perlport.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>Some Unicode characters may transliterate to nothing
+(i.e., empty string).</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>Very many Unicode characters transliterate to
+multi−character sequences. E.g., Unihan character
+U+5317, "北 ", transliterates as the
+four−character string "Bei ".</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>Within these constraints, <i>I may change</i> the
+transliteration of characters in future versions. For
+example, if someone convinces me that that the Armenian
+letter "Թ", currently transliterated as
+"T`", would be better transliterated as
+"D", I <i>may</i> well make that change.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>Unfortunately, there are many characters that Unidecode
+doesn't know a transliteration for. This is generally
+because the character has been added since I last revised
+the Unidecode data tables. I'm <i>always</i> catching
+up!</p> </td>
+<td width="1%">
+</td></tr>
+</table>
+<h2>DESIGN GOALS AND CONSTRAINTS
+<a name="DESIGN GOALS AND CONSTRAINTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Text::Unidecode
+is meant to be a transliterator of last resort, to be used
+once you've decided that you can't just display the Unicode
+data as is, <i>and once you've decided you don't have a more
+clever, language−specific transliterator
+available,</i> or once you've <i>already applied</i> smarter
+algorithms or mappings that you prefer and you now just want
+Unidecode to do cleanup.</p>
+<p style="margin-left:9%; margin-top: 1em">Unidecode
+transliterates context−insensitively−−
+that is, a given character is replaced with the same
+US−ASCII (7−bit ASCII) character or characters,
+no matter what the surrounding characters are.</p>
+<p style="margin-left:9%; margin-top: 1em">The main reason
+I'm making Text::Unidecode work with only
+context−insensitive substitution is that it's fast,
+dumb, and straightforward enough to be feasible. It doesn't
+tax my (quite limited) knowledge of world languages. It
+doesn't require me writing a hundred lines of code to get
+the Thai syllabification right (and never knowing whether
+I've gotten it wrong, because I don't know Thai), or
+spending a year trying to get Text::Unidecode to use the
+ChaSen algorithm for Japanese, or trying to write heuristics
+for telling the difference between Japanese, Chinese, or
+Korean, so it knows how to transliterate any given
+Uni−Han glyph. And moreover, context−insensitive
+substitution is still mostly useful, but still clearly
+couldn't be mistaken for authoritative.</p>
+<p style="margin-left:9%; margin-top: 1em">Text::Unidecode
+is an example of the 80/20 rule in action−− you
+get 80% of the usefulness using just 20% of a
+"real" solution.</p>
+<p style="margin-left:9%; margin-top: 1em">A
+"real" approach to transliteration for any given
+language can involve such increasingly tricky contextual
+factors as these: <br/>
+The previous / preceding character(s)</p>
+<p style="margin-left:14%;">What a given symbol
+"X" means, could depend on whether it's followed
+by a consonant, or by vowel, or by some diacritic
+character.</p>
+<p style="margin-left:9%;">Syllables</p>
+<p style="margin-left:14%;">A character "X" at
+end of a syllable could mean something different from when
+it's at the start−− which is especially
+problematic when the language involved doesn't explicitly
+mark where one syllable stops and the next starts.</p>
+<p style="margin-left:9%;">Parts of speech</p>
+<p style="margin-left:14%;">What "X" sounds like
+at the end of a word, depends on whether that word is a
+noun, or a verb, or what.</p>
+<p style="margin-left:9%;">Meaning</p>
+<p style="margin-left:14%;">By semantic context, you can
+tell that this ideogram "X" means "shoe"
+(pronounced one way) and not "time" (pronounced
+another), and that's how you know to transliterate it one
+way instead of the other.</p>
+<p style="margin-left:9%;">Origin of the word</p>
+<p style="margin-left:14%;">"X" means one thing
+in loanwords and/or placenames (and derivatives thereof),
+and another in native words.</p>
+<p style="margin-left:9%;">"It's just that
+way"</p>
+<p style="margin-left:14%;">"X" normally makes
+the /X/ sound, except for this list of seventy exceptions
+(and words based on them, sometimes indirectly). Or: you
+never can tell which of the three ways to pronounce
+"X" this word actually uses; you just have to know
+which it is, so keep a dictionary on hand!</p>
+<p style="margin-left:9%;">Language</p>
+<p style="margin-left:14%;">The character "X" is
+actually used in several different languages, and you have
+to figure out which you're looking at before you can
+determine how to transliterate it.</p>
+<p style="margin-left:9%; margin-top: 1em">Out of a desire
+to avoid being mired in <i>any</i> of these kinds of
+contextual factors, I chose to exclude <i>all of them</i>
+and just stick with context−insensitive
+replacement.</p>
+<h2>A POD ENCODING TEST
+<a name="A POD ENCODING TEST"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">"Brontë" is six
+characters that should look like "Bronte", but
+with double−dots on the "e" character.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>"Résumé" is six characters that
+should look like "Resume", but with /−shaped
+accents on the "e" characters.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>"læti" should be <i>four</i> letters
+long−− the second letter should not be two
+letters "ae", but should be a single letter that
+looks like an "a" entirely fused with an
+"e".</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>"χρονος" is
+six Greek characters that should look kind of like:
+xpovoc</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>"КАК ВАС
+ЗОВУТ" is three short
+Russian words that should look a lot like: KAK BAC 3OBYT</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>"ടധ" is two Malayalam characters
+that should look like: sw</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>"丫 二 十 一 " is four
+Chinese characters that should look like:
+"Y=+−"</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>"Ｈ ｅ ｌ ｌ ｏ
+" is five characters that should look like: Hello</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">If all of those
+come out right, your Pod viewing setup is working
+fine−− welcome to the 2010s! If those are full
+of garbage characters, consider viewing this page as HTML at
+&lt;https://metacpan.org/pod/Text::Unidecode&gt; or
+&lt;http://search.cpan.org/perldoc?Text::Unidecode&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">If things look
+mostly okay, but the Malayalam and/or the Chinese are just
+question−marks or empty boxes, it's probably just that
+your computer lacks the fonts for those.</p>
+<h2>TODO
+<a name="TODO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Lots:</p>
+<p style="margin-left:9%; margin-top: 1em">* Rebuild the
+Unihan database. (Talk about hitting a moving target!)</p>
+<p style="margin-left:9%; margin-top: 1em">* Add
+tone−numbers for Mandarin hanzi? Namely: In Unihan,
+when tone marks are present (like in "kMandarin:
+dào", should I continue to transliterate as just
+"Dao", or should I put in the tone number:
+"Dao4"? It would be pretty jarring to have digits
+appear where previously there was just alphabetic
+stuff−− But tone numbers make Chinese more
+readable. (I have a clever idea about doing this, for
+Unidecode v2 or v3.)</p>
+<p style="margin-left:9%; margin-top: 1em">* Start dealing
+with characters over U+FFFF. Cuneiform! Emojis!
+Whatever!</p>
+<p style="margin-left:9%; margin-top: 1em">* Fill in all
+the little characters that have crept into the Misc Symbols
+Etc blocks.</p>
+<p style="margin-left:9%; margin-top: 1em">* More things
+that need tending to are detailed in the TODO.txt file,
+included in this distribution. Normal installs probably
+don't leave the TODO.txt lying around, but if nothing else,
+you can see it at
+&lt;http://search.cpan.org/search?dist=Text::Unidecode&gt;</p>
+<h2>MOTTO
+<a name="MOTTO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+Text::Unidecode motto is:</p>
+<p style="margin-left:9%; margin-top: 1em">It's better than
+nothing!</p>
+<p style="margin-left:9%; margin-top: 1em">...in
+<i>both</i> meanings: 1) seeing the output of unidecode(...)
+is better than just having all font−unavailable
+Unicode characters replaced with "?"'s, or
+rendered as gibberish; and 2) it's the worst, i.e., there's
+nothing that Text::Unidecode's algorithm is better than. All
+sensible transliteration algorithms (like for German, see
+below) are going to be smarter than Unidecode's.</p>
+<h2>WHEN YOU DON'T LIKE WHAT UNIDECODE DOES
+<a name="WHEN YOU DON'T LIKE WHAT UNIDECODE DOES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">I will repeat
+the above, because some people miss it:</p>
+<p style="margin-left:9%; margin-top: 1em">Text::Unidecode
+is meant to be a transliterator of <i>last resort,</i> to be
+used once you've decided that you can't just display the
+Unicode data as is, <i>and once you've decided you don't
+have a more clever, language−specific transliterator
+available</i>−− or once you've <i>already
+applied</i> a smarter algorithm and now just want Unidecode
+to do cleanup.</p>
+<p style="margin-left:9%; margin-top: 1em">In other words,
+when you don't like what Unidecode does, <i>do it
+yourself.</i> Really, that's what the above says. Here's how
+you would do this for German, for example:</p>
+<p style="margin-left:9%; margin-top: 1em">In German,
+there's the typographical convention that an umlaut (the
+double−dots on: ä ö ü) can be written
+as an "−e", like with "Schön"
+becoming "Schoen". But Unidecode doesn't do
+that−− I have Unidecode simply drop the umlaut
+accent and give back "Schon".</p>
+<p style="margin-left:9%; margin-top: 1em">(I chose this
+not because I'm a big meanie, but because <i>generally</i>
+changing "ü" to "ue" is disastrous
+for all text that's <i>not in German</i>. Finnish
+"Hyvää päivää" would turn
+into "Hyvaeae paeivaeae". And I discourage you
+from being <i>yet another</i> German who emails me, trying
+to impel me to consider a typographical nicety of German to
+be more important than <i>all other languages</i>.)</p>
+<p style="margin-left:9%; margin-top: 1em">If you know that
+the text you're handling is probably in German, and you want
+to apply the "umlaut becomes −e" rule,
+here's how to do it for yourself (and then use Unidecode as
+<i>the fallback</i> afterwards):</p>
+<p style="margin-left:9%; margin-top: 1em">use utf8; #
+&lt;−− probably necessary. <br/>
+our( %German_Characters ) = qw( <br/>
+Ä AE ä ae <br/>
+Ö OE ö oe <br/>
+Ü UE ü ue <br/>
+ß ss <br/>
+); <br/>
+use Text::Unidecode qw(unidecode); <br/>
+sub german_to_ascii { <br/>
+my($german_text) = @_; <br/>
+$german_text =˜ <br/>
+
+s/([ÄäÖöÜüß])/$German_Characters{$1}/g;
+<br/>
+# And now, as a *fallthrough*: <br/>
+$german_text = unidecode( $german_text ); <br/>
+return $german_text; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">To pick another
+example, here's something that's not about a specific
+language, but simply having a preference that may or may not
+agree with Unidecode's (i.e., mine). Consider the
+"¥" symbol. Unidecode changes that to
+"Y=". If you want "¥" as
+"YEN", then...</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Text::Unidecode qw(unidecode); <br/>
+sub my_favorite_unidecode { <br/>
+my($text) = @_; <br/>
+$text =˜ s/¥/YEN/g; <br/>
+# ...and anything else you like, such as: <br/>
+$text =˜ s/€/Euro/g; <br/>
+# And then, as a fallback,... <br/>
+$text = unidecode($text); <br/>
+return $text; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Then if you
+do:</p>
+<p style="margin-left:9%; margin-top: 1em">print
+my_favorite_unidecode("You just won ¥250,000 and
+€40,000!!!");</p>
+<p style="margin-left:9%; margin-top: 1em">...you'll
+get:</p>
+<p style="margin-left:9%; margin-top: 1em">You just won
+YEN250,000 and Euro40,000!!!</p>
+<p style="margin-left:9%; margin-top: 1em">...just as you
+like it.</p>
+<p style="margin-left:9%; margin-top: 1em">(By the way, the
+reason <i>I</i> don't have Unidecode just turn
+"¥" into "YEN" is that the same
+symbol also stands for yuan, the Chinese currency. A
+"Y=" is nicely, <i>safely</i> neutral as to
+whether we're talking about yen or yuan−− Japan,
+or China.)</p>
+<p style="margin-left:9%; margin-top: 1em">Another example:
+for hanzi/kanji/hanja, I have designed Unidecode to
+transliterate according to the value that that character has
+in Mandarin (otherwise Cantonese,...). Some users have
+complained that applying Unidecode to Japanese produces
+gibberish.</p>
+<p style="margin-left:9%; margin-top: 1em">To make a long
+story short: transliterating from Japanese is
+<i>difficult</i> and it requires a <i>lot</i> of
+context−sensitivity. If you have text that you're
+fairly sure is in Japanese, you're going to have to use a
+Japanese−specific algorithm to transliterate Japanese
+into ASCII. (And then you can call Unidecode on the output
+from that−− it is useful for, for example,
+turning ｆ ｕ ｌ ｌ ｗ
+ｉ ｄ ｔ ｈ characters into their
+normal (ASCII) forms.</p>
+<p style="margin-left:9%; margin-top: 1em">(Note, as of
+August 2016: I have titanic but tentative plans for making
+the value of Unihan characters be something you could set
+parameters for at runtime, in changing the order of
+"Mandarin else Cantonese else..." in the value
+retrieval. Currently that preference list is hardwired on my
+end, at module−build time. Other options I'm
+considering allowing for: whether the Mandarin and Cantonese
+values should have the tone numbers on them; whether every
+Unihan value should have a terminal space; and maybe other
+clever stuff I haven't thought of yet.)</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If you get
+really implausible nonsense out of unidecode(...), make sure
+that the input data really is a utf8 string. See perlunicode
+and perlunitut.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Unidecode
+will work disastrously bad on Japanese.</i> That's because
+Japanese is very very hard. To extend the Unidecode motto,
+Unidecode is better than nothing, and with Japanese, <i>just
+barely!</i></p>
+<p style="margin-left:9%; margin-top: 1em">On pure
+Mandarin, Unidecode will frequently give odd
+values−− that's because a single hanzi can have
+several readings, and Unidecode only knows what the Unihan
+database says is the most common one.</p>
+<h2>THANKS
+<a name="THANKS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Thanks to (in
+only the sloppiest of sorta−chronological order):
+Jordan Lachler, Harald Tveit Alvestrand, Melissa Axelrod,
+Abhijit Menon−Sen, Mark−Jason Dominus, Joe
+Johnston, Conrad Heiney, fileformat.info, Philip Newton,
+唐 鳳 , Tomaž Šolc, Mike Doherty, JT
+Smith and the MadMongers, Arden Ogg, Craig Copris, David
+Cusimano, Brendan Byrd, Hex Martin, and <i>many</i> other
+pals who have helped with the ideas or values for
+Unidecode's transliterations, or whose help has been in the
+secret F5 tornado that constitutes the internals of
+Unidecode's implementation.</p>
+<p style="margin-left:9%; margin-top: 1em">And thank you to
+the many people who have encouraged me to plug away at this
+project. A decade went by before I had any idea that more
+than about 4 or 5 people were using or getting any value out
+of Unidecode. I am told that actually my figure was missing
+some zeroes on the end!</p>
+<h2>PORTS
+<a name="PORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Some wonderful
+people have ported Unidecode to other languages!</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p style="margin-top: 1em">Python:
+&lt;https://pypi.python.org/pypi/Unidecode&gt;</p> </td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>PHP:
+&lt;https://github.com/silverstripe−labs/silverstripe−unidecode&gt;</p> </td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>Ruby:
+&lt;http://www.rubydoc.info/gems/unidecode/1.0.0/frames&gt;</p> </td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>JavaScript:
+&lt;https://www.npmjs.org/package/unidecode&gt;</p> </td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>Java: &lt;https://github.com/xuender/unidecode&gt;</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">I can't vouch
+for the details of each port, but these are clever people,
+so I'm sure they did a fine job.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">An article I
+wrote for <i>The Perl Journal</i> about Unidecode:
+&lt;http://interglacial.com/tpj/22/&gt; (<b>READ
+IT!</b>)</p>
+<p style="margin-left:9%; margin-top: 1em">Jukka Korpela's
+&lt;http://www.cs.tut.fi/˜jkorpela/fui.html8&gt; which
+is brilliantly useful, and its code is brilliant (so, view
+source!). I was <i>kinda</i> thinking about maybe doing
+something <i>sort of</i> like that for the v2.x versions of
+Unicode−− but now he's got me convinced that I
+should go right ahead.</p>
+<p style="margin-left:9%; margin-top: 1em">Tom
+Christiansen's <i>Perl Unicode Cookbook</i>,
+&lt;http://www.perl.com/pub/2012/04/perlunicook−standard−preamble.html&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">Unicode
+Consortium: &lt;http://www.unicode.org/&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">Searchable
+Unihan database:
+&lt;http://www.unicode.org/cgi−bin/GetUnihanData.pl&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">Geoffrey
+Sampson. 1990. <i>Writing Systems: A Linguistic
+Introduction.</i> ISBN: 0804717567</p>
+<p style="margin-left:9%; margin-top: 1em">Randall K. Barry
+(editor). 1997. <i>ALA−LC Romanization Tables:
+Transliteration Schemes for Non−Roman Scripts.</i>
+ISBN: 0844409405 [ALA is the American Library Association;
+LC is the Library of Congress.]</p>
+<p style="margin-left:9%; margin-top: 1em">Rupert Snell.
+2000. <i>Beginner's Hindi Script (Teach Yourself Books).</i>
+ISBN: 0658009109</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+2001, 2014, 2015, 2016 Sean M. Burke.</p>
+<p style="margin-left:9%; margin-top: 1em">Unidecode is
+distributed under the Perl Artistic License ( perlartistic
+), namely:</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+distributed in the hope that it will be useful, but without
+any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.</p>
+<h2>DISCLAIMER
+<a name="DISCLAIMER"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Much of
+Text::Unidecode's internal data is based on data from The
+Unicode Consortium, with which I am unaffiliated. A good
+deal of the internal data comes from suggestions that have
+been contributed by people other than myself.</p>
+<p style="margin-left:9%; margin-top: 1em">The views and
+conclusions contained in my software and documentation are
+my own−− they should not be interpreted as
+representing official policies, either expressed or implied,
+of The Unicode Consortium; nor should they be interpreted as
+necessarily the views or conclusions of people who have
+contributed to this project.</p>
+<p style="margin-left:9%; margin-top: 1em">Moreover, I
+discourage you from inferring that choices that I've made in
+Unidecode reflect political or linguistic prejudices on my
+part. Just because Unidecode doesn't do great on your
+language, or just because it might seem to do better on some
+another language, please don't think I'm out to get you!</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Your pal, Sean
+M. Burke "sburke@cpan.org"</p>
+<h2>O HAI!
+<a name="O HAI!"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If you're using
+Unidecode for anything interesting, be cool and email me,
+I'm always curious what people use this for. (The answers so
+far have surprised me!)</p>
+<hr/>
+</body>
+</html>

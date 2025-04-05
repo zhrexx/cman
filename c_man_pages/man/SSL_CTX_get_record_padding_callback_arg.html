@@ -1,0 +1,236 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:13 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SET_RECORD_PADDING_CALLBACK</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SET_RECORD_PADDING_CALLBACK</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_set_record_padding_callback,
+SSL_set_record_padding_callback,
+SSL_CTX_set_record_padding_callback_arg,
+SSL_set_record_padding_callback_arg,
+SSL_CTX_get_record_padding_callback_arg,
+SSL_get_record_padding_callback_arg,
+SSL_CTX_set_block_padding, SSL_set_block_padding −
+install callback to specify TLS 1.3 record padding</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+void SSL_CTX_set_record_padding_callback(SSL_CTX *ctx,
+size_t (*cb)(SSL *s, int type, size_t len, void *arg)); <br/>
+int SSL_set_record_padding_callback(SSL *ssl, size_t
+(*cb)(SSL *s, int type, size_t len, void *arg)); <br/>
+void SSL_CTX_set_record_padding_callback_arg(SSL_CTX *ctx,
+void *arg); <br/>
+void *SSL_CTX_get_record_padding_callback_arg(const SSL_CTX
+*ctx); <br/>
+void SSL_set_record_padding_callback_arg(SSL *ssl, void
+*arg); <br/>
+void *SSL_get_record_padding_callback_arg(const SSL *ssl);
+<br/>
+int SSL_CTX_set_block_padding(SSL_CTX *ctx, size_t
+block_size); <br/>
+int SSL_set_block_padding(SSL *ssl, size_t block_size);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_record_padding_callback()</b>
+or <b>SSL_set_record_padding_callback()</b> can be used to
+assign a callback function <i>cb</i> to specify the padding
+for TLS 1.3 records. The value set in <b>ctx</b> is copied
+to a new SSL by <b>SSL_new()</b>. Kernel TLS is not possible
+if the record padding callback is set, and the callback
+function cannot be set if Kernel TLS is already configured
+for the current SSL object.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_record_padding_callback_arg()</b>
+and <b>SSL_set_record_padding_callback_arg()</b> assign a
+value <b>arg</b> that is passed to the callback when it is
+invoked. The value set in <b>ctx</b> is copied to a new SSL
+by <b>SSL_new()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_get_record_padding_callback_arg()</b>
+and <b>SSL_get_record_padding_callback_arg()</b> retrieve
+the <b>arg</b> value that is passed to the callback.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_block_padding()</b>
+and <b>SSL_set_block_padding()</b> pads the record to a
+multiple of the <b>block_size</b>. A <b>block_size</b> of 0
+or 1 disables block padding. The limit of <b>block_size</b>
+is SSL3_RT_MAX_PLAIN_LENGTH.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback is
+invoked for every record before encryption. The <b>type</b>
+parameter is the TLS record type that is being processed;
+may be one of SSL3_RT_APPLICATION_DATA, SSL3_RT_HANDSHAKE,
+or SSL3_RT_ALERT. The <b>len</b> parameter is the current
+plaintext length of the record before encryption. The
+<b>arg</b> parameter is the value set via
+<b>SSL_CTX_set_record_padding_callback_arg()</b> or
+<b>SSL_set_record_padding_callback_arg()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+cannot be used with QUIC SSL objects.
+<b>SSL_set_record_padding_callback()</b> and
+<b>SSL_set_block_padding()</b> fail if called on a QUIC SSL
+object.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_CTX_get_record_padding_callback_arg()</b> and
+<b>SSL_get_record_padding_callback_arg()</b> functions
+return the <b>arg</b> value assigned in the corresponding
+set functions.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_CTX_set_block_padding()</b> and
+<b>SSL_set_block_padding()</b> functions return 1 on success
+or 0 if <b>block_size</b> is too large.</p>
+<p style="margin-left:9%; margin-top: 1em">The <b>cb</b>
+returns the number of padding bytes to add to the record. A
+return of 0 indicates no padding will be added. A return
+value that causes the record to exceed the maximum record
+size (SSL3_RT_MAX_PLAIN_LENGTH) will pad out to the maximum
+record size.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_CTX_get_record_padding_callback_arg()</b> function
+returns 1 on success or 0 if the callback function is not
+set because Kernel TLS is configured for the SSL object.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The default
+behavior is to add no padding to the record.</p>
+<p style="margin-left:9%; margin-top: 1em">A
+user−supplied padding callback function will override
+the behavior set by <b>SSL_set_block_padding()</b> or
+<b>SSL_CTX_set_block_padding()</b>. Setting the
+user−supplied callback to NULL will restore the
+configured block padding behavior.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+only apply to TLS 1.3 records being written.</p>
+<p style="margin-left:9%; margin-top: 1em">Padding bytes
+are not added in constant−time.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_new</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The record
+padding API was added for TLS 1.3 support in OpenSSL
+1.1.1.</p>
+<p style="margin-left:9%; margin-top: 1em">The return type
+of <b>SSL_CTX_set_record_padding_callback()</b> function was
+changed to int in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2017−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:07 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::IPC::Driver</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::IPC::Driver</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#LOADING DRIVERS">LOADING DRIVERS</a><br/>
+<a href="#WRITING DRIVERS">WRITING DRIVERS</a><br/>
+<a href="#METHODS SUBCLASSES MUST IMPLEMENT">METHODS SUBCLASSES MUST IMPLEMENT</a><br/>
+<a href="#METHODS SUBCLASSES MAY IMPLEMENT OR OVERRIDE">METHODS SUBCLASSES MAY IMPLEMENT OR OVERRIDE</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::IPC::Driver
+− Base class for Test2 IPC drivers.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">package
+Test2::IPC::Driver::MyDriver; <br/>
+use base 'Test2::IPC::Driver'; <br/>
+...</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">$self−&gt;abort($msg)</p>
+<p style="margin-left:14%;">If an IPC encounters a fatal
+error it should use this. This will print the message to
+STDERR with 'IPC Fatal Error: ' prefixed to it, then it will
+forcefully exit 255. IPC errors may occur in threads or
+processes other than the main one, this method provides the
+best chance of the harness noticing the error.</p>
+<p style="margin-left:9%;">$self−&gt;abort_trace($msg)</p>
+<p style="margin-left:14%;">This is the same as
+"$ipc−&gt;abort($msg)" except that it uses
+"Carp::longmess" to add a stack trace to the
+message.</p>
+<h2>LOADING DRIVERS
+<a name="LOADING DRIVERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::IPC::Driver
+has an import() method. All drivers inherit this import
+method. This import method registers the driver.</p>
+<p style="margin-left:9%; margin-top: 1em">In most cases
+you just need to load the desired IPC driver to make it
+work. You should load this driver as early as possible. A
+warning will be issued if you load it too late for it to be
+effective.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::IPC::Driver::MyDriver; <br/>
+...</p>
+<h2>WRITING DRIVERS
+<a name="WRITING DRIVERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">package
+Test2::IPC::Driver::MyDriver; <br/>
+use strict; <br/>
+use warnings; <br/>
+use base 'Test2::IPC::Driver'; <br/>
+sub is_viable { <br/>
+return 0 if $ˆO eq 'win32'; # Will not work on windows.
+<br/>
+return 1; <br/>
+} <br/>
+sub add_hub { <br/>
+my $self = shift; <br/>
+my ($hid) = @_; <br/>
+... # Make it possible to contact the hub <br/>
+} <br/>
+sub drop_hub { <br/>
+my $self = shift; <br/>
+my ($hid) = @_; <br/>
+... # Nothing should try to reach the hub anymore. <br/>
+} <br/>
+sub send { <br/>
+my $self = shift; <br/>
+my ($hid, $e, $global) = @_; <br/>
+... # Send the event to the proper hub. <br/>
+# This may notify other procs/threads that there is a
+pending event. <br/>
+Test2::API::test2_ipc_set_pending($uniq_val); <br/>
+} <br/>
+sub cull { <br/>
+my $self = shift; <br/>
+my ($hid) = @_; <br/>
+my @events = ...; # Here is where you get the events for the
+hub <br/>
+return @events; <br/>
+} <br/>
+sub waiting { <br/>
+my $self = shift; <br/>
+... # Notify all listening procs and threads that the main
+<br/>
+... # process/thread is waiting for them to finish. <br/>
+} <br/>
+1;</p>
+<h3>METHODS SUBCLASSES MUST IMPLEMENT
+<a name="METHODS SUBCLASSES MUST IMPLEMENT"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$ipc−&gt;is_viable</p>
+<p style="margin-left:14%;">This should return true if the
+driver works in the current environment. This should return
+false if it does not. This is a CLASS method.</p>
+<p style="margin-left:9%;">$ipc−&gt;add_hub($hid)</p>
+<p style="margin-left:14%;">This is used to alert the
+driver that a new hub is expecting events. The driver should
+keep track of the process and thread ids, the hub should
+only be dropped by the proc+thread that started it.</p>
+<p style="margin-left:14%; margin-top: 1em">sub add_hub {
+<br/>
+my $self = shift; <br/>
+my ($hid) = @_; <br/>
+... # Make it possible to contact the hub <br/>
+}</p>
+<p style="margin-left:9%;">$ipc−&gt;drop_hub($hid)</p>
+<p style="margin-left:14%;">This is used to alert the
+driver that a hub is no longer accepting events. The driver
+should keep track of the process and thread ids, the hub
+should only be dropped by the proc+thread that started it
+(This is the drivers responsibility to enforce).</p>
+<p style="margin-left:14%; margin-top: 1em">sub drop_hub {
+<br/>
+my $self = shift; <br/>
+my ($hid) = @_; <br/>
+... # Nothing should try to reach the hub anymore. <br/>
+}</p>
+<p style="margin-left:9%;">$ipc−&gt;send($hid,
+$event); <br/>
+$ipc−&gt;send($hid, $event, $global);</p>
+<p style="margin-left:14%;">Used to send events from the
+current process/thread to the specified hub in its
+process+thread.</p>
+<p style="margin-left:14%; margin-top: 1em">sub send { <br/>
+my $self = shift; <br/>
+my ($hid, $e) = @_; <br/>
+... # Send the event to the proper hub. <br/>
+# This may notify other procs/threads that there is a
+pending event. <br/>
+Test2::API::test2_ipc_set_pending($uniq_val); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">If $global is
+true then the driver should send the event to all hubs in
+all processes and threads.</p>
+<p style="margin-left:9%;">@events =
+$ipc−&gt;cull($hid)</p>
+<p style="margin-left:14%;">Used to collect events that
+have been sent to the specified hub.</p>
+<p style="margin-left:14%; margin-top: 1em">sub cull { <br/>
+my $self = shift; <br/>
+my ($hid) = @_; <br/>
+my @events = ...; # Here is where you get the events for the
+hub <br/>
+return @events; <br/>
+}</p>
+<p style="margin-left:9%;">$ipc−&gt;<b>waiting()</b></p>
+<p style="margin-left:14%;">This is called in the parent
+process when it is complete and waiting for all child
+processes and threads to complete.</p>
+<p style="margin-left:14%; margin-top: 1em">sub waiting {
+<br/>
+my $self = shift; <br/>
+... # Notify all listening procs and threads that the main
+<br/>
+... # process/thread is waiting for them to finish. <br/>
+}</p>
+<h3>METHODS SUBCLASSES MAY IMPLEMENT OR OVERRIDE
+<a name="METHODS SUBCLASSES MAY IMPLEMENT OR OVERRIDE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$ipc−&gt;driver_abort($msg)</p>
+<p style="margin-left:14%;">This is a hook called by
+"Test2::IPC::Driver−&gt;abort()". This is
+your chance to cleanup when an abort happens. You cannot
+prevent the abort, but you can gracefully except it.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2 can be found at
+&lt;https://github.com/Test−More/test−more/&gt;.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;https://dev.perl.org/licenses/&gt;</p>
+<hr/>
+</body>
+</html>

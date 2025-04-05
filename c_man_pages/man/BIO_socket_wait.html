@@ -1,0 +1,187 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:43 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BIO_SOCKET_WAIT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">BIO_SOCKET_WAIT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">BIO_socket_wait,
+BIO_wait, BIO_do_connect_retry − BIO connection
+utility functions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/bio.h&gt; <br/>
+#ifndef OPENSSL_NO_SOCK <br/>
+int BIO_socket_wait(int fd, int for_read, time_t max_time);
+<br/>
+#endif <br/>
+int BIO_wait(BIO *bio, time_t max_time, unsigned int
+nap_milliseconds); <br/>
+int BIO_do_connect_retry(BIO *bio, int timeout, int
+nap_milliseconds);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_socket_wait()</b>
+waits on the socket <b>fd</b> for reading if <b>for_read</b>
+is not 0, else for writing, at most until <b>max_time</b>.
+It succeeds immediately if <b>max_time</b> == 0 (which means
+no timeout given).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_wait()</b>
+waits at most until <b>max_time</b> on the given (typically
+socket−based) <b>bio</b>, for reading if <b>bio</b> is
+supposed to read, else for writing. It is used by
+<b>BIO_do_connect_retry()</b> and can be used together
+<b>BIO_read</b>(3). It succeeds immediately if
+<b>max_time</b> == 0 (which means no timeout given). If
+sockets are not available it supports polling by succeeding
+after sleeping at most the given <b>nap_milliseconds</b> in
+order to avoid a tight busy loop. Via
+<b>nap_milliseconds</b> the caller determines the polling
+granularity.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_do_connect_retry()</b>
+connects via the given <b>bio</b>. It retries
+<b>BIO_do_connect()</b> as far as needed to reach a definite
+outcome, i.e., connection succeeded, timeout has been
+reached, or an error occurred. For nonblocking and
+potentially even non−socket BIOs it polls every
+<b>nap_milliseconds</b> and sleeps in between using
+<b>BIO_wait()</b>. If <b>nap_milliseconds</b> is &lt; 0 then
+a default value of 100 ms is used. If the <b>timeout</b>
+parameter is &gt; 0 this indicates the maximum number of
+seconds to wait until the connection is established or a
+definite error occurred. A value of 0 enables waiting
+indefinitely (i.e, no timeout), while a value &lt; 0 means
+that <b>BIO_do_connect()</b> is tried only once. The
+function may, directly or indirectly, invoke
+<b>ERR_clear_error()</b>.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_socket_wait()</b>,
+<b>BIO_wait()</b>, and <b>BIO_do_connect_retry()</b> return
+−1 on error, 0 on timeout, and 1 on success.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_do_connect</b>(3),
+<b>BIO_read</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_socket_wait()</b>,
+<b>BIO_wait()</b>, and <b>BIO_do_connect_retry()</b> were
+added in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2019−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:46 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_RTSP_REQUEST</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_RTSP_REQUEST</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_RTSP_REQUEST
+− RTSP request</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_RTSP_REQUEST, long
+request);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Tell libcurl
+what kind of RTSP request to make. Pass one of the following
+RTSP enum values as a long in the <i>request</i> argument.
+Unless noted otherwise, commands require the Session ID to
+be initialized. <br/>
+CURL_RTSPREQ_OPTIONS</p>
+<p style="margin-left:18%;">Used to retrieve the available
+methods of the server. The application is responsible for
+parsing and obeying the response. The session ID is not
+needed for this method.</p>
+<p style="margin-left:9%;">CURL_RTSPREQ_DESCRIBE</p>
+<p style="margin-left:18%;">Used to get the low level
+description of a stream. The application should note what
+formats it understands in the <i>'Accept:'</i> header.
+Unless set manually, libcurl automatically adds in
+<i>'Accept: application/sdp'</i>. Time−condition
+headers are added to Describe requests if the
+<i>CURLOPT_TIMECONDITION(3)</i> option is used. (The session
+ID is not needed for this method)</p>
+<p style="margin-left:9%;">CURL_RTSPREQ_ANNOUNCE</p>
+<p style="margin-left:18%;">When sent by a client, this
+method changes the description of the session. For example,
+if a client is using the server to record a meeting, the
+client can use Announce to inform the server of all the
+meta−information about the session. ANNOUNCE acts like
+an HTTP PUT or POST just like
+<i>CURL_RTSPREQ_SET_PARAMETER</i></p>
+<p style="margin-left:9%;">CURL_RTSPREQ_SETUP</p>
+<p style="margin-left:18%;">Setup is used to initialize the
+transport layer for the session. The application must set
+the desired Transport options for a session by using the
+<i>CURLOPT_RTSP_TRANSPORT(3)</i> option prior to calling
+setup. If no session ID is currently set with
+<i>CURLOPT_RTSP_SESSION_ID(3)</i>, libcurl extracts and uses
+the session ID in the response to this request. The session
+ID is not needed for this method.</p>
+<p style="margin-left:9%;">CURL_RTSPREQ_PLAY</p>
+<p style="margin-left:18%;">Send a Play command to the
+server. Use the <i>CURLOPT_RANGE(3)</i> option to modify the
+playback time (e.g. <i>npt=10−15</i>).</p>
+<p style="margin-left:9%;">CURL_RTSPREQ_PAUSE</p>
+<p style="margin-left:18%;">Send a Pause command to the
+server. Use the <i>CURLOPT_RANGE(3)</i> option with a single
+value to indicate when the stream should be halted. (e.g.
+<i>npt=25</i>)</p>
+<p style="margin-left:9%;">CURL_RTSPREQ_TEARDOWN</p>
+<p style="margin-left:18%;">This command terminates an RTSP
+session. Simply closing a connection does not terminate the
+RTSP session since it is valid to control an RTSP session
+over different connections.</p>
+<p style="margin-left:9%;">CURL_RTSPREQ_GET_PARAMETER</p>
+<p style="margin-left:18%;">Retrieve a parameter from the
+server. By default, libcurl adds a <i>Content−Type:
+text/parameters</i> header on all non−empty requests
+unless a custom one is set. GET_PARAMETER acts just like an
+HTTP PUT or POST (see <i>CURL_RTSPREQ_SET_PARAMETER</i>).
+Applications wishing to send a heartbeat message (e.g. in
+the presence of a server−specified timeout) should
+send use an empty GET_PARAMETER request.</p>
+<p style="margin-left:9%;">CURL_RTSPREQ_SET_PARAMETER</p>
+<p style="margin-left:18%;">Set a parameter on the server.
+By default, libcurl uses a *Content−Type:
+text/parameters* header unless a custom one is set. The
+interaction with SET_PARAMETER is much like an HTTP PUT or
+POST. An application may either use <i>CURLOPT_UPLOAD(3)</i>
+with <i>CURLOPT_READDATA(3)</i> like an HTTP PUT, or it may
+use <i>CURLOPT_POSTFIELDS(3)</i> like an HTTP POST. No
+chunked transfers are allowed, so the application must set
+the <i>CURLOPT_INFILESIZE(3)</i> in the former and
+<i>CURLOPT_POSTFIELDSIZE(3)</i> in the latter. Also, there
+is no use of multi−part POSTs within RTSP.</p>
+<p style="margin-left:9%;">CURL_RTSPREQ_RECORD</p>
+<p style="margin-left:18%;">Used to tell the server to
+record a session. Use the <i>CURLOPT_RANGE(3)</i> option to
+modify the record time.</p>
+<p style="margin-left:9%;">CURL_RTSPREQ_RECEIVE</p>
+<p style="margin-left:18%;">This is a special request
+because it does not send any data to the server. The
+application may call this function in order to receive
+interleaved RTP data. It returns after processing one read
+buffer of data in order to give the application a chance to
+run.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects rtsp only</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURL *curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+CURLcode res; <br/>
+curl_easy_setopt(curl, CURLOPT_URL,
+"rtsp://example.com/"); <br/>
+/* ask for options! */ <br/>
+curl_easy_setopt(curl, CURLOPT_RTSP_REQUEST,
+CURL_RTSPREQ_OPTIONS); <br/>
+res = curl_easy_perform(curl); <br/>
+curl_easy_cleanup(curl); <br/>
+} <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.20.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLE_OK
+if the option is supported, and CURLE_UNKNOWN_OPTION if
+not.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_RTSP_SESSION_ID</b>(3),
+<b>CURLOPT_RTSP_STREAM_URI</b>(3)</p>
+<hr/>
+</body>
+</html>

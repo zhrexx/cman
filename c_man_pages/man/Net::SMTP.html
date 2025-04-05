@@ -1,0 +1,550 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Net::SMTP</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Net::SMTP</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Class Methods">Class Methods</a><br/>
+<a href="#Object Methods">Object Methods</a><br/>
+<a href="#Addresses">Addresses</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#KNOWN BUGS">KNOWN BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href="#LICENCE">LICENCE</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#DATE">DATE</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Net::SMTP
+− Simple Mail Transfer Protocol Client</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Net::SMTP;
+<br/>
+# Constructors <br/>
+$smtp = Net::SMTP−&gt;new('mailhost'); <br/>
+$smtp = Net::SMTP−&gt;new('mailhost', Timeout =&gt;
+60);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+implements a client interface to the SMTP and ESMTP
+protocol, enabling a perl5 application to talk to SMTP
+servers. This documentation assumes that you are familiar
+with the concepts of the SMTP protocol described in RFC2821.
+With IO::Socket::SSL installed it also provides support for
+implicit and explicit TLS encryption, i.e. SMTPS or
+SMTP+STARTTLS.</p>
+<p style="margin-left:9%; margin-top: 1em">The Net::SMTP
+class is a subclass of Net::Cmd and (depending on
+avaibility) of IO::Socket::IP, IO::Socket::INET6 or
+IO::Socket::INET.</p>
+<h3>Class Methods
+<a name="Class Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"new([$host][,
+%options])"</p>
+<p style="margin-left:14%;">This is the constructor for a
+new Net::SMTP object. $host is the name of the remote host
+to which an SMTP connection is required.</p>
+<p style="margin-left:14%; margin-top: 1em">On failure
+"undef" will be returned and $@ will contain the
+reason for the failure.</p>
+<p style="margin-left:14%; margin-top: 1em">$host is
+optional. If $host is not given then it may instead be
+passed as the "Host" option described below. If
+neither is given then the "SMTP_Hosts" specified
+in "Net::Config" will be used.</p>
+<p style="margin-left:14%; margin-top: 1em">%options are
+passed in a hash like fashion, using key and value pairs.
+Possible options are:</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Hello</b>
+− SMTP requires that you identify yourself. This
+option specifies a string to pass as your mail domain. If
+not given localhost.localdomain will be used.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>SendHello</b>
+− If false then the EHLO (or HELO) command that is
+normally sent when constructing the object will not be sent.
+In that case the command will have to be sent manually by
+calling hello() instead.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Host</b>
+− SMTP host to connect to. It may be a single scalar
+(hostname[:port]), as defined for the "PeerAddr"
+option in IO::Socket::INET, or a reference to an array with
+hosts to try in turn. The "host" method will
+return the value which was used to connect to the host.
+Format − "PeerHost" from IO::Socket::INET
+new method.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Port</b>
+− port to connect to. Default − 25 for plain
+SMTP and 465 for immediate SSL.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>SSL</b>
+− If the connection should be done from start with
+SSL, contrary to later upgrade with "starttls".
+You can use SSL arguments as documented in IO::Socket::SSL,
+but it will usually use the right arguments already.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>LocalAddr</b>
+and <b>LocalPort</b> − These parameters are passed
+directly to IO::Socket to allow binding the socket to a
+specific local address and port.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Domain</b>
+− This parameter is passed directly to IO::Socket and
+makes it possible to enforce IPv4 connections even if
+IO::Socket::IP is used as super class. Alternatively
+<b>Family</b> can be used.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Timeout</b>
+− Maximum time, in seconds, to wait for a response
+from the SMTP server (default: 120)</p>
+<p style="margin-left:14%; margin-top: 1em"><b>ExactAddresses</b>
+− If true then all $address arguments must be as
+defined by "addr−spec" in RFC2822. If not
+given, or false, then Net::SMTP will attempt to extract the
+address from the value passed.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Debug</b>
+− Enable debugging information</p>
+<p style="margin-left:14%; margin-top: 1em">Example:</p>
+<p style="margin-left:14%; margin-top: 1em">$smtp =
+Net::SMTP−&gt;new('mailhost', <br/>
+Hello =&gt; 'my.mail.domain', <br/>
+Timeout =&gt; 30, <br/>
+Debug =&gt; 1, <br/>
+); <br/>
+# the same <br/>
+$smtp = Net::SMTP−&gt;new( <br/>
+Host =&gt; 'mailhost', <br/>
+Hello =&gt; 'my.mail.domain', <br/>
+Timeout =&gt; 30, <br/>
+Debug =&gt; 1, <br/>
+); <br/>
+# the same with direct SSL <br/>
+$smtp = Net::SMTP−&gt;new('mailhost', <br/>
+Hello =&gt; 'my.mail.domain', <br/>
+Timeout =&gt; 30, <br/>
+Debug =&gt; 1, <br/>
+SSL =&gt; 1, <br/>
+); <br/>
+# Connect to the default server from Net::config <br/>
+$smtp = Net::SMTP−&gt;new( <br/>
+Hello =&gt; 'my.mail.domain', <br/>
+Timeout =&gt; 30, <br/>
+);</p>
+<h2>Object Methods
+<a name="Object Methods"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Unless otherwise
+stated all methods return either a <i>true</i> or
+<i>false</i> value, with <i>true</i> meaning that the
+operation was a success. When a method states that it
+returns a value, failure will be returned as <i>undef</i> or
+an empty list.</p>
+<p style="margin-left:9%; margin-top: 1em">"Net::SMTP"
+inherits from "Net::Cmd" so methods defined in
+"Net::Cmd" may be used to send commands to the
+remote SMTP server in addition to the methods documented
+here. <br/>
+banner()</p>
+<p style="margin-left:14%;">Returns the banner message
+which the server replied with when the initial connection
+was made.</p>
+<p style="margin-left:9%;">domain()</p>
+<p style="margin-left:14%;">Returns the domain that the
+remote SMTP server identified itself as during
+connection.</p>
+<p style="margin-left:9%;">hello($domain)</p>
+<p style="margin-left:14%;">Tell the remote server the mail
+domain which you are in using the EHLO command (or HELO if
+EHLO fails). Since this method is invoked automatically when
+the Net::SMTP object is constructed the user should normally
+not have to call it manually.</p>
+<p style="margin-left:9%;">host()</p>
+<p style="margin-left:14%;">Returns the value used by the
+constructor, and passed to IO::Socket::INET, to connect to
+the host.</p>
+<p style="margin-left:9%;">etrn($domain)</p>
+<p style="margin-left:14%;">Request a queue run for the
+$domain given.</p>
+<p style="margin-left:9%;">starttls(%sslargs)</p>
+<p style="margin-left:14%;">Upgrade existing plain
+connection to SSL. You can use SSL arguments as documented
+in IO::Socket::SSL, but it will usually use the right
+arguments already.</p>
+<p style="margin-left:9%;">"auth($username,
+$password)" <br/>
+auth($sasl)</p>
+<p style="margin-left:14%;">Attempt SASL authentication.
+Requires Authen::SASL module. The first form constructs a
+new Authen::SASL object using the given username and
+password; the second form uses the given Authen::SASL
+object.</p>
+<p style="margin-left:9%;">"mail($address[,
+%options])" <br/>
+send($address) <br/>
+send_or_mail($address) <br/>
+send_and_mail($address)</p>
+<p style="margin-left:14%;">Send the appropriate command to
+the server MAIL, SEND, SOML or SAML. $address is the address
+of the sender. This initiates the sending of a message. The
+method "recipient" should be called for each
+address that the message is to be sent to.</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"mail" method can take some additional ESMTP
+%options which is passed in hash like fashion, using key and
+value pairs. Possible options are:</p>
+<p style="margin-left:14%; margin-top: 1em">Size =&gt;
+&lt;bytes&gt; <br/>
+Return =&gt; "FULL" | "HDRS" <br/>
+Bits =&gt; "7" | "8" |
+"binary" <br/>
+Transaction =&gt; &lt;ADDRESS&gt; <br/>
+Envelope =&gt; &lt;ENVID&gt; # xtext−encodes its
+argument <br/>
+ENVID =&gt; &lt;ENVID&gt; # similar to Envelope, but expects
+argument encoded <br/>
+XVERP =&gt; 1 <br/>
+AUTH =&gt; &lt;submitter&gt; # encoded address according to
+RFC 2554</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"Return" and "Envelope" parameters are
+used for DSN (Delivery Status Notification).</p>
+<p style="margin-left:14%; margin-top: 1em">The submitter
+address in "AUTH" option is expected to be in a
+format as required by RFC 2554, in an RFC2821−quoted
+form and xtext−encoded, or &lt;&gt; .</p>
+<p style="margin-left:9%;">reset()</p>
+<p style="margin-left:14%;">Reset the status of the server.
+This may be called after a message has been initiated, but
+before any data has been sent, to cancel the sending of the
+message.</p>
+<p style="margin-left:9%;">"recipient($address[,
+$address[, ...]][, %options])"</p>
+<p style="margin-left:14%;">Notify the server that the
+current message should be sent to all of the addresses
+given. Each address is sent as a separate command to the
+server. Should the sending of any address result in a
+failure then the process is aborted and a <i>false</i> value
+is returned. It is up to the user to call "reset"
+if they so desire.</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"recipient" method can also pass additional
+case−sensitive %options as an anonymous hash using key
+and value pairs. Possible options are:</p>
+<p style="margin-left:14%; margin-top: 1em">Notify =&gt;
+['NEVER'] or ['SUCCESS','FAILURE','DELAY'] (see below) <br/>
+ORcpt =&gt; &lt;ORCPT&gt; <br/>
+SkipBad =&gt; 1 (to ignore bad addresses)</p>
+<p style="margin-left:14%; margin-top: 1em">If
+"SkipBad" is true the "recipient" will
+not return an error when a bad address is encountered and it
+will return an array of addresses that did succeed.</p>
+<p style="margin-left:14%; margin-top: 1em">$smtp−&gt;recipient($recipient1,$recipient2);
+# Good <br/>
+$smtp−&gt;recipient($recipient1,$recipient2, { SkipBad
+=&gt; 1 }); # Good <br/>
+$smtp−&gt;recipient($recipient1,$recipient2, { Notify
+=&gt; ['FAILURE','DELAY'], SkipBad =&gt; 1 }); # Good <br/>
+@goodrecips=$smtp−&gt;recipient(@recipients, { Notify
+=&gt; ['FAILURE'], SkipBad =&gt; 1 }); # Good <br/>
+
+$smtp−&gt;recipient("$recipient,$recipient2");
+# BAD</p>
+<p style="margin-left:14%; margin-top: 1em">Notify is used
+to request Delivery Status Notifications (DSNs), but your
+SMTP/ESMTP service may not respect this request depending
+upon its version and your site's SMTP configuration.</p>
+<p style="margin-left:14%; margin-top: 1em">Leaving out the
+Notify option usually defaults an SMTP service to its
+default behavior equivalent to ['FAILURE'] notifications
+only, but again this may be dependent upon your site's SMTP
+configuration.</p>
+<p style="margin-left:14%; margin-top: 1em">The NEVER
+keyword must appear by itself if used within the Notify
+option and "requests that a DSN not be returned to the
+sender under any conditions."</p>
+<p style="margin-left:14%; margin-top: 1em">{Notify =&gt;
+['NEVER']} <br/>
+$smtp−&gt;recipient(@recipients, { Notify =&gt;
+['NEVER'], SkipBad =&gt; 1 }); # Good</p>
+<p style="margin-left:14%; margin-top: 1em">You may use any
+combination of these three values
+'SUCCESS','FAILURE','DELAY' in the anonymous array reference
+as defined by RFC3461 (see
+&lt;https://www.ietf.org/rfc/rfc3461.txt&gt; for more
+information. Note: quotations in this topic from same.).</p>
+<p style="margin-left:14%; margin-top: 1em">A Notify
+parameter of 'SUCCESS' or 'FAILURE' "requests that a
+DSN be issued on successful delivery or delivery failure,
+respectively."</p>
+<p style="margin-left:14%; margin-top: 1em">A Notify
+parameter of 'DELAY' "indicates the sender's
+willingness to receive delayed DSNs. Delayed DSNs may be
+issued if delivery of a message has been delayed for an
+unusual amount of time (as determined by the Message
+Transfer Agent (MTA) at which the message is delayed), but
+the final delivery status (whether successful or failure)
+cannot be determined. The absence of the DELAY keyword in a
+NOTIFY parameter requests that a "delayed" DSN NOT
+be issued under any conditions."</p>
+<p style="margin-left:14%; margin-top: 1em">{Notify =&gt;
+['SUCCESS','FAILURE','DELAY']} <br/>
+$smtp−&gt;recipient(@recipients, { Notify =&gt;
+['FAILURE','DELAY'], SkipBad =&gt; 1 }); # Good</p>
+<p style="margin-left:14%; margin-top: 1em">ORcpt is also
+part of the SMTP DSN extension according to RFC3461. It is
+used to pass along the original recipient that the mail was
+first sent to. The machine that generates a DSN will use
+this address to inform the sender, because he can't know if
+recipients get rewritten by mail servers. It is expected to
+be in a format as required by RFC3461,
+xtext−encoded.</p>
+<p style="margin-left:9%;">"to($address[, $address[,
+...]])" <br/>
+"cc($address[, $address[, ...]])" <br/>
+"bcc($address[, $address[, ...]])"</p>
+<p style="margin-left:14%;">Synonyms for
+"recipient".</p>
+<p style="margin-left:9%;">data([$data])</p>
+<p style="margin-left:14%;">Initiate the sending of the
+data from the current message.</p>
+<p style="margin-left:14%; margin-top: 1em">$data may be a
+reference to a list or a list and must be encoded by the
+caller to octets of whatever encoding is required, e.g. by
+using the Encode module's encode() function.</p>
+<p style="margin-left:14%; margin-top: 1em">If specified
+the contents of $data and a termination string
+".\r\n" is sent to the server. The result will be
+true if the data was accepted.</p>
+<p style="margin-left:14%; margin-top: 1em">If $data is not
+specified then the result will indicate that the server
+wishes the data to be sent. The data must then be sent using
+the "datasend" and "dataend" methods
+described in Net::Cmd.</p>
+<p style="margin-left:9%;">bdat($data) <br/>
+bdatlast($data)</p>
+<p style="margin-left:14%;">Use the alternate $data command
+"BDAT" of the data chunking service extension
+defined in RFC1830 for efficiently sending large MIME
+messages.</p>
+<p style="margin-left:9%;">expand($address)</p>
+<p style="margin-left:14%;">Request the server to expand
+the given address Returns an array which contains the text
+read from the server.</p>
+<p style="margin-left:9%;">verify($address)</p>
+<p style="margin-left:14%;">Verify that $address is a
+legitimate mailing address.</p>
+<p style="margin-left:14%; margin-top: 1em">Most sites
+usually disable this feature in their SMTP service
+configuration. Use "Debug =&gt; 1" option under
+<b>new()</b> to see if disabled.</p>
+<p style="margin-left:9%;">help([$subject])</p>
+<p style="margin-left:14%;">Request help text from the
+server. Returns the text or undef upon failure</p>
+<p style="margin-left:9%;">quit()</p>
+<p style="margin-left:14%;">Send the QUIT command to the
+remote SMTP server and close the socket connection.</p>
+<p style="margin-left:9%;">can_inet6()</p>
+<p style="margin-left:14%;">Returns whether we can use
+IPv6.</p>
+<p style="margin-left:9%;">can_ssl()</p>
+<p style="margin-left:14%;">Returns whether we can use
+SSL.</p>
+<h3>Addresses
+<a name="Addresses"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Net::SMTP
+attempts to DWIM with addresses that are passed. For example
+an application might extract The From: line from an email
+and pass that to <b>mail()</b>. While this may work, it is
+not recommended. The application should really use a module
+like Mail::Address to extract the mail address and pass
+that.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+"ExactAddresses" is passed to the constructor,
+then addresses should be a valid rfc2821−quoted
+address, although Net::SMTP will accept the address
+surrounded by angle brackets.</p>
+<p style="margin-left:9%; margin-top: 1em">funny
+user@domain WRONG <br/>
+"funny user"@domain RIGHT, recommended <br/>
+&lt;"funny user"@domain&gt; OK</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This example
+prints the mail domain name of the SMTP server known as
+mailhost:</p>
+<p style="margin-left:9%; margin-top: 1em">#!/usr/local/bin/perl
+−w <br/>
+use Net::SMTP; <br/>
+$smtp = Net::SMTP−&gt;new('mailhost'); <br/>
+print $smtp−&gt;domain,"\n"; <br/>
+$smtp−&gt;quit;</p>
+<p style="margin-left:9%; margin-top: 1em">This example
+sends a small message to the postmaster at the SMTP server
+known as mailhost:</p>
+<p style="margin-left:9%; margin-top: 1em">#!/usr/local/bin/perl
+−w <br/>
+use Net::SMTP; <br/>
+my $smtp = Net::SMTP−&gt;new('mailhost'); <br/>
+$smtp−&gt;mail($ENV{USER}); <br/>
+if ($smtp−&gt;to('postmaster')) { <br/>
+$smtp−&gt;data(); <br/>
+$smtp−&gt;datasend("To: postmaster\n"); <br/>
+$smtp−&gt;datasend("\n"); <br/>
+$smtp−&gt;datasend("A simple test
+message\n"); <br/>
+$smtp−&gt;dataend(); <br/>
+} else { <br/>
+print "Error: ", $smtp−&gt;message(); <br/>
+} <br/>
+$smtp−&gt;quit;</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>None</i>.</p>
+<h2>KNOWN BUGS
+<a name="KNOWN BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;https://rt.cpan.org/Dist/Display.html?Status=Active&amp;Queue=libnet&gt;.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Net::Cmd,
+IO::Socket::SSL.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Graham Barr
+&lt;gbarr@pobox.com &lt;mailto:gbarr@pobox.com&gt;&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">Steve Hay
+&lt;shay@cpan.org &lt;mailto:shay@cpan.org&gt;&gt; is now
+maintaining libnet as of version 1.22_02.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+1995−2004 Graham Barr. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2013−2016, 2020 Steve Hay. All rights reserved.</p>
+<h2>LICENCE
+<a name="LICENCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself, i.e. under the terms of
+either the GNU General Public License or the Artistic
+License, as specified in the <i>LICENCE</i> file.</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Version 3.15</p>
+<h2>DATE
+<a name="DATE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">20 March
+2023</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the
+<i>Changes</i> file.</p>
+<hr/>
+</body>
+</html>

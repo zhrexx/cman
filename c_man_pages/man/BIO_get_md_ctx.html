@@ -1,0 +1,275 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BIO_F_MD</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">BIO_F_MD</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">BIO_f_md,
+BIO_set_md, BIO_get_md, BIO_get_md_ctx − message
+digest BIO filter</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/bio.h&gt; <br/>
+#include &lt;openssl/evp.h&gt; <br/>
+const BIO_METHOD *BIO_f_md(void); <br/>
+int BIO_set_md(BIO *b, EVP_MD *md); <br/>
+int BIO_get_md(BIO *b, EVP_MD **mdp); <br/>
+int BIO_get_md_ctx(BIO *b, EVP_MD_CTX **mdcp);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_f_md()</b>
+returns the message digest BIO method. This is a filter BIO
+that digests any data passed through it. It is a BIO wrapper
+for the digest routines <b>EVP_DigestInit()</b>,
+<b>EVP_DigestUpdate()</b> and <b>EVP_DigestFinal()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">Any data written
+or read through a digest BIO using <b>BIO_read_ex()</b> and
+<b>BIO_write_ex()</b> is digested.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_gets()</b>,
+if its <b>size</b> parameter is large enough finishes the
+digest calculation and returns the digest value.
+<b>BIO_puts()</b> is not supported.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_reset()</b>
+reinitialises a digest BIO.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_set_md()</b>
+sets the message digest of BIO <b>b</b> to <b>md</b>: this
+must be called to initialize a digest BIO before any data is
+passed through it. It is a <b>BIO_ctrl()</b> macro.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_md()</b>
+places a pointer to the digest BIOs digest method in
+<b>mdp</b>. It is a <b>BIO_ctrl()</b> macro.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_md_ctx()</b>
+returns the digest BIOs context into <b>mdcp</b>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The context
+returned by <b>BIO_get_md_ctx()</b> can be used in calls to
+<b>EVP_DigestFinal()</b> and also the signature routines
+<b>EVP_SignFinal()</b> and <b>EVP_VerifyFinal()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The context
+returned by <b>BIO_get_md_ctx()</b> is an internal context
+structure. Changes made to this context will affect the
+digest BIO itself and the context pointer will become
+invalid when the digest BIO is freed.</p>
+<p style="margin-left:9%; margin-top: 1em">After the digest
+has been retrieved from a digest BIO it must be
+reinitialized by calling <b>BIO_reset()</b>, or
+<b>BIO_set_md()</b> before any more data is passed through
+it.</p>
+<p style="margin-left:9%; margin-top: 1em">If an
+application needs to call <b>BIO_gets()</b> or
+<b>BIO_puts()</b> through a chain containing digest BIOs
+then this can be done by prepending a buffering BIO.</p>
+<p style="margin-left:9%; margin-top: 1em">Calling
+<b>BIO_get_md_ctx()</b> will return the context and
+initialize the BIO state. This allows applications to
+initialize the context externally if the standard calls such
+as <b>BIO_set_md()</b> are not sufficiently flexible.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_f_md()</b>
+returns the digest BIO method.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_set_md()</b>,
+<b>BIO_get_md()</b> and <b>BIO_md_ctx()</b> return 1 for
+success and &lt;=0 for failure.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+example creates a BIO chain containing an SHA1 and MD5
+digest BIO and passes the string "Hello World"
+through it. Error checking has been omitted for clarity.</p>
+<p style="margin-left:9%; margin-top: 1em">BIO *bio,
+*mdtmp; <br/>
+char message[] = "Hello World"; <br/>
+bio = BIO_new(BIO_s_null()); <br/>
+mdtmp = BIO_new(BIO_f_md()); <br/>
+BIO_set_md(mdtmp, EVP_sha1()); <br/>
+/* <br/>
+* For BIO_push() we want to append the sink BIO and keep a
+note of <br/>
+* the start of the chain. <br/>
+*/ <br/>
+bio = BIO_push(mdtmp, bio); <br/>
+mdtmp = BIO_new(BIO_f_md()); <br/>
+BIO_set_md(mdtmp, EVP_md5()); <br/>
+bio = BIO_push(mdtmp, bio); <br/>
+/* Note: mdtmp can now be discarded */ <br/>
+BIO_write(bio, message, strlen(message));</p>
+<p style="margin-left:9%; margin-top: 1em">The next example
+digests data by reading through a chain instead:</p>
+<p style="margin-left:9%; margin-top: 1em">BIO *bio,
+*mdtmp; <br/>
+char buf[1024]; <br/>
+int rdlen; <br/>
+bio = BIO_new_file(file, "rb"); <br/>
+mdtmp = BIO_new(BIO_f_md()); <br/>
+BIO_set_md(mdtmp, EVP_sha1()); <br/>
+bio = BIO_push(mdtmp, bio); <br/>
+mdtmp = BIO_new(BIO_f_md()); <br/>
+BIO_set_md(mdtmp, EVP_md5()); <br/>
+bio = BIO_push(mdtmp, bio); <br/>
+do { <br/>
+rdlen = BIO_read(bio, buf, sizeof(buf)); <br/>
+/* Might want to do something with the data here */ <br/>
+} while (rdlen &gt; 0);</p>
+<p style="margin-left:9%; margin-top: 1em">This next
+example retrieves the message digests from a BIO chain and
+outputs them. This could be used with the examples
+above.</p>
+<p style="margin-left:9%; margin-top: 1em">BIO *mdtmp; <br/>
+unsigned char mdbuf[EVP_MAX_MD_SIZE]; <br/>
+int mdlen; <br/>
+int i; <br/>
+mdtmp = bio; /* Assume bio has previously been set up */
+<br/>
+do { <br/>
+EVP_MD *md; <br/>
+mdtmp = BIO_find_type(mdtmp, BIO_TYPE_MD); <br/>
+if (!mdtmp) <br/>
+break; <br/>
+BIO_get_md(mdtmp, &amp;md); <br/>
+printf("%s digest",
+OBJ_nid2sn(EVP_MD_get_type(md))); <br/>
+mdlen = BIO_gets(mdtmp, mdbuf, EVP_MAX_MD_SIZE); <br/>
+for (i = 0; i &lt; mdlen; i++) printf(":%02X",
+mdbuf[i]); <br/>
+printf("\n"); <br/>
+mdtmp = BIO_next(mdtmp); <br/>
+} while (mdtmp); <br/>
+BIO_free_all(bio);</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The lack of
+support for <b>BIO_puts()</b> and the non standard behaviour
+of <b>BIO_gets()</b> could be regarded as anomalous. It
+could be argued that <b>BIO_gets()</b> and <b>BIO_puts()</b>
+should be passed to the next BIO in the chain and digest the
+data passed through and that digests should be retrieved
+using a separate <b>BIO_ctrl()</b> call.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Before OpenSSL
+1.0.0., the call to <b>BIO_get_md_ctx()</b> would only work
+if the BIO was initialized first.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2000−2021 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

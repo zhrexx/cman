@@ -1,0 +1,220 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:46 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SD_BUS_CLOSE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SD_BUS_CLOSE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#Errors">Errors</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">sd_bus_close,
+sd_bus_flush, sd_bus_default_flush_close − Close and
+flush a bus connection</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;systemd/sd−bus.h&gt;</b></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="49%">
+<p style="margin-top: 1em"><b>void
+sd_bus_close(sd_bus *</b><i>bus</i><b>);</b></p> </td>
+<td width="42%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="49%">
+<p style="margin-top: 1em"><b>int
+sd_bus_flush(sd_bus *</b><i>bus</i><b>);</b></p> </td>
+<td width="42%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="49%">
+<p style="margin-top: 1em"><b>void
+sd_bus_default_flush_close(void);</b></p> </td>
+<td width="42%">
+</td></tr>
+</table>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>sd_bus_close()</b>
+disconnects the specified bus connection. When this call is
+invoked and the specified bus object refers to an active
+connection it is immediately terminated. No further messages
+may be sent or received on it. Any messages queued in the
+bus object (both incoming and outgoing) are released. If
+invoked on <b>NULL</b> bus object or when the bus connection
+is already closed this function executes no operation. This
+call does not free or unreference the bus object itself. Use
+<b>sd_bus_unref</b>(3) for that.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>sd_bus_flush()</b>
+synchronously writes out all outgoing queued message on a
+bus connection if there are any. This function call may
+block if the peer is not processing bus messages
+quickly.</p>
+<p style="margin-left:9%; margin-top: 1em">Before a program
+exits it is usually a good idea to flush any pending
+messages with <b>sd_bus_flush()</b> and then close
+connections with <b>sd_bus_close()</b> to ensure that no
+unwritten messages are lost, no further messages may be
+queued and all incoming but unprocessed messages are
+released. After both operations have been done, it is a good
+idea to also drop any remaining references to the bus object
+so that it may be freed. Since these three operations are
+frequently done together a helper call
+<b>sd_bus_flush_close_unref</b>(3) is provided that combines
+them into one.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>sd_bus_default_flush_close()</b>
+is similar to <b>sd_bus_flush_close_unref()</b>, but does
+not take a bus pointer argument and instead iterates over
+any of the "default" buses opened by
+<b>sd_bus_default</b>(3), <b>sd_bus_default_user</b>(3),
+<b>sd_bus_default_system</b>(3), and similar calls.
+<b>sd_bus_default_flush_close()</b> is particularly useful
+to clean up any buses opened using those calls before the
+program exits.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>sd_bus_flush()</b> returns a non−negative integer.
+On failure, it returns a negative errno−style error
+code.</p>
+<h3>Errors
+<a name="Errors"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returned errors
+may indicate the following problems:</p>
+<p style="margin-left:9%; margin-top: 1em"><b>−ECHILD</b></p>
+<p style="margin-left:14%;">The bus connection has been
+created in a different process, library or module
+instance.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Functions
+described here are available as a shared library, which can
+be compiled against and linked to with the
+<b>libsystemd pkg-config</b>(1) file.</p>
+<p style="margin-left:9%; margin-top: 1em">The code
+described here uses <b>getenv</b>(3), which is declared to
+be not multi−thread−safe. This means that the
+code calling the functions described here must not call
+<b>setenv</b>(3) from a parallel thread. It is recommended
+to only do calls to <b>setenv()</b> from an early phase of
+the program when no other threads have been started.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>sd_bus_close()</b>
+and <b>sd_bus_flush()</b> were added in version 221.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>sd_bus_default_flush_close()</b>
+was added in version 227.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>systemd</b>(1),
+<b>sd-bus</b>(3), <b>sd_bus_unref</b>(3),
+<b>sd_bus_set_close_on_exit</b>(3)</p>
+<hr/>
+</body>
+</html>

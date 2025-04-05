@@ -1,0 +1,270 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:33 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_SET_BIO</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_SET_BIO</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_set_bio,
+SSL_set0_rbio, SSL_set0_wbio − connect the SSL object
+with a BIO</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+void SSL_set_bio(SSL *ssl, BIO *rbio, BIO *wbio); <br/>
+void SSL_set0_rbio(SSL *s, BIO *rbio); <br/>
+void SSL_set0_wbio(SSL *s, BIO *wbio);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set0_rbio()</b>
+connects the BIO <b>rbio</b> for the read operations of the
+<b>ssl</b> object. The SSL engine inherits the behaviour of
+<b>rbio</b>. If the BIO is nonblocking then the <b>ssl</b>
+object will also have nonblocking behaviour. This function
+transfers ownership of <b>rbio</b> to <b>ssl</b>. It will be
+automatically freed using <b>BIO_free_all</b>(3) when the
+<b>ssl</b> is freed. On calling this function, any existing
+<b>rbio</b> that was previously set will also be freed via a
+call to <b>BIO_free_all</b>(3) (this includes the case where
+the <b>rbio</b> is set to the same value as previously).</p>
+<p style="margin-left:9%; margin-top: 1em">If using a
+custom BIO, <b>rbio</b> must implement either
+<b>BIO_meth_set_read_ex</b>(3) or
+<b>BIO_meth_set_read</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set0_wbio()</b>
+works in the same as <b>SSL_set0_rbio()</b> except that it
+connects the BIO <b>wbio</b> for the write operations of the
+<b>ssl</b> object. Note that if the rbio and wbio are the
+same then <b>SSL_set0_rbio()</b> and <b>SSL_set0_wbio()</b>
+each take ownership of one reference. Therefore, it may be
+necessary to increment the number of references available
+using <b>BIO_up_ref</b>(3) before calling the set0
+functions.</p>
+<p style="margin-left:9%; margin-top: 1em">If using a
+custom BIO, <b>wbio</b> must implement
+<b>BIO_meth_set_write_ex</b>(3) or
+<b>BIO_meth_set_write</b>(3). It additionally must implement
+<b>BIO_flush</b>(3) using <b>BIO_CTRL_FLUSH</b> and
+<b>BIO_meth_set_ctrl</b>(3). If flushing is unnecessary with
+<b>wbio</b>, <b>BIO_flush</b>(3) should return one and do
+nothing.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_bio()</b>
+is similar to <b>SSL_set0_rbio()</b> and
+<b>SSL_set0_wbio()</b> except that it connects both the
+<b>rbio</b> and the <b>wbio</b> at the same time, and
+transfers the ownership of <b>rbio</b> and <b>wbio</b> to
+<b>ssl</b> according to the following set of rules:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>If neither the <b>rbio</b> or <b>wbio</b> have changed
+from their previous values then nothing is done.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>If the <b>rbio</b> and <b>wbio</b> parameters are
+different and both are different to their previously set
+values then one reference is consumed for the rbio and one
+reference is consumed for the wbio.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>If the <b>rbio</b> and <b>wbio</b> parameters are the
+same and the <b>rbio</b> is not the same as the previously
+set value then one reference is consumed.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>If the <b>rbio</b> and <b>wbio</b> parameters are the
+same and the <b>rbio</b> is the same as the previously set
+value, then no additional references are consumed.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>If the <b>rbio</b> and <b>wbio</b> parameters are
+different and the <b>rbio</b> is the same as the previously
+set value then one reference is consumed for the <b>wbio</b>
+and no references are consumed for the <b>rbio</b>.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>If the <b>rbio</b> and <b>wbio</b> parameters are
+different and the <b>wbio</b> is the same as the previously
+set value and the old <b>rbio</b> and <b>wbio</b> values
+were the same as each other then one reference is consumed
+for the <b>rbio</b> and no references are consumed for the
+<b>wbio</b>.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="88%">
+<p>If the <b>rbio</b> and <b>wbio</b> parameters are
+different and the <b>wbio</b> is the same as the previously
+set value and the old <b>rbio</b> and <b>wbio</b> values
+were different to each other, then one reference is consumed
+for the <b>rbio</b> and one reference is consumed for the
+<b>wbio</b>.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Because of this
+complexity, this function should be avoided; use
+<b>SSL_set0_rbio()</b> and <b>SSL_set0_wbio()</b>
+instead.</p>
+<p style="margin-left:9%; margin-top: 1em">Where a new BIO
+is set on a QUIC connection SSL object, blocking mode will
+be disabled on that SSL object if the BIO cannot support
+blocking mode. If another BIO is subsequently set on the SSL
+object which can support blocking mode, blocking mode will
+not be automatically re−enabled. For more information,
+see <b>SSL_set_blocking_mode</b>(3).</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_bio()</b>,
+<b>SSL_set0_rbio()</b> and <b>SSL_set0_wbio()</b> cannot
+fail.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_rbio</b>(3),
+<b>SSL_connect</b>(3), <b>SSL_accept</b>(3),
+<b>SSL_shutdown</b>(3), <b>ssl</b>(7), <b>bio</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set0_rbio()</b>
+and <b>SSL_set0_wbio()</b> were added in OpenSSL 1.1.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2000−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

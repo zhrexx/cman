@@ -1,0 +1,278 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_COOKIELIST</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_COOKIELIST</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#Cookie file format">Cookie file format</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_COOKIELIST
+− add to or manipulate cookies held in memory</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_COOKIELIST, <br/>
+char *cookie);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a char
+pointer to a <i>cookie</i> string.</p>
+<p style="margin-left:9%; margin-top: 1em">Such a cookie
+can be either a single line in Netscape / Mozilla format or
+just regular HTTP−style header
+(<i>Set−Cookie:</i>) format. This option also enables
+the cookie engine. This adds that single cookie to the
+internal cookie store.</p>
+<p style="margin-left:9%; margin-top: 1em">We strongly
+advice against loading cookies from an HTTP header file, as
+that is an inferior data exchange format.</p>
+<p style="margin-left:9%; margin-top: 1em">Exercise caution
+if you are using this option and multiple transfers may
+occur. If you use the <i>Set−Cookie</i> format and the
+string does not specify a domain, then the cookie is sent
+for any domain (even after redirects are followed) and
+cannot be modified by a server−set cookie. If a server
+sets a cookie of the same name (or maybe you have imported
+one) then both are sent on future transfers to that server,
+likely not what you intended. To address these issues set a
+domain in <i>Set−Cookie</i> (doing that includes
+subdomains) or much better: use the Netscape file
+format.</p>
+<p style="margin-left:9%; margin-top: 1em">Additionally,
+there are commands available that perform actions if you
+pass in these exact strings:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>ALL</p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>erases all cookies held in memory</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>SESS</p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>erases all session cookies held in memory</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>FLUSH</p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>writes all known cookies to the file specified by
+<i>CURLOPT_COOKIEJAR(3)</i></p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p>RELOAD</p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>loads all cookies from the files specified by
+<i>CURLOPT_COOKIEFILE(3)</i></p> </td></tr>
+</table>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">NULL</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects http only</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">/* an inline
+import of a cookie in Netscape format. */</p>
+<p style="margin-left:9%; margin-top: 1em">#define SEP
+"\t" /* Tab separates the fields */</p>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+char *my_cookie = <br/>
+"example.com" /* Hostname */ <br/>
+SEP "FALSE" /* Include subdomains */ <br/>
+SEP "/" /* Path */ <br/>
+SEP "FALSE" /* Secure */ <br/>
+SEP "0" /* Expiry in epoch time format. 0 ==
+Session */ <br/>
+SEP "foo" /* Name */ <br/>
+SEP "bar"; /* Value */</p>
+<p style="margin-left:9%; margin-top: 1em">CURL *curl =
+curl_easy_init(); <br/>
+if(curl) { <br/>
+/* my_cookie is imported immediately via CURLOPT_COOKIELIST.
+*/ <br/>
+curl_easy_setopt(curl, CURLOPT_COOKIELIST, my_cookie);</p>
+<p style="margin-left:9%; margin-top: 1em">/* The list of
+cookies in cookies.txt are not be imported until right <br/>
+before a transfer is performed. Cookies in the list that
+have the same <br/>
+hostname, path and name as in my_cookie are skipped. That is
+because <br/>
+libcurl has already imported my_cookie and it’s
+considered a "live" <br/>
+cookie. A live cookie is not replaced by one read from a
+file. <br/>
+*/ <br/>
+curl_easy_setopt(curl, CURLOPT_COOKIEFILE,
+"cookies.txt"); /* import */</p>
+<p style="margin-left:9%; margin-top: 1em">/* Cookies are
+exported after curl_easy_cleanup is called. The server <br/>
+may have added, deleted or modified cookies by then. The
+cookies that <br/>
+were skipped on import are not exported. <br/>
+*/ <br/>
+curl_easy_setopt(curl, CURLOPT_COOKIEJAR,
+"cookies.txt"); /* export */</p>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_perform(curl);
+/* cookies imported from cookies.txt */</p>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_cleanup(curl);
+/* cookies exported to cookies.txt */ <br/>
+} <br/>
+}</p>
+<h2>Cookie file format
+<a name="Cookie file format"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The cookie file
+format and general cookie concepts in curl are described
+online here:
+https://curl.se/docs/http−cookies.html</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ALL</b> was
+added in 7.14.1</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SESS</b> was
+added in 7.15.4</p>
+<p style="margin-left:9%; margin-top: 1em"><b>FLUSH</b> was
+added in 7.17.1</p>
+<p style="margin-left:9%; margin-top: 1em"><b>RELOAD</b>
+was added in 7.39.0</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.14.1</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns CURLE_OK
+if the option is supported, CURLE_UNKNOWN_OPTION if not, or
+CURLE_OUT_OF_MEMORY if there was insufficient heap
+space.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLINFO_COOKIELIST</b>(3),
+<b>CURLOPT_COOKIE</b>(3), <b>CURLOPT_COOKIEFILE</b>(3),
+<b>CURLOPT_COOKIEJAR</b>(3)</p>
+<hr/>
+</body>
+</html>

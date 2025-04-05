@@ -1,0 +1,294 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:05 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Compare::Delta</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Compare::Delta</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#CLASS METHODS">CLASS METHODS</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#OTHER">OTHER</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Compare::Delta
+− Representation of differences between nested data
+structures.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This is used by
+Test2::Compare. When data structures are compared a delta
+will be returned. Deltas are a tree data structure that
+represent all the differences between two other data
+structures.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>CLASS METHODS
+<a name="CLASS METHODS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$class−&gt;add_column($NAME
+=&gt; sub { ... }) <br/>
+$class−&gt;add_column($NAME, %PARAMS)</p>
+<p style="margin-left:14%;">This can be used to add columns
+to the table that it produced when a comparison fails. The
+first argument should always be the column name, which must
+be unique.</p>
+<p style="margin-left:14%; margin-top: 1em">The first form
+simply takes a coderef that produces the value that should
+be displayed in the column for any given delta. The
+arguments passed into the sub are the delta, and the row
+ID.</p>
+<p style="margin-left:14%; margin-top: 1em">Test2::Compare::Delta−&gt;add_column(
+<br/>
+Foo =&gt; sub { <br/>
+my ($delta, $id) = @_; <br/>
+return $delta−&gt;... ? 'foo' : 'bar' <br/>
+}, <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">The second form
+allows you some extra options. The 'value' key is required,
+and must be a coderef. All other keys are optional.</p>
+<p style="margin-left:14%; margin-top: 1em">Test2::Compare::Delta−&gt;add_column(
+<br/>
+'Foo', # column name <br/>
+value =&gt; sub { ... }, # how to get the cell value <br/>
+alias =&gt; 'FOO', # Display name (used in table header)
+<br/>
+no_collapse =&gt; $bool, # Show column even if it has no
+values? <br/>
+);</p>
+<p style="margin-left:9%;">$bool =
+$class−&gt;remove_column($NAME)</p>
+<p style="margin-left:14%;">This will remove the specified
+column. This will return true if the column existed and was
+removed. This will return false if the column did not exist.
+No exceptions are thrown. If a missing column is a problem
+then you need to check the return yourself.</p>
+<p style="margin-left:9%;">$class−&gt;set_column_alias($NAME,
+$ALIAS)</p>
+<p style="margin-left:14%;">This can be used to change the
+table header, overriding the default column names with new
+ones.</p>
+<h3>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$bool =
+$delta−&gt;verified <br/>
+$delta−&gt;set_verified($bool)</p>
+<p style="margin-left:14%;">This will be true if the delta
+itself matched, if the delta matched then the problem is in
+the delta's children, not the delta itself.</p>
+<p style="margin-left:9%;">$aref = $delta−&gt;id <br/>
+$delta−&gt;set_id([$type, $name])</p>
+<p style="margin-left:14%;">ID for the delta, used to
+produce the path into the data structure. An example is
+"['HASH' =&gt; 'foo']" which means the delta is in
+the path "...−&gt;{'foo'}". Valid types are
+"HASH", "ARRAY", "SCALAR",
+"META", and "METHOD".</p>
+<p style="margin-left:9%;">$val = $delta−&gt;got <br/>
+$delta−&gt;set_got($val)</p>
+<p style="margin-left:14%;">Deltas are produced by
+comparing a received data structure 'got' against a check
+data structure 'check'. The 'got' attribute contains the
+value that was received for comparison.</p>
+<p style="margin-left:9%;">$check = $delta−&gt;chk
+<br/>
+$check = $delta−&gt;check <br/>
+$delta−&gt;set_chk($check) <br/>
+$delta−&gt;set_check($check)</p>
+<p style="margin-left:14%;">Deltas are produced by
+comparing a received data structure 'got' against a check
+data structure 'check'. The 'check' attribute contains the
+value that was expected in the comparison.</p>
+<p style="margin-left:14%; margin-top: 1em">"check"
+and "chk" are aliases for the same attribute.</p>
+<p style="margin-left:9%;">$aref =
+$delta−&gt;children <br/>
+$delta−&gt;set_children([$delta1, $delta2, ...])</p>
+<p style="margin-left:14%;">A Delta may have child deltas.
+If it does then this is an arrayref with those children.</p>
+<p style="margin-left:9%;">$dne = $delta−&gt;dne <br/>
+$delta−&gt;set_dne($dne)</p>
+<p style="margin-left:14%;">Sometimes a comparison results
+in one side or the other not existing at all, in which case
+this is set to the name of the attribute that does not
+exist. This can be set to 'got' or 'check'.</p>
+<p style="margin-left:9%;">$e = $delta−&gt;exception
+<br/>
+$delta−&gt;set_exception($e)</p>
+<p style="margin-left:14%;">This will be set to the
+exception in cases where the comparison failed due to an
+exception being thrown.</p>
+<h3>OTHER
+<a name="OTHER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$string =
+$delta−&gt;render_got</p>
+<p style="margin-left:14%;">Renders the string that should
+be used in a table to represent the received value in a
+comparison.</p>
+<p style="margin-left:9%;">$string =
+$delta−&gt;render_check</p>
+<p style="margin-left:14%;">Renders the string that should
+be used in a table to represent the expected value in a
+comparison.</p>
+<p style="margin-left:9%;">$bool =
+$delta−&gt;should_show</p>
+<p style="margin-left:14%;">This will return true if the
+delta should be shown in the table. This is normally true
+for any unverified delta. This will also be true for deltas
+that contain extra useful debug information.</p>
+<p style="margin-left:9%;">$aref =
+$delta−&gt;filter_visible</p>
+<p style="margin-left:14%;">This will produce an arrayref
+of "[ $path =&gt; $delta ]" for all deltas that
+should be displayed in the table.</p>
+<p style="margin-left:9%;">$aref =
+$delta−&gt;table_header</p>
+<p style="margin-left:14%;">This returns an array ref of
+the headers for the table.</p>
+<p style="margin-left:9%;">$string =
+$delta−&gt;table_op</p>
+<p style="margin-left:14%;">This returns the operator that
+should be shown in the table.</p>
+<p style="margin-left:9%;">$string =
+$delta−&gt;table_check_lines</p>
+<p style="margin-left:14%;">This returns the defined lines
+(extra debug info) that should be displayed.</p>
+<p style="margin-left:9%;">$string =
+$delta−&gt;table_got_lines</p>
+<p style="margin-left:14%;">This returns the generated
+lines (extra debug info) that should be displayed.</p>
+<p style="margin-left:9%;">$aref =
+$delta−&gt;table_rows</p>
+<p style="margin-left:14%;">This returns an arrayref of
+table rows, each row is itself an arrayref.</p>
+<p style="margin-left:9%;">@table_lines =
+$delta−&gt;table</p>
+<p style="margin-left:14%;">Returns all the lines of the
+table that should be displayed.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2−Suite can be found at
+<i>https://github.com/Test−More/test−more/</i>.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<i>http://dev.perl.org/licenses/</i></p>
+<hr/>
+</body>
+</html>

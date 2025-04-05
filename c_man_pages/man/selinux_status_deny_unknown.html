@@ -1,0 +1,204 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:52:46 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>selinux_status_open</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">selinux_status_open</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">selinux_status_open,
+selinux_status_close, selinux_status_updated,
+selinux_status_getenforce, selinux_status_policyload and
+selinux_status_deny_unknown − reference the SELinux
+kernel status without invocation of system calls</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;selinux/avc.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+selinux_status_open(int</b> <i>fallback</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+selinux_status_close(void);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+selinux_status_updated(void);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+selinux_status_getenforce(void);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+selinux_status_policyload(void);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+selinux_status_deny_unknown(void);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux 2.6.37 or
+later provides a SELinux kernel status page; being mostly
+placed on <i>/sys/fs/selinux/status</i> entry. It enables
+userspace applications to mmap this page with read-only
+mode, then it informs some status without system call
+invocations.</p>
+<p style="margin-left:9%; margin-top: 1em">In some cases
+that a userspace application tries to apply heavy frequent
+access control; such as row-level security in databases, it
+will face unignorable cost to communicate with kernel space
+to check invalidation of userspace avc.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+provides applications a way to know some kernel events
+without system-call invocation or worker thread for
+monitoring.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux_status_open</b>()
+tries to <b>open</b>(2) <i>/sys/fs/selinux/status</i> and
+<b>mmap</b>(2) it in read-only mode. The file-descriptor and
+pointer to the page shall be stored internally; Don’t
+touch them directly. Set 1 on the <i>fallback</i> argument
+to handle a case of older kernels without kernel status page
+support. In this case, this function tries to open a netlink
+socket using <b>avc_netlink_open</b>(3) and overwrite
+corresponding callbacks (setenforce and policyload). Thus,
+we need to pay attention to the interaction with these
+interfaces, when fallback mode is enabled.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux_status_close</b>()
+unmap the kernel status page and close its file descriptor,
+or close the netlink socket if fallbacked.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux_status_updated</b>()
+processes status update events. There are two kinds of
+status updates. <b>setenforce</b> events will change the
+effective enforcing state used within the AVC, and
+<b>policyload</b> events will result in a cache flush.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+returns 0 if there have been no updates since the last call,
+1 if there have been updates since the last call, or
+−1 on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux_status_getenforce</b>()
+returns 0 if SELinux is running in permissive mode, 1 if
+enforcing mode, or −1 on error. Same as
+<b>security_getenforce</b>(3) except with or without system
+call invocation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux_status_policyload</b>()
+returns times of policy reloaded on the running system, or
+−1 on error. Note that it is not a reliable value on
+fallback-mode until it receive the first event message via
+netlink socket. Thus, don’t use this value to know
+actual times of policy reloaded.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux_status_deny_unknown</b>()
+returns 0 if SELinux treats policy queries on undefined
+object classes or permissions as being allowed, 1 if such
+queries are denied, or −1 on error.</p>
+<p style="margin-left:9%; margin-top: 1em">Also note that
+these interfaces are not thread-safe, so you have to protect
+them from concurrent calls using exclusive locks when
+multiple threads are performing.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux_status_open</b>()
+returns 0 or 1 on success. 1 means we are ready to use these
+interfaces, but netlink socket was opened as fallback
+instead of the kernel status page. On error, −1 shall
+be returned.</p>
+<p style="margin-left:9%; margin-top: 1em">Any other
+functions with a return value shall return its
+characteristic value as described above, or −1 on
+errors.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>mmap</b>(2),
+<b>avc_netlink_open</b>(3), <b>security_getenforce</b>(3),
+<b>security_deny_unknown</b>(3)</p>
+<hr/>
+</body>
+</html>

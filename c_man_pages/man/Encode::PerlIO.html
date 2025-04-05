@@ -1,0 +1,297 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:47 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Encode::PerlIO</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Encode::PerlIO</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#Overview">Overview</a><br/>
+<a href="#How does it work?">How does it work?</a><br/>
+<a href="#Line Buffering">Line Buffering</a><br/>
+<a href="#How can I tell whether my encoding fully supports PerlIO ?">How can I tell whether my encoding fully supports PerlIO ?</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode::PerlIO
+−− a detailed document on Encode and PerlIO</p>
+<h2>Overview
+<a name="Overview"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">It is very
+common to want to do encoding transformations when reading
+or writing files, network connections, pipes etc. If Perl is
+configured to use the new 'perlio' IO system then
+"Encode" provides a "layer" (see PerlIO)
+which can transform data as it is read or written.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is how the
+blind poet would modernise the encoding:</p>
+<p style="margin-left:9%; margin-top: 1em">use Encode; <br/>
+open(my
+$iliad,'&lt;:encoding(iso−8859−7)','iliad.greek');
+<br/>
+open(my $utf8,'&gt;:utf8','iliad.utf8'); <br/>
+my @epic = &lt;$iliad&gt;; <br/>
+print $utf8 @epic; <br/>
+close($utf8); <br/>
+close($illiad);</p>
+<p style="margin-left:9%; margin-top: 1em">In addition, the
+new IO system can also be configured to read/write
+UTF−8 encoded characters (as noted above, this is
+efficient):</p>
+<p style="margin-left:9%; margin-top: 1em">open(my
+$fh,'&gt;:utf8','anything'); <br/>
+print $fh "Any \x{0021} string \N{SMILEY
+FACE}\n";</p>
+<p style="margin-left:9%; margin-top: 1em">Either of the
+above forms of "layer" specifications can be made
+the default for a lexical scope with the "use open
+..." pragma. See open.</p>
+<p style="margin-left:9%; margin-top: 1em">Once a handle is
+open, its layers can be altered using
+"binmode".</p>
+<p style="margin-left:9%; margin-top: 1em">Without any such
+configuration, or if Perl itself is built using the system's
+own IO, then write operations assume that the file handle
+accepts only <i>bytes</i> and will "die" if a
+character larger than 255 is written to the handle. When
+reading, each octet from the handle becomes a
+byte−in−a−character. Note that this
+default is the same behaviour as bytes−only languages
+(including Perl before v5.6) would have, and is sufficient
+to handle native 8−bit encodings e.g.
+iso−8859−1, EBCDIC etc. and any legacy
+mechanisms for handling other encodings and binary data.</p>
+<p style="margin-left:9%; margin-top: 1em">In other cases,
+it is the program's responsibility to transform characters
+into bytes using the API above before doing writes, and to
+transform the bytes read from a handle into characters
+before doing "character operations" (e.g.
+"lc", "/\W+/", ...).</p>
+<p style="margin-left:9%; margin-top: 1em">You can also use
+PerlIO to convert larger amounts of data you don't want to
+bring into memory. For example, to convert between
+ISO−8859−1 (Latin 1) and UTF−8 (or
+UTF−EBCDIC in EBCDIC machines):</p>
+<p style="margin-left:9%; margin-top: 1em">open(F,
+"&lt;:encoding(iso−8859−1)",
+"data.txt") or die $!; <br/>
+open(G, "&gt;:utf8", "data.utf") or die
+$!; <br/>
+while (&lt;F&gt;) { print G } <br/>
+# Could also do "print G &lt;F&gt;" but that would
+pull <br/>
+# the whole file into memory just to write it out again.</p>
+<p style="margin-left:9%; margin-top: 1em">More
+examples:</p>
+<p style="margin-left:9%; margin-top: 1em">open(my $f,
+"&lt;:encoding(cp1252)") <br/>
+open(my $g,
+"&gt;:encoding(iso−8859−2)") <br/>
+open(my $h, "&gt;:encoding(latin9)") #
+iso−8859−15</p>
+<p style="margin-left:9%; margin-top: 1em">See also
+encoding for how to change the default encoding of the data
+in your script.</p>
+<h2>How does it work?
+<a name="How does it work?"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Here is a crude
+diagram of how filehandle, PerlIO, and Encode interact.</p>
+<p style="margin-left:9%; margin-top: 1em">filehandle
+&lt;−&gt; PerlIO PerlIO &lt;−&gt; scalar
+(read/printed) <br/>
+\ / <br/>
+Encode</p>
+<p style="margin-left:9%; margin-top: 1em">When PerlIO
+receives data from either direction, it fills a buffer
+(currently with 1024 bytes) and passes the buffer to Encode.
+Encode tries to convert the valid part and passes it back to
+PerlIO, leaving invalid parts (usually a partial character)
+in the buffer. PerlIO then appends more data to the buffer,
+calls Encode again, and so on until the data stream
+ends.</p>
+<p style="margin-left:9%; margin-top: 1em">To do so, PerlIO
+always calls (de|en)code methods with CHECK set to 1. This
+ensures that the method stops at the right place when it
+encounters partial character. The following is what happens
+when PerlIO and Encode tries to encode (from utf8) more than
+1024 bytes and the buffer boundary happens to be in the
+middle of a character.</p>
+<p style="margin-left:9%; margin-top: 1em">A B C ....
+˜ \x{3000} .... <br/>
+41 42 43 .... 7E e3 80 80 .... <br/>
+&lt;− buffer
+−−−−−−−−−−−−−−−&gt;
+<br/>
+&lt;&lt; encoded &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+<br/>
+&lt;− next buffer
+−−−−−−</p>
+<p style="margin-left:9%; margin-top: 1em">Encode converts
+from the beginning to \x7E, leaving \xe3 in the buffer
+because it is invalid (partial character).</p>
+<p style="margin-left:9%; margin-top: 1em">Unfortunately,
+this scheme does not work well with escape−based
+encodings such as ISO−2022−JP.</p>
+<h2>Line Buffering
+<a name="Line Buffering"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Now let's see
+what happens when you try to decode from
+ISO−2022−JP and the buffer ends in the middle of
+a character.</p>
+<p style="margin-left:9%; margin-top: 1em">JIS208−ESC
+\x{5f3e} <br/>
+A B C .... ˜ \e $ B |DAN | .... <br/>
+41 42 43 .... 7E 1b 24 41 43 46 .... <br/>
+&lt;− buffer
+−−−−−−−−−−−−−−−−−−−−−−−−−−−&gt;
+<br/>
+&lt;&lt; encoded
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">As you see, the
+next buffer begins with \x43. But \x43 is 'C' in ASCII,
+which is wrong in this case because we are now in JISX 0208
+area so it has to convert \x43\x46, not \x43. Unlike utf8
+and EUC, in escape−based encodings you can't tell if a
+given octet is a whole character or just part of it.</p>
+<p style="margin-left:9%; margin-top: 1em">Fortunately
+PerlIO also supports line buffer if you tell PerlIO to use
+one instead of fixed buffer. Since ISO−2022−JP
+is guaranteed to revert to ASCII at the end of the line,
+partial character will never happen when line buffer is
+used.</p>
+<p style="margin-left:9%; margin-top: 1em">To tell PerlIO
+to use line buffer, implement −&gt;needs_lines method
+for your encoding object. See Encode::Encoding for
+details.</p>
+<p style="margin-left:9%; margin-top: 1em">Thanks to these
+efforts most encodings that come with Encode support PerlIO
+but that still leaves following encodings.</p>
+<p style="margin-left:9%; margin-top: 1em">iso−2022−kr
+<br/>
+MIME−B <br/>
+MIME−Header <br/>
+MIME−Q</p>
+<p style="margin-left:9%; margin-top: 1em">Fortunately
+iso−2022−kr is hardly used (according to
+Jungshik) and MIME−* are very unlikely to be fed to
+PerlIO because they are for mail headers. See
+Encode::MIME::Header for details.</p>
+<h3>How can I tell whether my encoding fully supports PerlIO ?
+<a name="How can I tell whether my encoding fully supports PerlIO ?"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">As of this
+writing, any encoding whose class belongs to Encode::XS and
+Encode::Unicode works. The Encode module has a
+"perlio_ok" method which you can use before
+applying PerlIO encoding to the filehandle. Here is an
+example:</p>
+<p style="margin-left:9%; margin-top: 1em">my $use_perlio =
+perlio_ok($enc); <br/>
+my $layer = $use_perlio ? "&lt;:raw" :
+"&lt;:encoding($enc)"; <br/>
+open my $fh, $layer, $file or die "$file : $!";
+<br/>
+while(&lt;$fh&gt;){ <br/>
+$_ = decode($enc, $_) unless $use_perlio; <br/>
+# .... <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Encode::Encoding,
+Encode::Supported, Encode::PerlIO, encoding, perlebcdic,
+"open" in perlfunc, perlunicode, utf8, the Perl
+Unicode Mailing List &lt;perl−unicode@perl.org&gt;</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:09 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Util::Grabber</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Util::Grabber</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#ENDING BEHAVIOR">ENDING BEHAVIOR</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Util::Grabber
+− Object used to temporarily intercept all events.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Once created
+this object will intercept and stash all events sent to the
+shared Test2::Hub object. Once the object is destroyed,
+events will once again be sent to the shared hub.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Test2
+qw/Core Grab/; <br/>
+my $grab = grab(); <br/>
+# Generate some events, they are intercepted. <br/>
+ok(1, "pass"); <br/>
+ok(0, "fail"); <br/>
+my $events_a = $grab−&gt;flush; <br/>
+# Generate some more events, they are intercepted. <br/>
+ok(1, "pass"); <br/>
+ok(0, "fail"); <br/>
+# Same as flush, except it destroys the grab object. <br/>
+my $events_b = $grab−&gt;finish;</p>
+<p style="margin-left:9%; margin-top: 1em">After calling
+finish() the grab object is destroyed and $grab is set to
+undef. $events_a is an arrayref with the first two events.
+$events_b is an arrayref with the second two events.</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">$grab =
+<b>grab()</b></p>
+<p style="margin-left:14%;">This lets you intercept all
+events for a section of code without adding anything to your
+call stack. This is useful for things that are sensitive to
+changes in the stack depth.</p>
+<p style="margin-left:14%; margin-top: 1em">my $grab =
+grab(); <br/>
+ok(1, 'foo'); <br/>
+ok(0, 'bar'); <br/>
+# $grab is magically undef after this. <br/>
+my $events = $grab−&gt;finish; <br/>
+is(@$events, 2, "grabbed two events.");</p>
+<p style="margin-left:14%; margin-top: 1em">When you call
+finish() the $grab object will automagically undef itself,
+but only for the reference used in the method call. If you
+have other references to the $grab object they will not be
+set to undef.</p>
+<p style="margin-left:14%; margin-top: 1em">If the $grab
+object is destroyed without calling finish(), it will
+automatically clean up after itself and restore the parent
+hub.</p>
+<p style="margin-left:14%; margin-top: 1em">{ <br/>
+my $grab = grab(); <br/>
+# Things are grabbed <br/>
+} <br/>
+# Things are back to normal</p>
+<p style="margin-left:14%; margin-top: 1em">By default the
+hub used has "no_ending" set to true. This will
+prevent the hub from enforcing that you issued a plan and
+ran at least one test. You can turn enforcement back one
+like this:</p>
+<p style="margin-left:14%; margin-top: 1em">$grab−&gt;hub−&gt;set_no_ending(0);</p>
+<p style="margin-left:14%; margin-top: 1em">With
+"no_ending" turned off, "finish" will
+run the post−test checks to enforce the plan and that
+tests were run. In many cases this will result in additional
+events in your events array.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">$grab =
+$class−&gt;<b>new()</b></p>
+<p style="margin-left:14%;">Create a new grab object,
+immediately starts intercepting events.</p>
+<p style="margin-left:9%;">$ar =
+$grab−&gt;<b>flush()</b></p>
+<p style="margin-left:14%;">Get an arrayref of all the
+events so far, clearing the grab objects internal list.</p>
+<p style="margin-left:9%;">$ar =
+$grab−&gt;<b>events()</b></p>
+<p style="margin-left:14%;">Get an arrayref of all events
+so far. Does not clear the internal list.</p>
+<p style="margin-left:9%;">$ar =
+$grab−&gt;<b>finish()</b></p>
+<p style="margin-left:14%;">Get an arrayref of all the
+events, then destroy the grab object.</p>
+<p style="margin-left:9%;">$hub =
+$grab−&gt;<b>hub()</b></p>
+<p style="margin-left:14%;">Get the hub that is used by the
+grab event.</p>
+<h2>ENDING BEHAVIOR
+<a name="ENDING BEHAVIOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">By default the
+hub used has "no_ending" set to true. This will
+prevent the hub from enforcing that you issued a plan and
+ran at least one test. You can turn enforcement back one
+like this:</p>
+<p style="margin-left:9%; margin-top: 1em">$grab−&gt;hub−&gt;set_no_ending(0);</p>
+<p style="margin-left:9%; margin-top: 1em">With
+"no_ending" turned off, "finish" will
+run the post−test checks to enforce the plan and that
+tests were run. In many cases this will result in additional
+events in your events array.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Tools::Intercept
+− Accomplish the same thing, but using blocks
+instead.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2 can be found at
+<i>https://github.com/Test−More/test−more/</i>.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<i>http://dev.perl.org/licenses/</i></p>
+<hr/>
+</body>
+</html>

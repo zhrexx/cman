@@ -1,0 +1,245 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:29 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_GET_RPOLL_DESCRIPTOR</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_GET_RPOLL_DESCRIPTOR</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_get_rpoll_descriptor,
+SSL_get_wpoll_descriptor, SSL_net_read_desired,
+SSL_net_write_desired − obtain information which can
+be used to determine when network I/O can be performed</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+int SSL_get_rpoll_descriptor(SSL *s, BIO_POLL_DESCRIPTOR
+*desc); <br/>
+int SSL_get_wpoll_descriptor(SSL *s, BIO_POLL_DESCRIPTOR
+*desc); <br/>
+int SSL_net_read_desired(SSL *s); <br/>
+int SSL_net_write_desired(SSL *s);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The functions
+<b>SSL_get_rpoll_descriptor()</b> and
+<b>SSL_get_wpoll_descriptor()</b> can be used to determine
+when an SSL object which represents a QUIC connection can
+perform useful network I/O, so that an application using a
+QUIC connection SSL object in nonblocking mode can determine
+when it should call <b>SSL_handle_events()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">On success,
+these functions output poll descriptors. For more
+information on poll descriptors, see
+<b>BIO_get_rpoll_descriptor</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The functions
+<b>SSL_net_read_desired()</b> and
+<b>SSL_net_write_desired()</b> return 1 or 0 depending on
+whether the SSL object is currently interested in receiving
+data from the network and/or writing data to the network
+respectively. If an SSL object is not interested in reading
+data from the network at the current time,
+<b>SSL_net_read_desired()</b> will return 0; likewise, if an
+SSL object is not interested in writing data to the network
+at the current time, <b>SSL_net_write_desired()</b> will
+return 0.</p>
+<p style="margin-left:9%; margin-top: 1em">The intention is
+that an application using QUIC in nonblocking mode can use
+these calls, in conjunction with
+<b>SSL_get_event_timeout</b>(3) to wait for network I/O
+conditions which allow the SSL object to perform useful
+work. When such a condition arises,
+<b>SSL_handle_events</b>(3) should be called.</p>
+<p style="margin-left:9%; margin-top: 1em">In particular,
+the expected usage is as follows:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p><b>SSL_handle_events()</b> should be called whenever the
+timeout returned by <b>SSL_get_event_timeout</b>(3) (if any)
+expires</p> </td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>If the last call to <b>SSL_net_read_desired()</b>
+returned 1, <b>SSL_handle_events()</b> should be called
+whenever the poll descriptor output by
+<b>SSL_get_rpoll_descriptor()</b> becomes readable.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>If the last call to <b>SSL_net_write_desired()</b>
+returned 1, <b>SSL_handle_events()</b> should be called
+whenever the poll descriptor output by
+<b>SSL_get_wpoll_descriptor()</b> becomes writable.</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The return
+values of the <b>SSL_net_read_desired()</b> and
+<b>SSL_net_write_desired()</b> functions may change in
+response to any call to the SSL object other than
+<b>SSL_net_read_desired()</b>,
+<b>SSL_net_write_desired()</b>,
+<b>SSL_get_rpoll_descriptor()</b>,
+<b>SSL_get_wpoll_descriptor()</b> and
+<b>SSL_get_event_timeout()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">On
+non−QUIC SSL objects, calls to
+<b>SSL_get_rpoll_descriptor()</b> and
+<b>SSL_get_wpoll_descriptor()</b> function the same as calls
+to <b>BIO_get_rpoll_descriptor()</b> and
+<b>BIO_get_wpoll_descriptor()</b> on the respective read and
+write BIOs configured on the SSL object.</p>
+<p style="margin-left:9%; margin-top: 1em">On
+non−QUIC SSL objects, calls to
+<b>SSL_net_read_desired()</b> and
+<b>SSL_net_write_desired()</b> function identically to calls
+to <b>SSL_want_read()</b> and <b>SSL_want_write()</b>
+respectively.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+return 1 on success and 0 on failure.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_handle_events</b>(3),
+<b>SSL_get_event_timeout</b>(3), <b>ssl</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_get_rpoll_descriptor()</b>,
+<b>SSL_get_wpoll_descriptor()</b>,
+<b>SSL_net_read_desired()</b> and
+<b>SSL_net_write_desired()</b> functions were added in
+OpenSSL 3.2.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2022−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

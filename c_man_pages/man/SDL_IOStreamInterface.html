@@ -1,0 +1,228 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:52:06 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SDL_IOStreamInterface</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SDL_IOStreamInterface</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#HEADER FILE">HEADER FILE</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SDL_IOStreamInterface
+− The function pointers that drive an
+<b>SDL_IOStream</b> .</p>
+<h2>HEADER FILE
+<a name="HEADER FILE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Defined in
+SDL3/SDL_iostream.h</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+"SDL3/SDL.h"</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>typedef
+struct SDL_IOStreamInterface <br/>
+{ <br/>
+/* The version of this interface */ <br/>
+Uint32 version; <br/>
+/** <br/>
+* Return the number of bytes in this SDL_IOStream <br/>
+* eturn the total size of the data stream, or -1 on error.
+<br/>
+* <br/>
+*/ <br/>
+Sint64 (SDLCALL *size)(void *userdata); <br/>
+/** <br/>
+* Seek to ‘offset‘ relative to
+‘whence‘, one of stdio’s whence values:
+<br/>
+* SDL_IO_SEEK_SET, SDL_IO_SEEK_CUR, SDL_IO_SEEK_END <br/>
+* eturn the final offset in the data stream, or -1 on error.
+<br/>
+* <br/>
+*/ <br/>
+Sint64 (SDLCALL *seek)(void *userdata, Sint64 offset,
+SDL_IOWhence whence); <br/>
+/** <br/>
+* Read up to ‘size‘ bytes from the data stream
+to the area pointed <br/>
+* at by ‘ptr‘. <br/>
+* <br/>
+* On an incomplete read, you should set
+‘*status‘ to a value from the <br/>
+* SDL_IOStatus enum. You do not have to explicitly set this
+on <br/>
+* a complete, successful read. <br/>
+* eturn the number of bytes read <br/>
+* <br/>
+*/ <br/>
+size_t (SDLCALL *read)(void *userdata, void *ptr, size_t
+size, SDL_IOStatus *status); <br/>
+/** <br/>
+* Write exactly ‘size‘ bytes from the area
+pointed at by ‘ptr‘ <br/>
+* to data stream. <br/>
+* <br/>
+* On an incomplete write, you should set
+‘*status‘ to a value from the <br/>
+* SDL_IOStatus enum. You do not have to explicitly set this
+on <br/>
+* a complete, successful write. <br/>
+* eturn the number of bytes written <br/>
+* <br/>
+*/ <br/>
+size_t (SDLCALL *write)(void *userdata, const void *ptr,
+size_t size, SDL_IOStatus *status); <br/>
+/** <br/>
+* If the stream is buffering, make sure the data is written
+out. <br/>
+* <br/>
+* On failure, you should set ‘*status‘ to a
+value from the <br/>
+* SDL_IOStatus enum. You do not have to explicitly set this
+on <br/>
+* a successful flush. <br/>
+* eturn true if successful or false on write error when
+flushing data. <br/>
+* <br/>
+*/ <br/>
+bool (SDLCALL *flush)(void *userdata, SDL_IOStatus *status);
+<br/>
+/** <br/>
+* Close and free any allocated resources. <br/>
+* <br/>
+* This does not guarantee file writes will sync to physical
+media; they <br/>
+* can be in the system’s file cache, waiting to go to
+disk. <br/>
+* <br/>
+* The SDL_IOStream is still destroyed even if this fails, so
+clean up anything <br/>
+* even if flushing buffers, etc, returns an error. <br/>
+* eturn true if successful or false on write error when
+flushing data. <br/>
+* <br/>
+*/ <br/>
+bool (SDLCALL *close)(void *userdata); <br/>
+} SDL_IOStreamInterface;</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Applications can
+provide this struct to <b>SDL_OpenIO</b> () to create their
+own implementation of <b>SDL_IOStream</b> . This is not
+necessarily required, as SDL already offers several common
+types of I/O streams, via functions like
+<b>SDL_IOFromFile</b> () and</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_IOFromMem</b>
+().</p>
+<p style="margin-left:9%; margin-top: 1em">This structure
+should be initialized using</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_INIT_INTERFACE</b>
+()</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This struct is
+available since SDL 3.2.0.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>•</b>(3),
+<b>SDL_INIT_INTERFACE</b>(3)</p>
+<hr/>
+</body>
+</html>

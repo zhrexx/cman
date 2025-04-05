@@ -1,0 +1,511 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:08 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>syslog</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">syslog</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#openlog()">openlog()</a><br/>
+<a href="#syslog() and vsyslog()">syslog() and vsyslog()</a><br/>
+<a href="#closelog()">closelog()</a><br/>
+<a href="#Values for option">Values for option</a><br/>
+<a href="#Values for facility">Values for facility</a><br/>
+<a href="#Values for level">Values for level</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">closelog,
+openlog, syslog, vsyslog − send messages to the system
+logger</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;syslog.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+openlog(const char *</b><i>ident</i><b>, int</b>
+<i>option</i><b>, int</b> <i>facility</i><b>); <br/>
+void syslog(int</b> <i>priority</i><b>, const char
+*</b><i>format</i><b>, ...); <br/>
+void closelog(void);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+vsyslog(int</b> <i>priority</i><b>, const char
+*</b><i>format</i><b>, va_list</b> <i>ap</i><b>);</b></p>
+<p style="margin-left:4%; margin-top: 1em">Feature Test
+Macro Requirements for glibc (see
+<b>feature_test_macros</b>(7)):</p>
+<p style="margin-left:9%; margin-top: 1em"><b>vsyslog</b>():
+<br/>
+Since glibc 2.19: <br/>
+_DEFAULT_SOURCE <br/>
+glibc 2.19 and earlier: <br/>
+_BSD_SOURCE</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<h3>openlog()
+<a name="openlog()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>openlog</b>()
+opens a connection to the system logger for a program.</p>
+<p style="margin-left:9%; margin-top: 1em">The string
+pointed to by <i>ident</i> is prepended to every message,
+and is typically set to the program name. If <i>ident</i> is
+NULL, the program name is used. (POSIX.1-2008 does not
+specify the behavior when <i>ident</i> is NULL.)</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>option</i> argument specifies flags which control the
+operation of <b>openlog</b>() and subsequent calls to
+<b>syslog</b>(). The <i>facility</i> argument establishes a
+default to be used if none is specified in subsequent calls
+to <b>syslog</b>(). The values that may be specified for
+<i>option</i> and <i>facility</i> are described below.</p>
+<p style="margin-left:9%; margin-top: 1em">The use of
+<b>openlog</b>() is optional; it will automatically be
+called by <b>syslog</b>() if necessary, in which case
+<i>ident</i> will default to NULL.</p>
+<h3>syslog() and vsyslog()
+<a name="syslog() and vsyslog()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>syslog</b>()
+generates a log message, which will be distributed by
+<b>syslogd</b>(8).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>priority</i> argument is formed by ORing together a
+<i>facility</i> value and a <i>level</i> value (described
+below). If no <i>facility</i> value is ORed into
+<i>priority</i>, then the default value set by
+<b>openlog</b>() is used, or, if there was no preceding
+<b>openlog</b>() call, a default of <b>LOG_USER</b> is
+employed.</p>
+<p style="margin-left:9%; margin-top: 1em">The remaining
+arguments are a <i>format</i>, as in <b>printf</b>(3), and
+any arguments required by the <i>format</i>, except that the
+two-character sequence <b>%m</b> will be replaced by the
+error message string <i>strerror</i>(<i>errno</i>). The
+format string need not include a terminating newline
+character.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+<b>vsyslog</b>() performs the same task as <b>syslog</b>()
+with the difference that it takes a set of arguments which
+have been obtained using the <b>stdarg</b>(3) variable
+argument list macros.</p>
+<h3>closelog()
+<a name="closelog()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>closelog</b>()
+closes the file descriptor being used to write to the system
+logger. The use of <b>closelog</b>() is optional.</p>
+<h3>Values for option
+<a name="Values for option"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>option</i> argument to <b>openlog</b>() is a bit mask
+constructed by ORing together any of the following
+values:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>LOG_CONS</b></p></td>
+<td width="6%"></td>
+<td width="72%">
+<p>Write directly to the system console if there is an
+error while sending to the system logger.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>LOG_NDELAY</b></p></td>
+<td width="6%"></td>
+<td width="72%">
+<p>Open the connection immediately (normally, the
+connection is opened when the first message is logged). This
+may be useful, for example, if a subsequent <b>chroot</b>(2)
+would make the pathname used internally by the logging
+facility unreachable.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>LOG_NOWAIT</b></p></td>
+<td width="6%"></td>
+<td width="72%">
+<p>Don’t wait for child processes that may have been
+created while logging the message. (The GNU C library does
+not create a child process, so this option has no effect on
+Linux.)</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>LOG_ODELAY</b></p></td>
+<td width="6%"></td>
+<td width="72%">
+<p>The converse of <b>LOG_NDELAY</b>; opening of the
+connection is delayed until <b>syslog</b>() is called. (This
+is the default, and need not be specified.)</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>LOG_PERROR</b></p></td>
+<td width="6%"></td>
+<td width="72%">
+<p>(Not in POSIX.1-2001 or POSIX.1-2008.) Also log the
+message to <i>stderr</i>.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>LOG_PID</b></p></td>
+<td width="6%"></td>
+<td width="72%">
+<p>Include the caller’s PID with each message.</p></td></tr>
+</table>
+<h3>Values for facility
+<a name="Values for facility"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>facility</i> argument is used to specify what type of
+program is logging the message. This lets the configuration
+file specify that messages from different facilities will be
+handled differently.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="15%">
+<p style="margin-top: 1em"><b>LOG_AUTH</b></p></td>
+<td width="4%"></td>
+<td width="72%">
+<p style="margin-top: 1em">security/authorization
+messages</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="15%">
+<p><b>LOG_AUTHPRIV</b></p></td>
+<td width="4%"></td>
+<td width="72%">
+<p>security/authorization messages (private)</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="15%">
+<p><b>LOG_CRON</b></p></td>
+<td width="4%"></td>
+<td width="72%">
+<p>clock daemon (<b>cron</b> and <b>at</b>)</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="15%">
+<p><b>LOG_DAEMON</b></p></td>
+<td width="4%"></td>
+<td width="72%">
+<p>system daemons without separate facility value</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="15%">
+<p><b>LOG_FTP</b></p></td>
+<td width="4%"></td>
+<td width="72%">
+<p>ftp daemon</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="15%">
+<p><b>LOG_KERN</b></p></td>
+<td width="4%"></td>
+<td width="72%">
+<p>kernel messages (these can’t be generated from
+user processes)</p></td></tr>
+</table>
+<p style="margin-left:9%;"><b>LOG_LOCAL0</b> through
+<b>LOG_LOCAL7</b></p>
+<p style="margin-left:28%;">reserved for local use</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>LOG_LPR</b></p></td>
+<td width="6%"></td>
+<td width="55%">
+<p>line printer subsystem</p></td>
+<td width="17%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>LOG_MAIL</b></p></td>
+<td width="6%"></td>
+<td width="55%">
+<p>mail subsystem</p></td>
+<td width="17%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>LOG_NEWS</b></p></td>
+<td width="6%"></td>
+<td width="55%">
+<p>USENET news subsystem</p></td>
+<td width="17%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="13%">
+<p><b>LOG_SYSLOG</b></p></td>
+<td width="6%"></td>
+<td width="55%">
+<p>messages generated internally by <b>syslogd</b>(8)</p></td>
+<td width="17%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><b>LOG_USER</b> (default)</p>
+<p style="margin-left:28%;">generic user-level messages</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="10%">
+<p><b>LOG_UUCP</b></p></td>
+<td width="9%"></td>
+<td width="18%">
+<p>UUCP subsystem</p></td>
+<td width="54%">
+</td></tr>
+</table>
+<h3>Values for level
+<a name="Values for level"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This determines
+the importance of the message. The levels are, in order of
+decreasing importance:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="14%">
+<p style="margin-top: 1em"><b>LOG_EMERG</b></p></td>
+<td width="5%"></td>
+<td width="44%">
+<p style="margin-top: 1em">system is unusable</p></td>
+<td width="28%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="14%">
+<p><b>LOG_ALERT</b></p></td>
+<td width="5%"></td>
+<td width="44%">
+<p>action must be taken immediately</p></td>
+<td width="28%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="14%">
+<p><b>LOG_CRIT</b></p></td>
+<td width="5%"></td>
+<td width="44%">
+<p>critical conditions</p></td>
+<td width="28%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="14%">
+<p><b>LOG_ERR</b></p></td>
+<td width="5%"></td>
+<td width="44%">
+<p>error conditions</p></td>
+<td width="28%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="14%">
+<p><b>LOG_WARNING</b></p></td>
+<td width="5%"></td>
+<td width="44%">
+<p>warning conditions</p></td>
+<td width="28%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="14%">
+<p><b>LOG_NOTICE</b></p></td>
+<td width="5%"></td>
+<td width="44%">
+<p>normal, but significant, condition</p></td>
+<td width="28%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="14%">
+<p><b>LOG_INFO</b></p></td>
+<td width="5%"></td>
+<td width="44%">
+<p>informational message</p></td>
+<td width="28%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="14%">
+<p><b>LOG_DEBUG</b></p></td>
+<td width="5%"></td>
+<td width="44%">
+<p>debug-level message</p></td>
+<td width="28%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The function
+<b>setlogmask</b>(3) can be used to restrict logging to
+specified levels only.</p>
+<h2>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For an
+explanation of the terms used in this section, see
+<b>attributes</b>(7).</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>syslog</b>()
+<b><br/>
+openlog</b>() <b><br/>
+closelog</b>()</p>
+<p style="margin-left:18%;">POSIX.1-2008.</p>
+<p style="margin-left:9%;"><b>vsyslog</b>()</p>
+<p style="margin-left:18%;">None.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>syslog</b>()</p>
+<p style="margin-left:18%;">4.2BSD, SUSv2,
+POSIX.1-2001.</p>
+<p style="margin-left:9%;"><b>openlog</b>() <b><br/>
+closelog</b>()</p>
+<p style="margin-left:18%;">4.3BSD, SUSv2,
+POSIX.1-2001.</p>
+<p style="margin-left:9%;"><b>vsyslog</b>()</p>
+<p style="margin-left:18%;">4.3BSD-Reno.</p>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2001
+specifies only the <b>LOG_USER</b> and <b>LOG_LOCAL*</b>
+values for <i>facility</i>. However, with the exception of
+<b>LOG_AUTHPRIV</b> and <b>LOG_FTP</b>, the other
+<i>facility</i> values appear on most UNIX systems.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>LOG_PERROR</b> value for <i>option</i> is not specified
+by POSIX.1-2001 or POSIX.1-2008, but is available in most
+versions of UNIX.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The argument
+<i>ident</i> in the call of <b>openlog</b>() is probably
+stored as-is. Thus, if the string it points to is changed,
+<b>syslog</b>() may start prepending the changed string, and
+if the string it points to ceases to exist, the results are
+undefined. Most portable is to use a string constant.</p>
+<p style="margin-left:9%; margin-top: 1em">Never pass a
+string with user-supplied data as a format, use the
+following instead:</p>
+<p style="margin-left:14%; margin-top: 1em">syslog(priority,
+"%s", string);</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>journalctl</b>(1),
+<b>logger</b>(1), <b>setlogmask</b>(3),
+<b>syslog.conf</b>(5), <b>syslogd</b>(8)</p>
+<hr/>
+</body>
+</html>

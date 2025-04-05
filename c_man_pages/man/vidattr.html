@@ -1,0 +1,1111 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:41 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curs_terminfo</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curs_terminfo</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Initialization">Initialization</a><br/>
+<a href="#The Terminal State">The Terminal State</a><br/>
+<a href="#Formatting Output">Formatting Output</a><br/>
+<a href="#Output Functions">Output Functions</a><br/>
+<a href="#Terminal Capability Functions">Terminal Capability Functions</a><br/>
+<a href="#Terminal Capability Names">Terminal Capability Names</a><br/>
+<a href="#Releasing Memory">Releasing Memory</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXTENSIONS">EXTENSIONS</a><br/>
+<a href="#PORTABILITY">PORTABILITY</a><br/>
+<a href="#Compatibility Macros">Compatibility Macros</a><br/>
+<a href="#Legacy Data">Legacy Data</a><br/>
+<a href="#Output Buffering">Output Buffering</a><br/>
+<a href="#Function Prototypes">Function Prototypes</a><br/>
+<a href="#Special TERM treatment">Special TERM treatment</a><br/>
+<a href="#Other Portability Issues">Other Portability Issues</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>del_curterm</b>,
+<b>putp</b>, <b>restartterm</b>, <b>set_curterm</b>,
+<b>setupterm</b>, <b>tigetflag</b>, <b>tigetnum</b>,
+<b>tigetstr</b>, <b>tiparm</b>, <b>tiparm_s</b>,
+<b>tiscan_s</b>, <b>tparm</b>, <b>tputs</b>,
+<b>vid_attr</b>, <b>vid_puts</b>, <b>vidattr</b>,
+<b>vidputs</b> − <i>curses</i> interfaces to
+<i>terminfo</i> database</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;curses.h&gt; <br/>
+#include &lt;term.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>TERMINAL
+*cur_term;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>const char *
+const boolnames[]; <br/>
+const char * const boolcodes[]; <br/>
+const char * const boolfnames[]; <br/>
+const char * const numnames[]; <br/>
+const char * const numcodes[]; <br/>
+const char * const numfnames[]; <br/>
+const char * const strnames[]; <br/>
+const char * const strcodes[]; <br/>
+const char * const strfnames[];</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+setupterm(const char *</b><i>term</i><b>, int</b>
+<i>filedes</i><b>, int *</b><i>errret</i><b>); <br/>
+TERMINAL *set_curterm(TERMINAL *</b><i>nterm</i><b>); <br/>
+int del_curterm(TERMINAL *</b><i>oterm</i><b>); <br/>
+int restartterm(const char *</b><i>term</i><b>, int</b>
+<i>filedes</i><b>, int *</b><i>errret</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>char
+*tparm(const char *</b><i>str</i><b>,</b> ...<b>);</b></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="6%"></td>
+<td width="7%"></td>
+<td width="87%">
+<p><i>/* or */</i></p></td></tr>
+</table>
+<p style="margin-left:9%;"><b>char *tparm(const char
+*</b><i>str</i><b>, long</b> <i>p1</i> ... <b>long</b>
+<i>p9</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+tputs(const char *</b><i>str</i><b>, int</b>
+<i>affcnt</i><b>, int (*</b><i>putc</i><b>)(int)); <br/>
+int putp(const char *</b><i>str</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+vidputs(chtype</b> <i>attrs</i><b>, int
+(*</b><i>putc</i><b>)(int)); <br/>
+int vidattr(chtype</b> <i>attrs</i><b>); <br/>
+int vid_puts(attr_t</b> <i>attrs</i><b>, short</b>
+<i>pair</i><b>, void *</b><i>opts</i><b>, int
+(*</b><i>putc</i><b>)(int)); <br/>
+int vid_attr(attr_t</b> <i>attrs</i><b>, short</b>
+<i>pair</i><b>, void *</b><i>opts</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+tigetflag(const char *</b><i>cap-code</i><b>); <br/>
+int tigetnum(const char *</b><i>cap-code</i><b>); <br/>
+char *tigetstr(const char *</b><i>cap-code</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>char
+*tiparm(const char *</b><i>str</i><b>,</b> ...<b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>/* extensions
+*/</i> <b><br/>
+char *tiparm_s(int</b> <i>expected</i><b>, int</b>
+<i>mask</i><b>, const char *</b><i>str</i><b>, ...); <br/>
+int tiscan_s(int *</b><i>expected</i><b>, int
+*</b><i>mask</i><b>, const char *</b><i>str</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>/* deprecated
+*/</i> <b><br/>
+int setterm(const char *</b><i>term</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These low-level
+functions must be called by programs that deal directly with
+the <i>terminfo</i> database to handle certain terminal
+capabilities, such as programming function keys. For all
+other functionality, <i>curses</i> functions are more
+suitable and their use is recommended.</p>
+<p style="margin-left:9%; margin-top: 1em">None of these
+functions use (or are aware of) multibyte character strings
+such as UTF-8.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Capability names and codes use the POSIX portable
+character set.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Capability string values have no associated encoding;
+they are strings of 8-bit characters.</p></td></tr>
+</table>
+<h3>Initialization
+<a name="Initialization"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Initially,
+<b>setupterm</b> should be called. The high-level
+<i>curses</i> functions <b>initscr</b> and <b>newterm</b>
+call <b>setupterm</b> to initialize the low-level set of
+terminal-dependent variables listed in
+<b>term_variables</b>(3X).</p>
+<p style="margin-left:9%; margin-top: 1em">Applications can
+use the terminal capabilities either directly (via header
+definitions), or by special functions. The header files
+<i>curses.h</i> and <i>term.h</i> should be included (in
+that order) to get the definitions for these strings,
+numbers, and flags.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>terminfo</i> variables <b>lines</b> and <b>columns</b>
+are initialized by <b>setupterm</b> as follows.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">If <b>use_env(FALSE)</b> has
+been called, values for <b>lines</b> and <b>columns</b>
+specified in <i>terminfo</i> are used.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Otherwise, if the environment variables <i>LINES</i> and
+<i>COLUMNS</i> exist, their values are used. If these
+environment variables do not exist and the program is
+running in a window, the current window size is used.
+Otherwise, if the environment variables do not exist, the
+values for <b>lines</b> and <b>columns</b> specified in the
+<i>terminfo</i> database are used.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Parameterized
+strings should be passed through <b>tparm</b> to instantiate
+them. All <i>terminfo</i> strings (including the output of
+<b>tparm</b>) should be sent to the terminal device with
+<b>tputs</b> or <b>putp</b>. Call <b>reset_shell_mode</b> to
+restore the terminal modes before exiting; see
+<b>curs_kernel</b>(3X).</p>
+<p style="margin-left:9%; margin-top: 1em">Programs that
+use cursor addressing should</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="48%">
+<p style="margin-top: 1em">output <b>enter_ca_mode</b> upon
+startup and</p></td>
+<td width="38%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="48%">
+<p>output <b>exit_ca_mode</b> before exiting.</p></td>
+<td width="38%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Programs that
+execute shell subprocesses should</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">call <b>reset_shell_mode</b> and
+output <b>exit_ca_mode</b> before the shell is called
+and</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>output <b>enter_ca_mode</b> and call
+<b>reset_prog_mode</b> after returning from the shell.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>setupterm</b>
+reads in the <i>terminfo</i> database, initializing the
+<i>terminfo</i> structures, but does not set up the output
+virtualization structures used by <i>curses</i>. Its
+parameters follow.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="5%">
+<p style="margin-top: 1em"><i>term</i></p></td>
+<td width="1%"></td>
+<td width="81%">
+<p style="margin-top: 1em">is the terminal type, a
+character string. If <i>term</i> is null, the environment
+variable <i>TERM</i> is read.</p></td></tr>
+</table>
+<p style="margin-left:13%;"><i>filedes</i></p>
+<p style="margin-left:19%;">is the file descriptor used for
+getting and setting terminal I/O modes.</p>
+<p style="margin-left:19%; margin-top: 1em">Higher-level
+applications use <b>newterm</b>(3X) to initialize the
+terminal, passing an output <i>stream</i> rather than a
+<i>descriptor</i>. In <i>curses</i>, the two are the same
+because <b>newterm</b> calls <b>setupterm</b>, passing the
+file descriptor derived from its output stream
+parameter.</p>
+<p style="margin-left:13%;"><i>errret</i></p>
+<p style="margin-left:19%;">points to an optional location
+where an error status can be returned to the caller. If
+<i>errret</i> is not null, then <b>setupterm</b> returns
+<b>OK</b> or <b>ERR</b> and stores a status value in the
+integer pointed to by <i>errret</i>. A return value of
+<b>OK</b> combined with status of <b>1</b> in <i>errret</i>
+is normal.</p>
+<p style="margin-left:19%; margin-top: 1em">If <b>ERR</b>
+is returned, examine <i>errret:</i></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="19%"></td>
+<td width="2%">
+<p><b>1</b></p></td>
+<td width="5%"></td>
+<td width="74%">
+<p>means that the terminal is hardcopy, and cannot be used
+for <i>curses</i> applications.</p></td></tr>
+</table>
+<p style="margin-left:26%; margin-top: 1em"><b>setupterm</b>
+determines if the entry is a hardcopy type by checking the
+<b>hardcopy</b> (<b>hc</b>) capability.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="19%"></td>
+<td width="2%">
+<p style="margin-top: 1em"><b>0</b></p></td>
+<td width="5%"></td>
+<td width="74%">
+<p style="margin-top: 1em">means that the terminal could
+not be found, or that it is a generic type, having too
+little information for <i>curses</i> applications to
+run.</p> </td></tr>
+</table>
+<p style="margin-left:26%; margin-top: 1em"><b>setupterm</b>
+determines if the entry is a generic type by checking the
+<b>generic_type</b> (<b>gn</b>) capability.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="19%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><b>−1</b></p></td>
+<td width="4%"></td>
+<td width="66%">
+<p style="margin-top: 1em">means that the <i>terminfo</i>
+database could not be found.</p></td>
+<td width="8%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">If
+<i>errret</i> is null, <b>setupterm</b> reports an error
+message upon finding an error and exits. Thus, the simplest
+call is:</p>
+<p style="margin-left:28%; margin-top: 1em">setupterm((char
+*)0, 1, (int *)0);</p>
+<p style="margin-left:19%; margin-top: 1em">which uses all
+the defaults and sends the output to <b>stdout</b>.</p>
+<h3>The Terminal State
+<a name="The Terminal State"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>setupterm</b>
+stores its information about the terminal in a
+<i>TERMINAL</i> structure pointed to by the global variable
+<b>cur_term</b>. If it detects an error, or decides that the
+terminal is unsuitable (hardcopy or generic), it discards
+this information, making it not available to
+applications.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>setupterm</b> is called repeatedly for the same terminal
+type, it will reuse the information. It maintains only one
+copy of a given terminal’s capabilities in memory. If
+it is called for different terminal types, <b>setupterm</b>
+allocates new storage for each set of terminal
+capabilities.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>set_curterm</b>
+sets <b>cur_term</b> to <i>nterm</i>, and makes all of the
+<i>terminfo</i> Boolean, numeric, and string variables use
+the values from <i>nterm</i>. It returns the old value of
+<b>cur_term</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>del_curterm</b>
+frees the space pointed to by <i>oterm</i> and makes it
+available for further use. If <i>oterm</i> is the same as
+<b>cur_term</b>, references to any of the <i>terminfo</i>
+Boolean, numeric, and string variables thereafter may refer
+to invalid memory locations until another <b>setupterm</b>
+has been called.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>restartterm</b>
+is similar to <b>setupterm</b> and <b>initscr</b>, except
+that it is called after restoring memory to a previous state
+(for example, when reloading a game saved as a core image
+dump). <b>restartterm</b> assumes that the windows and the
+input and output options are the same as when memory was
+saved, but the terminal type and baud rate may be different.
+Accordingly, <b>restartterm</b> saves various terminal state
+bits, calls <b>setupterm</b>, and then restores the
+bits.</p>
+<h3>Formatting Output
+<a name="Formatting Output"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>tparm</b>
+instantiates the string <i>str</i> with parameters
+<i>pi</i>. A pointer is returned to the result of <i>str</i>
+with the parameters applied. Application developers should
+keep in mind these quirks of the interface:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">Although <b>tparm</b>’s
+actual parameters may be integers or strings, the prototype
+expects <i>long</i> (integer) values.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Aside from the <b>set_attributes</b> (<b>sgr</b>)
+capability, most terminal capabilities require no more than
+one or two parameters.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Padding information is ignored by <b>tparm</b>; it is
+interpreted by <b>tputs</b>.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>The capability string is null-terminated. Use
+“\200” where an ASCII NUL is needed in the
+output.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>tiparm</b> is
+a newer form of <b>tparm</b> which uses <i>stdarg.h</i>
+rather than a fixed-parameter list. Its numeric parameters
+are <i>int</i>s rather than <i>long</i>s.</p>
+<p style="margin-left:9%; margin-top: 1em">Both
+<b>tparm</b> and <b>tiparm</b> assume that the application
+passes parameters consistent with the terminal description.
+Two extensions are provided as alternatives to deal with
+untrusted data.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em"><b>tiparm_s</b> is an extension
+which is a safer formatting function than <b>tparm</b> or
+<b>tiparm</b>, because it allows the developer to tell the
+<i>curses</i> library how many parameters to expect in the
+parameter list, and which may be string parameters.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The <i>mask</i>
+parameter has one bit set for each of the parameters (up to
+9) passed as <i>char</i> pointers rather than numbers.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">The extension <b>tiscan_s</b>
+allows the application to inspect a formatting capability to
+see what the <i>curses</i> library would assume.</p></td></tr>
+</table>
+<h3>Output Functions
+<a name="Output Functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">String
+capabilities can contain padding information, a time delay
+(accommodating performance limitations of hardware
+terminals) expressed as <b>$&lt;</b><i>n</i><b>&gt;</b>,
+where <i>n</i> is a nonnegative integral count of
+milliseconds. If <i>n</i> exceeds 30,000 (thirty seconds),
+it is capped at that value.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tputs</b>
+interprets time-delay information in the string <i>str</i>
+and outputs it, executing the delays:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">The <i>str</i> parameter must be
+a <i>terminfo</i> string variable or the return value of
+<b>tparm</b> or <b>tiparm</b>.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p><i>affcnt</i> is the number of lines affected, or
+<b>1</b> if not applicable.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p><i>putc</i> is a <i>putchar</i>-like function to which
+the characters are passed, one at a time.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">If <b>tputs</b>
+processes a time-delay, it uses the <b>delay_output</b>(3X)
+function, routing any resulting padding characters through
+this function.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>putp</b>
+calls “<b>tputs(</b><i>str</i><b>, 1,
+putchar)</b>”. The output of <b>putp</b> always goes
+to <b>stdout</b>, rather than the <i>filedes</i> specified
+in <b>setupterm</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>vidputs</b>
+displays the string on the terminal in the video attribute
+mode <i>attrs</i>, which is any combination of the
+attributes listed in <b>curses</b>(3X). The characters are
+passed to the <i>putchar</i>-like function <i>putc</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>vidattr</b>
+is like <b>vidputs</b>, except that it outputs through
+<i>putchar</i>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>vid_attr</b>
+and <b>vid_puts</b> correspond to <b>vidattr</b> and
+<b>vidputs</b>, respectively. They use multiple parameters
+to represent the character attributes and color; namely,</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="60%">
+<p style="margin-top: 1em"><i>attrs</i>, of type
+<i>attr_t</i>, for the attributes and</p></td>
+<td width="26%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="60%">
+<p><i>pair</i>, of type <i>short</i>, for the color pair
+number.</p> </td>
+<td width="26%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Use the
+attribute constants prefixed with “<b>WA_</b>”
+with <b>vid_attr</b> and <b>vid_puts</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">X/Open Curses
+reserves the <i>opts</i> argument for future use, saying
+that applications must provide a null pointer for that
+argument; but see section “EXTENSIONS”
+below.</p>
+<p style="margin-left:9%; margin-top: 1em">While
+<b>putp</b> is a low-level function that does not use
+high-level <i>curses</i> state, <i>ncurses</i> declares it
+in <i>curses.h</i> because System V did this (see
+section “HISTORY” below).</p>
+<h3>Terminal Capability Functions
+<a name="Terminal Capability Functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>tigetflag</b>,
+<b>tigetnum</b>, and <b>tigetstr</b> return the value of the
+capability corresponding to the <i>terminfo cap-code</i>,
+such as <b>xenl</b>, passed to them. The <i>cap-code</i> for
+each capability is given in the table column entitled
+<i>cap-code</i> code in the capabilities section of
+<b>terminfo</b>(5).</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+return special values to denote errors.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tigetflag</b>
+returns</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><b>−1</b></p></td>
+<td width="6%"></td>
+<td width="74%">
+<p style="margin-top: 1em">if <i>cap-code</i> is not a
+Boolean capability, or</p></td>
+<td width="8%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p><b>0</b></p></td>
+<td width="6%"></td>
+<td width="74%">
+<p>if it is canceled or absent from the terminal
+description.</p> </td>
+<td width="8%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>tigetnum</b>
+returns</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><b>−2</b></p></td>
+<td width="6%"></td>
+<td width="74%">
+<p style="margin-top: 1em">if <i>cap-code</i> is not a
+numeric capability, or</p></td>
+<td width="8%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p><b>−1</b></p></td>
+<td width="6%"></td>
+<td width="74%">
+<p>if it is canceled or absent from the terminal
+description.</p> </td>
+<td width="8%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>tigetstr</b>
+returns <b><br/>
+(char *)−1</b></p>
+<p style="margin-left:18%;">if <i>cap-code</i> is not a
+string capability, or</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p><b>0</b></p></td>
+<td width="8%"></td>
+<td width="74%">
+<p>if it is canceled or absent from the terminal
+description.</p> </td>
+<td width="8%">
+</td></tr>
+</table>
+<h3>Terminal Capability Names
+<a name="Terminal Capability Names"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These
+null-terminated arrays contain</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="45%">
+<p style="margin-top: 1em">the short <i>terminfo</i> names
+(“codes”),</p> </td>
+<td width="41%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="45%">
+<p>the <i>termcap</i> names (“names”), and</p></td>
+<td width="41%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="45%">
+<p>the long <i>terminfo</i> names
+(“fnames”)</p> </td>
+<td width="41%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">for each of the
+predefined <i>terminfo</i> variables:</p>
+<p style="margin-left:18%; margin-top: 1em"><b>const char
+*boolnames[]</b>, <b>*boolcodes[]</b>, <b>*boolfnames[] <br/>
+const char *numnames[]</b>, <b>*numcodes[]</b>,
+<b>*numfnames[] <br/>
+const char *strnames[]</b>, <b>*strcodes[]</b>,
+<b>*strfnames[]</b></p>
+<h3>Releasing Memory
+<a name="Releasing Memory"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Each successful
+call to <b>setupterm</b> allocates memory to hold the
+terminal description. As a side effect, it sets
+<b>cur_term</b> to point to this memory. If an application
+calls</p>
+<p style="margin-left:18%; margin-top: 1em">del_curterm(cur_term);</p>
+<p style="margin-left:9%; margin-top: 1em">the memory will
+be freed.</p>
+<p style="margin-left:9%; margin-top: 1em">The formatting
+functions <b>tparm</b> and <b>tiparm</b> extend the storage
+allocated by <b>setupterm</b> as follows.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">They add the
+“static” <i>terminfo</i> variables [a-z]. Before
+<i>ncurses</i> 6.3, those were shared by all screens. With
+<i>ncurses</i> 6.3, those are allocated per screen. See
+<b>terminfo</b>(5).</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>To improve performance, <i>ncurses</i> 6.3 caches the
+result of analyzing <i>terminfo</i> strings for their
+parameter types. That is stored as a binary tree referenced
+from the <i>TERMINAL</i> structure.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The higher-level
+<b>initscr</b> and <b>newterm</b> functions use
+<b>setupterm</b>. Normally they do not free this memory, but
+it is possible to do that using the <b>delscreen</b>(3X)
+function.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">X/Open Curses
+defines no failure conditions. In <i>ncurses</i>, <b><br/>
+del_curtem</b></p>
+<p style="margin-left:15%;">fails if its terminal parameter
+is null.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="5%">
+<p><b>putp</b></p></td>
+<td width="1%"></td>
+<td width="57%">
+<p>calls <b>tputs</b>, returning the same error codes.</p></td>
+<td width="28%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><b>restartterm</b></p>
+<p style="margin-left:15%;">fails if the associated call to
+<b>setupterm</b> returns <b>ERR</b>.</p>
+<p style="margin-left:9%;"><b>setupterm</b></p>
+<p style="margin-left:15%;">fails if it cannot allocate
+enough memory, or create the initial windows (<b>stdscr</b>,
+<b>curscr</b>, and <b>newscr</b>) Other error conditions are
+documented above.</p>
+<p style="margin-left:9%;"><b>tparm</b></p>
+<p style="margin-left:15%;">returns a null pointer if the
+capability would require unexpected parameters; that is, too
+many, too few, or incorrect types (strings where integers
+are expected, or vice versa).</p>
+<p style="margin-left:9%;"><b>tputs</b></p>
+<p style="margin-left:15%;">fails if the string parameter
+is null. It does not detect I/O errors: X/Open Curses states
+that <b>tputs</b> ignores the return value of the output
+function <i>putc</i>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>vid_attr</b> function in <i>ncurses</i> is a special
+case. It was originally implemented based on a draft of
+X/Open Curses, as a macro, before other parts of the
+<i>ncurses</i> wide-character API were developed, and unlike
+the other wide-character functions, is also provided in the
+non-wide-character configuration.</p>
+<h2>EXTENSIONS
+<a name="EXTENSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The functions
+marked as extensions were designed for <i>ncurses</i>, and
+are not found in SVr4 <i>curses</i>, 4.4BSD <i>curses</i>,
+or any other previous <i>curses</i> implementation.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>ncurses</i>
+allows <i>opts</i> to be a pointer to <i>int</i>, which
+overrides the <i>pair</i> (<i>short</i>) argument.</p>
+<h2>PORTABILITY
+<a name="PORTABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>setterm</b>
+is not described by X/Open and must be considered
+non-portable. All other functions are as described by
+X/Open.</p>
+<h3>Compatibility Macros
+<a name="Compatibility Macros"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This
+implementation provides a few macros for compatibility with
+systems before SVr4 (see section “HISTORY”
+below). They include <b>Bcrmode</b>, <b>Bfixterm</b>,
+<b>Bgettmode</b>, <b>Bnocrmode</b>, <b>Bresetterm</b>,
+<b>Bsaveterm</b>, and <b>Bsetterm</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">In SVr4, these
+are found in <i>curses.h</i>, but except for <b>setterm</b>,
+are likewise macros. The one function, <b>setterm</b>, is
+mentioned in the manual page. It further notes that
+<b>setterm</b> was replaced by <b>setupterm</b>, stating
+that the call</p>
+<p style="margin-left:18%;">setupterm(<i>term</i>, 1, (int
+*)0)</p>
+<p style="margin-left:9%;">provides the same functionality
+as <b>setterm(</b><i>term</i><b>)</b>, discouraging the
+latter for new programs. <i>ncurses</i> implements each of
+these symbols as macros for BSD <i>curses</i>
+compatibility.</p>
+<h3>Legacy Data
+<a name="Legacy Data"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>setupterm</b>
+copies the terminal name to the array <b>ttytype</b>. This
+is not part of X/Open Curses, but is assumed by some
+applications.</p>
+<p style="margin-left:9%; margin-top: 1em">Other
+implementions may not declare the capability name arrays.
+Some provide them without declaring them. X/Open Curses does
+not specify them.</p>
+<p style="margin-left:9%; margin-top: 1em">Extended
+terminal capability names, as defined by “<b>tic
+−x</b>”, are not stored in the arrays described
+here.</p>
+<h3>Output Buffering
+<a name="Output Buffering"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Older versions
+of <i>ncurses</i> assumed that the file descriptor passed to
+<b>setupterm</b> from <b>initscr</b> or <b>newterm</b> uses
+buffered I/O, and would write to the corresponding stream.
+In addition to the limitation that the terminal was left in
+block-buffered mode on exit (like System V
+<i>curses</i>), it was problematic because <i>ncurses</i>
+did not allow a reliable way to clean up on receiving
+<b>SIGTSTP</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The current
+version (ncurses6) uses output buffers managed directly by
+<i>ncurses</i>. Some of the low-level functions described in
+this manual page write to the standard output. They are not
+signal-safe. The high-level functions in <i>ncurses</i>
+employ alternate versions of these functions using the more
+reliable buffering scheme.</p>
+<h3>Function Prototypes
+<a name="Function Prototypes"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The X/Open
+Curses prototypes are based on the SVr4 <i>curses</i> header
+declarations, which were defined at the same time the C
+language was first standardized in the late 1980s.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>X/Open Curses uses <i>const</i> less effectively than a
+later design might, sometimes applying it needlessly to
+values that are already constant, and in most cases
+overlooking parameters that normally would use <i>const</i>.
+Passing <i>const</i>-qualified parameters to functions that
+do not declare them <i>const</i> may prevent the program
+from compiling. On the other hand, “writable
+strings” are an obsolescent feature.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">As an
+extension, this implementation can be configured to change
+the function prototypes to use the <i>const</i> keyword. The
+<i>ncurses</i> ABI 6 enables this feature by default.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">X/Open Curses prototypes
+<b>tparm</b> with a fixed number of parameters, rather than
+a variable argument list.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">This
+implementation uses a variable argument list, but can be
+configured to use the fixed-parameter list. Portable
+applications should provide nine parameters after the
+format; zeroes are fine for this purpose.</p>
+<p style="margin-left:14%; margin-top: 1em">In response to
+review comments by Thomas E. Dickey, X/Open Curses Issue 7
+proposed the <b>tiparm</b> function in mid-2009.</p>
+<p style="margin-left:14%; margin-top: 1em">While
+<b>tiparm</b> is always provided in <i>ncurses</i>, the
+older form is only available as a build-time configuration
+option. If not specially configured, <b>tparm</b> is the
+same as <b>tiparm</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">Both forms of
+<b>tparm</b> have drawbacks:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">Most of the calls to
+<b>tparm</b> use only one or two parameters. Passing nine on
+each call is awkward.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Using
+<i>long</i> for the numeric parameter type is a workaround
+to make the parameter use the same amount of stack as a
+pointer. That approach dates back to the mid-1980s, before C
+was standardized. Since then, there is a standard (and
+pointers are not required to fit in a <i>long</i>).</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">Providing the right number of
+parameters for a variadic function such as <b>tiparm</b> can
+be a problem, in particular for string parameters. However,
+only a few <i>terminfo</i> capabilities use string
+parameters (for instance, the ones used for programmable
+function keys).</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The
+<i>ncurses</i> library checks usage of these capabilities,
+and returns <b>ERR</b> if the capability mishandles string
+parameters. But it cannot check if a calling program
+provides strings in the right places for the <b>tparm</b>
+calls.</p>
+<p style="margin-left:14%; margin-top: 1em">The
+<b>tput</b>(1) program checks its use of these capabilities
+with a table, so that it calls <b>tparm</b> correctly.</p>
+<h3>Special TERM treatment
+<a name="Special TERM treatment"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If configured to
+use the terminal driver, as with the MinGW port,</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em"><b>setupterm</b> interprets a
+missing/empty <i>TERM</i> variable as the special value
+“unknown”.</p> </td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">SVr4
+<i>curses</i> uses the special value “dumb”.</p>
+<p style="margin-left:14%; margin-top: 1em">The difference
+between the two is that the former uses the
+<b>generic_type</b> (<b>gn</b>) <i>terminfo</i> capability,
+while the latter does not. A generic terminal is unsuitable
+for full-screen applications.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em"><b>setupterm</b> allows explicit
+use of the the windows console driver by checking if
+<b>$TERM</b> is set to “#win32con” or an
+abbreviation of that string.</p></td></tr>
+</table>
+<h3>Other Portability Issues
+<a name="Other Portability Issues"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">In SVr4,
+<b>set_curterm</b> returns an <i>int</i>, <b>OK</b> or
+<b>ERR</b>. We have chosen to implement the X/Open Curses
+semantics.</p>
+<p style="margin-left:9%; margin-top: 1em">In SVr4, the
+third argument of <b>tputs</b> has the type “<b>int
+(*putc)(char)</b>”.</p>
+<p style="margin-left:9%; margin-top: 1em">At least one
+implementation of X/Open Curses (Solaris) returns a value
+other than <b>OK</b> or <b>ERR</b> from <b>tputs</b>. It
+instead returns the length of the string, and does no error
+checking.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SVr2 (1984)
+introduced the <i>terminfo</i> feature. Its programming
+manual mentioned the following low-level functions.</p>
+<p style="margin-left:9%; margin-top: 1em">The programming
+manual also mentioned functions provided for <i>termcap</i>
+compatibility (commenting that they “may go away at a
+later date”).</p>
+<p style="margin-left:9%; margin-top: 1em">Early
+<i>terminfo</i> programs obtained capability values from the
+<i>TERMINAL</i> structure initialized by
+<b>setupterm</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">SVr3 (1987)
+extended <i>terminfo</i> by adding functions to retrieve
+capability values (like the <i>termcap</i> interface), and
+reusing <b>tgoto</b> and <b>tputs</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">SVr3 also
+replaced several of the SVr2 <i>terminfo</i> functions that
+had no counterpart in the <i>termcap</i> interface,
+documenting them as obsolete.</p>
+<p style="margin-left:9%; margin-top: 1em">SVr3 kept the
+<b>mvcur</b>, <b>vidattr</b>, and <b>vidputs</b> functions,
+along with <b>putp</b>, <b>tparm</b>, and <b>tputs</b>. The
+latter were needed to support padding, and to handle
+capabilities accessed by functions such as <b>vidattr</b>
+(which used more than the two parameters supported by
+<b>tgoto</b>).</p>
+<p style="margin-left:9%; margin-top: 1em">SVr3 introduced
+the functions for switching between terminal descriptions;
+for example, <b>set_curterm</b>. Some changes reflected
+incremental improvements to the SVr2 library.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">The <i>TERMINAL</i> type
+definition was introduced in SVr3.01, for the <i>term</i>
+structure provided in SVr2.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Various global variables such as <b>boolnames</b> were
+mentioned in the programming manual at this point, though
+the variables had been provided in SVr2.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">SVr4 (1989)
+added the <b>vid_attr</b> and <b>vid_puts</b> functions.</p>
+<p style="margin-left:9%; margin-top: 1em">Other low-level
+functions are declared in the <i>curses</i> header files of
+Unix systems, but none are documented. Those noted as
+“obsolete” by SVr3 remained in use by
+System V’s <i>vi</i>(1) editor.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curses</b>(3X),
+<b>curs_initscr</b>(3X), <b>curs_kernel</b>(3X),
+<b>curs_memleaks</b>(3X), <b>curs_termcap</b>(3X),
+<b>curs_variables</b>(3X), <b>putc</b>(3),
+<b>term_variables</b>(3X), <b>terminfo</b>(5)</p>
+<hr/>
+</body>
+</html>

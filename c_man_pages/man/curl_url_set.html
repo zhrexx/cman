@@ -1,0 +1,380 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:33 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curl_url_set</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curl_url_set</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#PARTS">PARTS</a><br/>
+<a href="#FLAGS">FLAGS</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">curl_url_set
+− set a URL part</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">CURLUcode
+curl_url_set(CURLU *url, <br/>
+CURLUPart part, <br/>
+const char *content, <br/>
+unsigned int flags);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The <i>url</i>
+handle to work on, passed in as the first argument, must be
+a handle previously created by <i>curl_url(3)</i> or
+<i>curl_url_dup(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+sets or updates individual URL components, or parts, held by
+the URL object the handle identifies.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>part</i>
+argument should identify the particular URL part (see list
+below) to set or change, with <i>content</i> pointing to a
+null−terminated string with the new contents for that
+URL part. The contents should be in the form and encoding
+they would use in a URL: URL encoded.</p>
+<p style="margin-left:9%; margin-top: 1em">When setting a
+part in the URL object that was previously already set, it
+replaces the data that was previously stored for that part
+with the new <i>content</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The caller does
+not have to keep <i>content</i> around after a successful
+call as this function copies the content.</p>
+<p style="margin-left:9%; margin-top: 1em">Setting a part
+to a NULL pointer removes that part's contents from the
+<i>CURLU</i> handle.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+has an 8 MB maximum length limit for all provided input
+strings. In the real world, excessively long fields in URLs
+cause problems even if this function accepts them.</p>
+<p style="margin-left:9%; margin-top: 1em">When setting or
+updating contents of individual URL parts,
+<i>curl_url_set(3)</i> might accept data that would not be
+otherwise possible to set in the string when it gets
+populated as a result of a full URL parse. Beware. If done
+so, extracting a full URL later on from such components
+might render an invalid URL.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>flags</i>
+argument is a bitmask with independent features.</p>
+<h2>PARTS
+<a name="PARTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLUPART_URL</p>
+<p style="margin-left:18%;">Allows the full URL of the
+handle to be replaced. If the handle already is populated
+with a URL, the new URL can be relative to the previous.</p>
+<p style="margin-left:18%; margin-top: 1em">When
+successfully setting a new URL, relative or absolute, the
+handle contents is replaced with the components of the newly
+set URL.</p>
+<p style="margin-left:18%; margin-top: 1em">Pass a pointer
+to a null−terminated string to the <i>url</i>
+parameter. The string must point to a correctly formatted
+"RFC 3986+" URL or be a NULL pointer. The URL
+parser only understands and parses the subset of URLS that
+are "hierarchical" and therefore contain a ://
+separator − not the ones that are normally specified
+with only a colon separator.</p>
+<p style="margin-left:18%; margin-top: 1em">By default this
+API only parses URLs using schemes for protocols that are
+supported built−in. To make libcurl parse URLs
+generically even for schemes it does not know about, the
+<b>CURLU_NON_SUPPORT_SCHEME</b> flags bit must be set.
+Otherwise, this function returns
+<i>CURLUE_UNSUPPORTED_SCHEME</i> for URL schemes it does not
+recognize.</p>
+<p style="margin-left:18%; margin-top: 1em">Unless
+<i>CURLU_NO_AUTHORITY</i> is set, a blank hostname is not
+allowed in the URL.</p>
+<p style="margin-left:9%;">CURLUPART_SCHEME</p>
+<p style="margin-left:18%;">Scheme cannot be URL decoded on
+set. libcurl only accepts setting schemes up to 40 bytes
+long.</p>
+<p style="margin-left:9%;">CURLUPART_USER</p>
+<p style="margin-left:18%;">If only the user part is set
+and not the password, the URL is represented with a blank
+password.</p>
+<p style="margin-left:9%;">CURLUPART_PASSWORD</p>
+<p style="margin-left:18%;">If only the password part is
+set and not the user, the URL is represented with a blank
+user.</p>
+<p style="margin-left:9%;">CURLUPART_OPTIONS</p>
+<p style="margin-left:18%;">The options field is an
+optional field that might follow the password in the
+userinfo part. It is only recognized/used when parsing URLs
+for the following schemes: pop3, smtp and imap. This
+function however allows users to independently set this
+field.</p>
+<p style="margin-left:9%;">CURLUPART_HOST</p>
+<p style="margin-left:18%;">The hostname. If it is
+International Domain Name (IDN) the string must then be
+encoded as your locale says or UTF−8 (when WinIDN is
+used). If it is a bracketed IPv6 numeric address it may
+contain a zone id (or you can use
+<i>CURLUPART_ZONEID</i>).</p>
+<p style="margin-left:18%; margin-top: 1em">Note that if
+you set an IPv6 address, it gets ruined and causes an error
+if you also set the CURLU_URLENCODE flag.</p>
+<p style="margin-left:18%; margin-top: 1em">Unless
+<i>CURLU_NO_AUTHORITY</i> is set, a blank hostname is not
+allowed to set.</p>
+<p style="margin-left:9%;">CURLUPART_ZONEID</p>
+<p style="margin-left:18%;">If the hostname is a numeric
+IPv6 address, this field can also be set.</p>
+<p style="margin-left:9%;">CURLUPART_PORT</p>
+<p style="margin-left:18%;">The port number cannot be URL
+encoded on set. The given port number is provided as a
+string and the decimal number in it must be between 0 and
+65535. Anything else returns an error.</p>
+<p style="margin-left:9%;">CURLUPART_PATH</p>
+<p style="margin-left:18%;">If a path is set in the URL
+without a leading slash, a slash is prepended
+automatically.</p>
+<p style="margin-left:9%;">CURLUPART_QUERY</p>
+<p style="margin-left:18%;">The query part gets spaces
+converted to pluses when asked to URL encode on set with the
+<i>CURLU_URLENCODE</i> bit.</p>
+<p style="margin-left:18%; margin-top: 1em">If used
+together with the <i>CURLU_APPENDQUERY</i> bit, the provided
+part is appended on the end of the existing query.</p>
+<p style="margin-left:18%; margin-top: 1em">The question
+mark in the URL is not part of the actual query
+contents.</p>
+<p style="margin-left:9%;">CURLUPART_FRAGMENT</p>
+<p style="margin-left:18%;">The hash sign in the URL is not
+part of the actual fragment contents.</p>
+<h2>FLAGS
+<a name="FLAGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The flags
+argument is zero, one or more bits set in a bitmask. <br/>
+CURLU_APPENDQUERY</p>
+<p style="margin-left:18%;">Can be used when setting the
+<i>CURLUPART_QUERY</i> component. The provided new part is
+then appended at the end of the existing query − and
+if the previous part did not end with an ampersand (&amp;),
+an ampersand gets inserted before the new appended part.</p>
+<p style="margin-left:18%; margin-top: 1em">When
+<i>CURLU_APPENDQUERY</i> is used together with
+<i>CURLU_URLENCODE</i>, the first '=' symbol is not URL
+encoded.</p>
+<p style="margin-left:9%;">CURLU_NON_SUPPORT_SCHEME</p>
+<p style="margin-left:18%;">If set, allows
+<i>curl_url_set(3)</i> to set a non−supported scheme.
+It then of course cannot know if the provided scheme is a
+valid one or not.</p>
+<p style="margin-left:9%;">CURLU_URLENCODE</p>
+<p style="margin-left:18%;">When set,
+<i>curl_url_set(3)</i> URL encodes the part on entry, except
+for <b>scheme</b>, <b>port</b> and <b>URL</b>.</p>
+<p style="margin-left:18%; margin-top: 1em">When setting
+the path component with URL encoding enabled, the slash
+character is skipped.</p>
+<p style="margin-left:18%; margin-top: 1em">The query part
+gets space−to−plus converted before the URL
+conversion is applied.</p>
+<p style="margin-left:18%; margin-top: 1em">This URL
+encoding is charset unaware and converts the input in a
+byte−by−byte manner.</p>
+<p style="margin-left:9%;">CURLU_DEFAULT_SCHEME</p>
+<p style="margin-left:18%;">If set, allows the URL to be
+set without a scheme and then sets that to the default
+scheme: HTTPS. Overrides the <i>CURLU_GUESS_SCHEME</i>
+option if both are set.</p>
+<p style="margin-left:9%;">CURLU_GUESS_SCHEME</p>
+<p style="margin-left:18%;">If set, allows the URL to be
+set without a scheme and it instead "guesses"
+which scheme that was intended based on the hostname. If the
+outermost subdomain name matches DICT, FTP, IMAP, LDAP, POP3
+or SMTP then that scheme is used, otherwise it picks HTTP.
+Conflicts with the <i>CURLU_DEFAULT_SCHEME</i> option which
+takes precedence if both are set.</p>
+<p style="margin-left:18%; margin-top: 1em">If guessing is
+not allowed and there is no default scheme set, trying to
+parse a URL without a scheme returns error.</p>
+<p style="margin-left:18%; margin-top: 1em">If the scheme
+ends up set as a result of guessing, i.e. it is not actually
+present in the parsed URL, it can later be figured out by
+using the <b>CURLU_NO_GUESS_SCHEME</b> flag when
+subsequently getting the URL or the scheme with
+<i>curl_url_get(3)</i>.</p>
+<p style="margin-left:9%;">CURLU_NO_AUTHORITY</p>
+<p style="margin-left:18%;">If set, skips authority checks.
+The RFC allows individual schemes to omit the host part
+(normally the only mandatory part of the authority), but
+libcurl cannot know whether this is permitted for custom
+schemes. Specifying the flag permits empty authority
+sections, similar to how file scheme is handled.</p>
+<p style="margin-left:9%;">CURLU_PATH_AS_IS</p>
+<p style="margin-left:18%;">When set for
+<b>CURLUPART_URL</b>, this skips the normalization of the
+path. That is the procedure where libcurl otherwise removes
+sequences of dot−slash and dot−dot etc. The same
+option used for transfers is called
+<i>CURLOPT_PATH_AS_IS(3)</i>.</p>
+<p style="margin-left:9%;">CURLU_ALLOW_SPACE</p>
+<p style="margin-left:18%;">If set, the URL parser allows
+space (ASCII 32) where possible. The URL syntax does
+normally not allow spaces anywhere, but they should be
+encoded as %20 or '+'. When spaces are allowed, they are
+still not allowed in the scheme. When space is used and
+allowed in a URL, it is stored as−is unless
+<i>CURLU_URLENCODE</i> is also set, which then makes libcurl
+URL encode the space before stored. This affects how the URL
+is constructed when <i>curl_url_get(3)</i> is subsequently
+used to extract the full URL or individual parts. (Added in
+7.78.0)</p>
+<p style="margin-left:9%;">CURLU_DISALLOW_USER</p>
+<p style="margin-left:18%;">If set, the URL parser does not
+accept embedded credentials for the <b>CURLUPART_URL</b>,
+and instead returns <b>CURLUE_USER_NOT_ALLOWED</b> for such
+URLs.</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+CURLUcode rc; <br/>
+CURLU *url = curl_url(); <br/>
+rc = curl_url_set(url, CURLUPART_URL,
+"https://example.com", 0); <br/>
+if(!rc) { <br/>
+/* change it to an FTP URL */ <br/>
+rc = curl_url_set(url, CURLUPART_SCHEME, "ftp",
+0); <br/>
+} <br/>
+curl_url_cleanup(url); <br/>
+}</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.78.0</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Returns a
+<i>CURLUcode</i> error value, which is CURLUE_OK (0) if
+everything went fine. See the <i>libcurl−errors(3)</i>
+man page for the full list with descriptions.</p>
+<p style="margin-left:9%; margin-top: 1em">The input string
+passed to <i>curl_url_set(3)</i> must be shorter than eight
+million bytes. Otherwise this function returns
+<b>CURLUE_MALFORMED_INPUT</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">If this function
+returns an error, no URL part is set.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_CURLU</b>(3),
+<b>curl_url</b>(3), <b>curl_url_cleanup</b>(3),
+<b>curl_url_dup</b>(3), <b>curl_url_get</b>(3),
+<b>curl_url_strerror</b>(3)</p>
+<hr/>
+</body>
+</html>

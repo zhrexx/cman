@@ -1,0 +1,186 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:35 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>UNW_INIT_LOCAL</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">UNW_INIT_LOCAL</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#THREAD AND SIGNAL SAFETY">THREAD AND SIGNAL SAFETY</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">unw_init_local
+−− initialize cursor for local unwinding</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;libunwind.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">int
+unw_init_local(unw_cursor_t *c, unw_context_t *ctxt); <br/>
+int unw_init_local2(unw_cursor_t *c, unw_context_t *ctxt,
+int flag);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+unw_init_local() routine initializes the unwind cursor
+pointed to by c with the machine state in the context
+structure pointed to by ctxt. As such, the machine state
+pointed to by ctxt identifies the initial stack frame at
+which unwinding starts. The machine state is expected to be
+one provided by a call to unw_getcontext(); as such, the
+instruction pointer may point to the instruction after the
+last instruction of a function, and libunwind will
+back−up the instruction pointer before beginning a
+walk up the call stack. The machine state must remain valid
+for the duration for which the cursor c is in use.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+unw_init_local() routine can be used only for unwinding in
+the address space of the current process (i.e., for local
+unwinding). For all other cases, unw_init_remote() must be
+used instead. However, unwind performance may be better when
+using unw_init_local(). Also, unw_init_local() is available
+even when UNW_LOCAL_ONLY has been defined before including
+&lt;libunwind.h&gt;, whereas unw_init_remote() is not.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+unw_context_t is known to be a signal frame (i.e., from the
+third argument in a sigaction handler on linux),
+unw_init_local2() should be used for correct initialization
+on some platforms, passing the UNW_INIT_SIGNAL_FRAME
+flag.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On successful
+completion, unw_init_local() returns 0. Otherwise the
+negative value of one of the error codes below is
+returned.</p>
+<h2>THREAD AND SIGNAL SAFETY
+<a name="THREAD AND SIGNAL SAFETY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">unw_init_local()
+is thread safe as well as safe to use from a signal
+handler.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">UNW_EINVAL</p>
+<p style="margin-left:18%;">unw_init_local() was called in
+a version of libunwind which supports remote unwinding only
+(this normally happens when calling unw_init_local() for a
+cross−platform version of libunwind).</p>
+<p style="margin-left:9%;">UNW_EUNSPEC</p>
+<p style="margin-left:18%;">An unspecified error
+occurred.</p>
+<p style="margin-left:9%;">UNW_EBADREG</p>
+<p style="margin-left:18%;">A register needed by
+unw_init_local() wasn’t accessible.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind(3libunwind),
+unw_init_remote(3libunwind)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">David
+Mosberger−Tang <br/>
+Email: <b>dmosberger@gmail.com</b> <br/>
+WWW: <b>http://www.nongnu.org/libunwind/</b>.</p>
+<hr/>
+</body>
+</html>

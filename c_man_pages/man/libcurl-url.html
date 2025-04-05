@@ -1,0 +1,277 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:01 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>libcurl-url</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">libcurl-url</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#INCLUDE">INCLUDE</a><br/>
+<a href="#CREATE">CREATE</a><br/>
+<a href="#CLEANUP">CLEANUP</a><br/>
+<a href="#DUPLICATE">DUPLICATE</a><br/>
+<a href="#PARSING">PARSING</a><br/>
+<a href="#REDIRECT">REDIRECT</a><br/>
+<a href="#GET URL">GET URL</a><br/>
+<a href="#GET PARTS">GET PARTS</a><br/>
+<a href="#SET PARTS">SET PARTS</a><br/>
+<a href="#CURLU_APPENDQUERY">CURLU_APPENDQUERY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libcurl−url
+− URL interface overview</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The URL
+interface provides functions for parsing and generating
+URLs.</p>
+<h2>INCLUDE
+<a name="INCLUDE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You still only
+include &lt;curl/curl.h&gt; in your code.</p>
+<h2>CREATE
+<a name="CREATE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Create a handle
+that holds URL info and resources with <i>curl_url(3)</i>:
+<br/>
+CURLU *h = curl_url();</p>
+<h2>CLEANUP
+<a name="CLEANUP"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">When done with
+it, clean it up with <i>curl_url_cleanup(3)</i> <br/>
+curl_url_cleanup(h);</p>
+<h2>DUPLICATE
+<a name="DUPLICATE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">When you need a
+copy of a handle, just duplicate it with
+<i>curl_url_dup(3)</i>: <br/>
+CURLU *nh = curl_url_dup(h);</p>
+<h2>PARSING
+<a name="PARSING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">By setting a URL
+to the handle with <i>curl_url_set(3)</i>, the URL is parsed
+and stored in the handle. If the URL is not syntactically
+correct it returns an error instead. <br/>
+rc = curl_url_set(h, CURLUPART_URL, <br/>
+"https://example.com:449/foo/bar?name=moo",
+0);</p>
+<p style="margin-left:9%; margin-top: 1em">The zero in the
+fourth argument is a bitmask for changing specific
+features.</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+this stores the URL in its individual parts within the
+handle.</p>
+<h2>REDIRECT
+<a name="REDIRECT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">When a handle
+already contains info about a URL, setting a relative URL
+makes it "redirect" to that. <br/>
+rc = curl_url_set(h, CURLUPART_URL,
+"../test?another", 0);</p>
+<h2>GET URL
+<a name="GET URL"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The <b>CURLU</b>
+handle represents a URL and you can easily extract that with
+<i>curl_url_get(3)</i>: <br/>
+char *url; <br/>
+rc = curl_url_get(h, CURLUPART_URL, &amp;url, 0); <br/>
+curl_free(url); <br/>
+The zero in the fourth argument is a bitmask for changing
+specific features.</p>
+<h2>GET PARTS
+<a name="GET PARTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">When a URL has
+been parsed or parts have been set, you can extract those
+pieces from the handle at any time.</p>
+<p style="margin-left:9%; margin-top: 1em">rc =
+curl_url_get(h, CURLUPART_FRAGMENT, &amp;fragment, 0); <br/>
+rc = curl_url_get(h, CURLUPART_HOST, &amp;host, 0); <br/>
+rc = curl_url_get(h, CURLUPART_PASSWORD, &amp;password, 0);
+<br/>
+rc = curl_url_get(h, CURLUPART_PATH, &amp;path, 0); <br/>
+rc = curl_url_get(h, CURLUPART_PORT, &amp;port, 0); <br/>
+rc = curl_url_get(h, CURLUPART_QUERY, &amp;query, 0); <br/>
+rc = curl_url_get(h, CURLUPART_SCHEME, &amp;scheme, 0); <br/>
+rc = curl_url_get(h, CURLUPART_USER, &amp;user, 0); <br/>
+rc = curl_url_get(h, CURLUPART_ZONEID, &amp;zoneid, 0);</p>
+<p style="margin-left:9%; margin-top: 1em">Extracted parts
+are not URL decoded unless the user also asks for it with
+the <i>CURLU_URLDECODE</i> flag set in the fourth bitmask
+argument.</p>
+<p style="margin-left:9%; margin-top: 1em">Remember to free
+the returned string with <i>curl_free(3)</i> when you are
+done with it!</p>
+<h2>SET PARTS
+<a name="SET PARTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A user set
+individual URL parts, either after having parsed a full URL
+or instead of parsing such.</p>
+<p style="margin-left:9%; margin-top: 1em">rc =
+curl_url_set(urlp, CURLUPART_FRAGMENT, "anchor",
+0); <br/>
+rc = curl_url_set(urlp, CURLUPART_HOST,
+"www.example.com", 0); <br/>
+rc = curl_url_set(urlp, CURLUPART_PASSWORD, "doe",
+0); <br/>
+rc = curl_url_set(urlp, CURLUPART_PATH,
+"/index.html", 0); <br/>
+rc = curl_url_set(urlp, CURLUPART_PORT, "443", 0);
+<br/>
+rc = curl_url_set(urlp, CURLUPART_QUERY,
+"name=john", 0); <br/>
+rc = curl_url_set(urlp, CURLUPART_SCHEME, "https",
+0); <br/>
+rc = curl_url_set(urlp, CURLUPART_USER, "john",
+0); <br/>
+rc = curl_url_set(urlp, CURLUPART_ZONEID, "eth0",
+0);</p>
+<p style="margin-left:9%; margin-top: 1em">Set parts are
+not URL encoded unless the user asks for it with the
+<i>CURLU_URLENCODE</i> flag.</p>
+<h2>CURLU_APPENDQUERY
+<a name="CURLU_APPENDQUERY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">An application
+can append a string to the right end of the query part with
+the <i>CURLU_APPENDQUERY</i> flag to
+<i>curl_url_set(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Imagine a handle
+that holds the URL "https://example.com/?shoes=2".
+An application can then add the string "hat=1" to
+the query part like this:</p>
+<p style="margin-left:9%; margin-top: 1em">rc =
+curl_url_set(urlp, CURLUPART_QUERY, "hat=1",
+CURLU_APPENDQUERY);</p>
+<p style="margin-left:9%; margin-top: 1em">It notices the
+lack of an ampersand (&amp;) separator and injects one, and
+the handle's full URL then equals
+"https://example.com/?shoes=2&amp;hat=1".</p>
+<p style="margin-left:9%; margin-top: 1em">The appended
+string can of course also get URL encoded on add, and if
+asked to URL encode, the encoding process skips the '='
+character. For example, append "candy=N&amp;N" to
+what we already have, and URL encode it to deal with the
+ampersand in the data:</p>
+<p style="margin-left:9%; margin-top: 1em">rc =
+curl_url_set(urlp, CURLUPART_QUERY,
+"candy=N&amp;N", <br/>
+CURLU_APPENDQUERY | CURLU_URLENCODE);</p>
+<p style="margin-left:9%; margin-top: 1em">Now the URL
+looks like</p>
+<p style="margin-left:9%; margin-top: 1em">https://example.com/?shoes=2&amp;hat=1&amp;candy=N%26N</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A URL with a
+literal IPv6 address can be parsed even when IPv6 support is
+not enabled.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_URL</b>(3),
+<b>curl_url</b>(3), <b>curl_url_cleanup</b>(3),
+<b>curl_url_dup</b>(3), <b>curl_url_get</b>(3),
+<b>curl_url_set</b>(3), <b>curl_url_strerror</b>(3)</p>
+<hr/>
+</body>
+</html>

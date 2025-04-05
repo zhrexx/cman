@@ -1,0 +1,631 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:45 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>getaddrinfo_a</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">getaddrinfo_a</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Synchronous example">Synchronous example</a><br/>
+<a href="#Asynchronous example">Asynchronous example</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">getaddrinfo_a,
+gai_suspend, gai_error, gai_cancel − asynchronous
+network address and service translation</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Asynchronous
+name lookup library (<i>libanl</i>, <i>−lanl</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#define
+_GNU_SOURCE</b> /* See feature_test_macros(7) */ <b><br/>
+#include &lt;netdb.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+getaddrinfo_a(int</b> <i>mode</i><b>, struct gaicb
+*</b><i>list</i><b>[restrict], <br/>
+int</b> <i>nitems</i><b>, struct sigevent *restrict</b>
+<i>sevp</i><b>); <br/>
+int gai_suspend(const struct gaicb *const</b>
+<i>list</i><b>[], int</b> <i>nitems</i><b>, <br/>
+const struct timespec *</b><i>timeout</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+gai_error(struct gaicb *</b><i>req</i><b>); <br/>
+int gai_cancel(struct gaicb *</b><i>req</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>getaddrinfo_a</b>() function performs the same task as
+<b>getaddrinfo</b>(3), but allows multiple name look-ups to
+be performed asynchronously, with optional notification on
+completion of look-up operations.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>mode</i>
+argument has one of the following values: <b><br/>
+GAI_WAIT</b></p>
+<p style="margin-left:18%;">Perform the look-ups
+synchronously. The call blocks until the look-ups have
+completed.</p>
+<p style="margin-left:9%;"><b>GAI_NOWAIT</b></p>
+<p style="margin-left:18%;">Perform the look-ups
+asynchronously. The call returns immediately, and the
+requests are resolved in the background. See the discussion
+of the <i>sevp</i> argument below.</p>
+<p style="margin-left:9%; margin-top: 1em">The array
+<i>list</i> specifies the look-up requests to process. The
+<i>nitems</i> argument specifies the number of elements in
+<i>list</i>. The requested look-up operations are started in
+parallel. NULL elements in <i>list</i> are ignored. Each
+request is described by a <i>gaicb</i> structure, defined as
+follows:</p>
+<p style="margin-left:14%; margin-top: 1em">struct gaicb {
+<br/>
+const char *ar_name; <br/>
+const char *ar_service; <br/>
+const struct addrinfo *ar_request; <br/>
+struct addrinfo *ar_result; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">The elements of
+this structure correspond to the arguments of
+<b>getaddrinfo</b>(3). Thus, <i>ar_name</i> corresponds to
+the <i>node</i> argument and <i>ar_service</i> to the
+<i>service</i> argument, identifying an Internet host and a
+service. The <i>ar_request</i> element corresponds to the
+<i>hints</i> argument, specifying the criteria for selecting
+the returned socket address structures. Finally,
+<i>ar_result</i> corresponds to the <i>res</i> argument; you
+do not need to initialize this element, it will be
+automatically set when the request is resolved. The
+<i>addrinfo</i> structure referenced by the last two
+elements is described in <b>getaddrinfo</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">When <i>mode</i>
+is specified as <b>GAI_NOWAIT</b>, notifications about
+resolved requests can be obtained by employing the
+<i>sigevent</i> structure pointed to by the <i>sevp</i>
+argument. For the definition and general details of this
+structure, see <b>sigevent</b>(3type). The
+<i>sevp−&gt;sigev_notify</i> field can have the
+following values: <b><br/>
+SIGEV_NONE</b></p>
+<p style="margin-left:18%;">Don’t provide any
+notification.</p>
+<p style="margin-left:9%;"><b>SIGEV_SIGNAL</b></p>
+<p style="margin-left:18%;">When a look-up completes,
+generate the signal <i>sigev_signo</i> for the process. See
+<b>sigevent</b>(3type) for general details. The
+<i>si_code</i> field of the <i>siginfo_t</i> structure will
+be set to <b>SI_ASYNCNL</b>.</p>
+<p style="margin-left:9%;"><b>SIGEV_THREAD</b></p>
+<p style="margin-left:18%;">When a look-up completes,
+invoke <i>sigev_notify_function</i> as if it were the start
+function of a new thread. See <b>sigevent</b>(3type) for
+details.</p>
+<p style="margin-left:9%; margin-top: 1em">For
+<b>SIGEV_SIGNAL</b> and <b>SIGEV_THREAD</b>, it may be
+useful to point <i>sevp−&gt;sigev_value.sival_ptr</i>
+to <i>list</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>gai_suspend</b>() function suspends execution of the
+calling thread, waiting for the completion of one or more
+requests in the array <i>list</i>. The <i>nitems</i>
+argument specifies the size of the array <i>list</i>. The
+call blocks until one of the following occurs:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p>One or more of the operations in <i>list</i>
+completes.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p>The call is interrupted by a signal that is caught.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="3%"></td>
+<td width="87%">
+<p>The time interval specified in <i>timeout</i> elapses.
+This argument specifies a timeout in seconds plus
+nanoseconds (see <b>nanosleep</b>(2) for details of the
+<i>timespec</i> structure). If <i>timeout</i> is NULL, then
+the call blocks indefinitely (until one of the events above
+occurs).</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">No explicit
+indication of which request was completed is given; you must
+determine which request(s) have completed by iterating with
+<b>gai_error</b>() over the list of requests.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>gai_error</b>() function returns the status of the
+request <i>req</i>: either <b>EAI_INPROGRESS</b> if the
+request was not completed yet, 0 if it was handled
+successfully, or an error code if the request could not be
+resolved.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>gai_cancel</b>() function cancels the request <i>req</i>.
+If the request has been canceled successfully, the error
+status of the request will be set to <b>EAI_CANCELED</b> and
+normal asynchronous notification will be performed. The
+request cannot be canceled if it is currently being
+processed; in that case, it will be handled as if
+<b>gai_cancel</b>() has never been called. If <i>req</i> is
+NULL, an attempt is made to cancel all outstanding requests
+that the process has made.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>getaddrinfo_a</b>() function returns 0 if all of the
+requests have been enqueued successfully, or one of the
+following nonzero error codes: <b><br/>
+EAI_AGAIN</b></p>
+<p style="margin-left:18%;">The resources necessary to
+enqueue the look-up requests were not available. The
+application may check the error status of each request to
+determine which ones failed.</p>
+<p style="margin-left:9%;"><b>EAI_MEMORY</b></p>
+<p style="margin-left:18%;">Out of memory.</p>
+<p style="margin-left:9%;"><b>EAI_SYSTEM</b></p>
+<p style="margin-left:18%;"><i>mode</i> is invalid.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>gai_suspend</b>() function returns 0 if at least one of
+the listed requests has been completed. Otherwise, it
+returns one of the following nonzero error codes: <b><br/>
+EAI_AGAIN</b></p>
+<p style="margin-left:18%;">The given timeout expired
+before any of the requests could be completed.</p>
+<p style="margin-left:9%;"><b>EAI_ALLDONE</b></p>
+<p style="margin-left:18%;">There were no actual requests
+given to the function.</p>
+<p style="margin-left:9%;"><b>EAI_INTR</b></p>
+<p style="margin-left:18%;">A signal has interrupted the
+function. Note that this interruption might have been caused
+by signal notification of some completed look-up
+request.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>gai_error</b>() function can return <b>EAI_INPROGRESS</b>
+for an unfinished look-up request, 0 for a successfully
+completed look-up (as described above), one of the error
+codes that could be returned by <b>getaddrinfo</b>(3), or
+the error code <b>EAI_CANCELED</b> if the request has been
+canceled explicitly before it could be finished.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>gai_cancel</b>() function can return one of these values:
+<b><br/>
+EAI_CANCELED</b></p>
+<p style="margin-left:18%;">The request has been canceled
+successfully.</p>
+<p style="margin-left:9%;"><b>EAI_NOTCANCELED</b></p>
+<p style="margin-left:18%;">The request has not been
+canceled.</p>
+<p style="margin-left:9%;"><b>EAI_ALLDONE</b></p>
+<p style="margin-left:18%;">The request has already
+completed.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>gai_strerror</b>(3) function translates these error codes
+to a human readable string, suitable for error
+reporting.</p>
+<h2>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For an
+explanation of the terms used in this section, see
+<b>attributes</b>(7).</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">GNU.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">glibc 2.2.3.</p>
+<p style="margin-left:9%; margin-top: 1em">The interface of
+<b>getaddrinfo_a</b>() was modeled after the
+<b>lio_listio</b>(3) interface.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Two examples are
+provided: a simple example that resolves several requests in
+parallel synchronously, and a complex example showing some
+of the asynchronous capabilities.</p>
+<h3>Synchronous example
+<a name="Synchronous example"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The program
+below simply resolves several hostnames in parallel, giving
+a speed-up compared to resolving the hostnames sequentially
+using <b>getaddrinfo</b>(3). The program might be used like
+this:</p>
+<p style="margin-left:14%; margin-top: 1em">$ <b>./a.out
+mirrors.kernel.org enoent.linuxfoundation.org gnu.org</b>
+<br/>
+mirrors.kernel.org: 139.178.88.99 <br/>
+enoent.linuxfoundation.org: Name or service not known <br/>
+gnu.org: 209.51.188.116</p>
+<p style="margin-left:9%; margin-top: 1em">Here is the
+program source code</p>
+<p style="margin-left:9%; margin-top: 1em">#define
+_GNU_SOURCE <br/>
+#include &lt;err.h&gt; <br/>
+#include &lt;netdb.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;string.h&gt; <br/>
+#define MALLOC(n, type) ((type *) reallocarray(NULL, n,
+sizeof(type))) <br/>
+int <br/>
+main(int argc, char *argv[]) <br/>
+{ <br/>
+int ret; <br/>
+struct gaicb *reqs[argc − 1]; <br/>
+char host[NI_MAXHOST]; <br/>
+struct addrinfo *res; <br/>
+if (argc &lt; 2) { <br/>
+fprintf(stderr, "Usage: %s HOST...\n", argv[0]);
+<br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+for (size_t i = 0; i &lt; argc − 1; i++) { <br/>
+reqs[i] = MALLOC(1, struct gaicb); <br/>
+if (reqs[i] == NULL) <br/>
+err(EXIT_FAILURE, "malloc"); <br/>
+memset(reqs[i], 0, sizeof(*reqs[0])); <br/>
+reqs[i]−&gt;ar_name = argv[i + 1]; <br/>
+} <br/>
+ret = getaddrinfo_a(GAI_WAIT, reqs, argc − 1, NULL);
+<br/>
+if (ret != 0) { <br/>
+fprintf(stderr, "getaddrinfo_a() failed: %s\n",
+<br/>
+gai_strerror(ret)); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+for (size_t i = 0; i &lt; argc − 1; i++) { <br/>
+printf("%s: ", reqs[i]−&gt;ar_name); <br/>
+ret = gai_error(reqs[i]); <br/>
+if (ret == 0) { <br/>
+res = reqs[i]−&gt;ar_result; <br/>
+ret = getnameinfo(res−&gt;ai_addr,
+res−&gt;ai_addrlen, <br/>
+host, sizeof(host), <br/>
+NULL, 0, NI_NUMERICHOST); <br/>
+if (ret != 0) { <br/>
+fprintf(stderr, "getnameinfo() failed: %s\n", <br/>
+gai_strerror(ret)); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+puts(host); <br/>
+} else { <br/>
+puts(gai_strerror(ret)); <br/>
+} <br/>
+} <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h3>Asynchronous example
+<a name="Asynchronous example"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This example
+shows a simple interactive <b>getaddrinfo_a</b>() front-end.
+The notification facility is not demonstrated.</p>
+<p style="margin-left:9%; margin-top: 1em">An example
+session might look like this:</p>
+<p style="margin-left:14%; margin-top: 1em">$
+<b>./a.out</b> <br/>
+&gt; a mirrors.kernel.org enoent.linuxfoundation.org gnu.org
+<br/>
+&gt; c 2 <br/>
+[2] gnu.org: Request not canceled <br/>
+&gt; w 0 1 <br/>
+[00] mirrors.kernel.org: Finished <br/>
+&gt; l <br/>
+[00] mirrors.kernel.org: 139.178.88.99 <br/>
+[01] enoent.linuxfoundation.org: Processing request in
+progress <br/>
+[02] gnu.org: 209.51.188.116 <br/>
+&gt; l <br/>
+[00] mirrors.kernel.org: 139.178.88.99 <br/>
+[01] enoent.linuxfoundation.org: Name or service not known
+<br/>
+[02] gnu.org: 209.51.188.116</p>
+<p style="margin-left:9%; margin-top: 1em">The program
+source is as follows:</p>
+<p style="margin-left:9%; margin-top: 1em">#define
+_GNU_SOURCE <br/>
+#include &lt;assert.h&gt; <br/>
+#include &lt;err.h&gt; <br/>
+#include &lt;netdb.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;string.h&gt; <br/>
+#define CALLOC(n, type) ((type *) calloc(n, sizeof(type)))
+<br/>
+#define REALLOCF(ptr, n, type) \ <br/>
+({ \ <br/>
+static_assert(__builtin_types_compatible_p(typeof(ptr), type
+*)); \ <br/>
+\ <br/>
+(type *) reallocarrayf(ptr, n, sizeof(type)); \ <br/>
+}) <br/>
+static struct gaicb **reqs = NULL; <br/>
+static size_t nreqs = 0; <br/>
+static inline void * <br/>
+reallocarrayf(void *p, size_t nmemb, size_t size) <br/>
+{ <br/>
+void *q; <br/>
+q = reallocarray(p, nmemb, size); <br/>
+if (q == NULL &amp;&amp; nmemb != 0 &amp;&amp; size != 0)
+<br/>
+free(p); <br/>
+return q; <br/>
+} <br/>
+static char * <br/>
+getcmd(void) <br/>
+{ <br/>
+static char buf[256]; <br/>
+fputs("&gt; ", stdout); fflush(stdout); <br/>
+if (fgets(buf, sizeof(buf), stdin) == NULL) <br/>
+return NULL; <br/>
+if (buf[strlen(buf) − 1] == '\n') <br/>
+buf[strlen(buf) − 1] = 0; <br/>
+return buf; <br/>
+} <br/>
+/* Add requests for specified hostnames. */ <br/>
+static void <br/>
+add_requests(void) <br/>
+{ <br/>
+size_t nreqs_base = nreqs; <br/>
+char *host; <br/>
+int ret; <br/>
+while ((host = strtok(NULL, " "))) { <br/>
+nreqs++; <br/>
+reqs = REALLOCF(reqs, nreqs, struct gaicb *); <br/>
+if (reqs == NULL) <br/>
+err(EXIT_FAILURE, "reallocf"); <br/>
+reqs[nreqs − 1] = CALLOC(1, struct gaicb); <br/>
+if (reqs[nreqs − 1] == NULL) <br/>
+err(EXIT_FAILURE, "calloc"); <br/>
+reqs[nreqs − 1]−&gt;ar_name = strdup(host); <br/>
+} <br/>
+/* Queue nreqs_base..nreqs requests. */ <br/>
+ret = getaddrinfo_a(GAI_NOWAIT, &amp;reqs[nreqs_base], <br/>
+nreqs − nreqs_base, NULL); <br/>
+if (ret) { <br/>
+fprintf(stderr, "getaddrinfo_a() failed: %s\n",
+<br/>
+gai_strerror(ret)); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+} <br/>
+/* Wait until at least one of specified requests completes.
+*/ <br/>
+static void <br/>
+wait_requests(void) <br/>
+{ <br/>
+char *id; <br/>
+int ret; <br/>
+size_t n; <br/>
+struct gaicb const **wait_reqs; <br/>
+wait_reqs = CALLOC(nreqs, const struct gaicb *); <br/>
+if (wait_reqs == NULL) <br/>
+err(EXIT_FAILURE, "calloc"); <br/>
+/* NULL elements are ignored by gai_suspend(). */ <br/>
+while ((id = strtok(NULL, " ")) != NULL) { <br/>
+n = atoi(id); <br/>
+if (n &gt;= nreqs) { <br/>
+printf("Bad request number: %s\n", id); <br/>
+return; <br/>
+} <br/>
+wait_reqs[n] = reqs[n]; <br/>
+} <br/>
+ret = gai_suspend(wait_reqs, nreqs, NULL); <br/>
+if (ret) { <br/>
+printf("gai_suspend(): %s\n", gai_strerror(ret));
+<br/>
+return; <br/>
+} <br/>
+for (size_t i = 0; i &lt; nreqs; i++) { <br/>
+if (wait_reqs[i] == NULL) <br/>
+continue; <br/>
+ret = gai_error(reqs[i]); <br/>
+if (ret == EAI_INPROGRESS) <br/>
+continue; <br/>
+printf("[%02zu] %s: %s\n", i,
+reqs[i]−&gt;ar_name, <br/>
+ret == 0 ? "Finished" : gai_strerror(ret)); <br/>
+} <br/>
+} <br/>
+/* Cancel specified requests. */ <br/>
+static void <br/>
+cancel_requests(void) <br/>
+{ <br/>
+char *id; <br/>
+int ret; <br/>
+size_t n; <br/>
+while ((id = strtok(NULL, " ")) != NULL) { <br/>
+n = atoi(id); <br/>
+if (n &gt;= nreqs) { <br/>
+printf("Bad request number: %s\n", id); <br/>
+return; <br/>
+} <br/>
+ret = gai_cancel(reqs[n]); <br/>
+printf("[%s] %s: %s\n", id,
+reqs[atoi(id)]−&gt;ar_name, <br/>
+gai_strerror(ret)); <br/>
+} <br/>
+} <br/>
+/* List all requests. */ <br/>
+static void <br/>
+list_requests(void) <br/>
+{ <br/>
+int ret; <br/>
+char host[NI_MAXHOST]; <br/>
+struct addrinfo *res; <br/>
+for (size_t i = 0; i &lt; nreqs; i++) { <br/>
+printf("[%02zu] %s: ", i,
+reqs[i]−&gt;ar_name); <br/>
+ret = gai_error(reqs[i]); <br/>
+if (!ret) { <br/>
+res = reqs[i]−&gt;ar_result; <br/>
+ret = getnameinfo(res−&gt;ai_addr,
+res−&gt;ai_addrlen, <br/>
+host, sizeof(host), <br/>
+NULL, 0, NI_NUMERICHOST); <br/>
+if (ret) { <br/>
+fprintf(stderr, "getnameinfo() failed: %s\n", <br/>
+gai_strerror(ret)); <br/>
+exit(EXIT_FAILURE); <br/>
+} <br/>
+puts(host); <br/>
+} else { <br/>
+puts(gai_strerror(ret)); <br/>
+} <br/>
+} <br/>
+} <br/>
+int <br/>
+main(void) <br/>
+{ <br/>
+char *cmdline; <br/>
+char *cmd; <br/>
+while ((cmdline = getcmd()) != NULL) { <br/>
+cmd = strtok(cmdline, " "); <br/>
+if (cmd == NULL) { <br/>
+list_requests(); <br/>
+} else { <br/>
+switch (cmd[0]) { <br/>
+case 'a': <br/>
+add_requests(); <br/>
+break; <br/>
+case 'w': <br/>
+wait_requests(); <br/>
+break; <br/>
+case 'c': <br/>
+cancel_requests(); <br/>
+break; <br/>
+case 'l': <br/>
+list_requests(); <br/>
+break; <br/>
+default: <br/>
+fprintf(stderr, "Bad command: %c\n", cmd[0]); <br/>
+break; <br/>
+} <br/>
+} <br/>
+} <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>getaddrinfo</b>(3),
+<b>inet</b>(3), <b>lio_listio</b>(3), <b>hostname</b>(7),
+<b>ip</b>(7), <b>sigevent</b>(3type)</p>
+<hr/>
+</body>
+</html>

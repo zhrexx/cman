@@ -1,0 +1,1074 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:16 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Compress::Zlib</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Compress::Zlib</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Notes for users of Compress::Zlib version 1">Notes for users of Compress::Zlib version 1</a><br/>
+<a href="#GZIP INTERFACE">GZIP INTERFACE</a><br/>
+<a href="#Examples">Examples</a><br/>
+<a href="#Compress::Zlib::memGzip">Compress::Zlib::memGzip</a><br/>
+<a href="#Compress::Zlib::memGunzip">Compress::Zlib::memGunzip</a><br/>
+<a href="#COMPRESS/UNCOMPRESS">COMPRESS/UNCOMPRESS</a><br/>
+<a href="#Deflate Interface">Deflate Interface</a><br/>
+<a href="#($d, $status) = deflateInit( [OPT] )">($d, $status) = deflateInit( [OPT] )</a><br/>
+<a href="#($out, $status) = $d−&gt;deflate($buffer)">($out, $status) = $d−&gt;deflate($buffer)</a><br/>
+<a href="#($out, $status) = $d−&gt;flush() =head2 ($out, $status) =$d−&gt;flush($flush_type)">($out, $status) = $d−&gt;flush() =head2 ($out, $status) =$d−&gt;flush($flush_type)</a><br/>
+<a href="#$status = $d−&gt;deflateParams([OPT])">$status = $d−&gt;deflateParams([OPT])</a><br/>
+<a href="#$d−&gt;dict_adler()">$d−&gt;dict_adler()</a><br/>
+<a href="#$d−&gt;msg()">$d−&gt;msg()</a><br/>
+<a href="#$d−&gt;total_in()">$d−&gt;total_in()</a><br/>
+<a href="#$d−&gt;total_out()">$d−&gt;total_out()</a><br/>
+<a href="#Example">Example</a><br/>
+<a href="#Inflate Interface">Inflate Interface</a><br/>
+<a href="#($i, $status) = inflateInit()">($i, $status) = inflateInit()</a><br/>
+<a href="#($out, $status) = $i−&gt;inflate($buffer)">($out, $status) = $i−&gt;inflate($buffer)</a><br/>
+<a href="#$status = $i−&gt;inflateSync($buffer)">$status = $i−&gt;inflateSync($buffer)</a><br/>
+<a href="#$i−&gt;dict_adler()">$i−&gt;dict_adler()</a><br/>
+<a href="#$i−&gt;msg()">$i−&gt;msg()</a><br/>
+<a href="#$i−&gt;total_in()">$i−&gt;total_in()</a><br/>
+<a href="#$i−&gt;total_out()">$i−&gt;total_out()</a><br/>
+<a href="#Example">Example</a><br/>
+<a href="#CHECKSUM FUNCTIONS">CHECKSUM FUNCTIONS</a><br/>
+<a href="#Misc">Misc</a><br/>
+<a href="#my $version = Compress::Zlib::zlib_version();">my $version = Compress::Zlib::zlib_version();</a><br/>
+<a href="#CONSTANTS">CONSTANTS</a><br/>
+<a href="#SUPPORT">SUPPORT</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#MODIFICATION HISTORY">MODIFICATION HISTORY</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Compress::Zlib
+− Interface to zlib compression library</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Compress::Zlib ; <br/>
+($d, $status) = deflateInit( [OPT] ) ; <br/>
+$status = $d−&gt;deflate($input, $output) ; <br/>
+$status = $d−&gt;flush([$flush_type]) ; <br/>
+$d−&gt;deflateParams(OPTS) ; <br/>
+$d−&gt;deflateTune(OPTS) ; <br/>
+$d−&gt;dict_adler() ; <br/>
+$d−&gt;crc32() ; <br/>
+$d−&gt;adler32() ; <br/>
+$d−&gt;total_in() ; <br/>
+$d−&gt;total_out() ; <br/>
+$d−&gt;msg() ; <br/>
+$d−&gt;get_Strategy(); <br/>
+$d−&gt;get_Level(); <br/>
+$d−&gt;get_BufSize(); <br/>
+($i, $status) = inflateInit( [OPT] ) ; <br/>
+$status = $i−&gt;inflate($input, $output [, $eof]) ;
+<br/>
+$status = $i−&gt;inflateSync($input) ; <br/>
+$i−&gt;dict_adler() ; <br/>
+$d−&gt;crc32() ; <br/>
+$d−&gt;adler32() ; <br/>
+$i−&gt;total_in() ; <br/>
+$i−&gt;total_out() ; <br/>
+$i−&gt;msg() ; <br/>
+$d−&gt;get_BufSize(); <br/>
+$dest = compress($source) ; <br/>
+$dest = uncompress($source) ; <br/>
+$gz = gzopen($filename or filehandle, $mode) ; <br/>
+$bytesread = $gz−&gt;gzread($buffer [,$size]) ; <br/>
+$bytesread = $gz−&gt;gzreadline($line) ; <br/>
+$byteswritten = $gz−&gt;gzwrite($buffer) ; <br/>
+$status = $gz−&gt;gzflush($flush) ; <br/>
+$offset = $gz−&gt;gztell() ; <br/>
+$status = $gz−&gt;gzseek($offset, $whence) ; <br/>
+$status = $gz−&gt;gzclose() ; <br/>
+$status = $gz−&gt;gzeof() ; <br/>
+$status = $gz−&gt;gzsetparams($level, $strategy) ;
+<br/>
+$errstring = $gz−&gt;gzerror() ; <br/>
+$gzerrno <br/>
+$dest = Compress::Zlib::memGzip($buffer) ; <br/>
+$dest = Compress::Zlib::memGunzip($buffer) ; <br/>
+$crc = adler32($buffer [,$crc]) ; <br/>
+$crc = crc32($buffer [,$crc]) ; <br/>
+$crc = crc32_combine($crc1, $crc2, $len2); <br/>
+$adler = adler32_combine($adler1, $adler2, $len2); <br/>
+my $version = Compress::Raw::Zlib::zlib_version();</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>Compress::Zlib</i> module provides a Perl interface to
+the <i>zlib</i> compression library (see "AUTHOR"
+for details about where to get <i>zlib</i>).</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"Compress::Zlib" module can be split into two
+general areas of functionality, namely a simple read/write
+interface to <i>gzip</i> files and a low−level
+in−memory compression/decompression interface.</p>
+<p style="margin-left:9%; margin-top: 1em">Each of these
+areas will be discussed in the following sections.</p>
+<h3>Notes for users of Compress::Zlib version 1
+<a name="Notes for users of Compress::Zlib version 1"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The main change
+in "Compress::Zlib" version 2.x is that it does
+not now interface directly to the zlib library. Instead it
+uses the "IO::Compress::Gzip" and
+"IO::Uncompress::Gunzip" modules for
+reading/writing gzip files, and the
+"Compress::Raw::Zlib" module for some
+low−level zlib access.</p>
+<p style="margin-left:9%; margin-top: 1em">The interface
+provided by version 2 of this module should be 100% backward
+compatible with version 1. If you find a difference in the
+expected behaviour please contact the author (See
+"AUTHOR"). See "GZIP INTERFACE"</p>
+<p style="margin-left:9%; margin-top: 1em">With the
+creation of the "IO::Compress" and
+"IO::Uncompress" modules no new features are
+planned for "Compress::Zlib" − the new
+modules do everything that "Compress::Zlib" does
+and then some. Development on "Compress::Zlib"
+will be limited to bug fixes only.</p>
+<p style="margin-left:9%; margin-top: 1em">If you are
+writing new code, your first port of call should be one of
+the new "IO::Compress" or
+"IO::Uncompress" modules.</p>
+<h2>GZIP INTERFACE
+<a name="GZIP INTERFACE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A number of
+functions are supplied in <i>zlib</i> for reading and
+writing <i>gzip</i> files that conform to RFC 1952. This
+module provides an interface to most of them.</p>
+<p style="margin-left:9%; margin-top: 1em">If you have
+previously used "Compress::Zlib" 1.x, the
+following enhancements/changes have been made to the
+"gzopen" interface:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>1.</p></td>
+<td width="3%"></td>
+<td width="85%">
+<p>If you want to open either STDIN or STDOUT with
+"gzopen", you can now optionally use the special
+filename ""−"" as a synonym for
+"\*STDIN" and "\*STDOUT".</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>2.</p></td>
+<td width="3%"></td>
+<td width="85%">
+<p>In "Compress::Zlib" version 1.x,
+"gzopen" used the zlib library to open the
+underlying file. This made things especially tricky when a
+Perl filehandle was passed to "gzopen". Behind the
+scenes the numeric C file descriptor had to be extracted
+from the Perl filehandle and this passed to the zlib
+library.</p> </td></tr>
+</table>
+<p style="margin-left:15%; margin-top: 1em">Apart from
+being non−portable to some operating systems, this
+made it difficult to use "gzopen" in situations
+where you wanted to extract/create a gzip data stream that
+is embedded in a larger file, without having to resort to
+opening and closing the file multiple times.</p>
+<p style="margin-left:15%; margin-top: 1em">It also made it
+impossible to pass a perl filehandle that wasn't associated
+with a real filesystem file, like, say, an
+"IO::String".</p>
+<p style="margin-left:15%; margin-top: 1em">In
+"Compress::Zlib" version 2.x, the
+"gzopen" interface has been completely rewritten
+to use the IO::Compress::Gzip for writing gzip files and
+IO::Uncompress::Gunzip for reading gzip files. None of the
+limitations mentioned above apply.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p style="margin-top: 1em">3.</p></td>
+<td width="3%"></td>
+<td width="80%">
+<p style="margin-top: 1em">Addition of "gzseek"
+to provide a restricted "seek" interface.</p></td>
+<td width="5%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>4.</p></td>
+<td width="3%"></td>
+<td width="80%">
+<p>Added "gztell".</p></td>
+<td width="5%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">A more complete
+and flexible interface for reading/writing gzip
+files/buffers is included with the module
+"IO−Compress−Zlib". See
+IO::Compress::Gzip and IO::Uncompress::Gunzip for more
+details. <b><br/>
+$gz = gzopen($filename, $mode) <br/>
+$gz = gzopen($filehandle, $mode)</b></p>
+<p style="margin-left:15%;">This function opens either the
+<i>gzip</i> file $filename for reading or writing or
+attaches to the opened filehandle, $filehandle. It returns
+an object on success and "undef" on failure.</p>
+<p style="margin-left:15%; margin-top: 1em">When writing a
+gzip file this interface will <i>always</i> create the
+smallest possible gzip header (exactly 10 bytes). If you
+want greater control over what gets stored in the gzip
+header (like the original filename or a comment) use
+IO::Compress::Gzip instead. Similarly if you want to read
+the contents of the gzip header use
+IO::Uncompress::Gunzip.</p>
+<p style="margin-left:15%; margin-top: 1em">The second
+parameter, $mode, is used to specify whether the file is
+opened for reading or writing and to optionally specify a
+compression level and compression strategy when writing. The
+format of the $mode parameter is similar to the mode
+parameter to the 'C' function "fopen", so
+"rb" is used to open for reading, "wb"
+for writing and "ab" for appending (writing at the
+end of the file).</p>
+<p style="margin-left:15%; margin-top: 1em">To specify a
+compression level when writing, append a digit between 0 and
+9 to the mode string −− 0 means no compression
+and 9 means maximum compression. If no compression level is
+specified Z_DEFAULT_COMPRESSION is used.</p>
+<p style="margin-left:15%; margin-top: 1em">To specify the
+compression strategy when writing, append 'f' for filtered
+data, 'h' for Huffman only compression, or 'R' for
+run−length encoding. If no strategy is specified
+Z_DEFAULT_STRATEGY is used.</p>
+<p style="margin-left:15%; margin-top: 1em">So, for
+example, "wb9" means open for writing with the
+maximum compression using the default strategy and
+"wb4R" means open for writing with compression
+level 4 and run−length encoding.</p>
+<p style="margin-left:15%; margin-top: 1em">Refer to the
+<i>zlib</i> documentation for the exact format of the $mode
+parameter.</p>
+<p style="margin-left:9%;"><b>$bytesread =
+$gz−&gt;gzread($buffer [, $size]) ;</b></p>
+<p style="margin-left:15%;">Reads $size bytes from the
+compressed file into $buffer. If $size is not specified, it
+will default to 4096. If the scalar $buffer is not large
+enough, it will be extended automatically.</p>
+<p style="margin-left:15%; margin-top: 1em">Returns the
+number of bytes actually read. On EOF it returns 0 and in
+the case of an error, −1.</p>
+<p style="margin-left:9%;"><b>$bytesread =
+$gz−&gt;gzreadline($line) ;</b></p>
+<p style="margin-left:15%;">Reads the next line from the
+compressed file into $line.</p>
+<p style="margin-left:15%; margin-top: 1em">Returns the
+number of bytes actually read. On EOF it returns 0 and in
+the case of an error, −1.</p>
+<p style="margin-left:15%; margin-top: 1em">It is legal to
+intermix calls to "gzread" and
+"gzreadline".</p>
+<p style="margin-left:15%; margin-top: 1em">To maintain
+backward compatibility with version 1.x of this module
+"gzreadline" ignores the $/ variable − it
+<i>always</i> uses the string "\n" as the line
+delimiter.</p>
+<p style="margin-left:15%; margin-top: 1em">If you want to
+read a gzip file a line at a time and have it respect the $/
+variable (or $INPUT_RECORD_SEPARATOR, or $RS when
+"English" is in use) see
+IO::Uncompress::Gunzip.</p>
+<p style="margin-left:9%;"><b>$byteswritten =
+$gz−&gt;gzwrite($buffer) ;</b></p>
+<p style="margin-left:15%;">Writes the contents of $buffer
+to the compressed file. Returns the number of bytes actually
+written, or 0 on error.</p>
+<p style="margin-left:9%;"><b>$status =
+$gz−&gt;gzflush($flush_type) ;</b></p>
+<p style="margin-left:15%;">Flushes all pending output into
+the compressed file.</p>
+<p style="margin-left:15%; margin-top: 1em">This method
+takes an optional parameter, $flush_type, that controls how
+the flushing will be carried out. By default the $flush_type
+used is "Z_FINISH". Other valid values for
+$flush_type are "Z_NO_FLUSH",
+"Z_SYNC_FLUSH", "Z_FULL_FLUSH" and
+"Z_BLOCK". It is strongly recommended that you
+only set the "flush_type" parameter if you fully
+understand the implications of what it does − overuse
+of "flush" can seriously degrade the level of
+compression achieved. See the "zlib" documentation
+for details.</p>
+<p style="margin-left:15%; margin-top: 1em">Returns 0 on
+success.</p>
+<p style="margin-left:9%;"><b>$offset =
+$gz−&gt;gztell() ;</b></p>
+<p style="margin-left:15%;">Returns the uncompressed file
+offset.</p>
+<p style="margin-left:9%;"><b>$status =
+$gz−&gt;gzseek($offset, $whence) ;</b></p>
+<p style="margin-left:15%;">Provides a sub−set of the
+"seek" functionality, with the restriction that it
+is only legal to seek forward in the compressed file. It is
+a fatal error to attempt to seek backward.</p>
+<p style="margin-left:15%; margin-top: 1em">When opened for
+writing, empty parts of the file will have NULL (0x00) bytes
+written to them.</p>
+<p style="margin-left:15%; margin-top: 1em">The $whence
+parameter should be one of SEEK_SET, SEEK_CUR or
+SEEK_END.</p>
+<p style="margin-left:15%; margin-top: 1em">Returns 1 on
+success, 0 on failure.</p>
+<p style="margin-left:9%;"><b>$gz−&gt;gzclose</b></p>
+<p style="margin-left:15%;">Closes the compressed file. Any
+pending data is flushed to the file before it is closed.</p>
+<p style="margin-left:15%; margin-top: 1em">Returns 0 on
+success.</p>
+<p style="margin-left:9%;"><b>$gz−&gt;gzsetparams($level,
+$strategy</b></p>
+<p style="margin-left:15%;">Change settings for the deflate
+stream $gz.</p>
+<p style="margin-left:15%; margin-top: 1em">The list of the
+valid options is shown below. Options not specified will
+remain unchanged.</p>
+<p style="margin-left:15%; margin-top: 1em">Note: This
+method is only available if you are running zlib 1.0.6 or
+better. <b><br/>
+$level</b></p>
+<p style="margin-left:22%;">Defines the compression level.
+Valid values are 0 through 9, "Z_NO_COMPRESSION",
+"Z_BEST_SPEED", "Z_BEST_COMPRESSION",
+and "Z_DEFAULT_COMPRESSION".</p>
+<p style="margin-left:15%;"><b>$strategy</b></p>
+<p style="margin-left:22%;">Defines the strategy used to
+tune the compression. The valid values are
+"Z_DEFAULT_STRATEGY", "Z_FILTERED" and
+"Z_HUFFMAN_ONLY".</p>
+<p style="margin-left:9%;"><b>$gz−&gt;gzerror</b></p>
+<p style="margin-left:15%;">Returns the <i>zlib</i> error
+message or number for the last operation associated with
+$gz. The return value will be the <i>zlib</i> error number
+when used in a numeric context and the <i>zlib</i> error
+message when used in a string context. The <i>zlib</i> error
+number constants, shown below, are available for use.</p>
+<p style="margin-left:15%; margin-top: 1em">Z_OK <br/>
+Z_STREAM_END <br/>
+Z_ERRNO <br/>
+Z_STREAM_ERROR <br/>
+Z_DATA_ERROR <br/>
+Z_MEM_ERROR <br/>
+Z_BUF_ERROR</p>
+<p style="margin-left:9%;"><b>$gzerrno</b></p>
+<p style="margin-left:15%;">The $gzerrno scalar holds the
+error code associated with the most recent <i>gzip</i>
+routine. Note that unlike gzerror(), the error is <i>not</i>
+associated with a particular file.</p>
+<p style="margin-left:15%; margin-top: 1em">As with
+gzerror() it returns an error number in numeric context and
+an error message in string context. Unlike gzerror() though,
+the error message will correspond to the <i>zlib</i> message
+when the error is associated with <i>zlib</i> itself, or the
+UNIX error message when it is not (i.e. <i>zlib</i> returned
+"Z_ERRORNO").</p>
+<p style="margin-left:15%; margin-top: 1em">As there is an
+overlap between the error numbers used by <i>zlib</i> and
+UNIX, $gzerrno should only be used to check for the presence
+of <i>an</i> error in numeric context. Use gzerror() to
+check for specific <i>zlib</i> errors. The <i>gzcat</i>
+example below shows how the variable can be used safely.</p>
+<h3>Examples
+<a name="Examples"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Here is an
+example script which uses the interface. It implements a
+<i>gzcat</i> function.</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use Compress::Zlib ; <br/>
+# use stdin if no files supplied <br/>
+@ARGV = '−' unless @ARGV ; <br/>
+foreach my $file (@ARGV) { <br/>
+my $buffer ; <br/>
+my $gz = gzopen($file, "rb") <br/>
+or die "Cannot open $file: $gzerrno\n" ; <br/>
+print $buffer while $gz−&gt;gzread($buffer) &gt; 0 ;
+<br/>
+die "Error reading from $file: $gzerrno" .
+($gzerrno+0) . "\n" <br/>
+if $gzerrno != Z_STREAM_END ; <br/>
+$gz−&gt;gzclose() ; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Below is a
+script which makes use of "gzreadline". It
+implements a very simple <i>grep</i> like script.</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use Compress::Zlib ; <br/>
+die "Usage: gzgrep pattern [file...]\n" <br/>
+unless @ARGV &gt;= 1; <br/>
+my $pattern = shift ; <br/>
+# use stdin if no files supplied <br/>
+@ARGV = '−' unless @ARGV ; <br/>
+foreach my $file (@ARGV) { <br/>
+my $gz = gzopen($file, "rb") <br/>
+or die "Cannot open $file: $gzerrno\n" ; <br/>
+while ($gz−&gt;gzreadline($_) &gt; 0) { <br/>
+print if /$pattern/ ; <br/>
+} <br/>
+die "Error reading from $file: $gzerrno\n" <br/>
+if $gzerrno != Z_STREAM_END ; <br/>
+$gz−&gt;gzclose() ; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">This script,
+<i>gzstream</i>, does the opposite of the <i>gzcat</i>
+script above. It reads from standard input and writes a gzip
+data stream to standard output.</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use Compress::Zlib ; <br/>
+binmode STDOUT; # gzopen only sets it on the fd <br/>
+my $gz = gzopen(\*STDOUT, "wb") <br/>
+or die "Cannot open stdout: $gzerrno\n" ; <br/>
+while (&lt;&gt;) { <br/>
+$gz−&gt;gzwrite($_) <br/>
+or die "error writing: $gzerrno\n" ; <br/>
+} <br/>
+$gz−&gt;gzclose ;</p>
+<h3>Compress::Zlib::memGzip
+<a name="Compress::Zlib::memGzip"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This function is
+used to create an in−memory gzip file with the minimum
+possible gzip header (exactly 10 bytes).</p>
+<p style="margin-left:9%; margin-top: 1em">$dest =
+Compress::Zlib::memGzip($buffer) <br/>
+or die "Cannot compress: $gzerrno\n";</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+it returns the in−memory gzip file. Otherwise it
+returns "undef" and the $gzerrno variable will
+store the zlib error code.</p>
+<p style="margin-left:9%; margin-top: 1em">The $buffer
+parameter can either be a scalar or a scalar reference.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+IO::Compress::Gzip for an alternative way to carry out
+in−memory gzip compression.</p>
+<h3>Compress::Zlib::memGunzip
+<a name="Compress::Zlib::memGunzip"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This function is
+used to uncompress an in−memory gzip file.</p>
+<p style="margin-left:9%; margin-top: 1em">$dest =
+Compress::Zlib::memGunzip($buffer) <br/>
+or die "Cannot uncompress: $gzerrno\n";</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+it returns the uncompressed gzip file. Otherwise it returns
+"undef" and the $gzerrno variable will store the
+zlib error code.</p>
+<p style="margin-left:9%; margin-top: 1em">The $buffer
+parameter can either be a scalar or a scalar reference. The
+contents of the $buffer parameter are destroyed after
+calling this function.</p>
+<p style="margin-left:9%; margin-top: 1em">If $buffer
+consists of multiple concatenated gzip data streams only the
+first will be uncompressed. Use "gunzip" with the
+"MultiStream" option in the
+"IO::Uncompress::Gunzip" module if you need to
+deal with concatenated data streams.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+IO::Uncompress::Gunzip for an alternative way to carry out
+in−memory gzip uncompression.</p>
+<h2>COMPRESS/UNCOMPRESS
+<a name="COMPRESS/UNCOMPRESS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Two functions
+are provided to perform in−memory
+compression/uncompression of RFC 1950 data streams. They are
+called "compress" and "uncompress".
+<b><br/>
+$dest = compress($source [, $level] ) ;</b></p>
+<p style="margin-left:15%;">Compresses $source. If
+successful it returns the compressed data. Otherwise it
+returns <i>undef</i>.</p>
+<p style="margin-left:15%; margin-top: 1em">The source
+buffer, $source, can either be a scalar or a scalar
+reference.</p>
+<p style="margin-left:15%; margin-top: 1em">The $level
+parameter defines the compression level. Valid values are 0
+through 9, "Z_NO_COMPRESSION",
+"Z_BEST_SPEED", "Z_BEST_COMPRESSION",
+and "Z_DEFAULT_COMPRESSION". If $level is not
+specified "Z_DEFAULT_COMPRESSION" will be
+used.</p>
+<p style="margin-left:9%;"><b>$dest = uncompress($source)
+;</b></p>
+<p style="margin-left:15%;">Uncompresses $source. If
+successful it returns the uncompressed data. Otherwise it
+returns <i>undef</i>.</p>
+<p style="margin-left:15%; margin-top: 1em">The source
+buffer can either be a scalar or a scalar reference.</p>
+<p style="margin-left:9%; margin-top: 1em">Please note: the
+two functions defined above are <i>not</i> compatible with
+the Unix commands of the same name.</p>
+<p style="margin-left:9%; margin-top: 1em">See IO::Deflate
+and IO::Inflate included with this distribution for an
+alternative interface for reading/writing RFC 1950
+files/buffers.</p>
+<h2>Deflate Interface
+<a name="Deflate Interface"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This section
+defines an interface that allows in−memory compression
+using the <i>deflate</i> interface provided by zlib.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a
+definition of the interface available:</p>
+<h3>($d, $status) = deflateInit( [OPT] )
+<a name="($d, $status) = deflateInit( [OPT] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Initialises a
+deflation stream.</p>
+<p style="margin-left:9%; margin-top: 1em">It combines the
+features of the <i>zlib</i> functions
+"deflateInit", "deflateInit2" and
+"deflateSetDictionary".</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+it will return the initialised deflation stream, $d and
+$status of "Z_OK" in a list context. In scalar
+context it returns the deflation stream, $d, only.</p>
+<p style="margin-left:9%; margin-top: 1em">If not
+successful, the returned deflation stream ($d) will be
+<i>undef</i> and $status will hold the exact <i>zlib</i>
+error code.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+optionally takes a number of named options specified as
+"−Name=&gt;value" pairs. This allows
+individual options to be tailored without having to specify
+them all in the parameter list.</p>
+<p style="margin-left:9%; margin-top: 1em">For backward
+compatibility, it is also possible to pass the parameters as
+a reference to a hash containing the name=&gt;value
+pairs.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+takes one optional parameter, a reference to a hash. The
+contents of the hash allow the deflation interface to be
+tailored.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a list
+of the valid options: <b><br/>
+−Level</b></p>
+<p style="margin-left:15%;">Defines the compression level.
+Valid values are 0 through 9, "Z_NO_COMPRESSION",
+"Z_BEST_SPEED", "Z_BEST_COMPRESSION",
+and "Z_DEFAULT_COMPRESSION".</p>
+<p style="margin-left:15%; margin-top: 1em">The default is
+Z_DEFAULT_COMPRESSION.</p>
+<p style="margin-left:9%;"><b>−Method</b></p>
+<p style="margin-left:15%;">Defines the compression method.
+The only valid value at present (and the default) is
+Z_DEFLATED.</p>
+<p style="margin-left:9%;"><b>−WindowBits</b></p>
+<p style="margin-left:15%;">To create an RFC 1950 data
+stream, set "WindowBits" to a positive number.</p>
+<p style="margin-left:15%; margin-top: 1em">To create an
+RFC 1951 data stream, set "WindowBits" to
+"−MAX_WBITS".</p>
+<p style="margin-left:15%; margin-top: 1em">For a full
+definition of the meaning and valid values for
+"WindowBits" refer to the <i>zlib</i>
+documentation for <i>deflateInit2</i>.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+MAX_WBITS.</p>
+<p style="margin-left:9%;"><b>−MemLevel</b></p>
+<p style="margin-left:15%;">For a definition of the meaning
+and valid values for "MemLevel" refer to the
+<i>zlib</i> documentation for <i>deflateInit2</i>.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+MAX_MEM_LEVEL.</p>
+<p style="margin-left:9%;"><b>−Strategy</b></p>
+<p style="margin-left:15%;">Defines the strategy used to
+tune the compression. The valid values are
+"Z_DEFAULT_STRATEGY", "Z_FILTERED" and
+"Z_HUFFMAN_ONLY".</p>
+<p style="margin-left:15%; margin-top: 1em">The default is
+Z_DEFAULT_STRATEGY.</p>
+<p style="margin-left:9%;"><b>−Dictionary</b></p>
+<p style="margin-left:15%;">When a dictionary is specified
+<i>Compress::Zlib</i> will automatically call
+"deflateSetDictionary" directly after calling
+"deflateInit". The Adler32 value for the
+dictionary can be obtained by calling the method
+"$d−&gt;dict_adler()".</p>
+<p style="margin-left:15%; margin-top: 1em">The default is
+no dictionary.</p>
+<p style="margin-left:9%;"><b>−Bufsize</b></p>
+<p style="margin-left:15%;">Sets the initial size for the
+deflation buffer. If the buffer has to be reallocated to
+increase the size, it will grow in increments of
+"Bufsize".</p>
+<p style="margin-left:15%; margin-top: 1em">The default is
+4096.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is an
+example of using the "deflateInit" optional
+parameter list to override the default buffer size and
+compression level. All other options will take their default
+values.</p>
+<p style="margin-left:9%; margin-top: 1em">deflateInit(
+−Bufsize =&gt; 300, <br/>
+−Level =&gt; Z_BEST_SPEED ) ;</p>
+<h3>($out, $status) = $d−&gt;deflate($buffer)
+<a name="($out, $status) = $d−&gt;deflate($buffer)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Deflates the
+contents of $buffer. The buffer can either be a scalar or a
+scalar reference. When finished, $buffer will be completely
+processed (assuming there were no errors). If the deflation
+was successful it returns the deflated output, $out, and a
+status value, $status, of "Z_OK".</p>
+<p style="margin-left:9%; margin-top: 1em">On error, $out
+will be <i>undef</i> and $status will contain the
+<i>zlib</i> error code.</p>
+<p style="margin-left:9%; margin-top: 1em">In a scalar
+context "deflate" will return $out only.</p>
+<p style="margin-left:9%; margin-top: 1em">As with the
+<i>deflate</i> function in <i>zlib</i>, it is not
+necessarily the case that any output will be produced by
+this method. So don't rely on the fact that $out is empty
+for an error test.</p>
+<h3>($out, $status) = $d−&gt;flush() =head2 ($out, $status) =$d−&gt;flush($flush_type)
+<a name="($out, $status) = $d−&gt;flush() =head2 ($out, $status) =$d−&gt;flush($flush_type)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Typically used
+to finish the deflation. Any pending output will be returned
+via $out. $status will have a value "Z_OK" if
+successful.</p>
+<p style="margin-left:9%; margin-top: 1em">In a scalar
+context "flush" will return $out only.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+flushing can seriously degrade the compression ratio, so it
+should only be used to terminate a decompression (using
+"Z_FINISH") or when you want to create a <i>full
+flush point</i> (using "Z_FULL_FLUSH").</p>
+<p style="margin-left:9%; margin-top: 1em">By default the
+"flush_type" used is "Z_FINISH". Other
+valid values for "flush_type" are
+"Z_NO_FLUSH", "Z_PARTIAL_FLUSH",
+"Z_SYNC_FLUSH" and "Z_FULL_FLUSH". It is
+strongly recommended that you only set the
+"flush_type" parameter if you fully understand the
+implications of what it does. See the "zlib"
+documentation for details.</p>
+<h3>$status = $d−&gt;deflateParams([OPT])
+<a name="$status = $d−&gt;deflateParams([OPT])"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Change settings
+for the deflate stream $d.</p>
+<p style="margin-left:9%; margin-top: 1em">The list of the
+valid options is shown below. Options not specified will
+remain unchanged. <b><br/>
+−Level</b></p>
+<p style="margin-left:15%;">Defines the compression level.
+Valid values are 0 through 9, "Z_NO_COMPRESSION",
+"Z_BEST_SPEED", "Z_BEST_COMPRESSION",
+and "Z_DEFAULT_COMPRESSION".</p>
+<p style="margin-left:9%;"><b>−Strategy</b></p>
+<p style="margin-left:15%;">Defines the strategy used to
+tune the compression. The valid values are
+"Z_DEFAULT_STRATEGY", "Z_FILTERED" and
+"Z_HUFFMAN_ONLY".</p>
+<h3>$d−&gt;dict_adler()
+<a name="$d−&gt;dict_adler()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+adler32 value for the dictionary.</p>
+<h3>$d−&gt;msg()
+<a name="$d−&gt;msg()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the last
+error message generated by zlib.</p>
+<h3>$d−&gt;total_in()
+<a name="$d−&gt;total_in()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+total number of bytes uncompressed bytes input to
+deflate.</p>
+<h3>$d−&gt;total_out()
+<a name="$d−&gt;total_out()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+total number of compressed bytes output from deflate.</p>
+<h3>Example
+<a name="Example"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Here is a
+trivial example of using "deflate". It simply
+reads standard input, deflates it and writes it to standard
+output.</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use Compress::Zlib ; <br/>
+binmode STDIN; <br/>
+binmode STDOUT; <br/>
+my $x = deflateInit() <br/>
+or die "Cannot create a deflation stream\n" ; <br/>
+my ($output, $status) ; <br/>
+while (&lt;&gt;) <br/>
+{ <br/>
+($output, $status) = $x−&gt;deflate($_) ; <br/>
+$status == Z_OK <br/>
+or die "deflation failed\n" ; <br/>
+print $output ; <br/>
+} <br/>
+($output, $status) = $x−&gt;flush() ; <br/>
+$status == Z_OK <br/>
+or die "deflation failed\n" ; <br/>
+print $output ;</p>
+<h2>Inflate Interface
+<a name="Inflate Interface"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This section
+defines the interface available that allows in−memory
+uncompression using the <i>deflate</i> interface provided by
+zlib.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a
+definition of the interface:</p>
+<h3>($i, $status) = inflateInit()
+<a name="($i, $status) = inflateInit()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Initialises an
+inflation stream.</p>
+<p style="margin-left:9%; margin-top: 1em">In a list
+context it returns the inflation stream, $i, and the
+<i>zlib</i> status code in $status. In a scalar context it
+returns the inflation stream only.</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+$i will hold the inflation stream and $status will be
+"Z_OK".</p>
+<p style="margin-left:9%; margin-top: 1em">If not
+successful, $i will be <i>undef</i> and $status will hold
+the <i>zlib</i> error code.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+optionally takes a number of named options specified as
+"−Name=&gt;value" pairs. This allows
+individual options to be tailored without having to specify
+them all in the parameter list.</p>
+<p style="margin-left:9%; margin-top: 1em">For backward
+compatibility, it is also possible to pass the parameters as
+a reference to a hash containing the name=&gt;value
+pairs.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+takes one optional parameter, a reference to a hash. The
+contents of the hash allow the deflation interface to be
+tailored.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a list
+of the valid options: <b><br/>
+−WindowBits</b></p>
+<p style="margin-left:15%;">To uncompress an RFC 1950 data
+stream, set "WindowBits" to a positive number.</p>
+<p style="margin-left:15%; margin-top: 1em">To uncompress
+an RFC 1951 data stream, set "WindowBits" to
+"−MAX_WBITS".</p>
+<p style="margin-left:15%; margin-top: 1em">For a full
+definition of the meaning and valid values for
+"WindowBits" refer to the <i>zlib</i>
+documentation for <i>inflateInit2</i>.</p>
+<p style="margin-left:15%; margin-top: 1em">Defaults to
+MAX_WBITS.</p>
+<p style="margin-left:9%;"><b>−Bufsize</b></p>
+<p style="margin-left:15%;">Sets the initial size for the
+inflation buffer. If the buffer has to be reallocated to
+increase the size, it will grow in increments of
+"Bufsize".</p>
+<p style="margin-left:15%; margin-top: 1em">Default is
+4096.</p>
+<p style="margin-left:9%;"><b>−Dictionary</b></p>
+<p style="margin-left:15%;">The default is no
+dictionary.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is an
+example of using the "inflateInit" optional
+parameter to override the default buffer size.</p>
+<p style="margin-left:9%; margin-top: 1em">inflateInit(
+−Bufsize =&gt; 300 ) ;</p>
+<h3>($out, $status) = $i−&gt;inflate($buffer)
+<a name="($out, $status) = $i−&gt;inflate($buffer)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Inflates the
+complete contents of $buffer. The buffer can either be a
+scalar or a scalar reference.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns
+"Z_OK" if successful and "Z_STREAM_END"
+if the end of the compressed data has been successfully
+reached. If not successful, $out will be <i>undef</i> and
+$status will hold the <i>zlib</i> error code.</p>
+<p style="margin-left:9%; margin-top: 1em">The $buffer
+parameter is modified by "inflate". On completion
+it will contain what remains of the input buffer after
+inflation. This means that $buffer will be an empty string
+when the return status is "Z_OK". When the return
+status is "Z_STREAM_END" the $buffer parameter
+will contains what (if anything) was stored in the input
+buffer after the deflated data stream.</p>
+<p style="margin-left:9%; margin-top: 1em">This feature is
+useful when processing a file format that encapsulates a
+compressed data stream (e.g. gzip, zip).</p>
+<h3>$status = $i−&gt;inflateSync($buffer)
+<a name="$status = $i−&gt;inflateSync($buffer)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Scans $buffer
+until it reaches either a <i>full flush point</i> or the end
+of the buffer.</p>
+<p style="margin-left:9%; margin-top: 1em">If a <i>full
+flush point</i> is found, "Z_OK" is returned and
+$buffer will be have all data up to the flush point removed.
+This can then be passed to the "deflate"
+method.</p>
+<p style="margin-left:9%; margin-top: 1em">Any other return
+code means that a flush point was not found. If more data is
+available, "inflateSync" can be called repeatedly
+with more compressed data until the flush point is
+found.</p>
+<h3>$i−&gt;dict_adler()
+<a name="$i−&gt;dict_adler()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+adler32 value for the dictionary.</p>
+<h3>$i−&gt;msg()
+<a name="$i−&gt;msg()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the last
+error message generated by zlib.</p>
+<h3>$i−&gt;total_in()
+<a name="$i−&gt;total_in()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+total number of bytes compressed bytes input to inflate.</p>
+<h3>$i−&gt;total_out()
+<a name="$i−&gt;total_out()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+total number of uncompressed bytes output from inflate.</p>
+<h3>Example
+<a name="Example"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Here is an
+example of using "inflate".</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use Compress::Zlib ; <br/>
+my $x = inflateInit() <br/>
+or die "Cannot create a inflation stream\n" ; <br/>
+my $input = '' ; <br/>
+binmode STDIN; <br/>
+binmode STDOUT; <br/>
+my ($output, $status) ; <br/>
+while (read(STDIN, $input, 4096)) <br/>
+{ <br/>
+($output, $status) = $x−&gt;inflate(\$input) ; <br/>
+print $output <br/>
+if $status == Z_OK or $status == Z_STREAM_END ; <br/>
+last if $status != Z_OK ; <br/>
+} <br/>
+die "inflation failed\n" <br/>
+unless $status == Z_STREAM_END ;</p>
+<h2>CHECKSUM FUNCTIONS
+<a name="CHECKSUM FUNCTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Two functions
+are provided by <i>zlib</i> to calculate checksums. For the
+Perl interface, the order of the two parameters in both
+functions has been reversed. This allows both running
+checksums and one off calculations to be done.</p>
+<p style="margin-left:9%; margin-top: 1em">$crc =
+adler32($buffer [,$crc]) ; <br/>
+$crc = crc32($buffer [,$crc]) ;</p>
+<p style="margin-left:9%; margin-top: 1em">The buffer
+parameters can either be a scalar or a scalar reference.</p>
+<p style="margin-left:9%; margin-top: 1em">If the $crc
+parameters is "undef", the crc value will be
+reset.</p>
+<p style="margin-left:9%; margin-top: 1em">If you have
+built this module with zlib 1.2.3 or better, two more
+CRC−related functions are available.</p>
+<p style="margin-left:9%; margin-top: 1em">$crc =
+crc32_combine($crc1, $crc2, $len2); <br/>
+$adler = adler32_combine($adler1, $adler2, $len2);</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+allow checksums to be merged. Refer to the <i>zlib</i>
+documentation for more details.</p>
+<h2>Misc
+<a name="Misc"></a>
+</h2>
+<h3>my $version = Compress::Zlib::zlib_version();
+<a name="my $version = Compress::Zlib::zlib_version();"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+version of the zlib library.</p>
+<h2>CONSTANTS
+<a name="CONSTANTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All the
+<i>zlib</i> constants are automatically imported when you
+make use of <i>Compress::Zlib</i>.</p>
+<h2>SUPPORT
+<a name="SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">General
+feedback/questions/bug reports should be sent to
+&lt;https://github.com/pmqs/IO−Compress/issues&gt;
+(preferred) or
+&lt;https://rt.cpan.org/Public/Dist/Display.html?Name=IO−Compress&gt;.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Compress::Gzip,
+IO::Uncompress::Gunzip, IO::Compress::Deflate,
+IO::Uncompress::Inflate, IO::Compress::RawDeflate,
+IO::Uncompress::RawInflate, IO::Compress::Bzip2,
+IO::Uncompress::Bunzip2, IO::Compress::Lzma,
+IO::Uncompress::UnLzma, IO::Compress::Xz,
+IO::Uncompress::UnXz, IO::Compress::Lzip,
+IO::Uncompress::UnLzip, IO::Compress::Lzop,
+IO::Uncompress::UnLzop, IO::Compress::Lzf,
+IO::Uncompress::UnLzf, IO::Compress::Zstd,
+IO::Uncompress::UnZstd, IO::Uncompress::AnyInflate,
+IO::Uncompress::AnyUncompress</p>
+<p style="margin-left:9%; margin-top: 1em">IO::Compress::FAQ</p>
+<p style="margin-left:9%; margin-top: 1em">File::GlobMapper,
+Archive::Zip, Archive::Tar, IO::Zlib</p>
+<p style="margin-left:9%; margin-top: 1em">For RFC 1950,
+1951 and 1952 see
+&lt;https://datatracker.ietf.org/doc/html/rfc1950&gt;,
+&lt;https://datatracker.ietf.org/doc/html/rfc1951&gt; and
+&lt;https://datatracker.ietf.org/doc/html/rfc1952&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>zlib</i>
+compression library was written by Jean−loup Gailly
+"gzip@prep.ai.mit.edu" and Mark Adler
+"madler@alumni.caltech.edu".</p>
+<p style="margin-left:9%; margin-top: 1em">The primary site
+for the <i>zlib</i> compression library is
+&lt;http://www.zlib.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">The primary site
+for the <i>zlib−ng</i> compression library is
+&lt;https://github.com/zlib−ng/zlib−ng&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">The primary site
+for gzip is &lt;http://www.gzip.org&gt;.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module was
+written by Paul Marquess, "pmqs@cpan.org".</p>
+<h2>MODIFICATION HISTORY
+<a name="MODIFICATION HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the Changes
+file.</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+1995−2024 Paul Marquess. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

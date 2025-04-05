@@ -1,0 +1,241 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:49 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>landlock_create_ruleset</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">landlock_create_ruleset</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">landlock_create_ruleset
+− create a new Landlock ruleset</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;linux/landlock.h&gt;</b> /* Definition of
+<b>LANDLOCK_*</b> constants */ <b><br/>
+#include &lt;sys/syscall.h&gt;</b> /* Definition of
+<b>SYS_*</b> constants */</p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+syscall(SYS_landlock_create_ruleset, <br/>
+const struct landlock_ruleset_attr *</b><i>attr</i><b>, <br/>
+size_t</b> <i>size</i> <b>, uint32_t</b>
+<i>flags</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A Landlock
+ruleset identifies a set of rules (i.e., actions on
+objects). This <b>landlock_create_ruleset</b>() system call
+enables creating a new file descriptor identifying a
+ruleset. This file descriptor can then be used by
+<b>landlock_add_rule</b>(2) and
+<b>landlock_restrict_self</b>(2). See <b>landlock</b>(7) for
+a global overview.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>attr</i>
+specifies the properties of the new ruleset. It points to
+the following structure:</p>
+<p style="margin-left:23%; margin-top: 1em">struct
+landlock_ruleset_attr { <br/>
+__u64 handled_access_fs; <br/>
+};</p>
+<p style="margin-left:18%; margin-top: 1em"><i>handled_access_fs</i>
+is a bitmask of actions that is handled by this ruleset and
+should then be forbidden if no rule explicitly allows them
+(see <b>Filesystem actions</b> in <b>landlock</b>(7)). This
+enables simply restricting ambient rights (e.g., global
+filesystem access) and is needed for compatibility
+reasons.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>size</i> must
+be specified as <i>sizeof(struct landlock_ruleset_attr)</i>
+for compatibility reasons.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>flags</i>
+must be 0 if <i>attr</i> is used. Otherwise, <i>flags</i>
+can be set to: <b><br/>
+LANDLOCK_CREATE_RULESET_VERSION</b></p>
+<p style="margin-left:18%;">If <i>attr</i> is NULL and
+<i>size</i> is 0, then the returned value is the highest
+supported Landlock ABI version (starting at 1). This version
+can be used for a best-effort security approach, which is
+encouraged when user space is not pinned to a specific
+kernel version. All features documented in these man pages
+are available with the version 1.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>landlock_create_ruleset</b>() returns a new Landlock
+ruleset file descriptor, or a Landlock ABI version,
+according to <i>flags</i>.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>landlock_create_ruleset</b>()
+can fail for the following reasons: <b><br/>
+EOPNOTSUPP</b></p>
+<p style="margin-left:18%;">Landlock is supported by the
+kernel but disabled at boot time.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="67%">
+<p>Unknown <i>flags</i>, or unknown access, or too small
+<i>size</i>.</p> </td>
+<td width="15%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>E2BIG</b></p></td>
+<td width="1%"></td>
+<td width="67%">
+<p><i>size</i> is too big.</p></td>
+<td width="15%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EFAULT</b></p></td>
+<td width="1%"></td>
+<td width="67%">
+<p><i>attr</i> was not a valid address.</p></td>
+<td width="15%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOMSG</b></p></td>
+<td width="1%"></td>
+<td width="67%">
+<p>Empty accesses (i.e.,
+<i>attr−&gt;handled_access_fs</i> is 0).</p></td>
+<td width="15%">
+</td></tr>
+</table>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux 5.13.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See
+<b>landlock</b>(7).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>landlock_add_rule</b>(2),
+<b>landlock_restrict_self</b>(2), <b>landlock</b>(7)</p>
+<hr/>
+</body>
+</html>

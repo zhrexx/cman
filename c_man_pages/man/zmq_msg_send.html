@@ -1,0 +1,256 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:57:21 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ZMQ_MSG_SEND</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">ZMQ_MSG_SEND</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Multi−part messages">Multi−part messages</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">zmq_msg_send
+− send a message part on a socket</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+zmq_msg_send (zmq_msg_t</b> <i>*msg</i><b>, void</b>
+<i>*socket</i><b>, int</b> <i>flags</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>zmq_msg_send()</i> function is identical to
+<b>zmq_sendmsg</b>(3), which shall be deprecated in future
+versions. <i>zmq_msg_send()</i> is more consistent with
+other message manipulation functions.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>zmq_msg_send()</i> function shall queue the message
+referenced by the <i>msg</i> argument to be sent to the
+socket referenced by the <i>socket</i> argument. The
+<i>flags</i> argument is a combination of the flags defined
+below:</p>
+<p style="margin-left:9%; margin-top: 1em"><b>ZMQ_DONTWAIT</b></p>
+<p style="margin-left:14%;">For socket types (DEALER, PUSH)
+that block (either with ZMQ_IMMEDIATE option set and no peer
+available, or all peers having full high−water mark),
+specifies that the operation should be performed in
+non−blocking mode. If the message cannot be queued on
+the <i>socket</i>, the <i>zmq_msg_send()</i> function shall
+fail with <i>errno</i> set to EAGAIN.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>ZMQ_SNDMORE</b></p>
+<p style="margin-left:14%;">Specifies that the message
+being sent is a multi−part message, and that further
+message parts are to follow. Refer to the section regarding
+multi−part messages below for a detailed
+description.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>zmq_msg_t</i> structure passed to <i>zmq_msg_send()</i>
+is nullified on a successful call. If you want to send the
+same message to multiple sockets you have to copy it (e.g.
+using <i>zmq_msg_copy()</i>). If the call fails, the
+<i>zmq_msg_t</i> structure stays intact, and must be
+consumed by another call to <i>zmq_msg_send()</i> on the
+same or another socket, or released using
+<i>zmq_msg_close()</i> to avoid a memory leak.</p>
+<p style="margin-left:14%; margin-top: 1em"><b><big>Note</big></b></p>
+<p style="margin-left:14%; margin-top: 1em">A successful
+invocation of <i>zmq_msg_send()</i> does not indicate that
+the message has been transmitted to the network, only that
+it has been queued on the <i>socket</i> and 0MQ has assumed
+responsibility for the message. You do not need to call
+<i>zmq_msg_close()</i> after a successful
+<i>zmq_msg_send()</i>.</p>
+<h3>Multi−part messages
+<a name="Multi−part messages"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A 0MQ message is
+composed of 1 or more message parts. Each message part is an
+independent <i>zmq_msg_t</i> in its own right. 0MQ ensures
+atomic delivery of messages: peers shall receive either all
+<i>message parts</i> of a message or none at all. The total
+number of message parts is unlimited except by available
+memory.</p>
+<p style="margin-left:9%; margin-top: 1em">An application
+that sends multi−part messages must use the
+<i>ZMQ_SNDMORE</i> flag when sending each message part
+except the final one.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>zmq_msg_send()</i> function shall return number of bytes
+in the message if successful (if number of bytes is higher
+than <i>MAX_INT</i>, the function will return
+<i>MAX_INT</i>). Otherwise it shall return −1 and set
+<i>errno</i> to one of the values defined below.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EAGAIN</b></p>
+<p style="margin-left:14%;">Non−blocking mode was
+requested and the message cannot be sent at the moment.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>ENOTSUP</b></p>
+<p style="margin-left:14%;">The <i>zmq_msg_send()</i>
+operation is not supported by this socket type.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EINVAL</b></p>
+<p style="margin-left:14%;">The sender tried to send
+multipart data, which the socket type does not allow.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EFSM</b></p>
+<p style="margin-left:14%;">The <i>zmq_msg_send()</i>
+operation cannot be performed on this socket at the moment
+due to the socket not being in the appropriate state. This
+error may occur with socket types that switch between
+several states, such as ZMQ_REP. See the <i>messaging
+patterns</i> section of <b>zmq_socket</b>(3) for more
+information.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>ETERM</b></p>
+<p style="margin-left:14%;">The 0MQ <i>context</i>
+associated with the specified <i>socket</i> was
+terminated.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>ENOTSOCK</b></p>
+<p style="margin-left:14%;">The provided <i>socket</i> was
+invalid.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EINTR</b></p>
+<p style="margin-left:14%;">The operation was interrupted
+by delivery of a signal before the message was sent.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EFAULT</b></p>
+<p style="margin-left:14%;">Invalid message.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EHOSTUNREACH</b></p>
+<p style="margin-left:14%;">The message cannot be
+routed.</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Filling in a
+message and sending it to a socket</b>.</p>
+<p style="margin-left:14%; margin-top: 1em">/* Create a new
+message, allocating 6 bytes for message content */ <br/>
+zmq_msg_t msg; <br/>
+int rc = zmq_msg_init_size (&amp;msg, 6); <br/>
+assert (rc == 0); <br/>
+/* Fill in message content with 'AAAAAA' */ <br/>
+memset (zmq_msg_data (&amp;msg), 'A', 6); <br/>
+/* Send the message to the socket */ <br/>
+rc = zmq_msg_send (&amp;msg, socket, 0); <br/>
+assert (rc == 6);</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Sending a
+multi-part message</b>.</p>
+<p style="margin-left:14%; margin-top: 1em">/* Send a
+multi−part message consisting of three parts to socket
+*/ <br/>
+rc = zmq_msg_send (&amp;part1, socket, ZMQ_SNDMORE); <br/>
+rc = zmq_msg_send (&amp;part2, socket, ZMQ_SNDMORE); <br/>
+/* Final part; no more parts to follow */ <br/>
+rc = zmq_msg_send (&amp;part3, socket, 0);</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>zmq_recv</b>(3)
+<b>zmq_send</b>(3) <b>zmq_msg_recv</b>(3)
+<b>zmq_socket</b>(7) <b>zmq</b>(7)</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This page was
+written by the 0MQ community. To make a change please read
+the 0MQ Contribution Policy at
+<b><font color="#0000FF">http://www.zeromq.org/docs:contributing</font></b><font color="#000000">.</font></p>
+<hr/>
+</body>
+</html>

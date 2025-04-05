@@ -1,0 +1,455 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:55 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LIBTRACEEVENT</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LIBTRACEEVENT</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#FILES">FILES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#RESOURCES">RESOURCES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">kbuffer_read_event,
+kbuffer_next_event, kbuffer_missed_events,
+kbuffer_event_size, kbuffer_curr_size, kbuffer_curr_offset,
+kbuffer_curr_index, kbuffer_read_buffer − Functions to
+read through the kbuffer sub buffer.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;kbuffer.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em">void
+*<b>kbuffer_read_event</b>(struct kbuffer *<i>kbuf</i>,
+unsigned long long *<i>ts</i>); <br/>
+void *<b>kbuffer_next_event</b>(struct kbuffer *<i>kbuf</i>,
+unsigned long long *<i>ts</i>); <br/>
+void *<b>kbuffer_read_at_offset</b>(struct kbuffer
+*<i>kbuf</i>, int <i>offset</i>, unsigned long long
+*<i>ts</i>); <br/>
+int <b>kbuffer_missed_events</b>(struct kbuffer
+*<i>kbuf</i>); <br/>
+int <b>kbuffer_event_size</b>(struct kbuffer *<i>kbuf</i>);
+<br/>
+int <b>kbuffer_curr_size</b>(struct kbuffer *<i>kbuf</i>);
+<br/>
+int <b>kbuffer_curr_offset</b>(struct kbuffer *<i>kbuf</i>);
+<br/>
+int <b>kbuffer_curr_index</b>(struct kbuffer *<i>kbuf</i>);
+<br/>
+int <b>kbuffer_read_buffer</b>(struct kbuffer *<i>kbuf</i>,
+void *<i>buffer</i>, int <i>len</i>);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The function
+<b>kbuffer_read_event()</b> reads the next event in the
+<i>kbuf</i> descriptor and if <i>ts</i> is non NULL, will
+place its timestamp into it. This does not modify the
+<i>kbuf</i> descriptor, and calling this function mulitple
+times will return the same result.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+<b>kbuffer_next_event()</b> will return the next event in
+the <i>kbuf</i> descriptor. It will also set the <i>ts</i>
+to the timestamp of the returned event. NULL is returned if
+there are no more events and <i>ts</i> will be undefined.
+Note, if this is called directly after a
+<b>kbuffer_load_subbuffer()</b> then it will likely give an
+unexpected result, as it will return the second event and
+not the first event. Usually this function is only used to
+move to the next event and to know if there’s any more
+events to read, and <b>kbuffer_read_event()</b> is always
+called first.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+<b>kbuffer_read_at_offset()</b> returns the event located at
+a given <i>offset</i> from the beginning of the
+sub−buffer. This offset can be retrieved by
+<b>kbuffer_curr_offset()</b>. If <i>ts</i> points to an
+unsigned long long, then it will be set to the event at the
+given offset’s timestamp.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+sub−buffer had missed events before it, then
+<b>kbuffer_missed_events()</b> will return the non zero. If
+it returns −1, that means there were missed events,
+but the exact number of missed events is unknown. If it
+returns a positive number, then the number of missed events
+is the return value.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>kbuffer_event_size()</b> function returns the size of the
+data portion of the current event (the one that would be
+returned by <b>kbuffer_read_event()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>kbuffer_curr_size()</b> function returns the entire
+record size of the current event (the one that would be
+returned by <b>kbuffer_read_event()</b>. The difference here
+is that the return value includes the size of the event
+record meta data that is not part of what is returned by
+<b>kbuffer_read_event()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>kbuffer_curr_offset()</b> function returns the offset
+from the beginning of the sub−buffer of where the
+current event’s meta data for the record begins. The
+first event will not be at offset zero. This offset can be
+used to retrieve the event with
+<b>kbuffer_read_at_offset()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>kbuffer_curr_index()</b> function returns the index from
+the beginning of the data portion of the sub−buffer
+where the current evnet’s meta data is located. The
+first event will likely be zero, but may not be if
+there’s a timestamp attached to it.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>kbuffer_read_buffer()</b> function will fill the given
+<i>buffer</i> from the <i>kbuf</i> the same way the kernel
+would do a read system call. That is, if the length
+<i>len</i> is less than the sub buffer size, or the kbuffer
+current index is non−zero, it will start copying from
+the <i>kbuf</i> current event and create <i>buffer</i> as a
+new sub buffer (with a timestamp and commit header) with
+that event that was found and including all events after
+that can fit within <i>len</i>. The <i>len</i> must include
+the size of the sub buffer header as well as the events to
+include. That is, <i>len</i> is the allocate size of
+<i>buffer</i> that can be filled. The return from this
+function is the index of the end of the last event that was
+added. If there are no more events then zero is returned,
+and if the buffer can not copy any events because <i>len</i>
+was too small, then −1 is returned.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>kbuffer_read_event()</b>
+returns the event that the <i>kbuf</i> descriptor is
+currently at, or NULL if the last event was passed (by
+<b>kbuffer_next_event()</b>).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>kbuffer_next_event()</b>
+returns the next event after the current event or NULL if
+there are no more events.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>kbuffer_read_at_offset()</b>
+returns the event at a given <i>offset</i> from the start of
+the sub−buffer stored in <i>kbuf</i>, or NULL if there
+exists no event. Note, <i>offset</i> only needs to be an
+offset that lands on the record, or is at the start of it.
+It does not need to be exactly at the beginning of the
+record.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>kbuffer_missed_events()</b>
+returns 0 if there were no missed events before loaded
+sub−buffer. Returns −1 if there were an unknown
+number of missed events, or if the number of missed events
+is known, that number will be returned.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>kbuffer_event_size()</b>
+returns the size of the data payload of the current event of
+<i>kbuf</i>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>kbuffer_curr_size()</b>
+returns the size of the entire record of the current event
+of <i>kbuf</i>. This includes the size of the meta data for
+that record.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>kbuf_curr_offset()</b>
+returns the offset of the current record from the beginning
+of the <i>kbuf</i> sub−buffer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>kbuf_curr_index()</b>
+returns the index of the current record from the beginning
+of the <i>kbuf</i> data section.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>kbuf_read_buffer()</b>
+returns the index of the end of the last event that was
+filled in <i>buffer</i>. If there are no more events to copy
+from <i>start</i> then 0 is returned. If <i>len</i> is not
+big enough to hold any events, then −1 is
+returned.</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em">#include
+&lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;fcntl.h&gt; <br/>
+#include &lt;unistd.h&gt; <br/>
+#include &lt;sys/stat.h&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">#include
+&lt;kbuffer.h&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">int main (int
+argc, char **argv) <br/>
+{ <br/>
+unsigned long long ts; <br/>
+struct kbuffer *kbuf; <br/>
+struct stat st; <br/>
+char *buf; <br/>
+void *event; <br/>
+int save_offset = −1; <br/>
+int record_size; <br/>
+int offset; <br/>
+int index; <br/>
+int size; <br/>
+int ret; <br/>
+int fd; <br/>
+int i = 0;</p>
+<p style="margin-left:14%; margin-top: 1em">if (argc &lt;
+2) { <br/>
+printf("usage: %s
+raw−subbuffer−page\n", argv[0]); <br/>
+printf(" Try: dd count=1 bs=4096
+if=/sys/kernel/tracing/per_cpu/cpu0/trace_pipe_raw
+of=/tmp/file\n"); <br/>
+exit(0); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(stat(argv[1], &amp;st) &lt; 0) { <br/>
+perror("stat"); <br/>
+exit(−1); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">buf =
+malloc(st.st_size); <br/>
+if (!buf) { <br/>
+perror("Allocating buffer"); <br/>
+exit(−1); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">fd =
+open(argv[1], O_RDONLY); <br/>
+if (fd &lt; 0) { <br/>
+perror(argv[1]); <br/>
+exit(−1); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">ret = read(fd,
+buf, st.st_size); <br/>
+if (ret &lt; 0) { <br/>
+perror("Reading buffer"); <br/>
+exit(−1); <br/>
+} <br/>
+close(fd);</p>
+<p style="margin-left:14%; margin-top: 1em">kbuf =
+kbuffer_alloc(KBUFFER_ENDIAN_SAME_AS_HOST, <br/>
+KBUFFER_LSIZE_SAME_AS_HOST); <br/>
+if (!kbuf) { <br/>
+perror("Creating kbuffer"); <br/>
+exit(−1); <br/>
+} <br/>
+ret = kbuffer_load_subbuffer(kbuf, buf); <br/>
+if (ret &lt; 0) { <br/>
+perror("Loading sub bufer"); <br/>
+exit(−1); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">if
+(kbuffer_subbuffer_size(kbuf) &gt; st.st_size) { <br/>
+fprintf(stderr, "kbuffer is bigger than raw size %d
+&gt; %ld\n", <br/>
+kbuffer_subbuffer_size(kbuf), st.st_size); <br/>
+exit(−1); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">ret =
+kbuffer_missed_events(kbuf); <br/>
+if (ret) { <br/>
+if (ret &gt; 0) <br/>
+printf("Missed %d events before this buffer\n",
+ret); <br/>
+else <br/>
+printf("Missed unknown number of events before this
+buffer\n"); <br/>
+} <br/>
+do { <br/>
+event = kbuffer_read_event(kbuf, &amp;ts); <br/>
+if (event) { <br/>
+record_size = kbuffer_curr_size(kbuf); <br/>
+offset = kbuffer_curr_offset(kbuf); <br/>
+index = kbuffer_curr_index(kbuf); <br/>
+size = kbuffer_event_size(kbuf);</p>
+<p style="margin-left:14%; margin-top: 1em">if (i == 20)
+<br/>
+save_offset = offset; <br/>
+printf(" event %3d ts:%lld\trecord_size:%d
+size:%d\tindex:%d offset:%d\n", <br/>
+i++, ts, record_size, size, index, offset); <br/>
+event = kbuffer_next_event(kbuf, NULL); <br/>
+} <br/>
+} while (event);</p>
+<p style="margin-left:14%; margin-top: 1em">if (!event)
+<br/>
+printf("Finished sub buffer\n");</p>
+<p style="margin-left:14%; margin-top: 1em">if (save_offset
+&gt; 0) { <br/>
+event = kbuffer_read_at_offset(kbuf, save_offset, &amp;ts);
+<br/>
+if (!event) { <br/>
+fprintf(stderr, "Funny, can't find event 20 at offset
+%d\n", save_offset); <br/>
+exit(−1); <br/>
+} <br/>
+record_size = kbuffer_curr_size(kbuf); <br/>
+offset = kbuffer_curr_offset(kbuf); <br/>
+index = kbuffer_curr_index(kbuf); <br/>
+size = kbuffer_event_size(kbuf);</p>
+<p style="margin-left:14%; margin-top: 1em">printf("\n
+saved event 20 ts:%lld\trecord_size:%d size:%d\tindex:%d
+offset:%d\n\n", <br/>
+ts, record_size, size, index, offset); <br/>
+} <br/>
+kbuffer_free(kbuf);</p>
+<p style="margin-left:14%; margin-top: 1em">return 0; <br/>
+}</p>
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em"><b>event−parse.h</b>
+<br/>
+Header file to include in order to have access to the
+library APIs. <b><br/>
+−ltraceevent</b> <br/>
+Linker switch to add when building a program that uses the
+library.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>libtraceevent</b>(3),
+<b>trace−cmd</b>(1)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:14%; margin-top: 1em"><b>Steven
+Rostedt</b>
+&lt;<b><font color="#0000FF">rostedt@goodmis.org</font></b>
+<small><font color="#000000">[1]</font></small>
+<font color="#000000">&gt;, author of
+<b>libtraceevent</b>.</font></p>
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><font color="#000000">Report
+bugs to
+&lt;</font><b><font color="#0000FF">linux−trace−devel@vger.kernel.org</font></b>
+<small><font color="#000000">[2]</font></small>
+<font color="#000000">&gt;</font></p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><font color="#000000">libtraceevent
+is Free Software licensed under the GNU LGPL 2.1</font></p>
+<h2>RESOURCES
+<a name="RESOURCES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b><font color="#0000FF">https://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git/</font></b></p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">1.</font></p> </td>
+<td width="1%"></td>
+<td width="24%">
+<p style="margin-top: 1em"><font color="#000000">rostedt@goodmis.org</font></p> </td>
+<td width="62%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:rostedt@goodmis.org</font></p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="10%"></td>
+<td width="3%">
+<p style="margin-top: 1em"><font color="#000000">2.</font></p> </td>
+<td width="1%"></td>
+<td width="42%">
+<p style="margin-top: 1em"><font color="#000000">linux-trace-devel@vger.kernel.org</font></p> </td>
+<td width="44%">
+</td></tr>
+</table>
+<p style="margin-left:14%;"><font color="#000000">mailto:linux-trace-devel@vger.kernel.org</font></p>
+<hr/>
+</body>
+</html>

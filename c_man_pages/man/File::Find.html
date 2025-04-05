@@ -1,0 +1,438 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:14 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>File::Find</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">File::Find</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#%options">%options</a><br/>
+<a href="#The wanted function">The wanted function</a><br/>
+<a href="#WARNINGS">WARNINGS</a><br/>
+<a href="#BUGS AND CAVEATS">BUGS AND CAVEATS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">File::Find
+− Traverse a directory tree.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use File::Find;
+<br/>
+find(\&amp;wanted, @directories_to_search); <br/>
+sub wanted { ... } <br/>
+use File::Find; <br/>
+finddepth(\&amp;wanted, @directories_to_search); <br/>
+sub wanted { ... } <br/>
+use File::Find; <br/>
+find({ wanted =&gt; \&amp;process, follow =&gt; 1 },
+'.');</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These are
+functions for searching through directory trees doing work
+on each file found similar to the Unix <b>find</b>(1)
+command. "File::Find" exports two functions,
+"find" and "finddepth". They work
+similarly but have subtle differences. <b><br/>
+find</b></p>
+<p style="margin-left:14%;">find(\&amp;wanted,
+@directories); <br/>
+find(\%options, @directories);</p>
+<p style="margin-left:14%; margin-top: 1em">find() does a
+depth-first search over the given @directories in the order
+they are given. For each file or directory found, it calls
+the &amp;wanted subroutine. (See below for details on how to
+use the &amp;wanted function). Additionally, for each
+directory found, it will chdir() into that directory and
+continue the search, invoking the &amp;wanted function on
+each file or subdirectory in the directory.</p>
+<p style="margin-left:9%;"><b>finddepth</b></p>
+<p style="margin-left:14%;">finddepth(\&amp;wanted,
+@directories); <br/>
+finddepth(\%options, @directories);</p>
+<p style="margin-left:14%; margin-top: 1em">finddepth()
+works just like find() except that it invokes the
+&amp;wanted function for a directory <i>after</i> invoking
+it for the directory’s contents. It does a postorder
+traversal instead of a preorder traversal, working from the
+bottom of the directory tree up where find() works from the
+top of the tree down.</p>
+<p style="margin-left:9%; margin-top: 1em">Despite the name
+of the finddepth() function, both find() and finddepth()
+perform a depth-first search of the directory hierarchy.</p>
+<h3>%options
+<a name="%options"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The first
+argument to find() is either a code reference to your
+&amp;wanted function, or a hash reference describing the
+operations to be performed for each file. The code reference
+is described in "The wanted function" below.</p>
+<p style="margin-left:9%; margin-top: 1em">Here are the
+possible <b>keys</b> for the hash: <br/>
+"wanted"</p>
+<p style="margin-left:14%;">The value should be a code
+reference. This code reference is described in "The
+wanted function" below. The &amp;wanted subroutine is
+mandatory.</p>
+<p style="margin-left:9%;">"bydepth"</p>
+<p style="margin-left:14%;">Reports the name of a directory
+only AFTER all its entries have been reported. Entry point
+finddepth() is a shortcut for specifying "{ bydepth
+=&gt; 1 }" in the first argument of find().</p>
+<p style="margin-left:9%;">"preprocess"</p>
+<p style="margin-left:14%;">The value should be a code
+reference. This code reference is used to preprocess the
+current directory. The name of the currently processed
+directory is in $File::Find::dir. Your preprocessing
+function is called after readdir(), but before the loop that
+calls the wanted() function. It is called with a list of
+strings (actually file/directory names) and is expected to
+return a list of strings. The code can be used to sort the
+file/directory names alphabetically, numerically, or to
+filter out directory entries based on their name alone. When
+"follow" or "follow_fast" are in effect,
+"preprocess" is a no-op.</p>
+<p style="margin-left:9%;">"postprocess"</p>
+<p style="margin-left:14%;">The value should be a code
+reference. It is invoked just before leaving the currently
+processed directory. It is called in void context with no
+arguments. The name of the current directory is in
+$File::Find::dir. This hook is handy for summarizing a
+directory, such as calculating its disk usage. When
+"follow" or "follow_fast" are in effect,
+"postprocess" is a no-op.</p>
+<p style="margin-left:9%;">"follow"</p>
+<p style="margin-left:14%;">Causes symbolic links to be
+followed. Since directory trees with symbolic links
+(followed) may contain files more than once and may even
+have cycles, a hash has to be built up with an entry for
+each file. This might be expensive both in space and time
+for a large directory tree. See "follow_fast" and
+"follow_skip" below. If either "follow"
+or "follow_fast" is in effect:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>It is guaranteed that an "lstat" has been
+called before the user’s wanted() function is called.
+This enables fast file checks involving "_". Note
+that this guarantee no longer holds if "follow" or
+"follow_fast" are not set.</p></td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>There is a variable $File::Find::fullname which holds
+the absolute pathname of the file with all symbolic links
+resolved. If the link is a dangling symbolic link, then
+fullname will be set to "undef".</p></td></tr>
+</table>
+<p style="margin-left:9%;">"follow_fast"</p>
+<p style="margin-left:14%;">This is similar to
+"follow" except that it may report some files more
+than once. It does detect cycles, however. Since only
+symbolic links have to be hashed, this is much cheaper both
+in space and time. If processing a file more than once (by
+the user’s wanted() function) is worse than just
+taking time, the option "follow" should be
+used.</p>
+<p style="margin-left:9%;">"follow_skip"</p>
+<p style="margin-left:14%;">"follow_skip==1",
+which is the default, causes all files which are neither
+directories nor symbolic links to be ignored if they are
+about to be processed a second time. If a directory or a
+symbolic link are about to be processed a second time,
+"File::Find" dies.</p>
+<p style="margin-left:14%; margin-top: 1em">"follow_skip==0"
+causes "File::Find" to die if any file is about to
+be processed a second time.</p>
+<p style="margin-left:14%; margin-top: 1em">"follow_skip==2"
+causes "File::Find" to ignore any duplicate files
+and directories but to proceed normally otherwise.</p>
+<p style="margin-left:9%;">"dangling_symlinks"</p>
+<p style="margin-left:14%;">Specifies what to do with
+symbolic links whose target doesn’t exist. If true and
+a code reference, will be called with the symbolic link name
+and the directory it lives in as arguments. Otherwise, if
+true and warnings are on, a warning of the form
+"symbolic_link_name is a dangling symbolic link\n"
+will be issued. If false, the dangling symbolic link will be
+silently ignored.</p>
+<p style="margin-left:9%;">"no_chdir"</p>
+<p style="margin-left:14%;">Does not chdir() to each
+directory as it recurses. The wanted() function will need to
+be aware of this, of course. In this case, $_ will be the
+same as $File::Find::name.</p>
+<p style="margin-left:9%;">"untaint"</p>
+<p style="margin-left:14%;">If find is used in taint-mode
+("−T" command line switch or "if EUID
+!= UID" or "if EGID != GID"), then internally
+directory names have to be untainted before they can be
+"chdir"’d to. Therefore they are checked
+against a regular expression "untaint_pattern".
+Note that all names passed to the user’s wanted()
+function are still tainted. If this option is used while not
+in taint-mode, "untaint" is a no-op.</p>
+<p style="margin-left:9%;">"untaint_pattern"</p>
+<p style="margin-left:14%;">See above. This should be set
+using the "qr" quoting operator. The default is
+set to "qr|ˆ([−+@\w./]+)$|". Note that
+the parentheses are vital.</p>
+<p style="margin-left:9%;">"untaint_skip"</p>
+<p style="margin-left:14%;">If set, a directory which fails
+the "untaint_pattern" is skipped, including all
+its sub-directories. The default is to "die" in
+such a case.</p>
+<h3>The wanted function
+<a name="The wanted function"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The wanted()
+function does whatever verifications you want on each file
+and directory. Note that despite its name, the wanted()
+function is a generic callback function, and does <b>not</b>
+tell "File::Find" if a file is "wanted"
+or not. In fact, its return value is ignored.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"wanted" function takes no arguments but rather
+does its work through a collection of variables. <br/>
+$File::Find::dir is the current directory name, <br/>
+$_ is the current filename within that directory <br/>
+$File::Find::name is the complete pathname to the file.</p>
+<p style="margin-left:9%; margin-top: 1em">The above
+variables have all been localized and may be changed without
+affecting data outside of the wanted function.</p>
+<p style="margin-left:9%; margin-top: 1em">For example,
+when examining the file <i>/some/path/foo.ext</i> you will
+have:</p>
+<p style="margin-left:9%; margin-top: 1em">$File::Find::dir
+= /some/path/ <br/>
+$_ = foo.ext <br/>
+$File::Find::name = /some/path/foo.ext</p>
+<p style="margin-left:9%; margin-top: 1em">You are
+chdir()’d to $File::Find::dir when the function is
+called, unless "no_chdir" was specified. Note that
+when changing to directories is in effect, the root
+directory (<i>/</i>) is a somewhat special case inasmuch as
+the concatenation of $File::Find::dir, '/' and $_ is not
+literally equal to $File::Find::name. The table below
+summarizes all variants:</p>
+<p style="margin-left:9%; margin-top: 1em">$File::Find::name
+$File::Find::dir $_ <br/>
+default / / . <br/>
+no_chdir=&gt;0 /etc / etc <br/>
+/etc/x /etc x <br/>
+no_chdir=&gt;1 / / / <br/>
+/etc / /etc <br/>
+/etc/x /etc /etc/x</p>
+<p style="margin-left:9%; margin-top: 1em">When
+"follow" or "follow_fast" are in effect,
+there is also a $File::Find::fullname. The function may set
+$File::Find::prune to prune the tree unless
+"bydepth" was specified. Unless "follow"
+or "follow_fast" is specified, for compatibility
+reasons ("find.pl", find2perl) there are in
+addition the following globals available:
+$File::Find::topdir, $File::Find::topdev,
+$File::Find::topino, $File::Find::topmode and
+$File::Find::topnlink.</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+useful for the "find2perl" tool (distributed with
+the App::find2perl CPAN module), which when fed:</p>
+<p style="margin-left:9%; margin-top: 1em">find2perl /
+−name .nfs\* −mtime +7 \ <br/>
+−exec rm −f {} \; −o −fstype nfs
+−prune</p>
+<p style="margin-left:9%; margin-top: 1em">produces
+something like:</p>
+<p style="margin-left:9%; margin-top: 1em">sub wanted {
+<br/>
+/ˆ\.nfs.*\z/s &amp;&amp; <br/>
+(($dev, $ino, $mode, $nlink, $uid, $gid) = lstat($_))
+&amp;&amp; <br/>
+int(−M _) &gt; 7 &amp;&amp; <br/>
+unlink($_) <br/>
+|| <br/>
+($nlink || (($dev, $ino, $mode, $nlink, $uid, $gid) =
+lstat($_))) &amp;&amp; <br/>
+$dev &lt; 0 &amp;&amp; <br/>
+($File::Find::prune = 1); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Notice the
+"_" in the above "int(−M _)": the
+"_" is a magical filehandle that caches the
+information from the preceding stat(), lstat(), or
+filetest.</p>
+<p style="margin-left:9%; margin-top: 1em">Here’s
+another interesting wanted function. It will find all
+symbolic links that don’t resolve:</p>
+<p style="margin-left:9%; margin-top: 1em">sub wanted {
+<br/>
+−l &amp;&amp; !−e &amp;&amp; print "bogus
+link: $File::Find::name\n"; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Note that you
+may mix directories and (non-directory) files in the list of
+directories to be searched by the wanted() function.</p>
+<p style="margin-left:9%; margin-top: 1em">find(\&amp;wanted,
+"./foo", "./bar",
+"./baz/epsilon");</p>
+<p style="margin-left:9%; margin-top: 1em">In the example
+above, no file in <i>./baz/</i> other than
+<i>./baz/epsilon</i> will be evaluated by wanted().</p>
+<p style="margin-left:9%; margin-top: 1em">See also the
+script "pfind" on CPAN for a nice application of
+this module.</p>
+<h2>WARNINGS
+<a name="WARNINGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If you run your
+program with the "−w" switch, or if you use
+the "warnings" pragma, File::Find will report
+warnings for several weird situations. You can disable these
+warnings by putting the statement</p>
+<p style="margin-left:9%; margin-top: 1em">no warnings
+'File::Find';</p>
+<p style="margin-left:9%; margin-top: 1em">in the
+appropriate scope. See warnings for more info about lexical
+warnings.</p>
+<h2>BUGS AND CAVEATS
+<a name="BUGS AND CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">$dont_use_nlink</p>
+<p style="margin-left:14%;">You can set the variable
+$File::Find::dont_use_nlink to 0 if you are sure the
+filesystem you are scanning reflects the number of
+subdirectories in the parent directory’s
+"nlink" count.</p>
+<p style="margin-left:14%; margin-top: 1em">If you do set
+$File::Find::dont_use_nlink to 0, you may notice an
+improvement in speed at the risk of not recursing into
+subdirectories if a filesystem doesn’t populate
+"nlink" as expected.</p>
+<p style="margin-left:14%; margin-top: 1em">$File::Find::dont_use_nlink
+now defaults to 1 on all platforms.</p>
+<p style="margin-left:9%;">Symlinks</p>
+<p style="margin-left:14%;">Be aware that the option to
+follow symbolic links can be dangerous. Depending on the
+structure of the directory tree (including symbolic links to
+directories) you might traverse a given (physical) directory
+more than once (only if "follow_fast" is in
+effect). Furthermore, deleting or changing files in a
+symbolically linked directory might cause very unpleasant
+surprises, since you delete or change files in an unknown
+directory.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"File::Find"
+used to produce incorrect results if called recursively.
+During the development of perl 5.8 this bug was fixed. The
+first fixed version of "File::Find" was 1.01.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>find</b>(1),
+find2perl</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:30 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>NTLM</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">NTLM</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#OBJECT API">OBJECT API</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Authen::NTLM
+− An NTLM authentication module</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Mail::IMAPClient; <br/>
+use Authen::NTLM; <br/>
+my $imap =
+Mail::IMAPClient−&gt;new(Server=&gt;'imaphost'); <br/>
+ntlm_user($username); <br/>
+ntlm_password($password); <br/>
+$imap−&gt;authenticate("NTLM",
+Authen::NTLM::ntlm); <br/>
+: <br/>
+$imap−&gt;logout; <br/>
+ntlm_reset; <br/>
+:</p>
+<p style="margin-left:9%; margin-top: 1em">or</p>
+<p style="margin-left:9%; margin-top: 1em">ntlmv2(1); <br/>
+ntlm_user($username); <br/>
+ntlm_host($host); <br/>
+ntlm_password($password); <br/>
+:</p>
+<p style="margin-left:9%; margin-top: 1em">or</p>
+<p style="margin-left:9%; margin-top: 1em">my $ntlm =
+Authen::NTLM−&gt; new( <br/>
+host =&gt; $host, <br/>
+user =&gt; $username, <br/>
+domain =&gt; $domain, <br/>
+password =&gt; $password, <br/>
+version =&gt; 1, <br/>
+); <br/>
+$ntlm−&gt; challenge; <br/>
+: <br/>
+$ntlm−&gt; challenge($challenge);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides methods to use NTLM authentication. It can <br/>
+be used as an authenticate method with the Mail::IMAPClient
+module <br/>
+to perform the challenge/response mechanism for NTLM
+connections <br/>
+or it can be used on its own for NTLM authentication with
+other <br/>
+protocols (eg. HTTP). <br/>
+The implementation is a direct port of the code from
+F&lt;fetchmail&gt; <br/>
+which, itself, has based its NTLM implementation on
+F&lt;samba&gt;. As <br/>
+such, this code is not especially efficient, however it will
+still <br/>
+take a fraction of a second to negotiate a login on a PII
+which is <br/>
+likely to be good enough for most situations.</p>
+<h3>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>ntlm_domain()</b></p>
+<p style="margin-left:14%;">Set the domain to use in the
+NTLM authentication messages. <br/>
+Returns the new domain. Without an argument, this function
+<br/>
+returns the current domain entry.</p>
+<p style="margin-left:9%;"><b>ntlm_user()</b></p>
+<p style="margin-left:14%;">Set the username to use in the
+NTLM authentication messages. <br/>
+Returns the new username. Without an argument, this function
+<br/>
+returns the current username entry.</p>
+<p style="margin-left:9%;"><b>ntlm_password()</b></p>
+<p style="margin-left:14%;">Set the password to use in the
+NTLM authentication messages. <br/>
+Returns the new password. Without an argument, this function
+<br/>
+returns the current password entry.</p>
+<p style="margin-left:9%;"><b>ntlm_reset()</b></p>
+<p style="margin-left:14%;">Resets the NTLM
+challenge/response state machine so that the next <br/>
+call to C&lt;ntlm()&gt; will produce an initial connect
+message.</p>
+<p style="margin-left:9%;"><b>ntlm()</b></p>
+<p style="margin-left:14%;">Generate a reply to a
+challenge. The NTLM protocol involves an <br/>
+initial empty challenge from the server requiring a message
+<br/>
+response containing the username and domain (which may be
+empty). <br/>
+The first call to C&lt;ntlm()&gt; generates this first
+message ignoring <br/>
+any arguments. <br/>
+The second time it is called, it is assumed that the
+argument is <br/>
+the challenge string sent from the server. This will contain
+8 <br/>
+bytes of data which are used in the DES functions to
+generate the <br/>
+response authentication strings. The result of the call is
+the <br/>
+final authentication string. <br/>
+If C&lt;ntlm_reset()&gt; is called, then the next call to
+C&lt;ntlm()&gt; will <br/>
+start the process again allowing multiple authentications
+within <br/>
+an application.</p>
+<p style="margin-left:9%;"><b>ntlmv2()</b></p>
+<p style="margin-left:14%;">Use NTLM v2 authentication.</p>
+<h3>OBJECT API
+<a name="OBJECT API"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">new %options</p>
+<p style="margin-left:14%;">Creates an object that accepts
+the following options: "user", "host",
+"domain", "password",
+"version".</p>
+<p style="margin-left:9%;">challenge [$challenge]</p>
+<p style="margin-left:14%;">If $challenge is not supplied,
+first−stage challenge string is generated. Otherwise,
+the third−stage challenge is generated, where
+$challenge is assumed to be extracted from the second stage
+of NTLM exchange. The result of the call is the final
+authentication string.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">David (Buzz)
+Bussenschutt &lt;davidbuzz@gmail.com&gt; − current
+maintainer <br/>
+Dmitry Karasik &lt;dmitry@karasik.eu.org&gt; − nice
+ntlmv2 patch, OO extensions. <br/>
+Andrew Hobson &lt;ahobson@infloop.com&gt; − initial
+ntlmv2 code <br/>
+Mark Bush &lt;Mark.Bush@bushnet.demon.co.uk&gt; − perl
+port <br/>
+Eric S. Raymond − author of fetchmail <br/>
+Andrew Tridgell and Jeremy Allison for SMB/Netbios code</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">perl,
+Mail::IMAPClient, LWP::Authen::Ntlm</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">1.09 − fix
+CPAN ticket # 70703 <br/>
+1.08 − fix CPAN ticket # 39925 <br/>
+1.07 − not publicly released <br/>
+1.06 − relicense as GPL+ or Artistic <br/>
+1.05 − add OO interface by Dmitry Karasik <br/>
+1.04 − implementation of NTLMv2 by Andrew
+Hobson/Dmitry Karasik <br/>
+1.03 − fixes long−standing 1 line bug
+L&lt;http://rt.cpan.org/Public/Bug/Display.html?id=9521&gt;
+− released by David Bussenschutt 9th Aug 2007 <br/>
+1.02 − released by Mark Bush 29th Oct 2001</p>
+<hr/>
+</body>
+</html>

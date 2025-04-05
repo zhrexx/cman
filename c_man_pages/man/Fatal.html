@@ -1,0 +1,239 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:59 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Fatal</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Fatal</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#BEST PRACTICE">BEST PRACTICE</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Fatal −
+Replace functions with equivalents which succeed or die</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Fatal
+qw(open close); <br/>
+open(my $fh, "&lt;", $filename); # No need to
+check errors! <br/>
+use File::Copy qw(move); <br/>
+use Fatal qw(move); <br/>
+move($file1, $file2); # No need to check errors! <br/>
+sub juggle { . . . } <br/>
+Fatal−&gt;import('juggle');</p>
+<h2>BEST PRACTICE
+<a name="BEST PRACTICE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>Fatal has
+been obsoleted by the new autodie pragma.</b> Please use
+autodie in preference to "Fatal". autodie supports
+lexical scoping, throws real exception objects, and provides
+much nicer error messages.</p>
+<p style="margin-left:9%; margin-top: 1em">The use of
+":void" with Fatal is discouraged.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Fatal"
+provides a way to conveniently replace functions which
+normally return a false value when they fail with
+equivalents which raise exceptions if they are not
+successful. This lets you use these functions without having
+to test their return values explicitly on each call.
+Exceptions can be caught using "eval{}". See
+perlfunc and perlvar for details.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+do−or−die equivalents are set up simply by
+calling Fatal's "import" routine, passing it the
+names of the functions to be replaced. You may wrap both
+user−defined functions and overridable CORE operators
+(except "exec", "system",
+"print", or any other built−in that cannot
+be expressed via prototypes) in this way.</p>
+<p style="margin-left:9%; margin-top: 1em">If the symbol
+":void" appears in the import list, then functions
+named later in that import list raise an exception only when
+these are called in void context−−that is, when
+their return values are ignored. For example</p>
+<p style="margin-left:9%; margin-top: 1em">use Fatal
+qw/:void open close/; <br/>
+# properly checked, so no exception raised on error <br/>
+if (not open(my $fh, '&lt;', '/bogotic') { <br/>
+warn "Can't open /bogotic: $!"; <br/>
+} <br/>
+# not checked, so error raises an exception <br/>
+close FH;</p>
+<p style="margin-left:9%; margin-top: 1em">The use of
+":void" is discouraged, as it can result in
+exceptions not being thrown if you <i>accidentally</i> call
+a method without void context. Use autodie instead if you
+need to be able to disable autodying/Fatal behaviour for a
+small block of code.</p>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Bad subroutine
+name for Fatal: %s</p>
+<p style="margin-left:14%;">You've called "Fatal"
+with an argument that doesn't look like a subroutine name,
+nor a switch that this version of Fatal understands.</p>
+<p style="margin-left:9%;">%s is not a Perl subroutine</p>
+<p style="margin-left:14%;">You've asked "Fatal"
+to try and replace a subroutine which does not exist, or has
+not yet been defined.</p>
+<p style="margin-left:9%;">%s is neither a builtin, nor a
+Perl subroutine</p>
+<p style="margin-left:14%;">You've asked "Fatal"
+to replace a subroutine, but it's not a Perl built−in,
+and "Fatal" couldn't find it as a regular
+subroutine. It either doesn't exist or has not yet been
+defined.</p>
+<p style="margin-left:9%;">Cannot make the
+non−overridable %s fatal</p>
+<p style="margin-left:14%;">You've tried to use
+"Fatal" on a Perl built−in that can't be
+overridden, such as "print" or "system",
+which means that "Fatal" can't help you, although
+some other modules might. See the "SEE ALSO"
+section of this documentation.</p>
+<p style="margin-left:9%;">Internal error: %s</p>
+<p style="margin-left:14%;">You've found a bug in
+"Fatal". Please report it using the
+"perlbug" command.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Fatal"
+clobbers the context in which a function is called and
+always makes it a scalar context, except when the
+":void" tag is used. This problem does not exist
+in autodie.</p>
+<p style="margin-left:9%; margin-top: 1em">"Used only
+once" warnings can be generated when
+"autodie" or "Fatal" is used with
+package filehandles (eg, "FILE"). It's strongly
+recommended you use scalar filehandles instead.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Original module
+by Lionel Cons (CERN).</p>
+<p style="margin-left:9%; margin-top: 1em">Prototype
+updates by Ilya Zakharevich
+&lt;ilya@math.ohio−state.edu&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">autodie support,
+bugfixes, extended diagnostics, "system" support,
+and major overhauling by Paul Fenwick
+&lt;pjf@perltraining.com.au&gt;</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+free software, you may distribute it under the same terms as
+Perl itself.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">autodie for a
+nicer way to use lexical Fatal.</p>
+<p style="margin-left:9%; margin-top: 1em">IPC::System::Simple
+for a similar idea for calls to system() and backticks.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:55 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OSSL_ALGORITHM</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OSSL_ALGORITHM</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#OSSL_ALGORITHM fields">OSSL_ALGORITHM fields</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#On the subject of algorithm names">On the subject of algorithm names</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OSSL_ALGORITHM
+− OpenSSL Core type to define a fetchable
+algorithm</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/core.h&gt; <br/>
+typedef struct ossl_algorithm_st OSSL_ALGORITHM; <br/>
+struct ossl_algorithm_st { <br/>
+const char *algorithm_names; /* key */ <br/>
+const char *property_definition; /* key */ <br/>
+const OSSL_DISPATCH *implementation; <br/>
+const char *algorithm_description; <br/>
+};</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>OSSL_ALGORITHM</b> type is a <i>public structure</i> that
+describes an algorithm that a <b>provider</b>(7) provides.
+Arrays of this type are returned by providers on demand from
+the OpenSSL libraries to describe what algorithms the
+providers provide implementations of, and with what
+properties.</p>
+<p style="margin-left:9%; margin-top: 1em">Arrays of this
+type must be terminated with a tuple where
+<i>algorithm_names</i> is NULL.</p>
+<p style="margin-left:9%; margin-top: 1em">This type of
+array is typically returned by the provider's operation
+querying function, further described in "Provider
+Functions" in <b>provider−base</b>(7).</p>
+<h3>OSSL_ALGORITHM fields
+<a name="OSSL_ALGORITHM fields"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>algorithm_names</i></p>
+<p style="margin-left:14%;">This string is a colon
+separated set of names / identities, and is used by the
+appropriate fetching functionality (such as
+<b>EVP_CIPHER_fetch</b>(3), <b>EVP_MD_fetch</b>(3), etc) to
+find the desired algorithm.</p>
+<p style="margin-left:14%; margin-top: 1em">Multiple names
+/ identities allow a specific algorithm implementation to be
+fetched multiple ways. For example, the RSA algorithm has
+the following known identities:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="19%">
+<p>"RSA"</p></td>
+<td width="62%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="19%">
+<p>"rsaEncryption"</p></td>
+<td width="62%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">This is the
+name of the algorithm's OBJECT IDENTIFIER (OID), as given by
+the PKCS#1 RFC's ASN.1 module
+&lt;https://www.rfc-editor.org/rfc/rfc8017#appendix-C&gt;</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="14%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="26%">
+<p style="margin-top: 1em">1.2.840.113549.1.1.1</p></td>
+<td width="55%">
+</td></tr>
+</table>
+<p style="margin-left:19%; margin-top: 1em">This is the OID
+itself for "rsaEncryption", in canonical decimal
+text form.</p>
+<p style="margin-left:14%; margin-top: 1em">The resulting
+<i>algorithm_names</i> string would look like this:</p>
+<p style="margin-left:14%; margin-top: 1em">"RSA:rsaEncryption:1.2.840.113549.1.1.1"</p>
+<p style="margin-left:14%; margin-top: 1em">The OpenSSL
+libraries use the first of the algorithm names as the main
+or canonical name, on a per algorithm implementation
+basis.</p>
+<p style="margin-left:14%; margin-top: 1em">See the notes
+"On the subject of algorithm names" below for a
+more in depth discussion on <i>algorithm_names</i> and how
+that may interact with applications and libraries, including
+OpenSSL's.</p>
+<p style="margin-left:9%;"><i>property_definition</i></p>
+<p style="margin-left:14%;">This string defines a set of
+properties associated with a particular algorithm
+implementation, and is used by the appropriate fetching
+functionality (such as <b>EVP_CIPHER_fetch</b>(3),
+<b>EVP_MD_fetch</b>(3), etc) for a finer grained lookup of
+an algorithm implementation, which is useful in case
+multiple implementations of the same algorithm are
+available.</p>
+<p style="margin-left:14%; margin-top: 1em">See
+<b>property</b>(7) for a further description of the contents
+of this string.</p>
+<p style="margin-left:9%;"><i>implementation</i></p>
+<p style="margin-left:14%;">Pointer to an
+<b>OSSL_DISPATCH</b>(3) array, containing pointers to the
+functions of a particular algorithm implementation.</p>
+<p style="margin-left:9%;"><i>algorithm_description</i></p>
+<p style="margin-left:14%;">A string with a short
+human−readable description of the algorithm.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<h3>On the subject of algorithm names
+<a name="On the subject of algorithm names"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Providers may
+find the need to register ASN.1 OIDs for algorithms using
+<b>OBJ_create</b>(3) (via the <b>core_obj_create</b> upcall
+described in <b>provider−base</b>(7), because some
+application or library −− possibly still the
+OpenSSL libraries, even −− use NIDs to look up
+algorithms.</p>
+<p style="margin-left:9%; margin-top: 1em">In that
+scenario, you must make sure that the corresponding
+<b>OSSL_ALGORITHM</b>'s <i>algorithm_names</i> includes both
+the short and the long name.</p>
+<p style="margin-left:9%; margin-top: 1em">Most of the
+time, registering ASN.1 OIDs like this shouldn't be
+necessary, and applications and libraries are encouraged to
+use <b>OBJ_obj2txt</b>(3) to get a text representation of
+the OID, which may be a long or short name for OIDs that are
+registered, or the OID itself in canonical decimal text form
+if not (or if <b>OBJ_obj2txt</b>(3) is called with
+<i>no_name</i> = 1).</p>
+<p style="margin-left:9%; margin-top: 1em">It's recommended
+to make sure that the corresponding <b>OSSL_ALGORITHM</b>'s
+<i>algorithm_names</i> include known names as well as the
+OID itself in canonical decimal text form. That should cover
+all scenarios.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>crypto</b>(7),
+<b>provider−base</b>(7),
+<b>openssl−core.h</b>(7),
+<b>openssl−core_dispatch.h</b>(7),
+<b>OSSL_DISPATCH</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_ALGORITHM</b>
+was added in OpenSSL 3.0</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright 2022
+The OpenSSL Project Authors. All Rights Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

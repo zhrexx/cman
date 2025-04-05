@@ -1,0 +1,187 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:35 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>UNW_INIT_REMOTE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">UNW_INIT_REMOTE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#THREAD AND SIGNAL SAFETY">THREAD AND SIGNAL SAFETY</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">unw_init_remote
+−− initialize cursor for remote unwinding</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;libunwind.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">int
+unw_init_remote(unw_cursor_t *c, unw_addr_space_t as, void
+*arg);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+unw_init_remote() routine initializes the unwind cursor
+pointed to by c for unwinding in the address space
+identified by as. The as argument can either be set to
+unw_local_addr_space (local address space) or to an
+arbitrary address space created with
+unw_create_addr_space().</p>
+<p style="margin-left:9%; margin-top: 1em">The arg opaque
+pointer tells the address space exactly what entity should
+be unwound. For example, if unw_local_addr_space is passed
+in as, then arg needs to be a pointer to a context structure
+containing the machine−state of the initial stack
+frame. However, other address spaces may instead expect a
+process ID, a thread ID, or a pointer to an arbitrary
+structure which identifies the stack frame chain to be
+unwound. In other words, the interpretation of arg is
+entirely dependent on the address space in use; libunwind
+never interprets the argument in any way on its own.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+unw_init_remote() can be used to initiate unwinding in
+<i>any</i> process, including the local process in which the
+unwinder itself is running. However, for local unwinding, it
+is generally preferable to use unw_init_local() instead,
+because it is easier to use and because it may perform
+better.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On successful
+completion, unw_init_remote() returns 0. Otherwise the
+negative value of one of the error−codes below is
+returned.</p>
+<h2>THREAD AND SIGNAL SAFETY
+<a name="THREAD AND SIGNAL SAFETY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">unw_init_remote()
+is thread safe. If the local address space is passed in
+argument as, this routine is also safe to use from a signal
+handler.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">UNW_EINVAL</p>
+<p style="margin-left:18%;">unw_init_remote() was called in
+a version of libunwind which supports local unwinding only
+(this normally happens when defining UNW_LOCAL_ONLY before
+including &lt;libunwind.h&gt; and then calling
+unw_init_remote()).</p>
+<p style="margin-left:9%;">UNW_EUNSPEC</p>
+<p style="margin-left:18%;">An unspecified error
+occurred.</p>
+<p style="margin-left:9%;">UNW_EBADREG</p>
+<p style="margin-left:18%;">A register needed by
+unw_init_remote() wasn’t accessible.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind(3libunwind),
+unw_create_addr_space(3libunwind),
+unw_init_local(3libunwind)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">David
+Mosberger−Tang <br/>
+Email: <b>dmosberger@gmail.com</b> <br/>
+WWW: <b>http://www.nongnu.org/libunwind/</b>.</p>
+<hr/>
+</body>
+</html>

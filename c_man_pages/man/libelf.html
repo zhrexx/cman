@@ -1,0 +1,493 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:01 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LIBELF</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LIBELF</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FILE VS MEMORY REPRESENTATION">FILE VS MEMORY REPRESENTATION</a><br/>
+<a href="#ELF VERSION">ELF VERSION</a><br/>
+<a href="#DESCRIPTORS">DESCRIPTORS</a><br/>
+<a href="#ERROR HANDLING">ERROR HANDLING</a><br/>
+<a href="#MEMORY MANAGEMENT">MEMORY MANAGEMENT</a><br/>
+<a href="#NAMESPACE">NAMESPACE</a><br/>
+<a href="#DATA STRUCTURES">DATA STRUCTURES</a><br/>
+<a href="#Section Compression Header">Section Compression Header</a><br/>
+<a href="#Section Data">Section Data</a><br/>
+<a href="#Archive Member Header">Archive Member Header</a><br/>
+<a href="#Archive Symbol Table Entry">Archive Symbol Table Entry</a><br/>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libelf − a
+library for accessing and manipulating ELF (Executable and
+Linkable Format) files</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Elfutils library
+(<b>libelf</b>, <b>libelf.so</b>, <b>-lelf</b>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;libelf.h&gt;</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>libelf</b> library provides an API for reading, writing,
+and manipulating ELF (Executable and Linkable Format) files.
+ELF is a standard format for object files, shared libraries,
+core dumps, and executables. See <b>elf</b>(5) for more
+information regarding ELF.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>libelf</b>
+provides routines for working with ELF object file headers,
+sections, symbol tables, relocation entries, and other key
+components.</p>
+<p style="margin-left:9%; margin-top: 1em">The core of the
+library is based on <i>Elf</i> file descriptors representing
+ELF files, which can be read from, written to, or updated
+in-place. The <b>elf_begin</b> function initializes access
+to an ELF object, while additional functions like
+<b>elf_getscn</b>, <b>elf_getdata</b>, and <b>elf_ndxscn</b>
+provide access to specific parts of the ELF file.</p>
+<h2>FILE VS MEMORY REPRESENTATION
+<a name="FILE VS MEMORY REPRESENTATION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>libelf</b> library distinguishes between the file
+representation of an ELF file and its memory
+representation.</p>
+<p style="margin-left:9%; margin-top: 1em">File
+Representation refers to the format in which an ELF file is
+stored on disk. The fields in the file may use specific
+sizes, alignment, and byte ordering (endianness) that could
+be different from the native format used by the host
+system.</p>
+<p style="margin-left:9%; margin-top: 1em">Memory
+Representation refers to the way the ELF data is organized
+when loaded into an application’s memory. In memory,
+the data structures are typically converted into the native
+format of the host system (e.g., the system’s
+endianness, word size, and alignment).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>libelf</b>
+provides the following functions to translate ELF data
+between file and memory representations:
+<b>elf32_xlatetom</b>, <b>elf64_xlatetom</b>,
+<b>elf32_xlatetof</b>, and <b>elf64_xlatetof</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<b>elf32_xlatetom</b>(3) for more information.</p>
+<h2>ELF VERSION
+<a name="ELF VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">To account for
+the possibility of multiple versions of the ELF
+specification, the ELF version number must be specified with
+the <b>elf_version</b> function before any other
+<b>libelf</b> functions. This function sets
+<b>libelf</b>’s ELF version to the specified value. At
+this time the only supported ELF version is
+<b>EV_CURRENT</b>.</p>
+<h2>DESCRIPTORS
+<a name="DESCRIPTORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>Elf</i>
+descriptors the central <b>libelf</b> object for accessing
+and manipulating ELF files. They are created with the
+<b>elf_begin</b>, <b>elf_clone</b>, and <b>elf_memory</b>
+functions and closed with the <b>elf_end</b> function.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>libelf</b>
+also provides <i>Elf_Scn</i> and <i>Elf_Data</i> descriptors
+for ELF sections and section contents, respectively. Members
+of the <i>Elf_Data</i> struct are described below. Members
+of the <i>Elf</i> and <i>Elf_Scn</i> structs are hidden from
+applications.</p>
+<p style="margin-left:9%; margin-top: 1em">These
+descriptors can be acquired and modified using various
+functions provided by <b>libelf</b>. See <b>libelf.h</b> for
+a complete list.</p>
+<h2>ERROR HANDLING
+<a name="ERROR HANDLING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If a
+<b>libelf</b> function encounters an error it will set an
+internal error code that can be retrieved with
+<b>elf_errno</b>. Each thread maintains its own separate
+error code. The meaning of each error code can be determined
+with <b>elf_errmsg,</b> which returns a string describing
+the error.</p>
+<h2>MEMORY MANAGEMENT
+<a name="MEMORY MANAGEMENT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>libelf</b>
+manages all of the memory it allocates and frees it with
+<b>elf_end</b>. The application must not call <b>free</b> on
+any memory allocated by <b>libelf</b>.</p>
+<h2>NAMESPACE
+<a name="NAMESPACE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>libelf</b>
+uses the following prefix format. See <b>libelf.h</b> for
+more information.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p><b>elf_</b></p></td>
+<td width="1%"></td>
+<td width="73%">
+<p>Functions usable with both 32-bit and 64-bit ELF
+files.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p><b>elf32_</b></p></td>
+<td width="1%"></td>
+<td width="73%">
+<p>Functions usable with 32-bit ELF files.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p><b>elf64_</b></p></td>
+<td width="1%"></td>
+<td width="73%">
+<p>Functions usable with 64-bit ELF files.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p><b>Elf_</b></p></td>
+<td width="1%"></td>
+<td width="73%">
+<p>Type that represents data for both 32-bit and 64-bit ELF
+files.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p><b>Elf32_</b></p></td>
+<td width="1%"></td>
+<td width="73%">
+<p>Type that represents data for 32-bit ELF files.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p><b>Elf64_</b></p></td>
+<td width="1%"></td>
+<td width="73%">
+<p>Type that represents data for 64-bit ELF files.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p><b>ELF_C_</b></p></td>
+<td width="1%"></td>
+<td width="73%">
+<p><i>Elf_Cmd</i> values used in functions such as
+<b>elf_flagset</b> and <b>elf_cntl</b>.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p><b>ELF_F_</b></p></td>
+<td width="1%"></td>
+<td width="73%">
+<p>Flags for ELF structures.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p><b>ELF_K_</b></p></td>
+<td width="1%"></td>
+<td width="73%">
+<p><i>Elf_Kind</i> Identification values for recognized
+object file types.</p></td></tr>
+<tr align="left" valign="top">
+<td width="18%"></td>
+<td width="8%">
+<p><b>ELF_T_</b></p></td>
+<td width="1%"></td>
+<td width="73%">
+<p><i>Elf_Type</i> values representing the known types of
+ELF data such as <b>ELF_T_BYTE</b>, (unsigned char)
+<b>ELF_T_REL</b>, (relocation entry) or <b>ELF_T_SYM</b>
+(symbol record).</p></td></tr>
+</table>
+<h2>DATA STRUCTURES
+<a name="DATA STRUCTURES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>libelf</b>
+implements the following data structures, in addition to
+including the data structures given in the ELF specification
+(see <b>elf</b>(5) for more information).</p>
+<h3>Section Compression Header
+<a name="Section Compression Header"></a>
+</h3>
+<p style="margin-left:14%; margin-top: 1em">typedef struct
+{ <br/>
+Elf32_Word ch_type; <br/>
+Elf32_Word ch_size; <br/>
+Elf32_Word ch_addralign; <br/>
+} Elf32_Chdr;</p>
+<p style="margin-left:14%; margin-top: 1em">typedef struct
+{ <br/>
+Elf64_Word ch_type; <br/>
+Elf64_Word ch_reserved; <br/>
+Elf64_Xword ch_size; <br/>
+Elf64_Xword ch_addralign; <br/>
+} Elf64_Chdr;</p>
+<p style="margin-left:9%;"><i>ch_type</i></p>
+<p style="margin-left:18%;">Compression format type. Legal
+values include <b>ELFCOMPRESS_ZLIB</b>,
+<b>ELFCOMPRESS_ZSTD</b>, the inclusive range between
+<b>ELFCOMPRESS_LOOS</b> to <b>ELFCOMPRESS_HIOS</b> as well
+as the inclusive range between <b>ELFCOMPRESS_LOPROC</b> and
+<b>ELFCOMPRESS_HIPROC <br/>
+ELFCOMPRESS_ZLIB</b></p>
+<p style="margin-left:27%;">ZLIB/DEFLATE algorithm.</p>
+<p style="margin-left:18%;"><b>ELFCOMPRESS_ZSTD</b></p>
+<p style="margin-left:27%;">Zstandard algorithm.</p>
+<p style="margin-left:18%;"><b>ELFCOMPRESS_LOOS</b></p>
+<p style="margin-left:27%;">Start of OS-specific
+compression types.</p>
+<p style="margin-left:18%;"><b>ELFCOMPRESS_HIOS</b></p>
+<p style="margin-left:27%;">End of OS-specific compression
+types.</p>
+<p style="margin-left:18%;"><b>ELFCOMPRESS_LOPROC</b></p>
+<p style="margin-left:27%;">Start of processor-specific
+compression types.</p>
+<p style="margin-left:18%;"><b>ELFCOMPRESS_HIPROC</b></p>
+<p style="margin-left:27%;">End of processor-specific
+compression types.</p>
+<p style="margin-left:9%;"><i>ch_reserved</i></p>
+<p style="margin-left:18%;">Space reserved for use by
+<b>libelf</b>.</p>
+<p style="margin-left:9%;"><i>ch_size</i></p>
+<p style="margin-left:18%;">Data size of uncompressed
+section.</p>
+<p style="margin-left:9%;"><i>ch_addralign</i></p>
+<p style="margin-left:18%;">Alignment of uncompressed
+section.</p>
+<h3>Section Data
+<a name="Section Data"></a>
+</h3>
+<p style="margin-left:14%; margin-top: 1em">typedef struct
+{ <br/>
+void *d_buf; <br/>
+Elf_Type d_type; <br/>
+unsigned int d_version; <br/>
+size_t d_size; <br/>
+int64_t d_off; <br/>
+size_t d_align; <br/>
+} Elf_Data;</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><i>d_buf</i></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>Pointer to the actual data. Use <b>elf_getdata</b> to
+retrieve data in memory representation and
+<b>elf_rawdata</b> to retrieve data in file
+representation.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><i>d_type</i></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The <i>Elf_Type</i> of this piece of data. See the
+<i>Elf_Type</i> enum in <b>libelf.h</b> for descriptions of
+each value.</p></td></tr>
+</table>
+<p style="margin-left:9%;"><i>d_version</i></p>
+<p style="margin-left:18%;">The ELF version for this
+data.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><i>d_size</i></p></td>
+<td width="1%"></td>
+<td width="41%">
+<p>The size in bytes of this data.</p></td>
+<td width="41%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><i>d_off</i></p></td>
+<td width="1%"></td>
+<td width="41%">
+<p>The section offset of this data.</p></td>
+<td width="41%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><i>d_align</i></p>
+<p style="margin-left:18%;">The section alignment of this
+data.</p>
+<h3>Archive Member Header
+<a name="Archive Member Header"></a>
+</h3>
+<p style="margin-left:14%; margin-top: 1em">typedef struct
+{ <br/>
+char *ar_name; <br/>
+time_t ar_date; <br/>
+uid_t ar_uid; <br/>
+gid_t ar_gid; <br/>
+mode_t ar_mode; <br/>
+int64_t ar_size; <br/>
+char *ar_rawname; <br/>
+} Elf_Arhdr;</p>
+<p style="margin-left:9%;"><i>ar_name</i></p>
+<p style="margin-left:18%;">Name of archive member.</p>
+<p style="margin-left:9%;"><i>ar_data</i></p>
+<p style="margin-left:18%;">File date.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><i>ar_uid</i></p></td>
+<td width="1%"></td>
+<td width="11%">
+<p>User ID.</p></td>
+<td width="71%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><i>ar_gid</i></p></td>
+<td width="1%"></td>
+<td width="11%">
+<p>Group ID.</p></td>
+<td width="71%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><i>ar_mode</i></p>
+<p style="margin-left:18%;">File mode.</p>
+<p style="margin-left:9%;"><i>ar_size</i></p>
+<p style="margin-left:18%;">File size.</p>
+<p style="margin-left:9%;"><i>ar_rawname</i></p>
+<p style="margin-left:18%;">Original name of archive
+member.</p>
+<h3>Archive Symbol Table Entry
+<a name="Archive Symbol Table Entry"></a>
+</h3>
+<p style="margin-left:14%; margin-top: 1em">typedef struct
+{ <br/>
+char *as_name; <br/>
+size_t as_off; <br/>
+unsigned long int as_hash; <br/>
+} Elf_Arsym;</p>
+<p style="margin-left:9%;"><i>as_name</i></p>
+<p style="margin-left:18%;">Symbol name.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><i>as_off</i></p></td>
+<td width="1%"></td>
+<td width="46%">
+<p>Offset for this file in the archive.</p></td>
+<td width="36%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><i>as_hash</i></p>
+<p style="margin-left:18%;">Hash value of the name.</p>
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Report bugs to
+&lt;elfutils-devel@sourceware.org&gt; or
+https://sourceware.org/bugzilla/.</p>
+<hr/>
+</body>
+</html>

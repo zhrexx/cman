@@ -1,0 +1,316 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:52 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OPENSSL_S390XCAP</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OPENSSL_S390XCAP</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OPENSSL_s390xcap
+− the IBM z processor capabilities vector</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">env
+OPENSSL_s390xcap=... &lt;application&gt;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libcrypto
+supports z/Architecture instruction set extensions. These
+extensions are denoted by individual bits in the
+capabilities vector. When libcrypto is initialized, the bits
+returned by the STFLE instruction and by the QUERY functions
+are stored in the vector.</p>
+<p style="margin-left:9%; margin-top: 1em">To change the
+set of instructions available to an application, you can set
+the <b>OPENSSL_s390xcap</b> environment variable before you
+start the application. After initialization, the capability
+vector is ANDed bitwise with a mask which is derived from
+the environment variable.</p>
+<p style="margin-left:9%; margin-top: 1em">The environment
+variable is a semicolon−separated list of tokens which
+is processed from left to right (whitespace is ignored):</p>
+<p style="margin-left:9%; margin-top: 1em">OPENSSL_s390xcap="&lt;tok1&gt;;&lt;tok2&gt;;..."</p>
+<p style="margin-left:9%; margin-top: 1em">There are four
+types of tokens: <br/>
+&lt;string&gt;</p>
+<p style="margin-left:14%;">The name of a processor
+generation. A bit in the environment variable's mask is set
+to one if and only if the specified processor generation
+implements the corresponding instruction set extension.
+Possible values are <b>z900</b>, <b>z990</b>, <b>z9</b>,
+<b>z10</b>, <b>z196</b>, <b>zEC12</b>, <b>z13</b>,
+<b>z14</b>, <b>z15</b>, and <b>z16</b>.</p>
+<p style="margin-left:9%;">&lt;string&gt;:&lt;mask&gt;:&lt;mask&gt;</p>
+<p style="margin-left:14%;">The name of an instruction
+followed by two 64−bit masks. The part of the
+environment variable's mask corresponding to the specified
+instruction is set to the specified 128−bit mask.
+Possible values are <b>kimd</b>, <b>klmd</b>, <b>km</b>,
+<b>kmc</b>, <b>kmac</b>, <b>kmctr</b>, <b>kmo</b>,
+<b>kmf</b>, <b>prno</b>, <b>kma</b>, <b>pcc</b> and
+<b>kdsa</b>.</p>
+<p style="margin-left:9%;">stfle:&lt;mask&gt;:&lt;mask&gt;:&lt;mask&gt;</p>
+<p style="margin-left:14%;">Store−facility−list−extended
+(stfle) followed by three 64−bit masks. The part of
+the environment variable's mask corresponding to the stfle
+instruction is set to the specified 192−bit mask.</p>
+<p style="margin-left:9%;">nocex</p>
+<p style="margin-left:14%;">Deactivate modular
+exponentiation and CRT operation offloading to Crypto
+Express Adapters.</p>
+<p style="margin-left:9%; margin-top: 1em">The 64−bit
+masks are specified in hexadecimal notation. The 0x prefix
+is optional. Prefix a mask with a tilde, "˜",
+to denote a bitwise NOT operation.</p>
+<p style="margin-left:9%; margin-top: 1em">The following is
+a list of significant bits for each instruction. Colon rows
+separate the individual 64−bit masks. The bit numbers
+in the first column are consistent with [1], that is, 0
+denotes the leftmost bit and the numbering is continuous
+across 64−bit mask boundaries.</p>
+<p style="margin-left:9%; margin-top: 1em">Bit Mask
+Facility/Function <br/>
+stfle: <br/>
+# 17 1&lt;&lt;46 message−security assist <br/>
+# 25 1&lt;&lt;38 store−clock−fast facility <br/>
+: <br/>
+# 76 1&lt;&lt;51 message−security assist extension 3
+<br/>
+# 77 1&lt;&lt;50 message−security assist extension 4
+<br/>
+: <br/>
+#129 1&lt;&lt;62 vector facility <br/>
+#134 1&lt;&lt;57 vector packed decimal facility <br/>
+#135 1&lt;&lt;56 vector enhancements facility 1 <br/>
+#146 1&lt;&lt;45 message−security assist extension 8
+<br/>
+#155 1&lt;&lt;36 message−security assist extension 9
+<br/>
+kimd : <br/>
+# 1 1&lt;&lt;62 KIMD−SHA−1 <br/>
+# 2 1&lt;&lt;61 KIMD−SHA−256 <br/>
+# 3 1&lt;&lt;60 KIMD−SHA−512 <br/>
+# 32 1&lt;&lt;31 KIMD−SHA3−224 <br/>
+# 33 1&lt;&lt;30 KIMD−SHA3−256 <br/>
+# 34 1&lt;&lt;29 KIMD−SHA3−384 <br/>
+# 35 1&lt;&lt;28 KIMD−SHA3−512 <br/>
+# 36 1&lt;&lt;27 KIMD−SHAKE−128 <br/>
+# 37 1&lt;&lt;26 KIMD−SHAKE−256 <br/>
+: <br/>
+# 65 1&lt;&lt;62 KIMD−GHASH <br/>
+klmd : <br/>
+# 32 1&lt;&lt;31 KLMD−SHA3−224 <br/>
+# 33 1&lt;&lt;30 KLMD−SHA3−256 <br/>
+# 34 1&lt;&lt;29 KLMD−SHA3−384 <br/>
+# 35 1&lt;&lt;28 KLMD−SHA3−512 <br/>
+# 36 1&lt;&lt;27 KLMD−SHAKE−128 <br/>
+# 37 1&lt;&lt;26 KLMD−SHAKE−256 <br/>
+: <br/>
+km : <br/>
+# 18 1&lt;&lt;45 KM−AES−128 <br/>
+# 19 1&lt;&lt;44 KM−AES−192 <br/>
+# 20 1&lt;&lt;43 KM−AES−256 <br/>
+# 50 1&lt;&lt;13 KM−XTS−AES−128 <br/>
+# 52 1&lt;&lt;11 KM−XTS−AES−256 <br/>
+: <br/>
+kmc : <br/>
+# 18 1&lt;&lt;45 KMC−AES−128 <br/>
+# 19 1&lt;&lt;44 KMC−AES−192 <br/>
+# 20 1&lt;&lt;43 KMC−AES−256 <br/>
+: <br/>
+kmac : <br/>
+# 18 1&lt;&lt;45 KMAC−AES−128 <br/>
+# 19 1&lt;&lt;44 KMAC−AES−192 <br/>
+# 20 1&lt;&lt;43 KMAC−AES−256 <br/>
+: <br/>
+kmctr: <br/>
+: <br/>
+kmo : <br/>
+# 18 1&lt;&lt;45 KMO−AES−128 <br/>
+# 19 1&lt;&lt;44 KMO−AES−192 <br/>
+# 20 1&lt;&lt;43 KMO−AES−256 <br/>
+: <br/>
+kmf : <br/>
+# 18 1&lt;&lt;45 KMF−AES−128 <br/>
+# 19 1&lt;&lt;44 KMF−AES−192 <br/>
+# 20 1&lt;&lt;43 KMF−AES−256 <br/>
+: <br/>
+prno : <br/>
+: <br/>
+kma : <br/>
+# 18 1&lt;&lt;45 KMA−GCM−AES−128 <br/>
+# 19 1&lt;&lt;44 KMA−GCM−AES−192 <br/>
+# 20 1&lt;&lt;43 KMA−GCM−AES−256 <br/>
+: <br/>
+pcc : <br/>
+: <br/>
+# 64 1&lt;&lt;63 PCC−Scalar−Multiply−P256
+<br/>
+# 65 1&lt;&lt;62 PCC−Scalar−Multiply−P384
+<br/>
+# 66 1&lt;&lt;61 PCC−Scalar−Multiply−P521
+<br/>
+# 72 1&lt;&lt;55
+PCC−Scalar−Multiply−Ed25519 <br/>
+# 73 1&lt;&lt;54 PCC−Scalar−Multiply−Ed448
+<br/>
+# 80 1&lt;&lt;47
+PCC−Scalar−Multiply−X25519 <br/>
+# 81 1&lt;&lt;46 PCC−Scalar−Multiply−X448
+<br/>
+kdsa : <br/>
+# 1 1&lt;&lt;62 KDSA−ECDSA−Verify−P256
+<br/>
+# 2 1&lt;&lt;61 KDSA−ECDSA−Verify−P384
+<br/>
+# 3 1&lt;&lt;60 KDSA−ECDSA−Verify−P521
+<br/>
+# 9 1&lt;&lt;54 KDSA−ECDSA−Sign−P256 <br/>
+# 10 1&lt;&lt;53 KDSA−ECDSA−Sign−P384 <br/>
+# 11 1&lt;&lt;52 KDSA−ECDSA−Sign−P521 <br/>
+# 32 1&lt;&lt;31 KDSA−EdDSA−Verify−Ed25519
+<br/>
+# 36 1&lt;&lt;27 KDSA−EdDSA−Verify−Ed448
+<br/>
+# 40 1&lt;&lt;23 KDSA−EdDSA−Sign−Ed25519
+<br/>
+# 44 1&lt;&lt;19 KDSA−EdDSA−Sign−Ed448
+<br/>
+:</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Not
+available.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Disables all
+instruction set extensions which the z196 processor does not
+implement:</p>
+<p style="margin-left:9%; margin-top: 1em">OPENSSL_s390xcap="z196"</p>
+<p style="margin-left:9%; margin-top: 1em">Disables the
+vector facility:</p>
+<p style="margin-left:9%; margin-top: 1em">OPENSSL_s390xcap="stfle:˜0:˜0:˜0x4000000000000000"</p>
+<p style="margin-left:9%; margin-top: 1em">Disables the
+KM−XTS−AES and the KIMD−SHAKE function
+codes:</p>
+<p style="margin-left:9%; margin-top: 1em">OPENSSL_s390xcap="km:˜0x2800:˜0;kimd:˜0xc000000:˜0"</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">[1]
+z/Architecture Principles of Operation,
+SA22−7832−12</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2018−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

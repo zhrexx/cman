@@ -1,0 +1,685 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:12 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>curs_termcap</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">curs_termcap</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Initialization">Initialization</a><br/>
+<a href="#Retrieving Capability Values">Retrieving Capability Values</a><br/>
+<a href="#Applying String Capabilities">Applying String Capabilities</a><br/>
+<a href="#Global Variables">Global Variables</a><br/>
+<a href="#Releasing Memory">Releasing Memory</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#PORTABILITY">PORTABILITY</a><br/>
+<a href="#Standards">Standards</a><br/>
+<a href="#Compatibility with BSD termcap">Compatibility with BSD termcap</a><br/>
+<a href="#Header File">Header File</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>PC</b>,
+<b>UP</b>, <b>BC</b>, <b>ospeed</b>, <b>tgetent</b>,
+<b>tgetflag</b>, <b>tgetnum</b>, <b>tgetstr</b>,
+<b>tgoto</b>, <b>tputs</b> − <i>curses</i> emulation
+of <i>termcap</i></p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i><b>#include
+&lt;curses.h&gt; <br/>
+#include &lt;term.h&gt;</b></i></p>
+<p style="margin-left:9%; margin-top: 1em"><i><b>char PC;
+<br/>
+char * UP; <br/>
+char * BC; <br/>
+unsigned ospeed;</b></i></p>
+<p style="margin-left:9%; margin-top: 1em"><i><b>int
+tgetent(char *</b>bp</i><b>, const char
+*</b><i>name</i><b>); <br/>
+int tgetflag(const char *</b><i>id</i><b>); <br/>
+int tgetnum(const char *</b><i>id</i><b>); <br/>
+char *tgetstr(const char *</b><i>id</i><b>, char
+**</b><i>area</i><b>); <br/>
+char *tgoto(const char *</b><i>cap</i><b>, int</b>
+<i>col</i><b>, int</b> <i>row</i><b>); <br/>
+int tputs(const char *</b><i>str</i><b>, int</b>
+<i>affcnt</i><b>, int (*</b><i>putc</i><b>)(int));</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b><i>ncurses</i></b>
+provides the foregoing variables and functions as a
+compatibility layer for programs that use the <i>termcap</i>
+library. The API is the same, but behavior is emulated using
+the <i>terminfo</i> database. Thus, it can be used only to
+query the capabilities of terminal database entries for
+which a <i>terminfo</i> entry has been compiled.</p>
+<h3>Initialization
+<a name="Initialization"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>tgetent</b>
+loads the terminal database entry for <i>name</i>; see
+<b>term</b>(7). This must be done before calling any of the
+other functions. It returns</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="2%">
+<p>1</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>on success,</p></td></tr>
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="2%">
+<p>0</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>if there is no such entry (or if the matching entry
+describes a generic terminal, having too little information
+for <i>curses</i> applications to run), and</p></td></tr>
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="2%">
+<p>−1</p></td>
+<td width="4%"></td>
+<td width="81%">
+<p>if the <i>terminfo</i> database could not be found.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">This
+implementation differs from those of historical
+<i>termcap</i> libraries.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="82%">
+<p style="margin-top: 1em"><i>ncurses</i> ignores the
+buffer pointer <i>bp</i>, as do other <i>termcap</i>
+implementations conforming to portions of X/Open Curses now
+withdrawn. The BSD <i>termcap</i> library would store a copy
+of the terminal type description in the area referenced by
+this pointer. <i>terminfo</i> stores terminal type
+descriptions in compiled form, which is not the same
+thing.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="82%">
+<p>The meanings of the return values differ. The BSD
+<i>termcap</i> library does not check whether the terminal
+type description includes the <b>generic</b> (<b>gn</b>)
+capability, nor whether the terminal type description
+supports an addressable cursor, a property essential for any
+<i>curses</i> implementation to operate.</p></td></tr>
+</table>
+<h3>Retrieving Capability Values
+<a name="Retrieving Capability Values"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>tgetflag</b>
+reports the Boolean entry for <i>id</i>, or zero if it is
+not available.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tgetnum</b>
+obtains the numeric entry for <i>id</i>, or −1 if it
+is not available.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tgetstr</b>
+returns the string entry for <i>id</i>, or <b>NULL</b> if it
+is not available. Use <b>tputs</b> to output the string
+returned. The <i>area</i> parameter is used as follows.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="82%">
+<p style="margin-top: 1em">It is assumed to be the address
+of a pointer to a buffer managed by the calling
+application.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="82%">
+<p>However, <i>ncurses</i> checks to ensure that
+<i>area</i> is not <b>NULL</b>, and also that the resulting
+buffer pointer is not <b>NULL</b>. If either check fails,
+<i>area</i> is ignored.</p></td></tr>
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="82%">
+<p>If the checks succeed, <i>ncurses</i> also copies the
+return value to the buffer pointed to by <i>area</i>, and
+the library updates <i>area</i> to point past the null
+character terminating this value.</p></td></tr>
+<tr align="left" valign="top">
+<td width="13%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="82%">
+<p>The return value itself is an address in the terminal
+type description loaded into memory.</p></td></tr>
+</table>
+<h3>Applying String Capabilities
+<a name="Applying String Capabilities"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">String
+capabilities can be parameterized; see subsection
+“Parameterized Strings” in <b>terminfo</b>(5).
+<b>tgoto</b> applies its second and third arguments to the
+parametric placeholders in the capability stored in the
+first argument.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">The capability may contain
+padding specifications; see subsection “Delays and
+Padding” of <b>terminfo</b>(5). The output of
+<b>tgoto</b> should thus be passed to <b>tputs</b> rather
+than some other output function such as
+<i>printf</i>(3).</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>While <b>tgoto</b> is assumed to be used for the
+two-parameter cursor positioning capability, <i>termcap</i>
+applications also use it for single-parameter
+capabilities.</p> </td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Doing so
+reveals a quirk in <b>tgoto</b>: most hardware terminals use
+cursor addressing with <i>row</i> first, but the original
+developers of the <i>termcap</i> interface chose to put the
+<i>col</i> (column) parameter first. The <b>tgoto</b>
+function swaps the order of its parameters. It does this
+even for calls requiring only a single parameter. In that
+case, the first parameter is merely a placeholder.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">Normally the <i>ncurses</i>
+library is compiled without full <i>termcap</i> support. In
+that case, <b>tgoto</b> uses an internal version of
+<b>tparm</b>(3X) (a more capable function).</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Because it uses
+<b>tparm</b> internally, <b>tgoto</b> is able to use some
+<i>term- info</i> features, but not all. In particular, it
+allows only numeric parameters; <b>tparm</b> supports string
+parameters.</p>
+<p style="margin-left:14%; margin-top: 1em">However,
+<b>tparm</b> is not a <i>termcap</i> feature, and portable
+<i>termcap</i> applications should not rely upon its
+availability.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tputs</b> is
+described in <b>curs_terminfo</b>(3X). It can retrieve
+capabilities by either <i>termcap</i> or <i>terminfo</i>
+code.</p>
+<h3>Global Variables
+<a name="Global Variables"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The variables
+<b>PC</b>, <b>UP</b> and <b>BC</b> are set by <b>tgetent</b>
+to the <i>terminfo</i> entry’s data for
+<b>pad_char</b>, <b>cursor_up</b> and
+<b>backspace_if_not_bs</b>, respectively. <b>UP</b> is not
+used by <i>ncurses</i>. <b>PC</b> is used by
+<b>delay_output</b>(3X). <b>BC</b> is used by <b>tgoto</b>
+emulation. The variable <b>ospeed</b> is set by
+<i>ncurses</i> using a system-specific encoding to indicate
+the terminal’s data rate.</p>
+<h3>Releasing Memory
+<a name="Releasing Memory"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>termcap</i> functions provide no means of freeing memory,
+because legacy <i>termcap</i> implementations used only the
+buffer areas provided by the caller via <b>tgetent</b> and
+<b>tgetstr</b>. Those buffers are unused in <i>term-
+info</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">By contrast,
+<i>terminfo</i> allocates memory. It uses
+<b>setupterm</b>(3X) to obtain the data used by
+<b>tgetent</b> and the functions that retrieve capability
+values. One could use</p>
+<p style="margin-left:18%;">del_curterm(cur_term);</p>
+<p style="margin-left:9%;">to free this memory, but there
+is an additional complication with <i>ncurses</i>. It uses a
+fixed-size pool of storage locations, one per value of the
+terminal name parameter given to <b>tgetent</b>. The
+<i>screen</i>(1) program relies upon this arrangement to
+improve its performance.</p>
+<p style="margin-left:9%; margin-top: 1em">An application
+that uses only the <i>termcap</i> functions, not the higher
+level <i>curses</i> API, could release the memory using
+<b>del_curterm</b>(3X), because the pool is freed using
+other functions; see <b>curs_memleaks</b>(3X).</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The return
+values of <b>tgetent</b>, <b>tgetflag</b>, <b>tgetname</b>,
+and <b>tgetstr</b> are documented above.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>tgoto</b>
+returns <b>NULL</b> on error. Error conditions include:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">uninitialized state
+(<b>tgetent</b> was not called successfully),</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p><i>cap</i> being a null pointer,</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p><i>cap</i> referring to a canceled capability,</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p><i>cap</i> being a capability with string-valued
+parameters (a <i>term- info</i>-only feature), and</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p><i>cap</i> being a capability with more than two
+parameters.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">See
+<b>curs_terminfo</b>(3X) regarding <b>tputs</b>.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>ncurses</i>
+compares only the first two characters of the <i>id</i>
+parameter of <b>tgetflag</b>, <b>tgetnum</b>, and
+<b>tgetstr</b> to the capability names in the database.</p>
+<h2>PORTABILITY
+<a name="PORTABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+are no longer standardized (and the variables never were);
+<i>ncurses</i> provides them to support legacy applications.
+They should not be used in new programs.</p>
+<h3>Standards
+<a name="Standards"></a>
+</h3>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">X/Open Curses, Issue 4, Version
+2 (1996), describes these functions, marking them as
+“TO BE WITHDRAWN”.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>X/Open Curses, Issue 7 (2009) marks the <i>termcap</i>
+interface (along with <b>vwprintw</b> and <b>vwscanw</b>) as
+withdrawn.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Neither X/Open
+Curses nor the SVr4 man pages documented the return values
+of <b>tgetent</b> correctly, though all three shown here
+were in fact returned ever since SVr1. In particular, an
+omission in the X/Open Curses specification has been
+misinterpreted to mean that <b>tgetent</b> returns <b>OK</b>
+or <b>ERR</b>. Because the purpose of these functions is to
+provide compatibility with the <i>termcap</i> library, that
+is a defect in X/Open Curses, Issue 4, Version 2 rather than
+in <i>ncurses</i>.</p>
+<h3>Compatibility with BSD termcap
+<a name="Compatibility with BSD termcap"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Externally
+visible variables are provided for support of certain
+<i>termcap</i> applications. However, their correct usage is
+poorly documented; for example, it is unclear when reading
+and writing them is meaningful. In particular, some
+applications are reported to declare and/or modify
+<b>ospeed</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The constraint
+that only the first two characters of the <i>id</i>
+parameter are used escapes many application developers. The
+BSD <i>termcap</i> library did not require a trailing null
+character on the capability identifier passed to
+<b>tgetstr</b>, <b>tgetnum</b>, and <b>tgetflag</b>. Some
+applications thus assume that the <i>termcap</i> interface
+does not require the trailing null character for the
+capability identifier.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em"><i>ncurses</i> disallows matches
+by the <i>termcap</i> interface against extended capability
+names that are longer than two characters; see
+<b>user_caps</b>(5).</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The BSD
+<i>termcap</i> function <b>tgetent</b> returns the text of a
+<i>termcap</i> entry in the buffer passed as an argument.
+This library, like other <i>terminfo</i> implementations,
+does not store terminal type descriptions as text. It sets
+the buffer contents to a null-terminated string.</p>
+<h3>Header File
+<a name="Header File"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This library
+includes a <i>termcap.h</i> header for compatibility with
+other implementations, but the header is rarely used because
+the other implementations are not strictly compatible.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Bill Joy
+originated a forerunner of <i>termcap</i> called
+“ttycap”, dated September 1977, and released in
+1BSD (March 1978). It used many of the same function names
+as the later <i>termcap</i>, such as <b>tgetent</b>,
+<b>tgetflag</b>, <b>tgetnum</b>, and <b>tgetstr</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">A clear
+descendant, the <i>termlib</i> library, followed in 2BSD
+(May 1979), adding <b>tgoto</b> and <b>tputs</b>. The former
+applied at that time only to cursor positioning
+capabilities, thus the overly specific name. Little changed
+in 3BSD (late 1979) except the addition of test programs and
+a <i>termlib</i> man page, which documented the API shown in
+section “SYNOPSIS” above.</p>
+<p style="margin-left:9%; margin-top: 1em">4BSD (November
+1980) renamed <i>termlib</i> to <i>termcap</i> and added
+another test program. The library remained much the same
+though 4.3BSD (June 1986). 4.4BSD-Lite (June 1994)
+refactored it, leaving the API unchanged.</p>
+<p style="margin-left:9%; margin-top: 1em">Function
+prototypes were a feature of ANSI C (1989). The library long
+antedated the standard and thus provided no header file
+declaring them. Nevertheless, the BSD sources included two
+different <i>termcap.h</i> header files over time.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">One was used internally by
+<i>jove</i>(1) from 4.3BSD onward. It declared global
+symbols for the <i>termcap</i> variables that it used.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>The other appeared in 4.4BSD-Lite Release 2 (June 1995)
+as part of <i>libedit</i> (also known as the <i>editline</i>
+library). CSRG source history shows that this was added in
+mid-1992. The <i>libedit</i> header file was used internally
+as a convenience for compiling the <i>editline</i> library.
+It declared function prototypes, but no global variables.
+This header file was added to NetBSD’s <i>termcap</i>
+library in mid-1994.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Meanwhile, GNU
+<i>termcap</i> began development in 1990. Its first release
+(1.0) in 1991 included a <i>termcap.h</i> header. Its second
+(1.1) in September 1992 modified the header to use
+<i>const</i> for the function prototypes in the header where
+one would expect the parameters to be read-only. BSD
+<i>termcap</i> did not. The prototype for <b>tputs</b> also
+differed, but in that instance, it was <i>libedit</i> that
+differed from BSD <i>termcap</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">GNU
+<i>termcap</i> 1.3 was bundled with <i>bash</i>(1) in
+mid-1993 to support the <i>readline</i>(3) library.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>ncurses</i>
+1.8.1 (November 1993) provided a <i>termcap.h</i> file. It
+reflected influence from GNU <i>termcap</i> and
+<i>emacs</i>(1) (rather than <i>jove</i>(1)), providing the
+following interface:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="59%">
+<p style="margin-top: 1em">global symbols used by
+<i>emacs</i>,</p> </td>
+<td width="27%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="59%">
+<p><i>const</i>-qualified function prototypes, and</p></td>
+<td width="27%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="59%">
+<p>a prototype for <b>tparam</b>, a GNU <i>termcap</i>
+feature.</p> </td>
+<td width="27%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Later (in
+mid-1996) the <b>tparam</b> function was removed from
+<i>ncurses</i>. Any two of the four implementations thus
+differ, and programs that intend to work with all
+<i>termcap</i> library interfaces must account for that
+fact.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If you call
+<b>tgetstr</b> to fetch <b>column_address</b> (<b>ch</b>) or
+any other parameterized string capability, be aware that it
+is returned in <i>term- info</i> notation, not the older and
+not-quite-compatible <i>termcap</i> notation. This does not
+cause problems if all you do with it is call <b>tgoto</b> or
+<b>tparm</b>, which both parametrically expand
+<i>terminfo</i>-style string capabilities as <i>terminfo</i>
+does. (If <i>ncurses</i> is configured to support
+<i>termcap,</i> <b>tgoto</b> checks whether the string is
+<i>terminfo</i>-style by looking for “<b>%p</b>”
+parameters or “<b>&lt;</b>...<b>&gt;</b>”
+delays, and invokes a <i>termcap</i>-style parser if the
+string appears not to use <i>terminfo</i> syntax.)</p>
+<p style="margin-left:9%; margin-top: 1em">Because
+<i>terminfo</i>’s syntax for padding in string
+capabilities differs from <i>termcap</i>’s, users can
+be surprised.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em"><b>tputs("50")</b> in
+a <i>terminfo</i> system transmits “50” rather
+than busy-waiting for 50 milliseconds.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>However, if <i>ncurses</i> is configured to support
+<i>termcap</i>, it may also have been configured to support
+BSD-style padding.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">In that case,
+<b>tputs</b> inspects strings passed to it, looking for
+digits at the beginning of the string.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>tputs("50")</b>
+in a <i>termcap</i> system may busy-wait for 50 milliseconds
+rather than transmitting “50”.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>termcap</i>
+has nothing analogous to <i>terminfo</i>’s
+<b>set_attributes</b> (<b>sgr</b>) capability. One
+consequence is that <i>termcap</i> applications assume that
+“<b>me</b>” (equivalent to
+<i>terminfo</i>’s <b>exit_attribute_mode</b>
+(<b>sgr0</b>) capability) does not reset the alternate
+character set. <i>ncurses</i> checks for, and modifies the
+data shared with, the <i>termcap</i> interface to
+accommodate the latter’s limitation in this
+respect.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>curses</b>(3X),
+<b>curs_terminfo</b>(3X), <b>putc</b>(3),
+<b>term_variables</b>(3X), <b>terminfo</b>(5)</p>
+<p style="margin-left:9%; margin-top: 1em">https://invisible−island.net/ncurses/tctest.html</p>
+<hr/>
+</body>
+</html>

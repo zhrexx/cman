@@ -1,0 +1,923 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:58 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ExtUtils::MM_Any</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">ExtUtils::MM_Any</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#Cross−platform helper methods">Cross−platform helper methods</a><br/>
+<a href="#Targets">Targets</a><br/>
+<a href="#Init methods">Init methods</a><br/>
+<a href="#Tools">Tools</a><br/>
+<a href="#File::Spec wrappers">File::Spec wrappers</a><br/>
+<a href="#Misc">Misc</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">ExtUtils::MM_Any
+− Platform−agnostic MM methods</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">FOR INTERNAL USE
+ONLY! <br/>
+package ExtUtils::MM_SomeOS; <br/>
+# Temporarily, you have to subclass both. Put MM_Any first.
+<br/>
+require ExtUtils::MM_Any; <br/>
+require ExtUtils::MM_Unix; <br/>
+@ISA = qw(ExtUtils::MM_Any ExtUtils::Unix);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>FOR INTERNAL
+USE ONLY!</b></p>
+<p style="margin-left:9%; margin-top: 1em">ExtUtils::MM_Any
+is a superclass for the ExtUtils::MM_* set of modules. It
+contains methods which are either inherently
+cross−platform or are written in a
+cross−platform manner.</p>
+<p style="margin-left:9%; margin-top: 1em">Subclass off of
+ExtUtils::MM_Any <i>and</i> ExtUtils::MM_Unix. This is a
+temporary solution.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>THIS MAY BE
+TEMPORARY!</b></p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Any methods
+marked <i>Abstract</i> must be implemented by
+subclasses.</p>
+<h3>Cross−platform helper methods
+<a name="Cross−platform helper methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These are
+methods which help writing cross−platform code.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>os_flavor
+Abstract</i></p>
+<p style="margin-left:9%; margin-top: 1em">my @os_flavor =
+$mm−&gt;os_flavor;</p>
+<p style="margin-left:9%; margin-top: 1em">@os_flavor is
+the style of operating system this is, usually corresponding
+to the MM_*.pm file we're using.</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+element of @os_flavor is the major family (ie. Unix,
+Windows, VMS, OS/2, etc...) and the rest are sub
+families.</p>
+<p style="margin-left:9%; margin-top: 1em">Some
+examples:</p>
+<p style="margin-left:9%; margin-top: 1em">Cygwin98
+('Unix', 'Cygwin', 'Cygwin9x') <br/>
+Windows ('Win32') <br/>
+Win98 ('Win32', 'Win9x') <br/>
+Linux ('Unix', 'Linux') <br/>
+MacOS X ('Unix', 'Darwin', 'MacOS', 'MacOS X') <br/>
+OS/2 ('OS/2')</p>
+<p style="margin-left:9%; margin-top: 1em">This is used to
+write code for styles of operating system. See
+<b>os_flavor_is()</b> for use.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>os_flavor_is</i></p>
+<p style="margin-left:9%; margin-top: 1em">my
+$is_this_flavor = $mm−&gt;os_flavor_is($this_flavor);
+<br/>
+my $is_this_flavor =
+$mm−&gt;os_flavor_is(@one_of_these_flavors);</p>
+<p style="margin-left:9%; margin-top: 1em">Checks to see if
+the current operating system is one of the given
+flavors.</p>
+<p style="margin-left:9%; margin-top: 1em">This is useful
+for code like:</p>
+<p style="margin-left:9%; margin-top: 1em">if(
+$mm−&gt;os_flavor_is('Unix') ) { <br/>
+$out = `foo 2&gt;&amp;1`; <br/>
+} <br/>
+else { <br/>
+$out = `foo`; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em"><i>can_load_xs</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $can_load_xs
+= $self−&gt;can_load_xs;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+we have the ability to load XS.</p>
+<p style="margin-left:9%; margin-top: 1em">This is
+important because miniperl, used to build XS modules in the
+core, can not load XS.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>can_run</i></p>
+<p style="margin-left:9%; margin-top: 1em">use
+ExtUtils::MM; <br/>
+my $runnable = MM−&gt;can_run($Config{make});</p>
+<p style="margin-left:9%; margin-top: 1em">If called in a
+scalar context it will return the full path to the binary
+you asked for if it was found, or "undef" if it
+was not.</p>
+<p style="margin-left:9%; margin-top: 1em">If called in a
+list context, it will return a list of the full paths to
+instances of the binary where found in "PATH", or
+an empty list if it was not found.</p>
+<p style="margin-left:9%; margin-top: 1em">Copied from
+IPC::Cmd, but modified into a method (and removed $INSTANCES
+capability).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>can_redirect_error</i></p>
+<p style="margin-left:9%; margin-top: 1em">$useredirect =
+MM−&gt;can_redirect_error;</p>
+<p style="margin-left:9%; margin-top: 1em">True if on an OS
+where qx operator (or backticks) can redirect
+"STDERR" onto "STDOUT".</p>
+<p style="margin-left:9%; margin-top: 1em"><i>is_make_type</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $is_dmake =
+$self−&gt;is_make_type('dmake');</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+"$self−&gt;make" is the given type;
+possibilities are:</p>
+<p style="margin-left:9%; margin-top: 1em">gmake GNU make
+<br/>
+dmake <br/>
+nmake <br/>
+bsdmake BSD pmake−derived</p>
+<p style="margin-left:9%; margin-top: 1em"><i>can_dep_space</i></p>
+<p style="margin-left:9%; margin-top: 1em">my
+$can_dep_space = $self−&gt;can_dep_space;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns true if
+"make" can handle (probably by quoting)
+dependencies that contain a space. Currently known true for
+GNU make, false for BSD pmake derivative.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>quote_dep</i></p>
+<p style="margin-left:9%; margin-top: 1em">$text =
+$mm−&gt;quote_dep($text);</p>
+<p style="margin-left:9%; margin-top: 1em">Method that
+protects Makefile single−value constants (mainly
+filenames), so that make will still treat them as single
+values even if they inconveniently have spaces in. If the
+make program being used cannot achieve such protection and
+the given text would need it, throws an exception.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>split_command</i></p>
+<p style="margin-left:9%; margin-top: 1em">my @cmds =
+$MM−&gt;split_command($cmd, @args);</p>
+<p style="margin-left:9%; margin-top: 1em">Most OS have a
+maximum command length they can execute at once. Large
+modules can easily generate commands well past that limit.
+Its necessary to split long commands up into a series of
+shorter commands.</p>
+<p style="margin-left:9%; margin-top: 1em">"split_command"
+will return a series of @cmds each processing part of the
+args. Collectively they will process all the arguments. Each
+individual line in @cmds will not be longer than the
+$self−&gt;max_exec_len being careful to take into
+account macro expansion.</p>
+<p style="margin-left:9%; margin-top: 1em">$cmd should
+include any switches and repeated initial arguments.</p>
+<p style="margin-left:9%; margin-top: 1em">If no @args are
+given, no @cmds will be returned.</p>
+<p style="margin-left:9%; margin-top: 1em">Pairs of
+arguments will always be preserved in a single command, this
+is a heuristic for things like pm_to_blib and pod2man which
+work on pairs of arguments. This makes things like this
+safe:</p>
+<p style="margin-left:9%; margin-top: 1em">$self−&gt;split_command($cmd,
+%pod2man);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>make_type</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns a
+suitable string describing the type of makefile being
+written.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>stashmeta</i></p>
+<p style="margin-left:9%; margin-top: 1em">my @recipelines
+= $MM−&gt;stashmeta($text, $file);</p>
+<p style="margin-left:9%; margin-top: 1em">Generates a set
+of @recipelines which will result in the literal $text
+ending up in literal $file when the recipe is executed. Call
+it once, with all the text you want in $file. Make macros
+will not be expanded, so the locations will be fixed at
+configure−time, not at build−time.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>echo</i></p>
+<p style="margin-left:9%; margin-top: 1em">my @commands =
+$MM−&gt;echo($text); <br/>
+my @commands = $MM−&gt;echo($text, $file); <br/>
+my @commands = $MM−&gt;echo($text, $file, \%opts);</p>
+<p style="margin-left:9%; margin-top: 1em">Generates a set
+of @commands which print the $text to a $file.</p>
+<p style="margin-left:9%; margin-top: 1em">If $file is not
+given, output goes to STDOUT.</p>
+<p style="margin-left:9%; margin-top: 1em">If $opts{append}
+is true the $file will be appended to rather than
+overwritten. Default is to overwrite.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+$opts{allow_variables} is true, make variables of the form
+"$(...)" will not be escaped. Other "$"
+will. Default is to escape all "$".</p>
+<p style="margin-left:9%; margin-top: 1em">Example of
+use:</p>
+<p style="margin-left:9%; margin-top: 1em">my $make = join
+'', map "\t$_\n", $MM−&gt;echo($text,
+$file);</p>
+<p style="margin-left:9%; margin-top: 1em"><i>wraplist</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $args =
+$mm−&gt;wraplist(@list);</p>
+<p style="margin-left:9%; margin-top: 1em">Takes an array
+of items and turns them into a well−formatted list of
+arguments. In most cases this is simply something like:</p>
+<p style="margin-left:9%; margin-top: 1em">FOO \ <br/>
+BAR \ <br/>
+BAZ</p>
+<p style="margin-left:9%; margin-top: 1em"><i>maketext_filter</i></p>
+<p style="margin-left:9%; margin-top: 1em">my
+$filter_make_text =
+$mm−&gt;maketext_filter($make_text);</p>
+<p style="margin-left:9%; margin-top: 1em">The text of the
+Makefile is run through this method before writing to disk.
+It allows systems a chance to make portability fixes to the
+Makefile.</p>
+<p style="margin-left:9%; margin-top: 1em">By default it
+does nothing.</p>
+<p style="margin-left:9%; margin-top: 1em">This method is
+protected and not intended to be called outside of
+MakeMaker.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>cd
+Abstract</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $subdir_cmd =
+$MM−&gt;cd($subdir, @cmds);</p>
+<p style="margin-left:9%; margin-top: 1em">This will
+generate a make fragment which runs the @cmds in the given
+$dir. The rough equivalent to this, except cross
+platform.</p>
+<p style="margin-left:9%; margin-top: 1em">cd $subdir
+&amp;&amp; $cmd</p>
+<p style="margin-left:9%; margin-top: 1em">Currently $dir
+can only go down one level. "foo" is fine.
+"foo/bar" is not. "../foo" is right
+out.</p>
+<p style="margin-left:9%; margin-top: 1em">The resulting
+$subdir_cmd has no leading tab nor trailing newline. This
+makes it easier to embed in a make string. For example.</p>
+<p style="margin-left:9%; margin-top: 1em">my $make =
+sprintf &lt;&lt;'CODE', $subdir_cmd; <br/>
+foo : <br/>
+$(ECHO) what <br/>
+%s <br/>
+$(ECHO) mouche <br/>
+CODE</p>
+<p style="margin-left:9%; margin-top: 1em"><i>oneliner
+Abstract</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $oneliner =
+$MM−&gt;oneliner($perl_code); <br/>
+my $oneliner = $MM−&gt;oneliner($perl_code,
+\@switches);</p>
+<p style="margin-left:9%; margin-top: 1em">This will
+generate a perl one−liner safe for the particular
+platform you're on based on the given $perl_code and
+@switches (a −e is assumed) suitable for using in a
+make target. It will use the proper shell quoting and
+escapes.</p>
+<p style="margin-left:9%; margin-top: 1em">$(PERLRUN) will
+be used as perl.</p>
+<p style="margin-left:9%; margin-top: 1em">Any newlines in
+$perl_code will be escaped. Leading and trailing newlines
+will be stripped. Makes this idiom much easier:</p>
+<p style="margin-left:9%; margin-top: 1em">my $code =
+$MM−&gt;oneliner(&lt;&lt;'CODE', [...switches...]);
+<br/>
+some code here <br/>
+another line here <br/>
+CODE</p>
+<p style="margin-left:9%; margin-top: 1em">Usage might be
+something like:</p>
+<p style="margin-left:9%; margin-top: 1em"># an echo
+emulation <br/>
+$oneliner = $MM−&gt;oneliner('print
+"Foo\n"'); <br/>
+$make = '$oneliner &gt; somefile';</p>
+<p style="margin-left:9%; margin-top: 1em">Dollar signs in
+the $perl_code will be protected from make using the
+"quote_literal" method, unless they are recognised
+as being a make variable, "$(varname)", in which
+case they will be left for make to expand. Remember to quote
+make macros else it might be used as a bareword. For
+example:</p>
+<p style="margin-left:9%; margin-top: 1em"># Assign the
+value of the $(VERSION_FROM) make macro to $vf. <br/>
+$oneliner = $MM−&gt;oneliner('$vf =
+"$(VERSION_FROM)"');</p>
+<p style="margin-left:9%; margin-top: 1em">Its currently
+very simple and may be expanded sometime in the figure to
+include more flexible code and switches.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>quote_literal
+Abstract</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $safe_text =
+$MM−&gt;quote_literal($text); <br/>
+my $safe_text = $MM−&gt;quote_literal($text,
+\%options);</p>
+<p style="margin-left:9%; margin-top: 1em">This will quote
+$text so it is interpreted literally in the shell.</p>
+<p style="margin-left:9%; margin-top: 1em">For example, on
+Unix this would escape any single−quotes in $text and
+put single−quotes around the whole thing.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+$options{allow_variables} is true it will leave '$(FOO)'
+make variables untouched. If false they will be escaped like
+any other "$". Defaults to true.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>escape_dollarsigns</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $escaped_text
+= $MM−&gt;escape_dollarsigns($text);</p>
+<p style="margin-left:9%; margin-top: 1em">Escapes stray
+"$" so they are not interpreted as make
+variables.</p>
+<p style="margin-left:9%; margin-top: 1em">It lets by
+"$(...)".</p>
+<p style="margin-left:9%; margin-top: 1em"><i>escape_all_dollarsigns</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $escaped_text
+= $MM−&gt;escape_all_dollarsigns($text);</p>
+<p style="margin-left:9%; margin-top: 1em">Escapes all
+"$" so they are not interpreted as make
+variables.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>escape_newlines
+Abstract</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $escaped_text
+= $MM−&gt;escape_newlines($text);</p>
+<p style="margin-left:9%; margin-top: 1em">Shell escapes
+newlines in $text.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>max_exec_len
+Abstract</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $max_exec_len
+= $MM−&gt;max_exec_len;</p>
+<p style="margin-left:9%; margin-top: 1em">Calculates the
+maximum command size the OS can exec. Effectively, this is
+the max size of a shell command line.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>make</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $make =
+$MM−&gt;make;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the make
+variant we're generating the Makefile for. This attempts to
+do some normalization on the information from %Config or the
+user.</p>
+<h3>Targets
+<a name="Targets"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These are
+methods which produce make targets.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>all_target</i></p>
+<p style="margin-left:9%; margin-top: 1em">Generate the
+default target 'all'.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>blibdirs_target</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $make_frag =
+$mm−&gt;blibdirs_target;</p>
+<p style="margin-left:9%; margin-top: 1em">Creates the
+blibdirs target which creates all the directories we use in
+blib/.</p>
+<p style="margin-left:9%; margin-top: 1em">The blibdirs.ts
+target is deprecated. Depend on blibdirs instead.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>clean
+(o)</i></p>
+<p style="margin-left:9%; margin-top: 1em">Defines the
+clean target.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>clean_subdirs_target</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $make_frag =
+$MM−&gt;clean_subdirs_target;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+clean_subdirs target. This is used by the clean target to
+call clean on any subdirectories which contain
+Makefiles.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>dir_target</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $make_frag =
+$mm−&gt;dir_target(@directories);</p>
+<p style="margin-left:9%; margin-top: 1em">Generates
+targets to create the specified directories and set its
+permission to PERM_DIR.</p>
+<p style="margin-left:9%; margin-top: 1em">Because
+depending on a directory to just ensure it exists doesn't
+work too well (the modified time changes too often)
+<b>dir_target()</b> creates a .exists file in the created
+directory. It is this you should depend on. For portability
+purposes you should use the $(DIRFILESEP) macro rather than
+a '/' to separate the directory from the file.</p>
+<p style="margin-left:9%; margin-top: 1em">yourdirectory$(DIRFILESEP).exists</p>
+<p style="margin-left:9%; margin-top: 1em"><i>distdir</i></p>
+<p style="margin-left:9%; margin-top: 1em">Defines the
+scratch directory target that will hold the distribution
+before tar−ing (or shar−ing).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>dist_test</i></p>
+<p style="margin-left:9%; margin-top: 1em">Defines a target
+that produces the distribution in the scratch directory, and
+runs 'perl Makefile.PL; make ;make test' in that
+subdirectory.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>xs_dlsyms_arg</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns
+command−line arg(s) to linker for file listing dlsyms
+to export. Defaults to returning empty string, can be
+overridden by e.g. AIX.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>xs_dlsyms_ext</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns
+file−extension for "xs_make_dlsyms" method's
+output file, including any "." character.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>xs_dlsyms_extra</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns any
+extra text to be prepended to the $extra argument of
+"xs_make_dlsyms".</p>
+<p style="margin-left:9%; margin-top: 1em"><i>xs_dlsyms_iterator</i></p>
+<p style="margin-left:9%; margin-top: 1em">Iterates over
+necessary shared objects, calling "xs_make_dlsyms"
+method for each with appropriate arguments.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>xs_make_dlsyms</i></p>
+<p style="margin-left:9%; margin-top: 1em">$self−&gt;xs_make_dlsyms(
+<br/>
+\%attribs, # hashref from %attribs in caller <br/>
+"$self−&gt;{BASEEXT}.def", # output file for
+Makefile target <br/>
+'Makefile.PL', # dependency <br/>
+$self−&gt;{NAME}, # shared object's "name"
+<br/>
+$self−&gt;{DLBASE}, # last ::−separated part of
+name <br/>
+$attribs{DL_FUNCS} || $self−&gt;{DL_FUNCS} || {}, #
+various params <br/>
+$attribs{FUNCLIST} || $self−&gt;{FUNCLIST} || [], <br/>
+$attribs{IMPORTS} || $self−&gt;{IMPORTS} || {}, <br/>
+$attribs{DL_VARS} || $self−&gt;{DL_VARS} || [], <br/>
+# optional extra param that will be added as param to
+Mksymlists <br/>
+);</p>
+<p style="margin-left:9%; margin-top: 1em">Utility method
+that returns Makefile snippet to call
+"Mksymlists".</p>
+<p style="margin-left:9%; margin-top: 1em"><i>dynamic
+(o)</i></p>
+<p style="margin-left:9%; margin-top: 1em">Defines the
+dynamic target.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>makemakerdflt_target</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $make_frag =
+$mm−&gt;makemakerdflt_target</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a make
+fragment with the makemakerdeflt_target specified. This
+target is the first target in the Makefile, is the default
+target and simply points off to 'all' just in case any make
+variant gets confused or something gets snuck in before the
+real 'all' target.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>manifypods_target</i></p>
+<p style="margin-left:9%; margin-top: 1em">my
+$manifypods_target = $self−&gt;manifypods_target;</p>
+<p style="margin-left:9%; margin-top: 1em">Generates the
+manifypods target. This target generates man pages from all
+POD files in MAN1PODS and MAN3PODS.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>metafile_target</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $target =
+$mm−&gt;metafile_target;</p>
+<p style="margin-left:9%; margin-top: 1em">Generate the
+metafile target.</p>
+<p style="margin-left:9%; margin-top: 1em">Writes the file
+META.yml (YAML encoded meta−data) and META.json (JSON
+encoded meta−data) about the module in the distdir.
+The format follows Module::Build's as closely as
+possible.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>metafile_data</i></p>
+<p style="margin-left:9%; margin-top: 1em">my
+$metadata_hashref = $mm−&gt;metafile_data(\%meta_add,
+\%meta_merge);</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the data
+which MakeMaker turns into the META.yml file and the
+META.json file. It is always in version 2.0 of the
+format.</p>
+<p style="margin-left:9%; margin-top: 1em">Values of
+%meta_add will overwrite any existing metadata in those
+keys. %meta_merge will be merged with them.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>metafile_file</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $meta_yml =
+$mm−&gt;metafile_file(@metadata_pairs);</p>
+<p style="margin-left:9%; margin-top: 1em">Turns the
+@metadata_pairs into YAML.</p>
+<p style="margin-left:9%; margin-top: 1em">This method does
+not implement a complete YAML dumper, being limited to dump
+a hash with values which are strings, undef's or nested
+hashes and arrays of strings. No quoting/escaping is
+done.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>distmeta_target</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $make_frag =
+$mm−&gt;distmeta_target;</p>
+<p style="margin-left:9%; margin-top: 1em">Generates the
+distmeta target to add META.yml and META.json to the
+MANIFEST in the distdir.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>mymeta</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $mymeta =
+$mm−&gt;mymeta;</p>
+<p style="margin-left:9%; margin-top: 1em">Generate MYMETA
+information as a hash either from an existing CPAN Meta file
+(META.json or META.yml) or from internal data.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>write_mymeta</i></p>
+<p style="margin-left:9%; margin-top: 1em">$self−&gt;write_mymeta(
+$mymeta );</p>
+<p style="margin-left:9%; margin-top: 1em">Write MYMETA
+information to MYMETA.json and MYMETA.yml.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>realclean
+(o)</i></p>
+<p style="margin-left:9%; margin-top: 1em">Defines the
+realclean target.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>realclean_subdirs_target</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $make_frag =
+$MM−&gt;realclean_subdirs_target;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+realclean_subdirs target. This is used by the realclean
+target to call realclean on any subdirectories which contain
+Makefiles.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>signature_target</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $target =
+$mm−&gt;signature_target;</p>
+<p style="margin-left:9%; margin-top: 1em">Generate the
+signature target.</p>
+<p style="margin-left:9%; margin-top: 1em">Writes the file
+SIGNATURE with "cpansign −s".</p>
+<p style="margin-left:9%; margin-top: 1em"><i>distsignature_target</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $make_frag =
+$mm−&gt;distsignature_target;</p>
+<p style="margin-left:9%; margin-top: 1em">Generates the
+distsignature target to add SIGNATURE to the MANIFEST in the
+distdir.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>special_targets</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $make_frag =
+$mm−&gt;special_targets</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a make
+fragment containing any targets which have special meaning
+to make. For example, .SUFFIXES and .PHONY.</p>
+<h3>Init methods
+<a name="Init methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Methods which
+help initialize the MakeMaker object and macros.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_ABSTRACT</i></p>
+<p style="margin-left:9%; margin-top: 1em">$mm−&gt;init_ABSTRACT</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_INST</i></p>
+<p style="margin-left:9%; margin-top: 1em">$mm−&gt;init_INST;</p>
+<p style="margin-left:9%; margin-top: 1em">Called by
+init_main. Sets up all INST_* variables except those related
+to XS code. Those are handled in init_xs.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_INSTALL</i></p>
+<p style="margin-left:9%; margin-top: 1em">$mm−&gt;init_INSTALL;</p>
+<p style="margin-left:9%; margin-top: 1em">Called by
+init_main. Sets up all INSTALL_* variables (except
+INSTALLDIRS) and *PREFIX.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_INSTALL_from_PREFIX</i></p>
+<p style="margin-left:9%; margin-top: 1em">$mm−&gt;init_INSTALL_from_PREFIX;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_from_INSTALL_BASE</i></p>
+<p style="margin-left:9%; margin-top: 1em">$mm−&gt;init_from_INSTALL_BASE</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_VERSION
+Abstract</i></p>
+<p style="margin-left:9%; margin-top: 1em">$mm−&gt;init_VERSION</p>
+<p style="margin-left:9%; margin-top: 1em">Initialize
+macros representing versions of MakeMaker and other
+tools</p>
+<p style="margin-left:9%; margin-top: 1em">MAKEMAKER: path
+to the MakeMaker module.</p>
+<p style="margin-left:9%; margin-top: 1em">MM_VERSION:
+ExtUtils::MakeMaker Version</p>
+<p style="margin-left:9%; margin-top: 1em">MM_REVISION:
+ExtUtils::MakeMaker version control revision (for backwards
+<br/>
+compat)</p>
+<p style="margin-left:9%; margin-top: 1em">VERSION: version
+of your module</p>
+<p style="margin-left:9%; margin-top: 1em">VERSION_MACRO:
+which macro represents the version (usually 'VERSION')</p>
+<p style="margin-left:9%; margin-top: 1em">VERSION_SYM:
+like version but safe for use as an RCS revision number</p>
+<p style="margin-left:9%; margin-top: 1em">DEFINE_VERSION:
+−D line to set the module version when compiling</p>
+<p style="margin-left:9%; margin-top: 1em">XS_VERSION:
+version in your .xs file. Defaults to $(VERSION)</p>
+<p style="margin-left:9%; margin-top: 1em">XS_VERSION_MACRO:
+which macro represents the XS version.</p>
+<p style="margin-left:9%; margin-top: 1em">XS_DEFINE_VERSION:
+−D line to set the xs version when compiling.</p>
+<p style="margin-left:9%; margin-top: 1em">Called by
+init_main.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_tools</i></p>
+<p style="margin-left:9%; margin-top: 1em">$MM−&gt;init_tools();</p>
+<p style="margin-left:9%; margin-top: 1em">Initializes the
+simple macro definitions used by <b>tools_other()</b> and
+places them in the $MM object. These use conservative cross
+platform versions and should be overridden with platform
+specific versions for performance.</p>
+<p style="margin-left:9%; margin-top: 1em">Defines at least
+these macros.</p>
+<p style="margin-left:9%; margin-top: 1em">Macro
+Description <br/>
+NOOP Do nothing <br/>
+NOECHO Tell make not to display the command itself <br/>
+SHELL Program used to run shell commands <br/>
+ECHO Print text adding a newline on the end <br/>
+RM_F Remove a file <br/>
+RM_RF Remove a directory <br/>
+TOUCH Update a file's timestamp <br/>
+TEST_F Test for a file's existence <br/>
+TEST_S Test the size of a file <br/>
+CP Copy a file <br/>
+CP_NONEMPTY Copy a file if it is not empty <br/>
+MV Move a file <br/>
+CHMOD Change permissions on a file <br/>
+FALSE Exit with non−zero <br/>
+TRUE Exit with zero <br/>
+UMASK_NULL Nullify umask <br/>
+DEV_NULL Suppress all command output</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_others</i></p>
+<p style="margin-left:9%; margin-top: 1em">$MM−&gt;init_others();</p>
+<p style="margin-left:9%; margin-top: 1em">Initializes the
+macro definitions having to do with compiling and linking
+used by <b>tools_other()</b> and places them in the $MM
+object.</p>
+<p style="margin-left:9%; margin-top: 1em">If there is no
+description, its the same as the parameter to
+<b>WriteMakefile()</b> documented in
+ExtUtils::MakeMaker.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>tools_other</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $make_frag =
+$MM−&gt;tools_other;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a make
+fragment containing definitions for the macros
+<b>init_others()</b> initializes.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_DIRFILESEP
+Abstract</i></p>
+<p style="margin-left:9%; margin-top: 1em">$MM−&gt;init_DIRFILESEP;
+<br/>
+my $dirfilesep = $MM−&gt;{DIRFILESEP};</p>
+<p style="margin-left:9%; margin-top: 1em">Initializes the
+DIRFILESEP macro which is the separator between the
+directory and filename in a filepath. ie. / on Unix, \ on
+Win32 and nothing on VMS.</p>
+<p style="margin-left:9%; margin-top: 1em">For example:</p>
+<p style="margin-left:9%; margin-top: 1em"># instead of
+$(INST_ARCHAUTODIR)/extralibs.ld <br/>
+$(INST_ARCHAUTODIR)$(DIRFILESEP)extralibs.ld</p>
+<p style="margin-left:9%; margin-top: 1em">Something of a
+hack but it prevents a lot of code duplication between MM_*
+variants.</p>
+<p style="margin-left:9%; margin-top: 1em">Do not use this
+as a separator between directories. Some operating systems
+use different separators between subdirectories as between
+directories and filenames (for example:
+VOLUME:[dir1.dir2]file on VMS).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_linker
+Abstract</i></p>
+<p style="margin-left:9%; margin-top: 1em">$mm−&gt;init_linker;</p>
+<p style="margin-left:9%; margin-top: 1em">Initialize
+macros which have to do with linking.</p>
+<p style="margin-left:9%; margin-top: 1em">PERL_ARCHIVE:
+path to libperl.a equivalent to be linked to dynamic
+extensions.</p>
+<p style="margin-left:9%; margin-top: 1em">PERL_ARCHIVE_AFTER:
+path to a library which should be put on the linker command
+line <i>after</i> the external libraries to be linked to
+dynamic extensions. This may be needed if the linker is
+one−pass, and Perl includes some overrides for C RTL
+functions, such as <b>malloc()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">EXPORT_LIST:
+name of a file that is passed to linker to define symbols to
+be exported.</p>
+<p style="margin-left:9%; margin-top: 1em">Some OSes do not
+need these in which case leave it blank.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_platform</i></p>
+<p style="margin-left:9%; margin-top: 1em">$mm−&gt;init_platform</p>
+<p style="margin-left:9%; margin-top: 1em">Initialize any
+macros which are for platform specific use only.</p>
+<p style="margin-left:9%; margin-top: 1em">A typical one is
+the version number of your OS specific module. (ie.
+MM_Unix_VERSION or MM_VMS_VERSION).</p>
+<p style="margin-left:9%; margin-top: 1em"><i>init_MAKE</i></p>
+<p style="margin-left:9%; margin-top: 1em">$mm−&gt;init_MAKE</p>
+<p style="margin-left:9%; margin-top: 1em">Initialize MAKE
+from either a MAKE environment variable or
+$Config{make}.</p>
+<h3>Tools
+<a name="Tools"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A grab bag of
+methods to generate specific macros and commands.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>manifypods</i></p>
+<p style="margin-left:9%; margin-top: 1em">Defines targets
+and routines to translate the pods into manpages and put
+them into the INST_* directories.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>POD2MAN_macro</i></p>
+<p style="margin-left:9%; margin-top: 1em">my
+$pod2man_macro = $self−&gt;POD2MAN_macro</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a
+definition for the POD2MAN macro. This is a program which
+emulates the pod2man utility. You can add more switches to
+the command by simply appending them on the macro.</p>
+<p style="margin-left:9%; margin-top: 1em">Typical
+usage:</p>
+<p style="margin-left:9%; margin-top: 1em">$(POD2MAN)
+−−section=3 −−perm_rw=$(PERM_RW)
+podfile1 man_page1 ...</p>
+<p style="margin-left:9%; margin-top: 1em"><i>test_via_harness</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $command =
+$mm−&gt;test_via_harness($perl, $tests);</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a
+$command line which runs the given set of $tests with
+Test::Harness and the given $perl.</p>
+<p style="margin-left:9%; margin-top: 1em">Used on the
+t/*.t files.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>test_via_script</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $command =
+$mm−&gt;test_via_script($perl, $script);</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a
+$command line which just runs a single test without
+Test::Harness. No checks are done on the results, they're
+just printed.</p>
+<p style="margin-left:9%; margin-top: 1em">Used for
+test.pl, since they don't always follow Test::Harness
+formatting.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>tool_autosplit</i></p>
+<p style="margin-left:9%; margin-top: 1em">Defines a simple
+perl call that runs autosplit. May be deprecated by
+pm_to_blib soon.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>arch_check</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $arch_ok =
+$mm−&gt;arch_check( <br/>
+$INC{"Config.pm"}, <br/>
+File::Spec−&gt;catfile($Config{archlibexp},
+"Config.pm") <br/>
+);</p>
+<p style="margin-left:9%; margin-top: 1em">A sanity check
+that what Perl thinks the architecture is and what Config
+thinks the architecture is are the same. If they're not it
+will return false and show a diagnostic message.</p>
+<p style="margin-left:9%; margin-top: 1em">When building
+Perl it will always return true, as nothing is installed
+yet.</p>
+<p style="margin-left:9%; margin-top: 1em">The interface is
+a bit odd because this is the result of a quick refactoring.
+Don't rely on it.</p>
+<h3>File::Spec wrappers
+<a name="File::Spec wrappers"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">ExtUtils::MM_Any
+is a subclass of File::Spec. The methods noted here override
+File::Spec.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>catfile</i></p>
+<p style="margin-left:9%; margin-top: 1em">File::Spec &lt;=
+0.83 has a bug where the file part of catfile is not
+canonicalized. This override fixes that bug.</p>
+<h3>Misc
+<a name="Misc"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Methods I can't
+really figure out where they should go yet.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>find_tests</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $test =
+$mm−&gt;find_tests;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a string
+suitable for feeding to the shell to return all tests in
+t/*.t.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>find_tests_recursive</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $tests =
+$mm−&gt;find_tests_recursive;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a string
+suitable for feeding to the shell to return all tests in t/
+but recursively. Equivalent to</p>
+<p style="margin-left:9%; margin-top: 1em">my $tests =
+$mm−&gt;find_tests_recursive_in('t');</p>
+<p style="margin-left:9%; margin-top: 1em"><i>find_tests_recursive_in</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $tests =
+$mm−&gt;find_tests_recursive_in($dir);</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a string
+suitable for feeding to the shell to return all tests in
+$dir recursively.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>extra_clean_files</i></p>
+<p style="margin-left:9%; margin-top: 1em">my
+@files_to_clean = $MM−&gt;extra_clean_files;</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a list
+of OS specific files to be removed in the clean target in
+addition to the usual set.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>installvars</i></p>
+<p style="margin-left:9%; margin-top: 1em">my @installvars
+= $mm−&gt;installvars;</p>
+<p style="margin-left:9%; margin-top: 1em">A list of all
+the INSTALL* variables without the INSTALL prefix. Useful
+for iteration or building related variable sets.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>libscan</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $wanted =
+$self−&gt;libscan($path);</p>
+<p style="margin-left:9%; margin-top: 1em">Takes a path to
+a file or dir and returns an empty string if we don't want
+to include this file in the library. Otherwise it returns
+the the $path unchanged.</p>
+<p style="margin-left:9%; margin-top: 1em">Mainly used to
+exclude version control administrative directories and
+base−level <i>README.pod</i> from installation.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>platform_constants</i></p>
+<p style="margin-left:9%; margin-top: 1em">my $make_frag =
+$mm−&gt;platform_constants</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a make
+fragment defining all the macros initialized in
+<b>init_platform()</b> rather than put them in
+<b>constants()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>post_constants
+(o)</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns an empty
+string per default. Dedicated to overrides from within
+Makefile.PL after all constants have been defined.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>post_initialize
+(o)</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns an empty
+string per default. Used in Makefile.PLs to add some chunk
+of text to the Makefile after the object is initialized.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>postamble
+(o)</i></p>
+<p style="margin-left:9%; margin-top: 1em">Returns an empty
+string. Can be used in Makefile.PLs to write some text to
+the Makefile at the end.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Michael G
+Schwern &lt;schwern@pobox.com&gt; and the denizens of
+makemaker@perl.org with code from ExtUtils::MM_Unix and
+ExtUtils::MM_Win32.</p>
+<hr/>
+</body>
+</html>

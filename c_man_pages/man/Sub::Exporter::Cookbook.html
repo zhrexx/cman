@@ -1,0 +1,433 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:47 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Sub::Exporter::Cookbook</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Sub::Exporter::Cookbook</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#OVERVIEW">OVERVIEW</a><br/>
+<a href="#PERL VERSION">PERL VERSION</a><br/>
+<a href="#THE RECIPES">THE RECIPES</a><br/>
+<a href="#Exporting Methods as Routines">Exporting Methods as Routines</a><br/>
+<a href="#Exporting Methods as Methods">Exporting Methods as Methods</a><br/>
+<a href="#Mixing−in Complex External Behavior">Mixing−in Complex External Behavior</a><br/>
+<a href="#Exporting Constants">Exporting Constants</a><br/>
+<a href="#Altering the Importer's @ISA">Altering the Importer's @ISA</a><br/>
+<a href="#Eating Exporter.pm's Brain">Eating Exporter.pm's Brain</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Sub::Exporter::Cookbook
+− useful, demonstrative, or stupid Sub::Exporter
+tricks</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">version
+0.991</p>
+<h2>OVERVIEW
+<a name="OVERVIEW"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Sub::Exporter is
+a fairly simple tool, and can be used to achieve some very
+simple goals. Its basic behaviors and their basic
+application (that is, "traditional" exporting of
+routines) are described in Sub::Exporter::Tutorial and
+Sub::Exporter. This document presents applications that may
+not be immediately obvious, or that can demonstrate how
+certain features can be put to use (for good or evil).</p>
+<h2>PERL VERSION
+<a name="PERL VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This library
+should run on perls released even a long time ago. It should
+work on any version of perl released in the last five
+years.</p>
+<p style="margin-left:9%; margin-top: 1em">Although it may
+work on older versions of perl, no guarantee is made that
+the minimum required version will not be increased. The
+version may be increased for any reason, and there is no
+promise that patches will be accepted to lower the minimum
+required perl.</p>
+<h2>THE RECIPES
+<a name="THE RECIPES"></a>
+</h2>
+<h3>Exporting Methods as Routines
+<a name="Exporting Methods as Routines"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">With
+Exporter.pm, exporting methods is a non−starter.
+Sub::Exporter makes it simple. By using the
+"curry_method" utility provided in
+Sub::Exporter::Util, a method can be exported with the
+invocant built in.</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Object::Strenuous; <br/>
+use Sub::Exporter::Util 'curry_method'; <br/>
+use Sub::Exporter −setup =&gt; { <br/>
+exports =&gt; [ objection =&gt; curry_method('new') ], <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">With this
+configuration, the importing code may contain:</p>
+<p style="margin-left:9%; margin-top: 1em">my $obj =
+objection("irrelevant");</p>
+<p style="margin-left:9%; margin-top: 1em">...and this will
+be equivalent to:</p>
+<p style="margin-left:9%; margin-top: 1em">my $obj =
+Object::Strenuous−&gt;new("irrelevant");</p>
+<p style="margin-left:9%; margin-top: 1em">The
+built−in invocant is determined by the invocant for
+the "import" method. That means that if we were to
+subclass Object::Strenuous as follows:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Object::Strenuous::Repeated; <br/>
+@ISA = 'Object::Strenuous';</p>
+<p style="margin-left:9%; margin-top: 1em">...then
+importing "objection" from the subclass would
+build−in that subclass.</p>
+<p style="margin-left:9%; margin-top: 1em">Finally, since
+the invocant can be an object, you can write something like
+this:</p>
+<p style="margin-left:9%; margin-top: 1em">package Cypher;
+<br/>
+use Sub::Exporter::Util 'curry_method'; <br/>
+use Sub::Exporter −setup =&gt; { <br/>
+exports =&gt; [ encypher =&gt; curry_method ], <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">with the
+expectation that "import" will be called on an
+instantiated Cypher object:</p>
+<p style="margin-left:9%; margin-top: 1em">BEGIN { <br/>
+my $cypher = Cypher−&gt;new( ... ); <br/>
+$cypher−&gt;import('encypher'); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Now there is a
+globally−available "encypher" routine which
+calls the encypher method on an otherwise unavailable Cypher
+object.</p>
+<h3>Exporting Methods as Methods
+<a name="Exporting Methods as Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">While exporting
+modules usually export subroutines to be called as
+subroutines, it's easy to use Sub::Exporter to export
+subroutines meant to be called as methods on the importing
+package or its objects.</p>
+<p style="margin-left:9%; margin-top: 1em">Here's a trivial
+(and naive) example:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Mixin::DumpObj; <br/>
+use Data::Dumper; <br/>
+use Sub::Exporter −setup =&gt; { <br/>
+exports =&gt; [ qw(dump) ] <br/>
+}; <br/>
+sub dump { <br/>
+my ($self) = @_; <br/>
+return Dumper($self); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">When writing
+your own object class, you can then import "dump"
+to be used as a method, called like so:</p>
+<p style="margin-left:9%; margin-top: 1em">$object−&gt;dump;</p>
+<p style="margin-left:9%; margin-top: 1em">By assuming that
+the importing class will provide a certain interface, a
+method−exporting module can be used as a simple
+plugin:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Number::Plugin::Upto; <br/>
+use Sub::Exporter −setup =&gt; { <br/>
+into =&gt; 'Number', <br/>
+exports =&gt; [ qw(upto) ], <br/>
+groups =&gt; [ default =&gt; [ qw(upto) ] ], <br/>
+}; <br/>
+sub upto { <br/>
+my ($self) = @_; <br/>
+return 1 .. abs($self−&gt;as_integer); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"into" line in the configuration says that this
+plugin will export, by default, into the Number package, not
+into the "use"−ing package. It can be
+exported anyway, though, and will work as long as the
+destination provides an "as_integer" method like
+the one it expects. To import it to a different destination,
+one can just write:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Number::Plugin::Upto { into =&gt; 'Quantity' };</p>
+<h3>Mixing−in Complex External Behavior
+<a name="Mixing−in Complex External Behavior"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">When exporting
+methods to be used as methods (see above), one very powerful
+option is to export methods that are generated routines that
+maintain an enclosed reference to the exporting module. This
+allows a user to import a single method which is implemented
+in terms of a complete, well−structured package.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a very
+small example:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Data::Analyzer; <br/>
+use Sub::Exporter −setup =&gt; { <br/>
+exports =&gt; [ analyze =&gt; \'_generate_analyzer' ], <br/>
+}; <br/>
+sub _generate_analyzer { <br/>
+my ($mixin, $name, $arg, $col) = @_; <br/>
+return sub { <br/>
+my ($self) = @_; <br/>
+my $values = [ $self−&gt;values ]; <br/>
+my $analyzer = $mixin−&gt;new($values); <br/>
+$analyzer−&gt;perform_analysis; <br/>
+$analyzer−&gt;aggregate_results; <br/>
+return $analyzer−&gt;summary; <br/>
+}; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">If imported by
+any package providing a "values" method, this
+plugin will provide a single "analyze" method that
+acts as a simple interface to a more complex set of
+behaviors.</p>
+<p style="margin-left:9%; margin-top: 1em">Even more
+importantly, because the $mixin value will be the invocant
+on which the "import" was actually called, one can
+subclass "Data::Analyzer" and replace only
+individual pieces of the complex behavior, making it easy to
+write complex, subclassable toolkits with simple single
+points of entry for external interfaces.</p>
+<h3>Exporting Constants
+<a name="Exporting Constants"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">While
+Sub::Exporter isn't in the constant−exporting
+business, it's easy to export constants by using one of its
+sister modules, Package::Generator.</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Important::Constants; <br/>
+use Sub::Exporter −setup =&gt; { <br/>
+collectors =&gt; [ constants =&gt; \'_set_constants' ], <br/>
+}; <br/>
+sub _set_constants { <br/>
+my ($class, $value, $data) = @_; <br/>
+Package::Generator−&gt;assign_symbols( <br/>
+$data−&gt;{into}, <br/>
+[ <br/>
+MEANING_OF_LIFE =&gt; \42, <br/>
+ONE_TRUE_BASE =&gt; \13, <br/>
+FACTORS =&gt; [ 6, 9 ], <br/>
+], <br/>
+); <br/>
+return 1; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Then, someone
+can write:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Important::Constants 'constants'; <br/>
+print "The factors @FACTORS produce $MEANING_OF_LIFE in
+$ONE_TRUE_BASE.";</p>
+<p style="margin-left:9%; margin-top: 1em">(The constants
+must be exported via a collector, because they are
+effectively altering the importing class in a way other than
+installing subroutines.)</p>
+<h3>Altering the Importer's @ISA
+<a name="Altering the Importer's @ISA"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">It's trivial to
+make a collector that changes the inheritance of an
+importing package:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Sub::Exporter −setup =&gt; { <br/>
+collectors =&gt; { −base =&gt; \'_make_base' }, <br/>
+}; <br/>
+sub _make_base { <br/>
+my ($class, $value, $data) = @_; <br/>
+my $target = $data−&gt;{into}; <br/>
+push @{"$target\::ISA"}, $class; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Then, the user
+of your class can write:</p>
+<p style="margin-left:9%; margin-top: 1em">use Some::Class
+−base;</p>
+<p style="margin-left:9%; margin-top: 1em">and become a
+subclass. This can be quite useful in building, for example,
+a module that helps build plugins. We may want a few
+utilities imported, but we also want to inherit behavior
+from some base plugin class;</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Framework::Util; <br/>
+use Sub::Exporter −setup =&gt; { <br/>
+exports =&gt; [ qw(log global_config) ], <br/>
+groups =&gt; [ _plugin =&gt; [ qw(log global_config) ] <br/>
+collectors =&gt; { '−plugin' =&gt; \'_become_plugin'
+}, <br/>
+}; <br/>
+sub _become_plugin { <br/>
+my ($class, $value, $data) = @_; <br/>
+my $target = $data−&gt;{into}; <br/>
+push @{"$target\::ISA"},
+$class−&gt;plugin_base_class; <br/>
+push @{ $data−&gt;{import_args} }, '−_plugin';
+<br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Now, you can
+write a plugin like this:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+Framework::Plugin::AirFreshener; <br/>
+use Framework::Util −plugin;</p>
+<h3>Eating Exporter.pm's Brain
+<a name="Eating Exporter.pm's Brain"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">You probably
+shouldn't actually do this in production. It's offered more
+as a demonstration than a suggestion.</p>
+<p style="margin-left:9%; margin-top: 1em">sub
+exporter_upgrade { <br/>
+my ($pkg) = @_; <br/>
+my $new_pkg = "$pkg\::UsingSubExporter"; <br/>
+return $new_pkg if $new_pkg−&gt;isa($pkg); <br/>
+Sub::Exporter::setup_exporter({ <br/>
+as =&gt; 'import', <br/>
+into =&gt; $new_pkg, <br/>
+exports =&gt; [ @{"$pkg\::EXPORT_OK"} ], <br/>
+groups =&gt; { <br/>
+%{"$pkg\::EXPORT_TAG"}, <br/>
+default =&gt; [ @{"$pkg\::EXPORTS"} ], <br/>
+}, <br/>
+}); <br/>
+@{"$new_pkg\::ISA"} = $pkg; <br/>
+return $new_pkg; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">This routine,
+given the name of an existing package configured to use
+Exporter.pm, returns the name of a new package with a
+Sub::Exporter−powered "import" routine. This
+lets you import "Toolkit::exported_sub" into the
+current package with the name "foo" by
+writing:</p>
+<p style="margin-left:9%; margin-top: 1em">BEGIN { <br/>
+require Toolkit; <br/>
+exporter_upgrade('Toolkit')−&gt;import(exported_sub
+=&gt; { −as =&gt; 'foo' }) <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">If you're
+feeling particularly naughty, this routine could have been
+declared in the UNIVERSAL package, meaning you could
+write:</p>
+<p style="margin-left:9%; margin-top: 1em">BEGIN { <br/>
+require Toolkit; <br/>
+
+Toolkit−&gt;exporter_upgrade−&gt;import(exported_sub
+=&gt; { −as =&gt; 'foo' }) <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">The new package
+will have all the same exporter configuration as the
+original, but will support export and group renaming,
+including exporting into scalar references. Further, since
+Sub::Exporter uses "can" to find the routine being
+exported, the new package may be subclassed and some of its
+exports replaced.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Ricardo Signes
+&lt;cpan@semiotic.systems&gt;</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2007 by Ricardo Signes.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<hr/>
+</body>
+</html>

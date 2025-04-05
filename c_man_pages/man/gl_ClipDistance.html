@@ -1,0 +1,212 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:54 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>GL_CLIPDISTANCE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">GL_CLIPDISTANCE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DECLARATION">DECLARATION</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#VERSION SUPPORT">VERSION SUPPORT</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">gl_ClipDistance
+− provides a forward−compatible mechanism for
+vertex clipping</p>
+<h2>DECLARATION
+<a name="DECLARATION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>gl_ClipDistance</i>
+is a member of the <i>gl_PerVertex</i> named block:</p>
+<p style="margin-left:9%; margin-top: 1em">out gl_PerVertex
+{ <br/>
+vec4 gl_Position; <br/>
+float gl_PointSize; <br/>
+float gl_ClipDistance[]; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">In fragment
+shaders, it is intrinsically declared as:
+in float gl_ClipDistance[] ;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>gl_ClipDistance</i> variable provides a forward
+compatible mechanism for controlling user clipping. The
+element <i>gl_ClipDistance</i>[<i>i</i>] specifies a clip
+distance for each user clip plane <i>i</i>. A distance of
+0.0 means that the vertex is on the plane, a positive
+distance means that the vertex is inside the clip plane, and
+a negative distance means that the point is outside the clip
+plane. The clip distances will be linearly interpolated
+across the primitive and the portion of the primitive with
+interpolated distances less than 0.0 will be clipped.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>gl_ClipDistance</i> array is initially predeclared as
+unsized and must be sized by the shader either by
+redeclaring it with an explicit size, or by indexing it with
+only integral constant expressions. The array must be sized
+to include all clip planes that are enabled via the OpenGL
+API; if the size does not include all enabled planes,
+results are undefined. The size may be at most
+<i>gl_MaxClipDistances</i>. The number of varying components
+consumed by <i>gl_ClipDistance</i> will match the size of
+the array, no matter how many planes are enabled. The shader
+must also set all values in <i>gl_ClipDistance</i> that have
+been enabled via the OpenGL API, or results are undefined.
+Values written into <i>gl_ClipDistance</i> planes that are
+not enabled have no effect.</p>
+<p style="margin-left:9%; margin-top: 1em">In the vertex,
+tessellation evaluation and geometry languages, a single
+global instance of the <i>gl_PerVertex</i> named block is
+available and its <i>gl_ClipDistance</i> member is an output
+that receives the clip distances for the current vertex. It
+may be written at any time during shader execution. The
+value written to <i>gl_ClipDistance</i> will be used by
+primitive assembly, clipping, culling and other fixed
+functionality operations, if present, that operate on
+primitives after vertex processing has occurred.</p>
+<p style="margin-left:9%; margin-top: 1em">In the
+tessellation control language, the <i>gl_PerVertex</i> named
+block is used to construct an array, <i>gl_out[]</i>, whose
+<i>gl_ClipDistance</i> members hold clip distances for each
+of the control points, which become available as inputs to
+the subsequent tessellation evaluation shader.</p>
+<p style="margin-left:9%; margin-top: 1em">The value of
+<i>gl_ClipDistance</i> (or the <i>gl_ClipDistance</i> member
+of the <i>gl_out[]</i> array, in the case of the
+tessellation control shader) is undefined after the vertex,
+tessellation control, and tessellation evaluation shading
+stages if the corresponding shader executable does not write
+to gl_ClipDistance. It is also undefined after the geometry
+processing stage if the geometry shader executable calls
+<b>EmitVertex</b>() without having written
+<i>gl_ClipDistance</i> since the last call to
+<b>EmitVertex</b>() (or hasn't written it at all).</p>
+<p style="margin-left:9%; margin-top: 1em">In the
+tessellation control, tessellation evaluation and geoemetry
+languages, the <i>gl_PerVertex</i> named block is used to
+construct an array, <i>gl_in[]</i> of per−vertex or
+per−control point inputs whose content represents the
+corresponding outputs written by the previous stage. Only
+elements of the <i>gl_ClipDistance</i> array that correspond
+to enabled clip planes have defined values.</p>
+<h2>VERSION SUPPORT
+<a name="VERSION SUPPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Versions 1.30 to
+1.40 − vertex shader only.</p>
+<p style="margin-left:9%; margin-top: 1em">Versions 1.50 to
+3.30 − vertex and geometry shaders only.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>gl_CullDistance</b>(),
+<b>gl_PointSize</b>()</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright ©
+2011−2014 Khronos Group. This material may be
+distributed subject to the terms and conditions set forth in
+the Open Publication License, v 1.0, 8 June 1999.
+<b><font color="#0000FF">http://opencontent.org/openpub/</font></b><font color="#000000">.</font></p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><font color="#000000">Copyright
+© 2011-2014 Khronos Group</font></p>
+<hr/>
+</body>
+</html>

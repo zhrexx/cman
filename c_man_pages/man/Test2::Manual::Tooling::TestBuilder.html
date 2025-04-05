@@ -1,0 +1,255 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:08 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Manual::Tooling::TestBuilder</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Manual::Tooling::TestBuilder</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CONTEXT">CONTEXT</a><br/>
+<a href="#TEST BUILDER METHODS">TEST BUILDER METHODS</a><br/>
+<a href="#LEVEL">LEVEL</a><br/>
+<a href="#TODO">TODO</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Manual::Tooling::TestBuilder
+− This section maps Test::Builder methods to Test2
+concepts.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">With
+Test::Builder tools were encouraged to use methods on the
+Test::Builder singleton object. Test2 has a different
+approach, every tool should get a new Test2::API::Context
+object, and call methods on that. This document maps several
+concepts from Test::Builder to Test2.</p>
+<h2>CONTEXT
+<a name="CONTEXT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">First thing to
+do, stop using the Test::Builder singleton, in fact stop
+using or even loading Test::Builder. Instead of
+Test::Builder each tool you write should follow this
+template:</p>
+<p style="margin-left:9%; margin-top: 1em">use Test2::API
+qw/context/; <br/>
+sub my_tool { <br/>
+my $ctx = context(); <br/>
+... do work ... <br/>
+$ctx−&gt;ok(1, "a passing assertion"); <br/>
+$ctx−&gt;release; <br/>
+return $whatever; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">The original
+Test::Builder style was this:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Test::Builder; <br/>
+my $tb = Test::Builder−&gt;new; # gets the singleton
+<br/>
+sub my_tool { <br/>
+... do work ... <br/>
+$tb−&gt;ok(1, "a passing assertion"); <br/>
+return $whatever; <br/>
+}</p>
+<h2>TEST BUILDER METHODS
+<a name="TEST BUILDER METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">$tb−&gt;BAIL_OUT($reason)</p>
+<p style="margin-left:14%;">The context object has a 'bail'
+method:</p>
+<p style="margin-left:14%; margin-top: 1em">$ctx−&gt;bail($reason)</p>
+<p style="margin-left:9%;">$tb−&gt;diag($string) <br/>
+$tb−&gt;note($string)</p>
+<p style="margin-left:14%;">The context object has diag and
+note methods:</p>
+<p style="margin-left:14%; margin-top: 1em">$ctx−&gt;diag($string);
+<br/>
+$ctx−&gt;note($string);</p>
+<p style="margin-left:9%;">$tb−&gt;done_testing</p>
+<p style="margin-left:14%;">The context object has a
+done_testing method:</p>
+<p style="margin-left:14%; margin-top: 1em">$ctx−&gt;done_testing;</p>
+<p style="margin-left:14%; margin-top: 1em">Unlike the
+Test::Builder version, no arguments are allowed.</p>
+<p style="margin-left:9%;">$tb−&gt;like <br/>
+$tb−&gt;unlike</p>
+<p style="margin-left:14%;">These are not part of context,
+instead look at Test2::Compare and
+Test2::Tools::Compare.</p>
+<p style="margin-left:9%;">$tb−&gt;ok($bool,
+$name)</p>
+<p style="margin-left:14%;"># Preferred <br/>
+$ctx−&gt;pass($name); <br/>
+$ctx−&gt;fail($name, @diag); <br/>
+# Discouraged, but supported: <br/>
+$ctx−&gt;ok($bool, $name, \@failure_diags)</p>
+<p style="margin-left:9%;">$tb−&gt;subtest</p>
+<p style="margin-left:14%;">use the
+Test2::API::run_subtest() function instead. See Test2::API
+for documentation.</p>
+<p style="margin-left:9%;">$tb−&gt;todo_start <br/>
+$tb−&gt;todo_end</p>
+<p style="margin-left:14%;">See Test2::Tools::Todo
+instead.</p>
+<p style="margin-left:9%;">$tb−&gt;output,
+$tb−&gt;failure_output, and
+$tb−&gt;todo_output</p>
+<p style="margin-left:14%;">These are handled via
+formatters now. See Test2::Formatter and
+Test2::Formatter::TAP.</p>
+<h2>LEVEL
+<a name="LEVEL"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test::Builder
+had the $Test::Builder::Level variable that you could modify
+in order to set the stack depth. This was useful if you
+needed to nest tools and wanted to make sure your file and
+line number were correct. It was also frustrating and prone
+to errors. Some people never even discovered the level
+variable and always had incorrect line numbers when their
+tools would fail.</p>
+<p style="margin-left:9%; margin-top: 1em">Test2 uses the
+context system, which solves the problem a better way. The
+top−most tool get a context, and holds on to it until
+it is done. Any tool nested under the first will find and
+use the original context instead of generating a new one.
+This means the level problem is solved for free, no
+variables to mess with.</p>
+<p style="margin-left:9%; margin-top: 1em">Test2 is also
+smart enough to honor $Test::Builder::Level if it is
+set.</p>
+<h2>TODO
+<a name="TODO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test::Builder
+used the $TODO package variable to set the TODO state. This
+was confusing, and easy to get wrong. See Test2::Tools::Todo
+for the modern way to accomplish a TODO state.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Manual
+− Primary index of the manual.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2−Manual can be found at
+<i>https://github.com/Test−More/test−more/</i>.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<i>http://dev.perl.org/licenses/</i></p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:25 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>malloc</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">malloc</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#malloc()">malloc()</a><br/>
+<a href="#free()">free()</a><br/>
+<a href="#calloc()">calloc()</a><br/>
+<a href="#realloc()">realloc()</a><br/>
+<a href="#reallocarray()">reallocarray()</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#Nonportable behavior">Nonportable behavior</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">malloc, free,
+calloc, realloc, reallocarray − allocate and free
+dynamic memory</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;stdlib.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+*malloc(size_t</b> <i>size</i><b>); <br/>
+void free(void *_Nullable</b> <i>ptr</i><b>); <br/>
+void *calloc(size_t</b> <i>nmemb</i><b>, size_t</b>
+<i>size</i><b>); <br/>
+void *realloc(void *_Nullable</b> <i>ptr</i><b>, size_t</b>
+<i>size</i><b>); <br/>
+void *reallocarray(void *_Nullable</b> <i>ptr</i><b>,
+size_t</b> <i>nmemb</i><b>, size_t</b>
+<i>size</i><b>);</b></p>
+<p style="margin-left:4%; margin-top: 1em">Feature Test
+Macro Requirements for glibc (see
+<b>feature_test_macros</b>(7)):</p>
+<p style="margin-left:9%; margin-top: 1em"><b>reallocarray</b>():
+<br/>
+Since glibc 2.29: <br/>
+_DEFAULT_SOURCE <br/>
+glibc 2.28 and earlier: <br/>
+_GNU_SOURCE</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<h3>malloc()
+<a name="malloc()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>malloc</b>() function allocates <i>size</i> bytes and
+returns a pointer to the allocated memory. <i>The memory is
+not initialized</i>. If <i>size</i> is 0, then
+<b>malloc</b>() returns a unique pointer value that can
+later be successfully passed to <b>free</b>(). (See
+"Nonportable behavior" for portability
+issues.)</p>
+<h3>free()
+<a name="free()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>free</b>() function frees the memory space pointed to by
+<i>ptr</i>, which must have been returned by a previous call
+to <b>malloc</b>() or related functions. Otherwise, or if
+<i>ptr</i> has already been freed, undefined behavior
+occurs. If <i>ptr</i> is NULL, no operation is
+performed.</p>
+<h3>calloc()
+<a name="calloc()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>calloc</b>() function allocates memory for an array of
+<i>nmemb</i> elements of <i>size</i> bytes each and returns
+a pointer to the allocated memory. The memory is set to
+zero. If <i>nmemb</i> or <i>size</i> is 0, then
+<b>calloc</b>() returns a unique pointer value that can
+later be successfully passed to <b>free</b>().</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+multiplication of <i>nmemb</i> and <i>size</i> would result
+in integer overflow, then <b>calloc</b>() returns an error.
+By contrast, an integer overflow would not be detected in
+the following call to <b>malloc</b>(), with the result that
+an incorrectly sized block of memory would be allocated:</p>
+<p style="margin-left:14%; margin-top: 1em">malloc(nmemb *
+size);</p>
+<h3>realloc()
+<a name="realloc()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>realloc</b>() function changes the size of the memory
+block pointed to by <i>ptr</i> to <i>size</i> bytes. The
+contents of the memory will be unchanged in the range from
+the start of the region up to the minimum of the old and new
+sizes. If the new size is larger than the old size, the
+added memory will <i>not</i> be initialized.</p>
+<p style="margin-left:9%; margin-top: 1em">If <i>ptr</i> is
+NULL, then the call is equivalent to <i>malloc(size)</i>,
+for all values of <i>size</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">If <i>size</i>
+is equal to zero, and <i>ptr</i> is not NULL, then the call
+is equivalent to <i>free(ptr)</i> (but see "Nonportable
+behavior" for portability issues).</p>
+<p style="margin-left:9%; margin-top: 1em">Unless
+<i>ptr</i> is NULL, it must have been returned by an earlier
+call to <b>malloc</b> or related functions. If the area
+pointed to was moved, a <i>free(ptr)</i> is done.</p>
+<h3>reallocarray()
+<a name="reallocarray()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>reallocarray</b>() function changes the size of (and
+possibly moves) the memory block pointed to by <i>ptr</i> to
+be large enough for an array of <i>nmemb</i> elements, each
+of which is <i>size</i> bytes. It is equivalent to the
+call</p>
+<p style="margin-left:14%; margin-top: 1em">realloc(ptr,
+nmemb * size);</p>
+<p style="margin-left:9%; margin-top: 1em">However, unlike
+that <b>realloc</b>() call, <b>reallocarray</b>() fails
+safely in the case where the multiplication would overflow.
+If such an overflow occurs, <b>reallocarray</b>() returns an
+error.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>malloc</b>(), <b>calloc</b>(), <b>realloc</b>(), and
+<b>reallocarray</b>() functions return a pointer to the
+allocated memory, which is suitably aligned for any type
+that fits into the requested size or less. On error, these
+functions return NULL and set <i>errno</i>. Attempting to
+allocate more than <b>PTRDIFF_MAX</b> bytes is considered an
+error, as an object that large could cause later pointer
+subtraction to overflow.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>free</b>() function returns no value, and preserves
+<i>errno</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>realloc</b>() and <b>reallocarray</b>() functions return
+NULL if <i>ptr</i> is not NULL and the requested size is
+zero; this is not considered an error. (See
+"Nonportable behavior" for portability issues.)
+Otherwise, the returned pointer may be the same as
+<i>ptr</i> if the allocation was not moved (e.g., there was
+room to expand the allocation in-place), or different from
+<i>ptr</i> if the allocation was moved to a new address. If
+these functions fail, the original block is left untouched;
+it is not freed or moved.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>calloc</b>(),
+<b>malloc</b>(), <b>realloc</b>(), and <b>reallocarray</b>()
+can fail with the following error:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOMEM</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>Out of memory. Possibly, the application hit the
+<b>RLIMIT_AS</b> or <b>RLIMIT_DATA</b> limit described in
+<b>getrlimit</b>(2). Another reason could be that the number
+of mappings created by the caller process exceeded the limit
+specified by <i>/proc/sys/vm/max_map_count</i>.</p></td></tr>
+</table>
+<h2>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For an
+explanation of the terms used in this section, see
+<b>attributes</b>(7).</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>malloc</b>()</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>free</b>()</p></td>
+<td width="83%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>calloc</b>()
+<b><br/>
+realloc</b>()</p>
+<p style="margin-left:18%;">C11, POSIX.1-2008.</p>
+<p style="margin-left:9%;"><b>reallocarray</b>()</p>
+<p style="margin-left:18%;">None.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>malloc</b>()</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>free</b>()</p></td>
+<td width="83%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em"><b>calloc</b>()
+<b><br/>
+realloc</b>()</p>
+<p style="margin-left:18%;">POSIX.1-2001, C89.</p>
+<p style="margin-left:9%;"><b>reallocarray</b>()</p>
+<p style="margin-left:18%;">glibc 2.26. OpenBSD 5.6,
+FreeBSD 11.0.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>malloc</b>()
+and related functions rejected sizes greater than
+<b>PTRDIFF_MAX</b> starting in glibc 2.30.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>free</b>()
+preserved <i>errno</i> starting in glibc 2.33.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">By default,
+Linux follows an optimistic memory allocation strategy. This
+means that when <b>malloc</b>() returns non-NULL there is no
+guarantee that the memory really is available. In case it
+turns out that the system is out of memory, one or more
+processes will be killed by the OOM killer. For more
+information, see the description of
+<i>/proc/sys/vm/overcommit_memory</i> and
+<i>/proc/sys/vm/oom_adj</i> in <b>proc</b>(5), and the Linux
+kernel source file
+<i>Documentation/vm/overcommit−accounting.rst</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Normally,
+<b>malloc</b>() allocates memory from the heap, and adjusts
+the size of the heap as required, using <b>sbrk</b>(2). When
+allocating blocks of memory larger than
+<b>MMAP_THRESHOLD</b> bytes, the glibc <b>malloc</b>()
+implementation allocates the memory as a private anonymous
+mapping using <b>mmap</b>(2). <b>MMAP_THRESHOLD</b> is
+128 kB by default, but is adjustable using
+<b>mallopt</b>(3). Prior to Linux 4.7 allocations performed
+using <b>mmap</b>(2) were unaffected by the
+<b>RLIMIT_DATA</b> resource limit; since Linux 4.7, this
+limit is also enforced for allocations performed using
+<b>mmap</b>(2).</p>
+<p style="margin-left:9%; margin-top: 1em">To avoid
+corruption in multithreaded applications, mutexes are used
+internally to protect the memory-management data structures
+employed by these functions. In a multithreaded application
+in which threads simultaneously allocate and free memory,
+there could be contention for these mutexes. To scalably
+handle memory allocation in multithreaded applications,
+glibc creates additional <i>memory allocation arenas</i> if
+mutex contention is detected. Each arena is a large region
+of memory that is internally allocated by the system (using
+<b>brk</b>(2) or <b>mmap</b>(2)), and managed with its own
+mutexes.</p>
+<p style="margin-left:9%; margin-top: 1em">If your program
+uses a private memory allocator, it should do so by
+replacing <b>malloc</b>(), <b>free</b>(), <b>calloc</b>(),
+and <b>realloc</b>(). The replacement functions must
+implement the documented glibc behaviors, including
+<i>errno</i> handling, size-zero allocations, and overflow
+checking; otherwise, other library routines may crash or
+operate incorrectly. For example, if the replacement
+<i>free</i>() does not preserve <i>errno</i>, then seemingly
+unrelated library routines may fail without having a valid
+reason in <i>errno</i>. Private memory allocators may also
+need to replace other glibc functions; see "Replacing
+malloc" in the glibc manual for details.</p>
+<p style="margin-left:9%; margin-top: 1em">Crashes in
+memory allocators are almost always related to heap
+corruption, such as overflowing an allocated chunk or
+freeing the same pointer twice.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>malloc</b>() implementation is tunable via environment
+variables; see <b>mallopt</b>(3) for details.</p>
+<h3>Nonportable behavior
+<a name="Nonportable behavior"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The behavior of
+these functions when the requested size is zero is glibc
+specific; other implementations may return NULL without
+setting <i>errno</i>, and portable POSIX programs should
+tolerate such behavior. See <b>realloc</b>(3p).</p>
+<p style="margin-left:9%; margin-top: 1em">POSIX requires
+memory allocators to set <i>errno</i> upon failure. However,
+the C standard does not require this, and applications
+portable to non-POSIX platforms should not assume this.</p>
+<p style="margin-left:9%; margin-top: 1em">Portable
+programs should not use private memory allocators, as POSIX
+and the C standard do not allow replacement of
+<b>malloc</b>(), <b>free</b>(), <b>calloc</b>(), and
+<b>realloc</b>().</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;err.h&gt; <br/>
+#include &lt;stddef.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;string.h&gt; <br/>
+#define MALLOCARRAY(n, type) ((type *) my_mallocarray(n,
+sizeof(type))) <br/>
+#define MALLOC(type) MALLOCARRAY(1, type) <br/>
+static inline void *my_mallocarray(size_t nmemb, size_t
+size); <br/>
+int <br/>
+main(void) <br/>
+{ <br/>
+char *p; <br/>
+p = MALLOCARRAY(32, char); <br/>
+if (p == NULL) <br/>
+err(EXIT_FAILURE, "malloc"); <br/>
+strlcpy(p, "foo", 32); <br/>
+puts(p); <br/>
+} <br/>
+static inline void * <br/>
+my_mallocarray(size_t nmemb, size_t size) <br/>
+{ <br/>
+return reallocarray(NULL, nmemb, size); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>valgrind</b>(1),
+<b>brk</b>(2), <b>mmap</b>(2), <b>alloca</b>(3),
+<b>malloc_get_state</b>(3), <b>malloc_info</b>(3),
+<b>malloc_trim</b>(3), <b>malloc_usable_size</b>(3),
+<b>mallopt</b>(3), <b>mcheck</b>(3), <b>mtrace</b>(3),
+<b>posix_memalign</b>(3)</p>
+<p style="margin-left:9%; margin-top: 1em">For details of
+the GNU C library implementation, see
+<a href="https://sourceware.org/glibc/wiki/MallocInternals">https://sourceware.org/glibc/wiki/MallocInternals</a>.</p>
+<hr/>
+</body>
+</html>

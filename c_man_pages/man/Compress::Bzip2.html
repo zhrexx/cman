@@ -1,0 +1,1178 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:15 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Compress::Bzip2</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Compress::Bzip2</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#FILE READ/WRITE INTERFACE">FILE READ/WRITE INTERFACE</a><br/>
+<a href="#$bz = bzopen(filename or filehandle, mode)">$bz = bzopen(filename or filehandle, mode)</a><br/>
+<a href="#$bz = Compress::Bzip2−&gt;new( [PARAMS] )">$bz = Compress::Bzip2−&gt;new( [PARAMS] )</a><br/>
+<a href="#$bz−&gt;bzopen(filename or filehandle, mode)">$bz−&gt;bzopen(filename or filehandle, mode)</a><br/>
+<a href="#$bytesread = $bz−&gt;bzread($buffer [, $size]) ;">$bytesread = $bz−&gt;bzread($buffer [, $size]) ;</a><br/>
+<a href="#$bytesread = $bz−&gt;bzreadline($line) ;">$bytesread = $bz−&gt;bzreadline($line) ;</a><br/>
+<a href="#$byteswritten = $bz−&gt;bzwrite($buffer [, $limit]) ;">$byteswritten = $bz−&gt;bzwrite($buffer [, $limit]) ;</a><br/>
+<a href="#$status = $bz−&gt;bzflush($flush) ;">$status = $bz−&gt;bzflush($flush) ;</a><br/>
+<a href="#$status = $bz−&gt;bzeof() ;">$status = $bz−&gt;bzeof() ;</a><br/>
+<a href="#$bz−&gt;bzclose">$bz−&gt;bzclose</a><br/>
+<a href="#$bz−&gt;bzsetparams( [PARAMS] );">$bz−&gt;bzsetparams( [PARAMS] );</a><br/>
+<a href="#$bz−&gt;bzerror">$bz−&gt;bzerror</a><br/>
+<a href="#$bz−&gt;bzclearerr">$bz−&gt;bzclearerr</a><br/>
+<a href="#$bzerrno">$bzerrno</a><br/>
+<a href="#$bz−&gt;prefix">$bz−&gt;prefix</a><br/>
+<a href="#Compress::Bzip2 Utilities">Compress::Bzip2 Utilities</a><br/>
+<a href="#bzip2( [OPTS], filename)">bzip2( [OPTS], filename)</a><br/>
+<a href="#bunzip2(filename)">bunzip2(filename)</a><br/>
+<a href="#bzcat(filenames...)">bzcat(filenames...)</a><br/>
+<a href="#bzlibversion()">bzlibversion()</a><br/>
+<a href="#bzinflateInit( opts... )">bzinflateInit( opts... )</a><br/>
+<a href="#Internal Utilties">Internal Utilties</a><br/>
+<a href="#bz_seterror(errno, msg) =head2 $bz−&gt;is_read() =head2 $bz−&gt;is_stream()=head2 $bz−&gt;is_write() =head2 $bz−&gt;total_in() =head2 $bz−&gt;total_out()=head2 version()">bz_seterror(errno, msg) =head2 $bz−&gt;is_read() =head2 $bz−&gt;is_stream()=head2 $bz−&gt;is_write() =head2 $bz−&gt;total_in() =head2 $bz−&gt;total_out()=head2 version()</a><br/>
+<a href="#Compress::Bzip2 1.03 COMPATIBILITY">Compress::Bzip2 1.03 COMPATIBILITY</a><br/>
+<a href="#$dest = compress( $string, [$level] )">$dest = compress( $string, [$level] )</a><br/>
+<a href="#$dest = decompress($string, [$level])">$dest = decompress($string, [$level])</a><br/>
+<a href="#uncompress($string, [$level])">uncompress($string, [$level])</a><br/>
+<a href="#$stream = compress_init( [PARAMS] )">$stream = compress_init( [PARAMS] )</a><br/>
+<a href="#$stream = decompress_init( [PARAMS] )">$stream = decompress_init( [PARAMS] )</a><br/>
+<a href="#$output = $stream−&gt;add( $string )">$output = $stream−&gt;add( $string )</a><br/>
+<a href="#$output = $stream−&gt;finish( [$string] )">$output = $stream−&gt;finish( [$string] )</a><br/>
+<a href="#$stream−&gt;error">$stream−&gt;error</a><br/>
+<a href="#$stream−&gt;input_size">$stream−&gt;input_size</a><br/>
+<a href="#$stream−&gt;output_size">$stream−&gt;output_size</a><br/>
+<a href="#GZIP COMPATIBILITY INTERFACE">GZIP COMPATIBILITY INTERFACE</a><br/>
+<a href="#$gz = gzopen( $filename, $mode )">$gz = gzopen( $filename, $mode )</a><br/>
+<a href="#$gz−&gt;gzread( $buffer, [ $length ] )">$gz−&gt;gzread( $buffer, [ $length ] )</a><br/>
+<a href="#$gz−&gt;gzreadline( $buffer )">$gz−&gt;gzreadline( $buffer )</a><br/>
+<a href="#$gz−&gt;gzwrite( $buffer )">$gz−&gt;gzwrite( $buffer )</a><br/>
+<a href="#$gz−&gt;gzflush( [$flushtype] )">$gz−&gt;gzflush( [$flushtype] )</a><br/>
+<a href="#$gz−&gt;gzclose( )">$gz−&gt;gzclose( )</a><br/>
+<a href="#$gz−&gt;gzeof( )">$gz−&gt;gzeof( )</a><br/>
+<a href="#$gz−&gt;gzerror( )">$gz−&gt;gzerror( )</a><br/>
+<a href="#$gz−&gt;gzsetparams( $level, $strategy )">$gz−&gt;gzsetparams( $level, $strategy )</a><br/>
+<a href="#$d = deflateInit( [OPTS] )">$d = deflateInit( [OPTS] )</a><br/>
+<a href="#$d−&gt;deflate( $buffer )">$d−&gt;deflate( $buffer )</a><br/>
+<a href="#$d−&gt;deflateParams( [OPTS] )">$d−&gt;deflateParams( [OPTS] )</a><br/>
+<a href="#$d−&gt;flush( [$flushtype] )">$d−&gt;flush( [$flushtype] )</a><br/>
+<a href="#$d−&gt;dict_adler( )">$d−&gt;dict_adler( )</a><br/>
+<a href="#$d−&gt;msg( )">$d−&gt;msg( )</a><br/>
+<a href="#$d = inflateInit( [OPTS] )">$d = inflateInit( [OPTS] )</a><br/>
+<a href="#$d−&gt;inflate( )">$d−&gt;inflate( )</a><br/>
+<a href="#$d−&gt;inflateSync( )">$d−&gt;inflateSync( )</a><br/>
+<a href="#$d−&gt;adler32( $crc )">$d−&gt;adler32( $crc )</a><br/>
+<a href="#$d−&gt;crc32( $crc )">$d−&gt;crc32( $crc )</a><br/>
+<a href="#$buffer = memGzip( $buffer )">$buffer = memGzip( $buffer )</a><br/>
+<a href="#$buffer = memGunzip( $buffer )">$buffer = memGunzip( $buffer )</a><br/>
+<a href="#IN−MEMORY COMPRESS/UNCOMPRESS">IN−MEMORY COMPRESS/UNCOMPRESS</a><br/>
+<a href="#$compressed = memBzip($buffer);">$compressed = memBzip($buffer);</a><br/>
+<a href="#$uncompressed = memBunzip($buffer);">$uncompressed = memBunzip($buffer);</a><br/>
+<a href="#STREAM DEFLATE (= COMPRESS)">STREAM DEFLATE (= COMPRESS)</a><br/>
+<a href="#($d, $status) = bzdeflateInit( [PARAMS] )">($d, $status) = bzdeflateInit( [PARAMS] )</a><br/>
+<a href="#($out, $status) = $d−&gt;bzdeflate($buffer)">($out, $status) = $d−&gt;bzdeflate($buffer)</a><br/>
+<a href="#($out, $status) = $d−&gt;bzflush([flush_type])">($out, $status) = $d−&gt;bzflush([flush_type])</a><br/>
+<a href="#Example">Example</a><br/>
+<a href="#STREAM INFLATE">STREAM INFLATE</a><br/>
+<a href="#($i, $status) = inflateInit()">($i, $status) = inflateInit()</a><br/>
+<a href="#($out, $status) = $i−&gt;bzinflate($buffer)">($out, $status) = $i−&gt;bzinflate($buffer)</a><br/>
+<a href="#Example">Example</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#A bzcat function">A bzcat function</a><br/>
+<a href="#A grep using bzreadline">A grep using bzreadline</a><br/>
+<a href="#Streaming Compression">Streaming Compression</a><br/>
+<a href="#EXPORT">EXPORT</a><br/>
+<a href="#Export tag :all">Export tag :all</a><br/>
+<a href="#Export tag :constants">Export tag :constants</a><br/>
+<a href="#Export tag :bzip1">Export tag :bzip1</a><br/>
+<a href="#Export tag :utilities">Export tag :utilities</a><br/>
+<a href="#Export tag :gzip">Export tag :gzip</a><br/>
+<a href="#Exportable constants">Exportable constants</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#MODIFICATION HISTORY">MODIFICATION HISTORY</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Compress::Bzip2
+− Interface to Bzip2 compression library</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Compress::Bzip2 qw(:all :constant :utilities :gzip); <br/>
+($bz, $status) = bzdeflateInit( [PARAMS] ); <br/>
+($out, $status) = $bz−&gt;bzdeflate($buffer) ; #
+compress <br/>
+($bz, $status) = bzinflateInit( [PARAMS] ); <br/>
+($out, $status) = $bz−&gt;bzinflate($buffer); #
+uncompress <br/>
+($out, $status) = $bz−&gt;bzflush() ; <br/>
+($out, $status) = $bz−&gt;bzclose() ; <br/>
+$dest = memBzip($source); <br/>
+alias compress <br/>
+$dest = memBunzip($source); <br/>
+alias decompress <br/>
+$bz = Compress::Bzip2−&gt;new( [PARAMS] ); <br/>
+$bz = bzopen($filename or filehandle, $mode); <br/>
+alternate, with $bz created by new(): <br/>
+$bz−&gt;bzopen($filename or filehandle, $mode); <br/>
+$bytesread = $bz−&gt;bzread($buffer [,$size]) ; <br/>
+$bytesread = $bz−&gt;bzreadline($line); <br/>
+$byteswritten = $bz−&gt;bzwrite($buffer [,$limit]);
+<br/>
+$errstring = $bz−&gt;bzerror(); <br/>
+$status = $bz−&gt;bzeof(); <br/>
+$status = $bz−&gt;bzflush(); <br/>
+$status = $bz−&gt;bzclose() ; <br/>
+$status = $bz−&gt;bzsetparams( $param =&gt; $setting
+); <br/>
+$bz−&gt;total_in() ; <br/>
+$bz−&gt;total_out() ; <br/>
+$verstring = $bz−&gt;bzversion(); <br/>
+$Compress::Bzip2::bzerrno</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>Compress::Bzip2</i> module provides a Perl interface to
+the <b>bzip2</b> compression library (see "AUTHOR"
+for details about where to get <i>Bzip2</i>). A relevant
+subset of the functionality provided by <i>bzip2</i> is
+available in <i>Compress::Bzip2</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">All string
+parameters can either be a scalar or a scalar reference.</p>
+<p style="margin-left:9%; margin-top: 1em">The module can
+be split into two general areas of functionality, namely
+in−memory compression/decompression and read/write
+access to <i>bzip2</i> files. Each of these areas will be
+discussed separately below.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NOTE</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>Compress::Bzip2</i>
+is just a simple <i>bzip2</i> binding, comparable to the old
+Compress::Zlib library. It is not well integrated into
+PerlIO, use the preferred IO::Compress::Bzip2 instead.</p>
+<h2>FILE READ/WRITE INTERFACE
+<a name="FILE READ/WRITE INTERFACE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A number of
+functions are supplied in <i>bzlib</i> for reading and
+writing <i>bzip2</i> files. Unfortunately, most of them are
+not suitable. So, this module provides another interface,
+built over top of the low level bzlib methods.</p>
+<h3>$bz = bzopen(filename or filehandle, mode)
+<a name="$bz = bzopen(filename or filehandle, mode)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This function
+returns an object which is used to access the other
+<i>bzip2</i> methods.</p>
+<p style="margin-left:9%; margin-top: 1em">The <b>mode</b>
+parameter is used to specify both whether the file is opened
+for reading or writing, with "r" or "w"
+respectively.</p>
+<p style="margin-left:9%; margin-top: 1em">If a reference
+to an open filehandle is passed in place of the filename, it
+better be positioned to the start of a
+compression/decompression sequence.</p>
+<p style="margin-left:9%; margin-top: 1em">WARNING: With
+Perl 5.6 you cannot use a filehandle because of SEGV in
+destruction with bzclose or an implicit close.</p>
+<h3>$bz = Compress::Bzip2−&gt;new( [PARAMS] )
+<a name="$bz = Compress::Bzip2−&gt;new( [PARAMS] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Create a
+Compress::Bzip2 object. Optionally, provide
+compression/decompression parameters as a keyword =&gt;
+setting list. See <b><i>bzsetparams()</i></b> for a
+description of the parameters.</p>
+<h3>$bz−&gt;bzopen(filename or filehandle, mode)
+<a name="$bz−&gt;bzopen(filename or filehandle, mode)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is bzopen,
+but it uses an object previously created by the new method.
+Other than that, it is identical to the above bzopen.</p>
+<h3>$bytesread = $bz−&gt;bzread($buffer [, $size]) ;
+<a name="$bytesread = $bz−&gt;bzread($buffer [, $size]) ;"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Reads
+<b>$size</b> bytes from the compressed file into
+<b>$buffer</b>. If <b>$size</b> is not specified, it will
+default to 4096. If the scalar <b>$buffer</b> is not large
+enough, it will be extended automatically.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+number of bytes actually read. On EOF it returns 0 and in
+the case of an error, −1.</p>
+<h3>$bytesread = $bz−&gt;bzreadline($line) ;
+<a name="$bytesread = $bz−&gt;bzreadline($line) ;"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Reads the next
+line from the compressed file into <b>$line</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+number of bytes actually read. On EOF it returns 0 and in
+the case of an error, −1.</p>
+<p style="margin-left:9%; margin-top: 1em">It IS legal to
+intermix calls to <b>bzread</b> and <b>bzreadline</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">At this time
+<b>bzreadline</b> ignores the variable $/
+($INPUT_RECORD_SEPARATOR or $RS when "English" is
+in use). The end of a line is denoted by the C character
+'\n'.</p>
+<h3>$byteswritten = $bz−&gt;bzwrite($buffer [, $limit]) ;
+<a name="$byteswritten = $bz−&gt;bzwrite($buffer [, $limit]) ;"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Writes the
+contents of <b>$buffer</b> to the compressed file. Returns
+the number of bytes actually written, or 0 on error.</p>
+<p style="margin-left:9%; margin-top: 1em">If $limit is
+given and non−zero, then only that many bytes from
+$buffer will be written.</p>
+<h3>$status = $bz−&gt;bzflush($flush) ;
+<a name="$status = $bz−&gt;bzflush($flush) ;"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Flushes all
+pending output to the compressed file. Works identically to
+the <i>zlib</i> function it interfaces to. Note that the use
+of <b>bzflush</b> can degrade compression.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns
+"BZ_OK" if <b>$flush</b> is "BZ_FINISH"
+and all output could be flushed. Otherwise the bzlib error
+code is returned.</p>
+<p style="margin-left:9%; margin-top: 1em">Refer to the
+<i>bzlib</i> documentation for the valid values of
+<b>$flush</b>.</p>
+<h3>$status = $bz−&gt;bzeof() ;
+<a name="$status = $bz−&gt;bzeof() ;"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns 1 if the
+end of file has been detected while reading the input file,
+otherwise returns 0.</p>
+<h3>$bz−&gt;bzclose
+<a name="$bz−&gt;bzclose"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Closes the
+compressed file. Any pending data is flushed to the file
+before it is closed.</p>
+<h3>$bz−&gt;bzsetparams( [PARAMS] );
+<a name="$bz−&gt;bzsetparams( [PARAMS] );"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Change settings
+for the deflate stream $bz.</p>
+<p style="margin-left:9%; margin-top: 1em">The list of the
+valid options is shown below. Options not specified will
+remain unchanged. <b><br/>
+−verbosity</b></p>
+<p style="margin-left:15%;">Defines the verbosity level.
+Valid values are 0 through 4,</p>
+<p style="margin-left:15%; margin-top: 1em">The default is
+"−verbosity =&gt; 0".</p>
+<p style="margin-left:9%;"><b>−blockSize100k</b></p>
+<p style="margin-left:15%;">For bzip object opened for
+stream deflation or write.</p>
+<p style="margin-left:15%; margin-top: 1em">Defines the
+buffering factor of compression method. The algorithm
+buffers all data until the buffer is full, then it flushes
+all the data out. Use −blockSize100k to specify the
+size of the buffer.</p>
+<p style="margin-left:15%; margin-top: 1em">Valid settings
+are 1 through 9, representing a blocking in multiples of
+100k.</p>
+<p style="margin-left:15%; margin-top: 1em">Note that each
+such block has an overhead of leading and trailing
+synchronization bytes. bzip2 recovery uses this information
+to pull useable data out of a corrupted file.</p>
+<p style="margin-left:15%; margin-top: 1em">A streaming
+application would probably want to set the blocking low.</p>
+<p style="margin-left:9%;"><b>−workFactor</b></p>
+<p style="margin-left:15%;">For bzip object opened for
+stream deflation or write.</p>
+<p style="margin-left:15%; margin-top: 1em">The workFactor
+setting tells the deflation algorithm how much work to
+invest to compensate for repetitive data.</p>
+<p style="margin-left:15%; margin-top: 1em">workFactor may
+be a number from 0 to 250 inclusive. The default setting is
+30.</p>
+<p style="margin-left:15%; margin-top: 1em">See the bzip
+documentation for more information.</p>
+<p style="margin-left:9%;"><b>−small</b></p>
+<p style="margin-left:15%;">For bzip object opened for
+stream inflation or read.</p>
+<p style="margin-left:15%; margin-top: 1em"><b>small</b>
+may be 0 or 1. Set "small" to one to use a slower,
+less memory intensive algorithm.</p>
+<h3>$bz−&gt;bzerror
+<a name="$bz−&gt;bzerror"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+<i>bzlib</i> error message or number for the last operation
+associated with <b>$bz</b>. The return value will be the
+<i>bzlib</i> error number when used in a numeric context and
+the <i>bzlib</i> error message when used in a string
+context. The <i>bzlib</i> error number constants, shown
+below, are available for use.</p>
+<p style="margin-left:9%; margin-top: 1em">BZ_CONFIG_ERROR
+<br/>
+BZ_DATA_ERROR <br/>
+BZ_DATA_ERROR_MAGIC <br/>
+BZ_FINISH <br/>
+BZ_FINISH_OK <br/>
+BZ_FLUSH <br/>
+BZ_FLUSH_OK <br/>
+BZ_IO_ERROR <br/>
+BZ_MAX_UNUSED <br/>
+BZ_MEM_ERROR <br/>
+BZ_OK <br/>
+BZ_OUTBUFF_FULL <br/>
+BZ_PARAM_ERROR <br/>
+BZ_RUN <br/>
+BZ_RUN_OK <br/>
+BZ_SEQUENCE_ERROR <br/>
+BZ_STREAM_END <br/>
+BZ_UNEXPECTED_EOF</p>
+<h3>$bz−&gt;bzclearerr
+<a name="$bz−&gt;bzclearerr"></a>
+</h3>
+<h3>$bzerrno
+<a name="$bzerrno"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>$bzerrno</b> scalar holds the error code associated with
+the most recent <i>bzip2</i> routine. Note that unlike
+<b>bzerror()</b>, the error is <i>not</i> associated with a
+particular file.</p>
+<p style="margin-left:9%; margin-top: 1em">As with
+<b>bzerror()</b> it returns an error number in numeric
+context and an error message in string context. Unlike
+<b>bzerror()</b> though, the error message will correspond
+to the <i>bzlib</i> message when the error is associated
+with <i>bzlib</i> itself, or the UNIX error message when it
+is not (i.e. <i>bzlib</i> returned
+"Z_ERRORNO").</p>
+<p style="margin-left:9%; margin-top: 1em">As there is an
+overlap between the error numbers used by <i>bzlib</i> and
+UNIX, <b>$bzerrno</b> should only be used to check for the
+presence of <i>an</i> error in numeric context. Use
+<b>bzerror()</b> to check for specific <i>bzlib</i> errors.
+The <i>bzcat</i> example below shows how the variable can be
+used safely.</p>
+<h3>$bz−&gt;prefix
+<a name="$bz−&gt;prefix"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the
+additional 5 byte header which is prepended to the bzip2
+header starting with "BZh" when using
+memBzip/compress.</p>
+<h2>Compress::Bzip2 Utilities
+<a name="Compress::Bzip2 Utilities"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Options:
+−d −c −z −f −v −k
+−s −1..9</p>
+<h3>bzip2( [OPTS], filename)
+<a name="bzip2( [OPTS], filename)"></a>
+</h3>
+<h3>bunzip2(filename)
+<a name="bunzip2(filename)"></a>
+</h3>
+<h3>bzcat(filenames...)
+<a name="bzcat(filenames...)"></a>
+</h3>
+<h3>bzlibversion()
+<a name="bzlibversion()"></a>
+</h3>
+<h3>bzinflateInit( opts... )
+<a name="bzinflateInit( opts... )"></a>
+</h3>
+<h2>Internal Utilties
+<a name="Internal Utilties"></a>
+</h2>
+<h3>bz_seterror(errno, msg) =head2 $bz−&gt;is_read() =head2 $bz−&gt;is_stream()=head2 $bz−&gt;is_write() =head2 $bz−&gt;total_in() =head2 $bz−&gt;total_out()=head2 version()
+<a name="bz_seterror(errno, msg) =head2 $bz−&gt;is_read() =head2 $bz−&gt;is_stream()=head2 $bz−&gt;is_write() =head2 $bz−&gt;total_in() =head2 $bz−&gt;total_out()=head2 version()"></a>
+</h3>
+<h2>Compress::Bzip2 1.03 COMPATIBILITY
+<a name="Compress::Bzip2 1.03 COMPATIBILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">While the 2.x
+thread forked off of 1.00, another line of development came
+to a head at 1.03. The 1.03 version worked with bzlib 1.0.2,
+had improvements to the error handling, single buffer
+inflate/deflate, a streaming interface to inflate/deflate,
+and a cpan style test suite.</p>
+<h3>$dest = compress( $string, [$level] )
+<a name="$dest = compress( $string, [$level] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias to
+memBzip, this compresses string, using the optional
+compression level, 1 through 9, the default being 6. Returns
+a string containing the compressed data.</p>
+<p style="margin-left:9%; margin-top: 1em">On error
+<i>undef</i> is returned.</p>
+<h3>$dest = decompress($string, [$level])
+<a name="$dest = decompress($string, [$level])"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias to
+memBunzip, this decompresses the data in string, returning a
+string containing the decompressed data.</p>
+<p style="margin-left:9%; margin-top: 1em">On error
+<i>undef</i> is returned.</p>
+<h3>uncompress($string, [$level])
+<a name="uncompress($string, [$level])"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Another alias to
+memBunzip</p>
+<h3>$stream = compress_init( [PARAMS] )
+<a name="$stream = compress_init( [PARAMS] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias to
+bzdeflateInit. In addition to the named parameters
+documented for bzdeflateInit, the following are
+accepted:</p>
+<p style="margin-left:9%; margin-top: 1em">−level,
+alias to −blockSize100k <br/>
+−buffer, to set the buffer size.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+−buffer option is ignored. The intermediate buffer
+size is not changeable.</p>
+<h3>$stream = decompress_init( [PARAMS] )
+<a name="$stream = decompress_init( [PARAMS] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias to
+bzinflateInit. See bzinflateInit for a description of the
+parameters. The option "−buffer" is
+accepted, but ignored.</p>
+<h3>$output = $stream−&gt;add( $string )
+<a name="$output = $stream−&gt;add( $string )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Add data to be
+compressed/decompressed. Returns whatever output is
+available (possibly none, if it's still buffering it), or
+undef on error.</p>
+<h3>$output = $stream−&gt;finish( [$string] )
+<a name="$output = $stream−&gt;finish( [$string] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Finish the
+operation; takes an optional final data string. Whatever is
+returned completes the output; returns undef on error.</p>
+<h3>$stream−&gt;error
+<a name="$stream−&gt;error"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Like the
+function, but applies to the current object only. Note that
+errors in a stream object are also returned by the
+function.</p>
+<h3>$stream−&gt;input_size
+<a name="$stream−&gt;input_size"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias to
+total_in. Total bytes passed to the stream.</p>
+<h3>$stream−&gt;output_size
+<a name="$stream−&gt;output_size"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias to
+total_out. Total bytes received from the stream.</p>
+<h2>GZIP COMPATIBILITY INTERFACE
+<a name="GZIP COMPATIBILITY INTERFACE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Except for the
+exact state and error numbers, this package presents an
+interface very much like that given by the Compress::Zlib
+package. Mostly, if you take the method name, state or error
+number from Compress::Zlib and replace the "g"
+with a "b", your code should work.</p>
+<p style="margin-left:9%; margin-top: 1em">To make the
+interoperability even easier, all the Compress::Zlib method
+names have been used as aliases or cover functions for the
+bzip2 methods.</p>
+<p style="margin-left:9%; margin-top: 1em">Therefore, most
+code that uses Compress::Zlib should be able to use this
+package, with a one line change.</p>
+<p style="margin-left:9%; margin-top: 1em">Simply
+change</p>
+<p style="margin-left:9%; margin-top: 1em">$gz =
+Compress::Zlib::gzopen( "filename", "w"
+);</p>
+<p style="margin-left:9%; margin-top: 1em">to</p>
+<p style="margin-left:9%; margin-top: 1em">$gz =
+Compress::Bzip2::gzopen( "filename", "w"
+);</p>
+<p style="margin-left:9%; margin-top: 1em">Some of the
+Compress::Zlib aliases don't return anything useful, like
+crc32 or adler32, cause bzip2 doesn't do that sort of
+thing.</p>
+<h3>$gz = gzopen( $filename, $mode )
+<a name="$gz = gzopen( $filename, $mode )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzopen.</p>
+<h3>$gz−&gt;gzread( $buffer, [ $length ] )
+<a name="$gz−&gt;gzread( $buffer, [ $length ] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzread.</p>
+<h3>$gz−&gt;gzreadline( $buffer )
+<a name="$gz−&gt;gzreadline( $buffer )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzreadline.</p>
+<h3>$gz−&gt;gzwrite( $buffer )
+<a name="$gz−&gt;gzwrite( $buffer )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzwrite.</p>
+<h3>$gz−&gt;gzflush( [$flushtype] )
+<a name="$gz−&gt;gzflush( [$flushtype] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzflush, with return code translation.</p>
+<h3>$gz−&gt;gzclose( )
+<a name="$gz−&gt;gzclose( )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzclose.</p>
+<h3>$gz−&gt;gzeof( )
+<a name="$gz−&gt;gzeof( )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzeof.</p>
+<h3>$gz−&gt;gzerror( )
+<a name="$gz−&gt;gzerror( )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzerror.</p>
+<h3>$gz−&gt;gzsetparams( $level, $strategy )
+<a name="$gz−&gt;gzsetparams( $level, $strategy )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is a
+no−op.</p>
+<h3>$d = deflateInit( [OPTS] )
+<a name="$d = deflateInit( [OPTS] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzdeflateInit, with return code translation.</p>
+<p style="margin-left:9%; margin-top: 1em">All OPTS are
+ignored.</p>
+<h3>$d−&gt;deflate( $buffer )
+<a name="$d−&gt;deflate( $buffer )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzdeflate, with return code translation.</p>
+<h3>$d−&gt;deflateParams( [OPTS] )
+<a name="$d−&gt;deflateParams( [OPTS] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is a
+no−op.</p>
+<h3>$d−&gt;flush( [$flushtype] )
+<a name="$d−&gt;flush( [$flushtype] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Cover function
+for bzflush or bzclose, depending on $flushtype.</p>
+<p style="margin-left:9%; margin-top: 1em">See the
+Compress::Zlib documentation for more information.</p>
+<h3>$d−&gt;dict_adler( )
+<a name="$d−&gt;dict_adler( )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is a
+no−op.</p>
+<h3>$d−&gt;msg( )
+<a name="$d−&gt;msg( )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is a
+no−op.</p>
+<h3>$d = inflateInit( [OPTS] )
+<a name="$d = inflateInit( [OPTS] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzinflateInit, with return code translation.</p>
+<p style="margin-left:9%; margin-top: 1em">All OPTS are
+ignored.</p>
+<h3>$d−&gt;inflate( )
+<a name="$d−&gt;inflate( )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+bzinflate, with return code translation.</p>
+<h3>$d−&gt;inflateSync( )
+<a name="$d−&gt;inflateSync( )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is a
+no−op.</p>
+<h3>$d−&gt;adler32( $crc )
+<a name="$d−&gt;adler32( $crc )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is a
+no−op.</p>
+<h3>$d−&gt;crc32( $crc )
+<a name="$d−&gt;crc32( $crc )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This is a
+no−op.</p>
+<h3>$buffer = memGzip( $buffer )
+<a name="$buffer = memGzip( $buffer )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+memBzip.</p>
+<h3>$buffer = memGunzip( $buffer )
+<a name="$buffer = memGunzip( $buffer )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Alias for
+memBunzip.</p>
+<h2>IN−MEMORY COMPRESS/UNCOMPRESS
+<a name="IN−MEMORY COMPRESS/UNCOMPRESS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Two
+high−level functions are provided by <i>bzlib</i> to
+perform in−memory compression. They are <b>memBzip</b>
+and <b>memBunzip</b>. Two Perl subs are provided which
+provide similar functionality.</p>
+<h3>$compressed = memBzip($buffer);
+<a name="$compressed = memBzip($buffer);"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Compresses
+<b>$buffer</b>. If successful it returns the compressed
+data. Otherwise it returns <i>undef</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The buffer
+parameter can either be a scalar or a scalar reference.</p>
+<p style="margin-left:9%; margin-top: 1em">Essentially, an
+in−memory bzip file is created. It creates a minimal
+bzip header, which adds 5 bytes before the bzip2 specific
+BZh header.</p>
+<h3>$uncompressed = memBunzip($buffer);
+<a name="$uncompressed = memBunzip($buffer);"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Uncompresses
+<b>$buffer</b>. If successful it returns the uncompressed
+data. Otherwise it returns <i>undef</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The source
+buffer can either be a scalar or a scalar reference.</p>
+<p style="margin-left:9%; margin-top: 1em">The buffer
+parameter can either be a scalar or a scalar reference. The
+contents of the buffer parameter are destroyed after calling
+this function.</p>
+<h2>STREAM DEFLATE (= COMPRESS)
+<a name="STREAM DEFLATE (= COMPRESS)"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The Perl
+interface will <i>always</i> consume the complete input
+buffer before returning. Also the output buffer returned
+will be automatically grown to fit the amount of output
+available.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a
+definition of the interface available:</p>
+<h3>($d, $status) = bzdeflateInit( [PARAMS] )
+<a name="($d, $status) = bzdeflateInit( [PARAMS] )"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Initialises a
+deflation stream.</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+it will return the initialised deflation stream, <b>$d</b>
+and <b>$status</b> of "BZ_OK" in a list context.
+In scalar context it returns the deflation stream,
+<b>$d</b>, only.</p>
+<p style="margin-left:9%; margin-top: 1em">If not
+successful, the returned deflation stream (<b>$d</b>) will
+be <i>undef</i> and <b>$status</b> will hold the exact
+<i>bzip2</i> error code.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+optionally takes a number of named options specified as
+"−Name=&gt;value" pairs. This allows
+individual options to be tailored without having to specify
+them all in the parameter list.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a list
+of the valid options: <b><br/>
+−verbosity</b></p>
+<p style="margin-left:15%;">Defines the verbosity level.
+Valid values are 0 through 4,</p>
+<p style="margin-left:15%; margin-top: 1em">The default is
+"−verbosity =&gt; 0".</p>
+<p style="margin-left:9%;"><b>−blockSize100k</b></p>
+<p style="margin-left:15%;">Defines the buffering factor of
+compression method. The algorithm buffers all data until the
+buffer is full, then it flushes all the data out. Use
+−blockSize100k to specify the size of the buffer.</p>
+<p style="margin-left:15%; margin-top: 1em">Valid settings
+are 1 through 9, representing a blocking in multiples of
+100k.</p>
+<p style="margin-left:15%; margin-top: 1em">Note that each
+such block has an overhead of leading and trailing
+synchronization bytes. bzip2 recovery uses this information
+to pull useable data out of a corrupted file.</p>
+<p style="margin-left:15%; margin-top: 1em">A streaming
+application would probably want to set the blocking low.</p>
+<p style="margin-left:9%;"><b>−workFactor</b></p>
+<p style="margin-left:15%;">The workFactor setting tells
+the deflation algorithm how much work to invest to
+compensate for repetitive data.</p>
+<p style="margin-left:15%; margin-top: 1em">workFactor may
+be a number from 0 to 250 inclusive. The default setting is
+30.</p>
+<p style="margin-left:15%; margin-top: 1em">See the bzip
+documentation for more information.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is an
+example of using the <b>deflateInit</b> optional parameter
+list to override the default buffer size and compression
+level. All other options will take their default values.</p>
+<p style="margin-left:9%; margin-top: 1em">bzdeflateInit(
+−blockSize100k =&gt; 1, −verbosity =&gt; 1
+);</p>
+<h3>($out, $status) = $d−&gt;bzdeflate($buffer)
+<a name="($out, $status) = $d−&gt;bzdeflate($buffer)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Deflates the
+contents of <b>$buffer</b>. The buffer can either be a
+scalar or a scalar reference. When finished, <b>$buffer</b>
+will be completely processed (assuming there were no
+errors). If the deflation was successful it returns deflated
+output, <b>$out</b>, and a status value, <b>$status</b>, of
+"Z_OK".</p>
+<p style="margin-left:9%; margin-top: 1em">On error,
+<b>$out</b> will be <i>undef</i> and <b>$status</b> will
+contain the <i>zlib</i> error code.</p>
+<p style="margin-left:9%; margin-top: 1em">In a scalar
+context <b>bzdeflate</b> will return <b>$out</b> only.</p>
+<p style="margin-left:9%; margin-top: 1em">As with the
+internal buffering of the <i>deflate</i> function in
+<i>bzip2</i>, it is not necessarily the case that any output
+will be produced by this method. So don't rely on the fact
+that <b>$out</b> is empty for an error test. In fact, given
+the size of bzdeflates internal buffer, with most files it's
+likely you won't see any output at all until flush or
+close.</p>
+<h3>($out, $status) = $d−&gt;bzflush([flush_type])
+<a name="($out, $status) = $d−&gt;bzflush([flush_type])"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Typically used
+to finish the deflation. Any pending output will be returned
+via <b>$out</b>. <b>$status</b> will have a value
+"BZ_OK" if successful.</p>
+<p style="margin-left:9%; margin-top: 1em">In a scalar
+context <b>bzflush</b> will return <b>$out</b> only.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+flushing can seriously degrade the compression ratio, so it
+should only be used to terminate a decompression (using
+"BZ_FLUSH") or when you want to create a <i>full
+flush point</i> (using "BZ_FINISH").</p>
+<p style="margin-left:9%; margin-top: 1em">The allowable
+values for "flush_type" are "BZ_FLUSH"
+and "BZ_FINISH".</p>
+<p style="margin-left:9%; margin-top: 1em">For a handle
+opened for "w" (bzwrite), the default is
+"BZ_FLUSH". For a stream, the default for
+"flush_type" is "BZ_FINISH" (which is
+essentially a close and reopen).</p>
+<p style="margin-left:9%; margin-top: 1em">It is strongly
+recommended that you only set the "flush_type"
+parameter if you fully understand the implications of what
+it does. See the "bzip2" documentation for
+details.</p>
+<h3>Example
+<a name="Example"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Here is a
+trivial example of using <b>bzdeflate</b>. It simply reads
+standard input, deflates it and writes it to standard
+output.</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use Compress::Bzip2 ; <br/>
+binmode STDIN; <br/>
+binmode STDOUT; <br/>
+my $x = bzdeflateInit() <br/>
+or die "Cannot create a deflation stream\n" ; <br/>
+my ($output, $status) ; <br/>
+while (&lt;&gt;) <br/>
+{ <br/>
+($output, $status) = $x−&gt;bzdeflate($_) ; <br/>
+$status == BZ_OK <br/>
+or die "deflation failed\n" ; <br/>
+print $output ; <br/>
+} <br/>
+($output, $status) = $x−&gt;bzclose() ; <br/>
+$status == BZ_OK <br/>
+or die "deflation failed\n" ; <br/>
+print $output ;</p>
+<h2>STREAM INFLATE
+<a name="STREAM INFLATE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Here is a
+definition of the interface:</p>
+<h3>($i, $status) = inflateInit()
+<a name="($i, $status) = inflateInit()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Initialises an
+inflation stream.</p>
+<p style="margin-left:9%; margin-top: 1em">In a list
+context it returns the inflation stream, <b>$i</b>, and the
+<i>zlib</i> status code (<b>$status</b>). In a scalar
+context it returns the inflation stream only.</p>
+<p style="margin-left:9%; margin-top: 1em">If successful,
+<b>$i</b> will hold the inflation stream and <b>$status</b>
+will be "BZ_OK".</p>
+<p style="margin-left:9%; margin-top: 1em">If not
+successful, <b>$i</b> will be <i>undef</i> and
+<b>$status</b> will hold the <i>bzlib.h</i> error code.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+optionally takes a number of named options specified as
+"−Name=&gt;value" pairs. This allows
+individual options to be tailored without having to specify
+them all in the parameter list.</p>
+<p style="margin-left:9%; margin-top: 1em">For backward
+compatibility, it is also possible to pass the parameters as
+a reference to a hash containing the name=&gt;value
+pairs.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+takes one optional parameter, a reference to a hash. The
+contents of the hash allow the deflation interface to be
+tailored.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a list
+of the valid options: <b><br/>
+−small</b></p>
+<p style="margin-left:15%;"><b>small</b> may be 0 or 1. Set
+"small" to one to use a slower, less memory
+intensive algorithm.</p>
+<p style="margin-left:9%;"><b>−verbosity</b></p>
+<p style="margin-left:15%;">Defines the verbosity level.
+Valid values are 0 through 4,</p>
+<p style="margin-left:15%; margin-top: 1em">The default is
+"−verbosity =&gt; 0".</p>
+<p style="margin-left:9%; margin-top: 1em">Here is an
+example of using the <b>bzinflateInit</b> optional
+parameter.</p>
+<p style="margin-left:9%; margin-top: 1em">bzinflateInit(
+−small =&gt; 1, −verbosity =&gt; 1 );</p>
+<h3>($out, $status) = $i−&gt;bzinflate($buffer)
+<a name="($out, $status) = $i−&gt;bzinflate($buffer)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Inflates the
+complete contents of <b>$buffer</b>. The buffer can either
+be a scalar or a scalar reference.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns
+"BZ_OK" if successful and
+"BZ_STREAM_END" if the end of the compressed data
+has been successfully reached. If not successful,
+<b>$out</b> will be <i>undef</i> and <b>$status</b> will
+hold the <i>bzlib</i> error code.</p>
+<p style="margin-left:9%; margin-top: 1em">The $buffer
+parameter is modified by "bzinflate". On
+completion it will contain what remains of the input buffer
+after inflation. This means that $buffer will be an empty
+string when the return status is "BZ_OK". When the
+return status is "BZ_STREAM_END" the $buffer
+parameter will contains what (if anything) was stored in the
+input buffer after the deflated data stream.</p>
+<p style="margin-left:9%; margin-top: 1em">This feature is
+useful when processing a file format that encapsulates a
+compressed data stream.</p>
+<h3>Example
+<a name="Example"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Here is an
+example of using <b>bzinflate</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use Compress::Bzip2; <br/>
+my $x = bzinflateInit() <br/>
+or die "Cannot create a inflation stream\n" ; <br/>
+my $input = '' ; <br/>
+binmode STDIN; <br/>
+binmode STDOUT; <br/>
+my ($output, $status) ; <br/>
+while (read(STDIN, $input, 4096)) <br/>
+{ <br/>
+($output, $status) = $x−&gt;bzinflate(\$input) ; <br/>
+print $output <br/>
+if $status == BZ_OK or $status == BZ_STREAM_END ; <br/>
+last if $status != BZ_OK ; <br/>
+} <br/>
+die "inflation failed\n" <br/>
+unless $status == BZ_STREAM_END ;</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Here are some
+example scripts of using the interface.</p>
+<h3>A bzcat function
+<a name="A bzcat function"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use Compress::Bzip2 ; <br/>
+die "Usage: bzcat file...\n" unless @ARGV ; <br/>
+my $file ; <br/>
+foreach $file (@ARGV) { <br/>
+my $buffer ; <br/>
+my $bz = bzopen($file, "rb") <br/>
+or die "Cannot open $file: $bzerrno\n" ; <br/>
+print $buffer while $bz−&gt;bzread($buffer) &gt; 0 ;
+<br/>
+die "Error reading from $file: $bzerrno" .
+($bzerrno+0) . "\n" <br/>
+if $bzerrno != BZ_STREAM_END ; <br/>
+$bz−&gt;bzclose() ; <br/>
+}</p>
+<h3>A grep using bzreadline
+<a name="A grep using bzreadline"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use Compress::Bzip2 ; <br/>
+die "Usage: bzgrep pattern file...\n" unless @ARGV
+&gt;= 2; <br/>
+my $pattern = shift ; <br/>
+my $file ; <br/>
+foreach $file (@ARGV) { <br/>
+my $bz = bzopen($file, "rb") <br/>
+or die "Cannot open $file: $bzerrno\n" ; <br/>
+while ($bz−&gt;bzreadline($_) &gt; 0) { <br/>
+print if /$pattern/ ; <br/>
+} <br/>
+die "Error reading from $file: $bzerrno\n" <br/>
+if $bzerrno != Z_STREAM_END ; <br/>
+$bz−&gt;bzclose() ; <br/>
+}</p>
+<h3>Streaming Compression
+<a name="Streaming Compression"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This script,
+<i>bzstream</i>, does the opposite of the <i>bzcat</i>
+script above. It reads from standard input and writes a bzip
+file to standard output.</p>
+<p style="margin-left:9%; margin-top: 1em">use strict ;
+<br/>
+use warnings ; <br/>
+use Compress::Bzip2 ; <br/>
+binmode STDOUT; # bzopen only sets it on the fd <br/>
+my $bz = bzopen(\*STDOUT, "wb") <br/>
+or die "Cannot open stdout: $bzerrno\n" ; <br/>
+while (&lt;&gt;) { <br/>
+$bz−&gt;bzwrite($_) or die "error writing:
+$bzerrno\n" ; <br/>
+} <br/>
+$bz−&gt;bzclose ;</p>
+<h2>EXPORT
+<a name="EXPORT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Use the tags
+:all, :utilities, :constants, :bzip1 and :gzip.</p>
+<h3>Export tag :all
+<a name="Export tag :all"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This exports all
+the exportable methods.</p>
+<h3>Export tag :constants
+<a name="Export tag :constants"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This exports
+only the BZ_* constants.</p>
+<h3>Export tag :bzip1
+<a name="Export tag :bzip1"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This exports the
+Compress::Bzip2 1.x functions, for compatibility.</p>
+<p style="margin-left:9%; margin-top: 1em">compress <br/>
+decompress <br/>
+compress_init <br/>
+decompress_init <br/>
+version</p>
+<p style="margin-left:9%; margin-top: 1em">These are
+actually aliases to memBzip and memBunzip.</p>
+<h3>Export tag :utilities
+<a name="Export tag :utilities"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This gives an
+interface to the bzip2 methods.</p>
+<p style="margin-left:9%; margin-top: 1em">bzopen <br/>
+bzinflateInit <br/>
+bzdeflateInit <br/>
+memBzip <br/>
+memBunzip <br/>
+bzip2 <br/>
+bunzip2 <br/>
+bzcat <br/>
+bzlibversion <br/>
+$bzerrno</p>
+<h3>Export tag :gzip
+<a name="Export tag :gzip"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This gives
+compatibility with Compress::Zlib.</p>
+<p style="margin-left:9%; margin-top: 1em">gzopen <br/>
+gzinflateInit <br/>
+gzdeflateInit <br/>
+memGzip <br/>
+memGunzip <br/>
+$gzerrno</p>
+<h2>Exportable constants
+<a name="Exportable constants"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">All the
+<i>bzlib</i> constants are automatically imported when you
+make use of <i>Compress::Bzip2</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">BZ_CONFIG_ERROR
+<br/>
+BZ_DATA_ERROR <br/>
+BZ_DATA_ERROR_MAGIC <br/>
+BZ_FINISH <br/>
+BZ_FINISH_OK <br/>
+BZ_FLUSH <br/>
+BZ_FLUSH_OK <br/>
+BZ_IO_ERROR <br/>
+BZ_MAX_UNUSED <br/>
+BZ_MEM_ERROR <br/>
+BZ_OK <br/>
+BZ_OUTBUFF_FULL <br/>
+BZ_PARAM_ERROR <br/>
+BZ_RUN <br/>
+BZ_RUN_OK <br/>
+BZ_SEQUENCE_ERROR <br/>
+BZ_STREAM_END <br/>
+BZ_UNEXPECTED_EOF</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+documentation for zlib, bzip2 and Compress::Zlib.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Rob Janes,
+&lt;arjay at cpan.org&gt;</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2005 by Rob Janes</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself, either Perl version
+5.8.3 or, at your option, any later version of Perl 5 you
+may have available.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>Compress::Bzip2</i> module was originally written by
+Gawdi Azem
+<i>azemgi@rupert.informatik.uni−stuttgart.de</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+<i>Compress::Bzip2</i> module was written by Gawdi Azem
+<i>azemgi@rupert.informatik.uni−stuttgart.de</i>. It
+provided an interface to the in memory inflate and deflate
+routines.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Compress::Bzip2</i>
+was subsequently passed on to Marco Carnut
+<i>kiko@tempest.com.br</i> who shepherded it through to
+version 1.03, a set of changes which included upgrades to
+handle bzlib 1.0.2, and improvements to the in memory
+inflate and deflate routines. The streaming interface and
+error information were added by David Robins
+<i>dbrobins@davidrobins.net</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Version 2 of
+<i>Compress::Bzip2</i> is due to Rob Janes, of
+arjay@cpan.org. This release is intended to give an
+interface close to that of Compress::Zlib. It's development
+forks from 1.00, not 1.03, so the streaming interface is not
+the same as that in 1.03, although apparently compatible as
+it passes the 1.03 test suite.</p>
+<p style="margin-left:9%; margin-top: 1em">Minor subsequent
+fixes and releases were done by Reini Urban,
+rurban@cpan.org.</p>
+<h2>MODIFICATION HISTORY
+<a name="MODIFICATION HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the Changes
+file.</p>
+<p style="margin-left:9%; margin-top: 1em">2.00 Second
+public release of <i>Compress::Bzip2</i>.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,1154 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:08 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Tools::Compare</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Tools::Compare</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#ADVANCED">ADVANCED</a><br/>
+<a href="#COMPARISON TOOLS">COMPARISON TOOLS</a><br/>
+<a href="#QUICK CHECKS">QUICK CHECKS</a><br/>
+<a href="#VALUE SPECIFICATIONS">VALUE SPECIFICATIONS</a><br/>
+<a href="#SET BUILDERS">SET BUILDERS</a><br/>
+<a href="#HASH BUILDER">HASH BUILDER</a><br/>
+<a href="#ARRAY BUILDER">ARRAY BUILDER</a><br/>
+<a href="#BAG BUILDER">BAG BUILDER</a><br/>
+<a href="#ORDERED SUBSET BUILDER">ORDERED SUBSET BUILDER</a><br/>
+<a href="#META BUILDER">META BUILDER</a><br/>
+<a href="#OBJECT BUILDER">OBJECT BUILDER</a><br/>
+<a href="#EVENT BUILDERS">EVENT BUILDERS</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Tools::Compare
+− Tools for comparing deep data structures.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test::More had
+is_deeply(). This library is the Test2 version that can be
+used to compare data structures, but goes a step further in
+that it provides tools for building a data structure
+specification against which you can verify your data. There
+are both 'strict' and 'relaxed' versions of the tools.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::Tools::Compare; <br/>
+# Hash for demonstration purposes <br/>
+my $some_hash = {a =&gt; 1, b =&gt; 2, c =&gt; 3}; <br/>
+# Strict checking, everything must match <br/>
+is( <br/>
+$some_hash, <br/>
+{a =&gt; 1, b =&gt; 2, c =&gt; 3}, <br/>
+"The hash we got matches our expectations" <br/>
+); <br/>
+# Relaxed Checking, only fields we care about are checked,
+and we can use a <br/>
+# regex to approximate a field. <br/>
+like( <br/>
+$some_hash, <br/>
+{a =&gt; 1, b =&gt; qr/\A[0−9]+\z/}, <br/>
+"'a' is 1, 'b' is an integer, we don't care about
+'c'." <br/>
+);</p>
+<h3>ADVANCED
+<a name="ADVANCED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Declarative
+hash, array, and objects builders are available that allow
+you to generate specifications. These are more verbose than
+simply providing a hash, but have the advantage that every
+component you specify has a line number associated. This is
+helpful for debugging as the failure output will tell you
+not only which fields was incorrect, but also the line on
+which you declared the field.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Test2::Tools::Compare qw{ <br/>
+is like isnt unlike <br/>
+match mismatch validator <br/>
+hash array bag object meta number float rounded within
+string subset bool <br/>
+in_set not_in_set check_set <br/>
+item field call call_list call_hash prop check all_items
+all_keys all_vals all_values <br/>
+etc end filter_items <br/>
+T F D DF E DNE FDNE U L <br/>
+event fail_events <br/>
+exact_ref <br/>
+}; <br/>
+is( <br/>
+$some_hash, <br/>
+hash { <br/>
+field a =&gt; 1; <br/>
+field b =&gt; 2; <br/>
+field c =&gt; 3; <br/>
+}, <br/>
+"Hash matches spec" <br/>
+);</p>
+<h2>COMPARISON TOOLS
+<a name="COMPARISON TOOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">$bool = is($got,
+$expect) <br/>
+$bool = is($got, $expect, $name) <br/>
+$bool = is($got, $expect, $name, @diag)</p>
+<p style="margin-left:14%;">$got is the data structure you
+want to check. $expect is what you want $got to look like.
+$name is an optional name for the test. @diag is optional
+diagnostics messages that will be printed to STDERR in event
+of failure, they will not be displayed when the comparison
+is successful. The boolean true/false result of the
+comparison is returned.</p>
+<p style="margin-left:14%; margin-top: 1em">This is the
+strict checker. The strict checker requires a perfect match
+between $got and $expect. All hash fields must be specified,
+all array items must be present, etc. All
+non−scalar/hash/array/regex references must be
+identical (same memory address). Scalar, hash and array
+references will be traversed and compared. Regex references
+will be compared to see if they have the same pattern.</p>
+<p style="margin-left:14%; margin-top: 1em">is( <br/>
+$some_hash, <br/>
+{a =&gt; 1, b =&gt; 2, c =&gt; 3}, <br/>
+"The hash we got matches our expectations" <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">The only
+exception to strictness is when it is given an $expect
+object that was built from a specification, in which case
+the specification determines the strictness. Strictness only
+applies to literal values/references that are provided and
+converted to a specification for you.</p>
+<p style="margin-left:14%; margin-top: 1em">is( <br/>
+$some_hash, <br/>
+hash { # Note: the hash function is not exported by default
+<br/>
+field a =&gt; 1; <br/>
+field b =&gt; match(qr/\A[0−9]+\z/); # Note: The match
+function is not exported by default <br/>
+# Don't care about other fields. <br/>
+}, <br/>
+"The hash comparison is not strict" <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">This works for
+both deep and shallow structures. For instance you can use
+this to compare two strings:</p>
+<p style="margin-left:14%; margin-top: 1em">is('foo',
+'foo', "strings match");</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note</b>:
+This is not the tool to use if you want to check if two
+references are the same exact reference, use ref_is() from
+the Test2::Tools::Ref plugin instead. <i>Most</i> of the
+time this will work as well, however there are problems if
+your reference contains a cycle and refers back to itself at
+some point. If this happens, an exception will be thrown to
+break an otherwise infinite recursion.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note</b>:
+Non−reference values will be compared as strings using
+"eq", so that means strings '2.0' and '2' will not
+match, but numeric 2.0 and 2 will, since they are both
+stringified to '2'.</p>
+<p style="margin-left:9%;">$bool = isnt($got, $expect) <br/>
+$bool = isnt($got, $expect, $name) <br/>
+$bool = isnt($got, $expect, $name, @diag)</p>
+<p style="margin-left:14%;">Opposite of is(). Does all the
+same checks, but passes when there is a mismatch.</p>
+<p style="margin-left:9%;">$bool = like($got, $expect) <br/>
+$bool = like($got, $expect, $name) <br/>
+$bool = like($got, $expect, $name, @diag)</p>
+<p style="margin-left:14%;">$got is the data structure you
+want to check. $expect is what you want $got to look like.
+$name is an optional name for the test. @diag is optional
+diagnostics messages that will be printed to STDERR in event
+of failure, they will not be displayed when the comparison
+is successful. The boolean true/false result of the
+comparison is returned.</p>
+<p style="margin-left:14%; margin-top: 1em">This is the
+relaxed checker. This will ignore hash keys or array indexes
+that you do not actually specify in your $expect structure.
+In addition regex and sub references will be used as
+validators. If you provide a regex using
+"qr/.../", the regex itself will be used to
+validate the corresponding value in the $got structure. The
+same is true for coderefs, the value is passed in as the
+first argument (and in $_) and the sub should return a
+boolean value. In this tool regexes will stringify the thing
+they are checking.</p>
+<p style="margin-left:14%; margin-top: 1em">like( <br/>
+$some_hash, <br/>
+{a =&gt; 1, b =&gt; qr/\A[0−9]+\z/}, <br/>
+"'a' is 1, 'b' is an integer, we don't care about other
+fields" <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">This works for
+both deep and shallow structures. For instance you can use
+this to compare two strings:</p>
+<p style="margin-left:14%; margin-top: 1em">like('foo bar',
+qr/ˆfoo/, "string matches the pattern");</p>
+<p style="margin-left:9%;">$bool = unlike($got, $expect)
+<br/>
+$bool = unlike($got, $expect, $name) <br/>
+$bool = unlike($got, $expect, $name, @diag)</p>
+<p style="margin-left:14%;">Opposite of like(). Does all
+the same checks, but passes when there is a mismatch.</p>
+<p style="margin-left:9%; margin-top: 1em">The is(),
+isnt(), like(), and unlike() functions can be made to dump
+$got using Data::Dumper when tests fail by setting the
+"T2_AUTO_DUMP" environment variable to
+"1". (Alternatively, "T2_AUTO_DUMP" can
+be set to the name of a Perl module providing a compatible
+Dump() method.) The "T2_AUTO_DEPARSE" environment
+variable can be used to enable Data::Dumper's deparsing of
+coderefs.</p>
+<h3>QUICK CHECKS
+<a name="QUICK CHECKS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Note: None of
+these are exported by default. You need to request
+them.</b></p>
+<p style="margin-left:9%; margin-top: 1em">Quick checks are
+a way to quickly generate a common value specification.
+These can be used in structures passed into "is"
+and "like" through the $expect argument.</p>
+<p style="margin-left:9%; margin-top: 1em">Example:</p>
+<p style="margin-left:9%; margin-top: 1em">is($foo, T(),
+'$foo has a true value'); <br/>
+$check = T()</p>
+<p style="margin-left:14%;">This verifies that the value in
+the corresponding $got structure is true, any true value
+will do.</p>
+<p style="margin-left:14%; margin-top: 1em">is($foo, T(),
+'$foo has a true value'); <br/>
+is( <br/>
+{ a =&gt; 'xxx' }, <br/>
+{ a =&gt; T() }, <br/>
+"The 'a' key is true" <br/>
+);</p>
+<p style="margin-left:9%;">$check = F()</p>
+<p style="margin-left:14%;">This verifies that the value in
+the corresponding $got structure is false, any false value
+will do, <b>but the value must exist</b>.</p>
+<p style="margin-left:14%; margin-top: 1em">is($foo, F(),
+'$foo has a false value'); <br/>
+is( <br/>
+{ a =&gt; 0 }, <br/>
+{ a =&gt; F() }, <br/>
+"The 'a' key is false" <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">It is important
+to note that a nonexistent value does not count as false.
+This check will generate a failing test result:</p>
+<p style="margin-left:14%; margin-top: 1em">is( <br/>
+{ a =&gt; 1 }, <br/>
+{ a =&gt; 1, b =&gt; F() }, <br/>
+"The 'b' key is false" <br/>
+);</p>
+<p style="margin-left:14%; margin-top: 1em">This will
+produce the following output:</p>
+<p style="margin-left:14%; margin-top: 1em">not ok 1
+− The b key is false <br/>
+# Failed test "The 'b' key is false" <br/>
+# at some_file.t line 10. <br/>
+#
++−−−−−−+−−−−−−−−−−−−−−−−−−+−−−−−−−+−−−−−−−−−+
+<br/>
+# | PATH | GOT | OP | CHECK | <br/>
+#
++−−−−−−+−−−−−−−−−−−−−−−−−−+−−−−−−−+−−−−−−−−−+
+<br/>
+# | {b} | &lt;DOES NOT EXIST&gt; | FALSE | FALSE() | <br/>
+#
++−−−−−−+−−−−−−−−−−−−−−−−−−+−−−−−−−+−−−−−−−−−+</p>
+<p style="margin-left:14%; margin-top: 1em">In Perl, you
+can have behavior that is different for a missing key vs. a
+false key, so it was decided not to count a completely
+absent value as false. See the DNE() shortcut below for
+checking that a field is missing.</p>
+<p style="margin-left:14%; margin-top: 1em">If you want to
+check for false and/or DNE use the FDNE() check.</p>
+<p style="margin-left:9%;">$check = D()</p>
+<p style="margin-left:14%;">This is to verify that the
+value in the $got structure is defined. Any value other than
+"undef" will pass.</p>
+<p style="margin-left:14%; margin-top: 1em">This will
+pass:</p>
+<p style="margin-left:14%; margin-top: 1em">is('foo', D(),
+'foo is defined');</p>
+<p style="margin-left:14%; margin-top: 1em">This will
+fail:</p>
+<p style="margin-left:14%; margin-top: 1em">is(undef, D(),
+'foo is defined');</p>
+<p style="margin-left:9%;">$check = U()</p>
+<p style="margin-left:14%;">This is to verify that the
+value in the $got structure is undefined.</p>
+<p style="margin-left:14%; margin-top: 1em">This will
+pass:</p>
+<p style="margin-left:14%; margin-top: 1em">is(undef, U(),
+'not defined');</p>
+<p style="margin-left:14%; margin-top: 1em">This will
+fail:</p>
+<p style="margin-left:14%; margin-top: 1em">is('foo', U(),
+'not defined');</p>
+<p style="margin-left:9%;">$check = <b>DF()</b></p>
+<p style="margin-left:14%;">This is to verify that the
+value in the $got structure is defined but false. Any false
+value other than "undef" will pass.</p>
+<p style="margin-left:14%; margin-top: 1em">This will
+pass:</p>
+<p style="margin-left:14%; margin-top: 1em">is(0, DF(),
+'foo is defined but false');</p>
+<p style="margin-left:14%; margin-top: 1em">These will
+fail:</p>
+<p style="margin-left:14%; margin-top: 1em">is(undef, DF(),
+'foo is defined but false'); <br/>
+is(1, DF(), 'foo is defined but false');</p>
+<p style="margin-left:9%;">$check = E()</p>
+<p style="margin-left:14%;">This can be used to check that
+a value exists. This is useful to check that an array has
+more values, or to check that a key exists in a hash, even
+if the value is undefined.</p>
+<p style="margin-left:14%; margin-top: 1em">These pass:</p>
+<p style="margin-left:14%; margin-top: 1em">is(['a', 'b',
+undef], ['a', 'b', E()], "There is a third item in the
+array"); <br/>
+is({a =&gt; 1, b =&gt; 2}, {a =&gt; 1, b =&gt; E()},
+"The 'b' key exists in the hash");</p>
+<p style="margin-left:14%; margin-top: 1em">These will
+fail:</p>
+<p style="margin-left:14%; margin-top: 1em">is(['a', 'b'],
+['a', 'b', E()], "Third item exists"); <br/>
+is({a =&gt; 1}, {a =&gt; 1, b =&gt; E()}, "'b' key
+exists");</p>
+<p style="margin-left:9%;">$check = <b>DNE()</b></p>
+<p style="margin-left:14%;">This can be used to check that
+no value exists. This is useful to check the end bound of an
+array, or to check that a key does not exist in a hash.</p>
+<p style="margin-left:14%; margin-top: 1em">These pass:</p>
+<p style="margin-left:14%; margin-top: 1em">is(['a', 'b'],
+['a', 'b', DNE()], "There is no third item in the
+array"); <br/>
+is({a =&gt; 1}, {a =&gt; 1, b =&gt; DNE()}, "The 'b'
+key does not exist in the hash");</p>
+<p style="margin-left:14%; margin-top: 1em">These will
+fail:</p>
+<p style="margin-left:14%; margin-top: 1em">is(['a', 'b',
+'c'], ['a', 'b', DNE()], "No third item"); <br/>
+is({a =&gt; 1, b =&gt; 2}, {a =&gt; 1, b =&gt; DNE()},
+"No 'b' key");</p>
+<p style="margin-left:9%;">$check = <b>FDNE()</b></p>
+<p style="margin-left:14%;">This is a combination of F()
+and DNE(). This will pass for a false value, or a
+nonexistent value.</p>
+<p style="margin-left:9%;">$check = L()</p>
+<p style="margin-left:14%;">This is to verify that the
+value in the $got structure is defined and has length. Any
+value other than "undef" or the empty string will
+pass (including references).</p>
+<p style="margin-left:14%; margin-top: 1em">These will
+pass:</p>
+<p style="margin-left:14%; margin-top: 1em">is('foo', L(),
+'value is defined and has length'); <br/>
+is([], L(), 'value is defined and has length');</p>
+<p style="margin-left:14%; margin-top: 1em">These will
+fail:</p>
+<p style="margin-left:14%; margin-top: 1em">is(undef, L(),
+'value is defined and has length'); <br/>
+is('', L(), 'value is defined and has length');</p>
+<h3>VALUE SPECIFICATIONS
+<a name="VALUE SPECIFICATIONS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Note: None of
+these are exported by default. You need to request them.</b>
+<br/>
+$check = string "..."</p>
+<p style="margin-left:14%;">Verify that the value matches
+the given string using the "eq" operator.</p>
+<p style="margin-left:9%;">$check = !string
+"..."</p>
+<p style="margin-left:14%;">Verify that the value does not
+match the given string using the "ne"
+operator.</p>
+<p style="margin-left:9%;">$check = number ...;</p>
+<p style="margin-left:14%;">Verify that the value matches
+the given number using the "==" operator.</p>
+<p style="margin-left:9%;">$check = !number ...;</p>
+<p style="margin-left:14%;">Verify that the value does not
+match the given number using the "!="
+operator.</p>
+<p style="margin-left:9%;">$check = number_lt ...; <br/>
+$check = number_le ...; <br/>
+$check = number_ge ...; <br/>
+$check = number_gt ...;</p>
+<p style="margin-left:14%;">Verify that the value is less
+than, less than or equal to, greater than or equal to, or
+greater than the given number.</p>
+<p style="margin-left:9%;">$check = float ...;</p>
+<p style="margin-left:14%;">Verify that the value is
+approximately equal to the given number.</p>
+<p style="margin-left:14%; margin-top: 1em">If a
+'precision' parameter is specified, both operands will be
+rounded to 'precision' number of fractional decimal digits
+and compared with "eq".</p>
+<p style="margin-left:14%; margin-top: 1em">is($near_val,
+float($val, precision =&gt; 4), "Near 4 decimal
+digits");</p>
+<p style="margin-left:14%; margin-top: 1em">Otherwise, the
+check will be made within a range of +/− 'tolerance',
+with a default 'tolerance' of 1e−08.</p>
+<p style="margin-left:14%; margin-top: 1em">is( $near_val,
+float($val, tolerance =&gt; 0.01), "Almost
+there...");</p>
+<p style="margin-left:14%; margin-top: 1em">See also
+"within" and "rounded".</p>
+<p style="margin-left:9%;">$check = !float ...;</p>
+<p style="margin-left:14%;">Verify that the value is not
+approximately equal to the given number.</p>
+<p style="margin-left:14%; margin-top: 1em">If a
+'precision' parameter is specified, both operands will be
+rounded to 'precision' number of fractional decimal digits
+and compared with "eq".</p>
+<p style="margin-left:14%; margin-top: 1em">Otherwise, the
+check will be made within a range of +/− 'tolerance',
+with a default 'tolerance' of 1e−08.</p>
+<p style="margin-left:14%; margin-top: 1em">See also
+"!within" and "!rounded".</p>
+<p style="margin-left:9%;">$check = within($num,
+$tolerance);</p>
+<p style="margin-left:14%;">Verify that the value
+approximately matches the given number, within a range of
++/− $tolerance. Compared using the "=="
+operator.</p>
+<p style="margin-left:14%; margin-top: 1em">$tolerance is
+optional and defaults to 1e−08.</p>
+<p style="margin-left:9%;">$check = !within($num,
+$tolerance);</p>
+<p style="margin-left:14%;">Verify that the value does not
+approximately match the given number within a range of
++/− $tolerance. Compared using the "!="
+operator.</p>
+<p style="margin-left:14%; margin-top: 1em">$tolerance is
+optional and defaults to 1e−08.</p>
+<p style="margin-left:9%;">$check = rounded($num,
+$precision);</p>
+<p style="margin-left:14%;">Verify that the value
+approximately matches the given number, when both are
+rounded to $precision number of fractional digits. Compared
+using the "eq" operator.</p>
+<p style="margin-left:9%;">$check = !rounded($num,
+$precision);</p>
+<p style="margin-left:14%;">Verify that the value does not
+approximately match the given number, when both are rounded
+to $precision number of fractional digits. Compared using
+the "ne" operator.</p>
+<p style="margin-left:9%;">$check = bool ...;</p>
+<p style="margin-left:14%;">Verify the value has the same
+boolean value as the given argument (XNOR).</p>
+<p style="margin-left:9%;">$check = !bool ...;</p>
+<p style="margin-left:14%;">Verify the value has a
+different boolean value from the given argument (XOR).</p>
+<p style="margin-left:9%;">$check = check_isa ...;</p>
+<p style="margin-left:14%;">Verify the value is an instance
+of the given class name.</p>
+<p style="margin-left:9%;">$check = !check_isa ...;</p>
+<p style="margin-left:14%;">Verify the value is not an
+instance of the given class name.</p>
+<p style="margin-left:9%;">$check = match qr/.../ <br/>
+$check = !mismatch qr/.../</p>
+<p style="margin-left:14%;">Verify that the value matches
+the regex pattern. This form of pattern check will
+<b>NOT</b> stringify references being checked.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+"!mismatch()" is documented for completion, please
+do not use it.</p>
+<p style="margin-left:9%;">$check = !match qr/.../ <br/>
+$check = mismatch qr/.../</p>
+<p style="margin-left:14%;">Verify that the value does not
+match the regex pattern. This form of pattern check will
+<b>NOT</b> stringify references being checked.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+mismatch() was created before overloading of "!"
+for match() was a thing.</p>
+<p style="margin-left:9%;">$check = validator(sub{ ... })
+<br/>
+$check = validator($NAME =&gt; sub{ ... }) <br/>
+$check = validator($OP, $NAME, sub{ ... })</p>
+<p style="margin-left:14%;">The coderef is the only
+required argument. The coderef should check that the value
+is what you expect and return a boolean true or false.
+Optionally, you can specify a name and operator that are
+used in diagnostics. They are also provided to the sub
+itself as named parameters.</p>
+<p style="margin-left:14%; margin-top: 1em">Check the value
+using this sub. The sub gets the value in $_, and it
+receives the value and several other items as named
+parameters.</p>
+<p style="margin-left:14%; margin-top: 1em">my $check =
+validator(sub { <br/>
+my %params = @_; <br/>
+# These both work: <br/>
+my $got = $_; <br/>
+my $got = $params{got}; <br/>
+# Check if a value exists at all <br/>
+my $exists = $params{exists} <br/>
+# What $OP (if any) did we specify when creating the
+validator <br/>
+my $operator = $params{operator}; <br/>
+# What name (if any) did we specify when creating the
+validator <br/>
+my $name = $params{name}; <br/>
+... <br/>
+return $bool; <br/>
+}</p>
+<p style="margin-left:9%;">$check = exact_ref($ref)</p>
+<p style="margin-left:14%;">Check that the value is exactly
+the same reference as the one provided.</p>
+<h3>SET BUILDERS
+<a name="SET BUILDERS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Note: None of
+these are exported by default. You need to request them.</b>
+<br/>
+my $check = check_set($check1, $check2, ...)</p>
+<p style="margin-left:14%;">Check that the value matches
+ALL of the specified checks.</p>
+<p style="margin-left:9%;">my $check = in_set($check1,
+$check2, ...)</p>
+<p style="margin-left:14%;">Check that the value matches
+ONE OR MORE of the specified checks.</p>
+<p style="margin-left:9%;">not_in_set($check1, $check2,
+...)</p>
+<p style="margin-left:14%;">Check that the value DOES NOT
+match ANY of the specified checks.</p>
+<p style="margin-left:9%;">check $thing</p>
+<p style="margin-left:14%;">Check that the value matches
+the specified thing.</p>
+<h3>HASH BUILDER
+<a name="HASH BUILDER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Note: None of
+these are exported by default. You need to request
+them.</b></p>
+<p style="margin-left:9%; margin-top: 1em">$check = hash {
+<br/>
+field foo =&gt; 1; <br/>
+field bar =&gt; 2; <br/>
+# Ensure the 'baz' keys does not even exist in the hash.
+<br/>
+field baz =&gt; DNE(); <br/>
+# Ensure the key exists, but is set to undef <br/>
+field bat =&gt; undef; <br/>
+# Any check can be used <br/>
+field boo =&gt; $check; <br/>
+# Set checks that apply to all keys or values. Can be done
+multiple <br/>
+# times, and each call can define multiple checks, all will
+be run. <br/>
+all_vals match qr/a/, match qr/b/; # All values must have an
+'a' and a 'b' <br/>
+all_keys match qr/x/; # All keys must have an 'x' <br/>
+... <br/>
+end(); # optional, enforces that no other keys are present.
+<br/>
+}; <br/>
+$check = hash { ... }</p>
+<p style="margin-left:14%;">This is used to define a hash
+check.</p>
+<p style="margin-left:9%;">field $NAME =&gt; $VAL <br/>
+field $NAME =&gt; $CHECK</p>
+<p style="margin-left:14%;">Specify a field check. This
+will check the hash key specified by $NAME and ensure it
+matches the value in $VAL. You can put any valid check in
+$VAL, such as the result of another call to "array {
+... }", DNE(), etc.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+This function can only be used inside a hash builder sub,
+and must be called in void context.</p>
+<p style="margin-left:9%;">all_keys($CHECK1, $CHECK2,
+...)</p>
+<p style="margin-left:14%;">Add checks that apply to all
+keys. You can put this anywhere in the hash block, and can
+call it any number of times with any number of
+arguments.</p>
+<p style="margin-left:9%;">all_vals($CHECK1, $CHECK2, ...)
+<br/>
+all_values($CHECK1, $CHECK2, ...)</p>
+<p style="margin-left:14%;">Add checks that apply to all
+values. You can put this anywhere in the hash block, and can
+call it any number of times with any number of
+arguments.</p>
+<p style="margin-left:9%;"><b>end()</b></p>
+<p style="margin-left:14%;">Enforce that no keys are found
+in the hash other than those specified. This is essentially
+the "use strict" of a hash check. This can be used
+anywhere in the hash builder, though typically it is placed
+at the end.</p>
+<p style="margin-left:9%;"><b>etc()</b></p>
+<p style="margin-left:14%;">Ignore any extra keys found in
+the hash. This is the opposite of end(). This can be used
+anywhere in the hash builder, though typically it is placed
+at the end.</p>
+<p style="margin-left:9%;"><b>DNE()</b></p>
+<p style="margin-left:14%;">This is a handy check that can
+be used with field() to ensure that a field (D)oes (N)ot
+(E)xist.</p>
+<p style="margin-left:14%; margin-top: 1em">field foo =&gt;
+DNE();</p>
+<h3>ARRAY BUILDER
+<a name="ARRAY BUILDER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Note: None of
+these are exported by default. You need to request
+them.</b></p>
+<p style="margin-left:9%; margin-top: 1em">$check = array {
+<br/>
+# Uses the next index, in this case index 0; <br/>
+item 'a'; <br/>
+# Gets index 1 automatically <br/>
+item 'b'; <br/>
+# Specify the index <br/>
+item 2 =&gt; 'c'; <br/>
+# We skipped index 3, which means we don't care what it is.
+<br/>
+item 4 =&gt; 'e'; <br/>
+# Gets index 5. <br/>
+item 'f'; <br/>
+# Remove any REMAINING items that contain 0−9. <br/>
+filter_items { grep {!m/[0−9]/} @_ }; <br/>
+# Set checks that apply to all items. Can be done multiple
+times, and <br/>
+# each call can define multiple checks, all will be run.
+<br/>
+all_items match qr/a/, match qr/b/; <br/>
+all_items match qr/x/; <br/>
+# Of the remaining items (after the filter is applied) the
+next one <br/>
+# (which is now index 6) should be 'g'. <br/>
+item 6 =&gt; 'g'; <br/>
+item 7 =&gt; DNE; # Ensure index 7 does not exist. <br/>
+end(); # Ensure no other indexes exist. <br/>
+}; <br/>
+$check = array { ... } <br/>
+item $VAL <br/>
+item $CHECK <br/>
+item $IDX, $VAL <br/>
+item $IDX, $CHECK</p>
+<p style="margin-left:14%;">Add an expected item to the
+array. If $IDX is not specified it will automatically
+calculate it based on the last item added. You can skip
+indexes, which means you do not want them to be checked.</p>
+<p style="margin-left:14%; margin-top: 1em">You can provide
+any value to check in $VAL, or you can provide any valid
+check object.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+Items MUST be added in order.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+This function can only be used inside an array, bag or
+subset builder sub, and must be called in void context.</p>
+<p style="margin-left:9%;">filter_items { my @remaining =
+@_; ...; return @filtered }</p>
+<p style="margin-left:14%;">This function adds a filter,
+all items remaining in the array from the point the filter
+is reached will be passed into the filter sub as arguments,
+the sub should return only the items that should be
+checked.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+This function can only be used inside an array builder sub,
+and must be called in void context.</p>
+<p style="margin-left:9%;">all_items($CHECK1, $CHECK2,
+...)</p>
+<p style="margin-left:14%;">Add checks that apply to all
+items. You can put this anywhere in the array block, and can
+call it any number of times with any number of
+arguments.</p>
+<p style="margin-left:9%;"><b>end()</b></p>
+<p style="margin-left:14%;">Enforce that there are no
+indexes after the last one specified. This will not force
+checking of skipped indexes.</p>
+<p style="margin-left:9%;"><b>etc()</b></p>
+<p style="margin-left:14%;">Ignore any extra items found in
+the array. This is the opposite of end(). This can be used
+anywhere in the array builder, though typically it is placed
+at the end.</p>
+<p style="margin-left:9%;"><b>DNE()</b></p>
+<p style="margin-left:14%;">This is a handy check that can
+be used with item() to ensure that an index (D)oes (N)ot
+(E)xist.</p>
+<p style="margin-left:14%; margin-top: 1em">item 5 =&gt;
+DNE();</p>
+<h3>BAG BUILDER
+<a name="BAG BUILDER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Note: None of
+these are exported by default. You need to request
+them.</b></p>
+<p style="margin-left:9%; margin-top: 1em">$check = bag {
+<br/>
+item 'a'; <br/>
+item 'b'; <br/>
+end(); # Ensure no other elements exist. <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">A bag is like an
+array, but we don't care about the order of the items. In
+the example, $check would match both "['a','b']"
+and "['b','a']". <br/>
+$check = bag { ... } <br/>
+item $VAL <br/>
+item $CHECK</p>
+<p style="margin-left:14%;">Add an expected item to the
+bag.</p>
+<p style="margin-left:14%; margin-top: 1em">You can provide
+any value to check in $VAL, or you can provide any valid
+check object.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+This function can only be used inside an array, bag or
+subset builder sub, and must be called in void context.</p>
+<p style="margin-left:9%;">all_items($CHECK1, $CHECK2,
+...)</p>
+<p style="margin-left:14%;">Add checks that apply to all
+items. You can put this anywhere in the bag block, and can
+call it any number of times with any number of
+arguments.</p>
+<p style="margin-left:9%;"><b>end()</b></p>
+<p style="margin-left:14%;">Enforce that there are no more
+items after the last one specified.</p>
+<p style="margin-left:9%;"><b>etc()</b></p>
+<p style="margin-left:14%;">Ignore any extra items found in
+the array. This is the opposite of end(). This can be used
+anywhere in the bag builder, though typically it is placed
+at the end.</p>
+<h3>ORDERED SUBSET BUILDER
+<a name="ORDERED SUBSET BUILDER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Note: None of
+these are exported by default. You need to request
+them.</b></p>
+<p style="margin-left:9%; margin-top: 1em">$check = subset
+{ <br/>
+item 'a'; <br/>
+item 'b'; <br/>
+item 'c'; <br/>
+# Doesn't matter if the array has 'd', the check will skip
+past any <br/>
+# unknown items until it finds the next one in our subset.
+<br/>
+item 'e'; <br/>
+item 'f'; <br/>
+}; <br/>
+$check = subset { ... } <br/>
+item $VAL <br/>
+item $CHECK</p>
+<p style="margin-left:14%;">Add an expected item to the
+subset.</p>
+<p style="margin-left:14%; margin-top: 1em">You can provide
+any value to check in $VAL, or you can provide any valid
+check object.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+Items MUST be added in order.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>Note:</b>
+This function can only be used inside an array, bag or
+subset builder sub, and must be called in void context.</p>
+<h3>META BUILDER
+<a name="META BUILDER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Note: None of
+these are exported by default. You need to request
+them.</b></p>
+<p style="margin-left:9%; margin-top: 1em">my $check = meta
+{ <br/>
+prop blessed =&gt; 'My::Module'; # Ensure value is blessed
+as our package <br/>
+prop reftype =&gt; 'HASH'; # Ensure value is a blessed hash
+<br/>
+prop isa =&gt; 'My::Base'; # Ensure value is an instance of
+our class <br/>
+prop size =&gt; 4; # Check the number of hash keys <br/>
+prop this =&gt; ...; # Check the item itself <br/>
+}; <br/>
+meta { ... } <br/>
+meta_check { ... }</p>
+<p style="margin-left:14%;">Build a meta check. If you are
+using Moose then the meta() function would conflict with the
+one exported by Moose, in such cases meta_check() is
+available. Neither is exported by default.</p>
+<p style="margin-left:9%;">prop $NAME =&gt; $VAL <br/>
+prop $NAME =&gt; $CHECK</p>
+<p style="margin-left:14%;">Check the property specified by
+$name against the value or check.</p>
+<p style="margin-left:14%; margin-top: 1em">Valid
+properties are: <br/>
+'blessed'</p>
+<p style="margin-left:19%;">What package (if any) the thing
+is blessed as.</p>
+<p style="margin-left:14%;">'reftype'</p>
+<p style="margin-left:19%;">Reference type (if any) the
+thing is.</p>
+<p style="margin-left:14%;">'isa'</p>
+<p style="margin-left:19%;">What class the thing is an
+instance of.</p>
+<p style="margin-left:14%;">'this'</p>
+<p style="margin-left:19%;">The thing itself.</p>
+<p style="margin-left:14%;">'size'</p>
+<p style="margin-left:19%;">For array references this
+returns the number of elements. For hashes this returns the
+number of keys. For everything else this returns undef.</p>
+<h3>OBJECT BUILDER
+<a name="OBJECT BUILDER"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Note: None of
+these are exported by default. You need to request
+them.</b></p>
+<p style="margin-left:9%; margin-top: 1em">my $check =
+object { <br/>
+call foo =&gt; 1; # Call the 'foo' method, check the result.
+<br/>
+# Call the specified sub−ref as a method on the
+object, check the <br/>
+# result. This is useful for wrapping methods that return
+multiple <br/>
+# values. <br/>
+call sub { [ shift−&gt;get_list ] } =&gt; [...]; <br/>
+# This can be used to ensure a method does not exist. <br/>
+call nope =&gt; DNE(); <br/>
+# Check the hash key 'foo' of the underlying reference, this
+only works <br/>
+# on blessed hashes. <br/>
+field foo =&gt; 1; <br/>
+# Check the value of index 4 on the underlying reference,
+this only <br/>
+# works on blessed arrays. <br/>
+item 4 =&gt; 'foo'; <br/>
+# Check the meta−property 'blessed' of the object.
+<br/>
+prop blessed =&gt; 'My::Module'; <br/>
+# Check if the object is an instance of the specified class.
+<br/>
+prop isa =&gt; 'My::Base'; <br/>
+# Ensure only the specified hash keys or array indexes are
+present in <br/>
+# the underlying hash. Has no effect on meta−property
+checks or method <br/>
+# checks. <br/>
+end(); <br/>
+}; <br/>
+$check = object { ... }</p>
+<p style="margin-left:14%;">Specify an object check for use
+in comparisons.</p>
+<p style="margin-left:9%;">call $METHOD_NAME =&gt; $RESULT
+<br/>
+call $METHOD_NAME =&gt; $CHECK <br/>
+call [$METHOD_NAME, @METHOD_ARGS] =&gt; $RESULT <br/>
+call [$METHOD_NAME, @METHOD_ARGS] =&gt; $CHECK <br/>
+call sub { ... }, $RESULT <br/>
+call sub { ... }, $CHECK</p>
+<p style="margin-left:14%;">Call the specified method (or
+coderef) and verify the result. If you pass an arrayref, the
+first element must be the method name, the others are the
+arguments it will be called with.</p>
+<p style="margin-left:14%; margin-top: 1em">The coderef
+form is useful if you need to do something more complex.</p>
+<p style="margin-left:14%; margin-top: 1em">my $ref = sub {
+<br/>
+local $SOME::GLOBAL::THING = 3; <br/>
+return [shift−&gt;get_values_for('thing')]; <br/>
+}; <br/>
+call $ref =&gt; ...;</p>
+<p style="margin-left:9%;">call_list $METHOD_NAME =&gt;
+$RESULT <br/>
+call_list $METHOD_NAME =&gt; $CHECK <br/>
+call_list [$METHOD_NAME, @METHOD_ARGS] =&gt; $RESULT <br/>
+call_list [$METHOD_NAME, @METHOD_ARGS] =&gt; $CHECK <br/>
+call_list sub { ... }, $RESULT <br/>
+call_list sub { ... }, $CHECK</p>
+<p style="margin-left:14%;">Same as "call", but
+the method is invoked in list context, and the result is
+always an arrayref.</p>
+<p style="margin-left:14%; margin-top: 1em">call_list
+get_items =&gt; [ ... ];</p>
+<p style="margin-left:9%;">call_hash $METHOD_NAME =&gt;
+$RESULT <br/>
+call_hash $METHOD_NAME =&gt; $CHECK <br/>
+call_hash [$METHOD_NAME, @METHOD_ARGS] =&gt; $RESULT <br/>
+call_hash [$METHOD_NAME, @METHOD_ARGS] =&gt; $CHECK <br/>
+call_hash sub { ... }, $RESULT <br/>
+call_hash sub { ... }, $CHECK</p>
+<p style="margin-left:14%;">Same as "call", but
+the method is invoked in list context, and the result is
+always a hashref. This will warn if the method returns an
+odd number of values.</p>
+<p style="margin-left:14%; margin-top: 1em">call_hash
+get_items =&gt; { ... };</p>
+<p style="margin-left:9%;">field $NAME =&gt; $VAL</p>
+<p style="margin-left:14%;">Works just like it does for
+hash checks.</p>
+<p style="margin-left:9%;">item $VAL <br/>
+item $IDX, $VAL</p>
+<p style="margin-left:14%;">Works just like it does for
+array checks.</p>
+<p style="margin-left:9%;">prop $NAME =&gt; $VAL <br/>
+prop $NAME =&gt; $CHECK</p>
+<p style="margin-left:14%;">Check the property specified by
+$name against the value or check.</p>
+<p style="margin-left:14%; margin-top: 1em">Valid
+properties are: <br/>
+'blessed'</p>
+<p style="margin-left:19%;">What package (if any) the thing
+is blessed as.</p>
+<p style="margin-left:14%;">'reftype'</p>
+<p style="margin-left:19%;">Reference type (if any) the
+thing is.</p>
+<p style="margin-left:14%;">'isa'</p>
+<p style="margin-left:19%;">What class the thing is an
+instance of.</p>
+<p style="margin-left:14%;">'this'</p>
+<p style="margin-left:19%;">The thing itself.</p>
+<p style="margin-left:14%;">'size'</p>
+<p style="margin-left:19%;">For array references this
+returns the number of elements. For hashes this returns the
+number of keys. For everything else this returns undef.</p>
+<p style="margin-left:9%;"><b>DNE()</b></p>
+<p style="margin-left:14%;">Can be used with
+"item", or "field" to ensure the hash
+field or array index does not exist. Can also be used with
+"call" to ensure a method does not exist.</p>
+<p style="margin-left:9%;"><b>end()</b></p>
+<p style="margin-left:14%;">Turn on strict array/hash
+checking, ensuring that no extra keys/indexes are
+present.</p>
+<p style="margin-left:9%;"><b>etc()</b></p>
+<p style="margin-left:14%;">Ignore any extra items found in
+the hash/array. This is the opposite of end(). This can be
+used anywhere in the builder, though typically it is placed
+at the end.</p>
+<h3>EVENT BUILDERS
+<a name="EVENT BUILDERS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>Note: None of
+these are exported by default. You need to request
+them.</b></p>
+<p style="margin-left:9%; margin-top: 1em">Check that we
+got an event of a specified type:</p>
+<p style="margin-left:9%; margin-top: 1em">my $check =
+event 'Ok';</p>
+<p style="margin-left:9%; margin-top: 1em">Check for
+details about the event:</p>
+<p style="margin-left:9%; margin-top: 1em">my $check =
+event Ok =&gt; sub { <br/>
+# Check for a failure <br/>
+call pass =&gt; 0; <br/>
+# Effective pass after TODO/SKIP are accounted for. <br/>
+call effective_pass =&gt; 1; <br/>
+# Check the diagnostics <br/>
+call diag =&gt; [ match qr/Failed test foo/ ]; <br/>
+# Check the file the event reports to <br/>
+prop file =&gt; 'foo.t'; <br/>
+# Check the line number the event reports to <br/>
+prop line =&gt; '42'; <br/>
+# You can check the todo/skip values as well: <br/>
+prop skip =&gt; 'broken'; <br/>
+prop todo =&gt; 'fixme'; <br/>
+# Thread−id and process−id where event was
+generated <br/>
+prop tid =&gt; 123; <br/>
+prop pid =&gt; 123; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">You can also
+provide a fully qualified event package with the '+'
+prefix:</p>
+<p style="margin-left:9%; margin-top: 1em">my $check =
+event '+My::Event' =&gt; sub { ... }</p>
+<p style="margin-left:9%; margin-top: 1em">You can also
+provide a hashref instead of a sub to directly check hash
+values of the event:</p>
+<p style="margin-left:9%; margin-top: 1em">my $check =
+event Ok =&gt; { pass =&gt; 1, ... };</p>
+<p style="margin-left:9%; margin-top: 1em"><i>USE IN OTHER
+BUILDERS</i></p>
+<p style="margin-left:9%; margin-top: 1em">You can use
+these all in other builders, simply use them in void context
+to have their value(s) appended to the build.</p>
+<p style="margin-left:9%; margin-top: 1em">my $check =
+array { <br/>
+event Ok =&gt; { ... }; <br/>
+event Note =&gt; { ... }; <br/>
+fail_events Ok =&gt; { pass =&gt; 0 }; <br/>
+# Get a Diag for free. <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em"><i>SPECIFICS</i>
+<br/>
+$check = event $TYPE; <br/>
+$check = event $TYPE =&gt; sub { ... }; <br/>
+$check = event $TYPE =&gt; { ... };</p>
+<p style="margin-left:14%;">This works just like an object
+builder. In addition to supporting everything the object
+check supports, you also have to specify the event type, and
+many extra meta−properties are available.</p>
+<p style="margin-left:14%; margin-top: 1em">Extra
+properties are: <br/>
+'file'</p>
+<p style="margin-left:19%;">File name to which the event
+reports (for use in diagnostics).</p>
+<p style="margin-left:14%;">'line'</p>
+<p style="margin-left:19%;">Line number to which the event
+reports (for use in diagnostics).</p>
+<p style="margin-left:14%;">'package'</p>
+<p style="margin-left:19%;">Package to which the event
+reports (for use in diagnostics).</p>
+<p style="margin-left:14%;">'subname'</p>
+<p style="margin-left:19%;">Sub that was called to generate
+the event (example: ok()).</p>
+<p style="margin-left:14%;">'skip'</p>
+<p style="margin-left:19%;">Set to the skip value if the
+result was generated by skipping tests.</p>
+<p style="margin-left:14%;">'todo'</p>
+<p style="margin-left:19%;">Set to the todo value if TODO
+was set when the event was generated.</p>
+<p style="margin-left:14%;">'trace'</p>
+<p style="margin-left:19%;">The "at file foo.t line
+42" string that will be used in diagnostics.</p>
+<p style="margin-left:14%;">'tid'</p>
+<p style="margin-left:19%;">Thread ID in which the event
+was generated.</p>
+<p style="margin-left:14%;">'pid'</p>
+<p style="margin-left:19%;">Process ID in which the event
+was generated.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>NOTE</b>:
+Event checks have an implicit etc() added. This means you
+need to use end() if you want to fail on unexpected hash
+keys or array indexes. This implicit etc() extends to all
+forms, including builder, hashref, and no argument.</p>
+<p style="margin-left:9%;">@checks = fail_events $TYPE;
+<br/>
+@checks = fail_events $TYPE =&gt; sub { ... }; <br/>
+@checks = fail_events $TYPE =&gt; { ... };</p>
+<p style="margin-left:14%;">Just like event() documented
+above. The difference is that this produces two events, the
+one you specify, and a "Diag" after it. There are
+no extra checks in the Diag.</p>
+<p style="margin-left:14%; margin-top: 1em">Use this to
+validate a simple failure where you do not want to be
+bothered with the default diagnostics. It only adds a single
+Diag check, so if your failure has custom diagnostics you
+will need to add checks for them.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2−Suite can be found at
+<i>https://github.com/Test−More/test−more/</i>.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<i>http://dev.perl.org/licenses/</i></p>
+<hr/>
+</body>
+</html>

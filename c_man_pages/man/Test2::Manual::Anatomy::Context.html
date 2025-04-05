@@ -1,0 +1,229 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:07 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Test2::Manual::Anatomy::Context</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Test2::Manual::Anatomy::Context</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#WHAT IS THE CONTEXT OBJECT?">WHAT IS THE CONTEXT OBJECT?</a><br/>
+<a href="#PRIMARY INTERFACE FOR TEST TOOLS">PRIMARY INTERFACE FOR TEST TOOLS</a><br/>
+<a href="#TRACK FILE AND LINE NUMBERS FOR ERROR REPORTING">TRACK FILE AND LINE NUMBERS FOR ERROR REPORTING</a><br/>
+<a href="#PRESERVE $?, $!, $ˆE AND $@">PRESERVE $?, $!, $ˆE AND $@</a><br/>
+<a href="#FINALIZE THE API STATE">FINALIZE THE API STATE</a><br/>
+<a href="#FIND/CREATE THE CURRENT/ROOT HUB">FIND/CREATE THE CURRENT/ROOT HUB</a><br/>
+<a href="#PROVIDE HOOKS">PROVIDE HOOKS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#SOURCE">SOURCE</a><br/>
+<a href="#MAINTAINERS">MAINTAINERS</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Manual::Anatomy::Context
+− Internals documentation for the Context objects.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This document
+explains how the Test2::API::Context object works.</p>
+<h2>WHAT IS THE CONTEXT OBJECT?
+<a name="WHAT IS THE CONTEXT OBJECT?"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The context
+object is one of the key components of Test2, and makes many
+features possible that would otherwise be impossible. Every
+test tool starts by getting a context, and ends by releasing
+the context. A test tool does all its work between getting
+and releasing the context. The context instance is the
+primary interface for sending events to the Test2 stack.
+Finally the context system is responsible for tracking what
+file and line number a tool operates on, which is critical
+for debugging.</p>
+<h3>PRIMARY INTERFACE FOR TEST TOOLS
+<a name="PRIMARY INTERFACE FOR TEST TOOLS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Nearly every
+Test2 based tool should start by calling $ctx =
+Test2::API::context() in order to get a context object, and
+should end by calling "$ctx−&gt;release()".
+Once a tool has its context object it can call methods on
+the object to send events or have other effects. Nearly
+everything a test tool needs to do should be done through
+the context object.</p>
+<h3>TRACK FILE AND LINE NUMBERS FOR ERROR REPORTING
+<a name="TRACK FILE AND LINE NUMBERS FOR ERROR REPORTING"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">When you call
+"Test2::API::Context" a new context object will be
+returned. If there is already a context object in effect
+(from a different point in the stack) you will get a clone
+of the existing one. If there is not already a current
+context then a completely new one will be generated. When a
+new context is generated Test2 will determine the file name
+and line number for your test code, these will be used when
+reporting any failures.</p>
+<p style="margin-left:9%; margin-top: 1em">Typically the
+file and line number will be determined using caller() to
+look at your tools caller. The $Test::Builder::Level will be
+respected if detected, but is discouraged in favor of just
+using context objects at every level.</p>
+<p style="margin-left:9%; margin-top: 1em">When calling
+Test2::API::Context() you can specify the "level =&gt;
+$count" arguments if you need to look at a deeper
+caller.</p>
+<h3>PRESERVE $?, $!, $ˆE AND $@
+<a name="PRESERVE $?, $!, $ˆE AND $@"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">When you call
+Test2::API::context() the current values of $?, $!,
+$ˆE, and $@ are stored in the context object itself.
+Whenever the context is released the original values of
+these variables will be restored. This protects the
+variables from any side effects caused by testing tools.</p>
+<h3>FINALIZE THE API STATE
+<a name="FINALIZE THE API STATE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Test2::API works
+via a hidden singleton instance of Test2::API::Instance. The
+singleton has some state that is not set in stone until the
+last possible minute. The last possible minute happens to be
+the first time a context is acquired. State includes IPC
+instance, Formatter class, Root PID, etc.</p>
+<h3>FIND/CREATE THE CURRENT/ROOT HUB
+<a name="FIND/CREATE THE CURRENT/ROOT HUB"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Test2 has a
+stack of hubs, the stack can be accessed via
+Test2::API::test2_stack. When you get a context it will find
+the current hub, if there is no current hub then the root
+one will be initialized.</p>
+<h3>PROVIDE HOOKS
+<a name="PROVIDE HOOKS"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">There are hooks
+that run when contexts are created, found, and released. See
+Test2::API for details on these hooks and how to use
+them.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test2::Manual
+− Primary index of the manual.</p>
+<h2>SOURCE
+<a name="SOURCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The source code
+repository for Test2−Manual can be found at
+<i>https://github.com/Test−More/test−more/</i>.</p>
+<h2>MAINTAINERS
+<a name="MAINTAINERS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Chad Granum
+&lt;exodist@cpan.org&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Chad
+Granum &lt;exodist@cpan.org&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<p style="margin-left:9%; margin-top: 1em">See
+<i>http://dev.perl.org/licenses/</i></p>
+<hr/>
+</body>
+</html>

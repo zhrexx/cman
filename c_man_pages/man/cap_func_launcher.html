@@ -1,0 +1,285 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:53 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CAP_LAUNCH</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CAP_LAUNCH</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSYS">SYNOPSYS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">cap_new_launcher,
+cap_func_launcher, cap_launcher_callback,
+cap_launcher_set_mode, cap_launcher_set_iab,
+cap_launcher_set_chroot, cap_launch, cap_launcher_setuid,
+cap_launcher_setgroups − libcap launch
+functionality</p>
+<h2>SYNOPSYS
+<a name="SYNOPSYS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;sys/capability.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">cap_launch_t
+cap_new_launcher(const char *arg0, const char *const *argv,
+<br/>
+const char *const *envp);</p>
+<p style="margin-left:9%; margin-top: 1em">cap_launch_t
+cap_func_launcher(int (callback_fn)(void *detail));</p>
+<p style="margin-left:9%; margin-top: 1em">int
+cap_launcher_callback(cap_launch_t attr, <br/>
+int (callback_fn)(void *detail)); <br/>
+int cap_launcher_set_mode(cap_launch_t attr, cap_mode_t
+flavor); <br/>
+cap_iab_t cap_launcher_set_iab(cap_launch_t attr, cap_iab_t
+iab); <br/>
+int cap_launcher_set_chroot(cap_launch_t attr, const char
+*chroot);</p>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;sys/types.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">pid_t
+cap_launch(cap_launch_t attr, void *detail); <br/>
+int cap_launcher_setuid(cap_launch_t attr, uid_t uid); <br/>
+int cap_launcher_setgroups(cap_launch_t attr, gid_t gid,
+<br/>
+int ngroups, const gid_t *groups);</p>
+<p style="margin-left:9%; margin-top: 1em">Link with
+<i>−lcap</i>.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A launcher
+provides a mechanism for code to execute a callback function
+and/or a program executable in an environment with a
+modified security context. Essentially it provides a
+mechanism for a program to <b>fork</b>(2) a new context from
+that of the main program manipulate capability and other
+privileged state in that <b>fork</b>(2)d process before
+(optionally) <b>execve</b>(2)ing a new program. When the
+application links to <i>−lpsx</i> this support is
+needed to robustly execute the launched code without
+modifying the privilge of the whole (POSIX semantics
+honoring) main application.</p>
+<p style="margin-left:9%; margin-top: 1em">A launcher is
+defined by one of these two functions:
+<b>cap_new_launcher</b>() or <b>cap_func_launcher</b>(). The
+return value being of opaque type <b>cap_launch_t</b> a
+return value of NULL implies an error has occurred.</p>
+<p style="margin-left:9%; margin-top: 1em">Once defined, a
+<b>cap_launch_t</b> value can be used with
+<b>cap_launch</b>() to execute that <i>launcher</i>. In such
+cases, a non-negative return value indicates success: zero
+meaning success without a program being invoked; non-zero
+being equal to the process ID (<b>pid_t</b>) of the newly
+launched program.</p>
+<p style="margin-left:9%; margin-top: 1em">A
+<b>cap_launch_t</b> occupies allocated memory and should be
+freed with <b>cap_free</b>(3). Before being
+<b>cap_free</b>(3)d a <b>cap_value_t</b> value may be reused
+for multiple independent launches. The <i>detail</i>
+argument to <b>cap_launch</b>(), in conjunction with the
+launcher’s callback function, can be used to customize
+the invocation of the launch. Care must be taken to leverage
+custom shared memory (see <b>mmap</b>(2)) or some other IPC
+to return values to the main program via <i>detail</i> since
+the callback and any subsequent program execution will occur
+outside the main process of the calling application. An
+example of this would be to allocate detail as follows:</p>
+<p style="margin-left:9%; margin-top: 1em">const char
+*args[] = { "echo", "hello", NULL };
+<br/>
+cap_launch_t cmd =
+cap_new_launcher("/usr/bin/echo", args, NULL);
+<br/>
+int *detail = mmap(NULL, sizeof(int), PROT_READ |
+PROT_WRITE, <br/>
+MAP_SHARED | MAP_ANONYMOUS, -1, 0); <br/>
+cap_launcher_callback(cmd, &amp;answer_detail_fn); <br/>
+*detail = 41; <br/>
+pid_t pid = cap_launch(cmd, detail); <br/>
+printf("launcher callback set detail to %d\n",
+*detail); <br/>
+munmap(detail, sizeof(int));</p>
+<p style="margin-left:9%; margin-top: 1em">Unless modified
+by the callback function, the launched code will execute
+with the capability and other security context of the
+application.</p>
+<p style="margin-left:9%; margin-top: 1em">If the callback
+function returns anything other than zero, a
+<b>cap_launch</b>() will be aborted. If detail of the
+failure is important to the caller, it should be
+communicated via the <i>detail</i> argument.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions can be used to instruct the launcher to modify the
+security state of the invoked program without altering the
+state of the calling program. Such modifications must be
+performed prior to calling <b>cap_launch</b>() if they are
+to have the desired effect. Further, they are only invoked
+after any installed callback has completed. For example, one
+can drop or modify capabilities, <i>just</i> for executing a
+file.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions instruct the launcher to do some common tasks of
+this sort (note some require permitted capability bits to
+succeed):</p>
+<p style="margin-left:9%; margin-top: 1em"><b>cap_launcher_callback</b>()
+can be used to install or replace the currently installed
+callback function of the launcher.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>cap_launcher_set_mode</b>()
+can be used to ensure that the libcap-mode of the launched
+program is the desired one.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>cap_launcher_set_iab</b>()
+This function returns the <b>cap_iab_t</b> previously
+associated with the launcher. Calling this function with an
+IAB value of NULL will configure the launcher to not set an
+IAB value (the default). See <b>cap_iab</b>(3) for details
+on the IAB set. Note, the launcher is associated directly
+with the supplied <i>iab</i> value, and does not make a copy
+of it. This iab value is locked to the laucher and cannot be
+modified while associated with the launcher. Set with NULL
+to regain control over the memory associated with that IAB
+value, otherwise the IAB value will be
+<b>cap_free</b><i>()</i><b>’d when the launcher
+is.</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>cap_launcher_set_chroot</b>()
+This function causes the launched program executable to be
+invoked inside a chroot <i>root</i> directory.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>cap_launcher_setuid</b>()
+This function causes the launched program executable to be
+invoked with the specified user identifier
+(<i>uid_t</i>).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>cap_launcher_setgroups</b>()
+This function causes the launched program executable to be
+invoked with the specified primary and supplementary group
+IDs.</p>
+<p style="margin-left:9%; margin-top: 1em">Note, if any of
+the launcher enhancements made by the above functions should
+fail to take effect (typically for a lack of sufficient
+privilege), the launch will fail and return -1.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A return of NULL
+for a <b>cap_launch_t</b> should be considered an error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>cap_launch</b>()
+returns -1 in the case of an error.</p>
+<p style="margin-left:9%; margin-top: 1em">In all such
+cases a return value of 0 implies success. In other cases,
+consult <b>errno</b>(3) for further details.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>cap_launch</b>() family of functions were introduced in
+libcap 2.33. It primarily addresses a complexity with
+<i>-lpsx</i> linked pthreads(7) applications that use
+capabilities but also honor POSIX semantics.</p>
+<p style="margin-left:9%; margin-top: 1em">Using
+<i>−lcap</i> and <i>−lpthread</i> together
+without the POSIX semantics support from <i>−lpsx</i>
+introduces a subtle class of exposure to privilege
+escalation. (See
+https://sites.google.com/site/fullycapable/who-ordered-libpsx
+for an explanation.)</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>libpsx</b>(3),
+<b>psx_syscall</b>(3), <b>libcap</b>(3), <b>cap_mode</b>(3),
+<b>cap_iab</b>(3), <b>capabilities</b>(7), <b>errno</b>(3),
+<b>fork</b>(2), <b>mmap</b>(2), <b>chroot</b>(2), and
+<b>munmap</b>(2).</p>
+<hr/>
+</body>
+</html>

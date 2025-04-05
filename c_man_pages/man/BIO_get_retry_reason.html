@@ -1,0 +1,272 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:39 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BIO_SHOULD_RETRY</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">BIO_SHOULD_RETRY</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">BIO_should_read,
+BIO_should_write, BIO_should_io_special, BIO_retry_type,
+BIO_should_retry, BIO_get_retry_BIO, BIO_get_retry_reason,
+BIO_set_retry_reason − BIO retry functions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/bio.h&gt; <br/>
+int BIO_should_read(BIO *b); <br/>
+int BIO_should_write(BIO *b); <br/>
+int BIO_should_io_special(iBIO *b); <br/>
+int BIO_retry_type(BIO *b); <br/>
+int BIO_should_retry(BIO *b); <br/>
+BIO *BIO_get_retry_BIO(BIO *bio, int *reason); <br/>
+int BIO_get_retry_reason(BIO *bio); <br/>
+void BIO_set_retry_reason(BIO *bio, int reason);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+determine why a BIO is not able to read or write data. They
+will typically be called after a failed <b>BIO_read_ex()</b>
+or <b>BIO_write_ex()</b> call.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_should_retry()</b>
+is true if the call that produced this condition should then
+be retried at a later time.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>BIO_should_retry()</b> is false then the cause is an
+error condition.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_should_read()</b>
+is true if the cause of the condition is that the BIO has
+insufficient data to return. Check for readability and/or
+retry the last operation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_should_write()</b>
+is true if the cause of the condition is that the BIO has
+pending data to write. Check for writability and/or retry
+the last operation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_should_io_special()</b>
+is true if some "special" condition, that is a
+reason other than reading or writing is the cause of the
+condition.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_retry_type()</b>
+returns a mask of the cause of a retry condition consisting
+of the values <b>BIO_FLAGS_READ</b>, <b>BIO_FLAGS_WRITE</b>,
+<b>BIO_FLAGS_IO_SPECIAL</b> though current BIO types will
+only set one of these.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_retry_BIO()</b>
+determines the precise reason for the special condition, it
+returns the BIO that caused this condition and if
+<b>reason</b> is not NULL it contains the reason code. The
+meaning of the reason code and the action that should be
+taken depends on the type of BIO that resulted in this
+condition.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_retry_reason()</b>
+returns the reason for a special condition if passed the
+relevant BIO, for example as returned by
+<b>BIO_get_retry_BIO()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_set_retry_reason()</b>
+sets the retry reason for a special condition for a given
+BIO. This would usually only be called by BIO
+implementations.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_should_read()</b>,
+<b>BIO_should_write()</b>, <b>BIO_should_io_special()</b>,
+<b>BIO_retry_type()</b>, and <b>BIO_should_retry()</b>, are
+implemented as macros.</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>BIO_should_retry()</b> returns false then the precise
+"error condition" depends on the BIO type that
+caused it and the return code of the BIO operation. For
+example if a call to <b>BIO_read_ex()</b> on a socket BIO
+returns 0 and <b>BIO_should_retry()</b> is false then the
+cause will be that the connection closed. A similar
+condition on a file BIO will mean that it has reached EOF.
+Some BIO types may place additional information on the error
+queue. For more details see the individual BIO type manual
+pages.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+underlying I/O structure is in a blocking mode almost all
+current BIO types will not request a retry, because the
+underlying I/O calls will not. If the application knows that
+the BIO type will never signal a retry then it need not call
+<b>BIO_should_retry()</b> after a failed BIO I/O call. This
+is typically done with file BIOs.</p>
+<p style="margin-left:9%; margin-top: 1em">SSL BIOs are the
+only current exception to this rule: they can request a
+retry even if the underlying I/O structure is blocking, if a
+handshake occurs during a call to <b>BIO_read()</b>. An
+application can retry the failed call immediately or avoid
+this situation by setting SSL_MODE_AUTO_RETRY on the
+underlying SSL structure.</p>
+<p style="margin-left:9%; margin-top: 1em">While an
+application may retry a failed non blocking call immediately
+this is likely to be very inefficient because the call will
+fail repeatedly until data can be processed or is available.
+An application will normally wait until the necessary
+condition is satisfied. How this is done depends on the
+underlying I/O structure.</p>
+<p style="margin-left:9%; margin-top: 1em">For example if
+the cause is ultimately a socket and
+<b>BIO_should_read()</b> is true then a call to
+<b>select()</b> may be made to wait until data is available
+and then retry the BIO operation. By combining the retry
+conditions of several non blocking BIOs in a single
+<b>select()</b> call it is possible to service several BIOs
+in a single thread, though the performance may be poor if
+SSL BIOs are present because long delays can occur during
+the initial handshake process.</p>
+<p style="margin-left:9%; margin-top: 1em">It is possible
+for a BIO to block indefinitely if the underlying I/O
+structure cannot process or return any data. This depends on
+the behaviour of the platforms I/O functions. This is often
+not desirable: one solution is to use non blocking I/O and
+use a timeout on the <b>select()</b> (or equivalent)
+call.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The OpenSSL ASN1
+functions cannot gracefully deal with non blocking I/O: that
+is they cannot retry after a partial read or write. This is
+usually worked around by only passing the relevant data to
+ASN1 functions when the entire structure can be read or
+written.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_should_read()</b>,
+<b>BIO_should_write()</b>, <b>BIO_should_io_special()</b>,
+and <b>BIO_should_retry()</b> return either 1 or 0 based on
+the actual conditions of the <b>BIO</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_retry_type()</b>
+returns a flag combination presenting the cause of a retry
+condition or false if there is no retry condition.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_retry_BIO()</b>
+returns a valid <b>BIO</b> structure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_retry_reason()</b>
+returns the reason for a special condition.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>bio</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>BIO_get_retry_reason()</b> and
+<b>BIO_set_retry_reason()</b> functions were added in
+OpenSSL 1.1.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2000−2018 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:55:19 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>X509V3_SET_CTX</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">X509V3_SET_CTX</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">X509V3_set_ctx,
+X509V3_set_issuer_pkey − X.509 v3 extension generation
+utilities</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/x509v3.h&gt; <br/>
+void X509V3_set_ctx(X509V3_CTX *ctx, X509 *issuer, X509
+*subject, <br/>
+X509_REQ *req, X509_CRL *crl, int flags); <br/>
+int X509V3_set_issuer_pkey(X509V3_CTX *ctx, EVP_PKEY
+*pkey);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>X509V3_set_ctx()</b>
+fills in the basic fields of <i>ctx</i> of type
+<b>X509V3_CTX</b>, providing details potentially needed by
+functions producing X509 v3 extensions. These may make use
+of fields of the certificate <i>subject</i>, the
+certification request <i>req</i>, or the certificate
+revocation list <i>crl</i>. At most one of these three
+parameters can be non−NULL. When constructing the
+subject key identifier of a certificate by computing a hash
+value of its public key, the public key is taken from
+<i>subject</i> or <i>req</i>. Similarly, when constructing
+subject alternative names from any email addresses contained
+in a subject DN, the subject DN is taken from <i>subject</i>
+or <i>req</i>. If <i>subject</i> or <i>crl</i> is provided,
+<i>issuer</i> should point to its issuer, for instance as a
+reference for generating the authority key identifier
+extension. <i>issuer</i> may be the same pointer value as
+<i>subject</i> (which usually is an indication that the
+<i>subject</i> certificate is self−issued or even
+self−signed). In this case the fallback source for
+generating the authority key identifier extension will be
+taken from any value provided using
+<b>X509V3_set_issuer_pkey()</b>. <i>flags</i> may be 0 or
+contain <b>X509V3_CTX_TEST</b>, which means that just the
+syntax of extension definitions is to be checked without
+actually producing any extension, or
+<b>X509V3_CTX_REPLACE</b>, which means that each X.509v3
+extension added as defined in some configuration section
+shall replace any already existing extension with the same
+OID.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>X509V3_set_issuer_pkey()</b>
+explicitly sets the issuer private key of the subject
+certificate that has been provided in <i>ctx</i>. This
+should be done in case the <i>issuer</i> and <i>subject</i>
+arguments to <b>X509V3_set_ctx()</b> have the same pointer
+value to provide fallback data for the authority key
+identifier extension.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>X509V3_set_issuer_pkey()</b>
+returns 1 on success and 0 on error.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>X509_add_ext</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>X509V3_set_issuer_pkey()</b>
+was added in OpenSSL 3.0.</p>
+<p style="margin-left:9%; margin-top: 1em">CTX_TEST was
+deprecated in OpenSSL 3.0; use X509V3_CTX_TEST instead.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2015−2025 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

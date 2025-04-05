@@ -1,0 +1,702 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:07 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PCRE2DEMO</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">PCRE2DEMO</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SOURCE CODE">SOURCE CODE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">PCRE2DEMO - A
+demonstration C program for PCRE2</p>
+<h2>SOURCE CODE
+<a name="SOURCE CODE"></a>
+</h2>
+<p style="margin-top: 1em">/*************************************************
+<br/>
+* PCRE2 DEMONSTRATION PROGRAM * <br/>
+*************************************************/</p>
+<p style="margin-top: 1em">/* This is a demonstration
+program to illustrate a straightforward way of <br/>
+using the PCRE2 regular expression library from a C program.
+See the <br/>
+pcre2sample documentation for a short discussion ("man
+pcre2sample" if you have <br/>
+the PCRE2 man pages installed). PCRE2 is a revised API for
+the library, and is <br/>
+incompatible with the original PCRE API.</p>
+<p style="margin-top: 1em">There are actually three
+libraries, each supporting a different code unit <br/>
+width. This demonstration program uses the 8-bit library.
+The default is to <br/>
+process each code unit as a separate character, but if the
+pattern begins with <br/>
+"(*UTF)", both it and the subject are treated as
+UTF-8 strings, where <br/>
+characters may occupy multiple code units.</p>
+<p style="margin-top: 1em">In Unix-like environments, if
+PCRE2 is installed in your standard system <br/>
+libraries, you should be able to compile this program using
+this command:</p>
+<p style="margin-top: 1em">cc -Wall pcre2demo.c -lpcre2-8
+-o pcre2demo</p>
+<p style="margin-top: 1em">If PCRE2 is not installed in a
+standard place, it is likely to be installed <br/>
+with support for the pkg-config mechanism. If you have
+pkg-config, you can <br/>
+compile this program using this command:</p>
+<p style="margin-top: 1em">cc -Wall pcre2demo.c
+‘pkg-config --cflags --libs libpcre2-8‘ -o
+pcre2demo</p>
+<p style="margin-top: 1em">If you do not have pkg-config,
+you may have to use something like this:</p>
+<p style="margin-top: 1em">cc -Wall pcre2demo.c
+-I/usr/local/include -L/usr/local/lib \ <br/>
+-R/usr/local/lib -lpcre2-8 -o pcre2demo</p>
+<p style="margin-top: 1em">Replace
+"/usr/local/include" and
+"/usr/local/lib" with wherever the include and
+<br/>
+library files for PCRE2 are installed on your system. Only
+some operating <br/>
+systems (Solaris is one) use the -R option.</p>
+<p style="margin-top: 1em">Building under Windows:</p>
+<p style="margin-top: 1em">If you want to statically link
+this program against a non-dll .a file, you must <br/>
+define PCRE2_STATIC before including pcre2.h, so in this
+environment, uncomment <br/>
+the following line. */</p>
+<p style="margin-top: 1em">/* #define PCRE2_STATIC */</p>
+<p style="margin-top: 1em">/* The PCRE2_CODE_UNIT_WIDTH
+macro must be defined before including pcre2.h. <br/>
+For a program that uses only one code unit width, setting it
+to 8, 16, or 32 <br/>
+makes it possible to use generic function names such as
+pcre2_compile(). Note <br/>
+that just changing 8 to 16 (for example) is not sufficient
+to convert this <br/>
+program to process 16-bit characters. Even in a fully 16-bit
+environment, where <br/>
+string-handling functions such as strcmp() and printf() work
+with 16-bit <br/>
+characters, the code for handling the table of named
+substrings will still need <br/>
+to be modified. */</p>
+<p style="margin-top: 1em">#define PCRE2_CODE_UNIT_WIDTH
+8</p>
+<p style="margin-top: 1em">#include &lt;stdio.h&gt; <br/>
+#include &lt;string.h&gt; <br/>
+#include &lt;pcre2.h&gt;</p>
+<p style="margin-top: 1em">/**************************************************************************
+<br/>
+* Here is the program. The API includes the concept of
+"contexts" for * <br/>
+* setting up unusual interface requirements for compiling
+and matching, * <br/>
+* such as custom memory managers and non-standard newline
+definitions. * <br/>
+* This program does not do any of this, so it makes no use
+of contexts, * <br/>
+* always passing NULL where a context could be given. * <br/>
+
+**************************************************************************/</p>
+<p style="margin-top: 1em">int main(int argc, char **argv)
+<br/>
+{ <br/>
+pcre2_code *re; <br/>
+PCRE2_SPTR pattern; /* PCRE2_SPTR is a pointer to unsigned
+code units of */ <br/>
+PCRE2_SPTR subject; /* the appropriate width (in this case,
+8 bits). */ <br/>
+PCRE2_SPTR name_table;</p>
+<p style="margin-top: 1em">int crlf_is_newline; <br/>
+int errornumber; <br/>
+int find_all; <br/>
+int i; <br/>
+int rc; <br/>
+int utf8;</p>
+<p style="margin-top: 1em">uint32_t option_bits; <br/>
+uint32_t namecount; <br/>
+uint32_t name_entry_size; <br/>
+uint32_t newline;</p>
+<p style="margin-top: 1em">PCRE2_SIZE erroroffset; <br/>
+PCRE2_SIZE *ovector; <br/>
+PCRE2_SIZE subject_length;</p>
+<p style="margin-top: 1em">pcre2_match_data
+*match_data;</p>
+<p style="margin-top: 1em">/**************************************************************************
+<br/>
+* First, sort out the command line. There is only one
+possible option at * <br/>
+* the moment, "-g" to request repeated matching to
+find all occurrences, * <br/>
+* like Perl’s /g option. We set the variable find_all
+to a non-zero value * <br/>
+* if the -g option is present. * <br/>
+
+**************************************************************************/</p>
+<p style="margin-top: 1em">find_all = 0; <br/>
+for (i = 1; i &lt; argc; i++) <br/>
+{ <br/>
+if (strcmp(argv[i], "-g") == 0) find_all = 1; <br/>
+else if (argv[i][0] == ’-’) <br/>
+{ <br/>
+printf("Unrecognised option %s\n", argv[i]); <br/>
+return 1; <br/>
+} <br/>
+else break; <br/>
+}</p>
+<p style="margin-top: 1em">/* After the options, we require
+exactly two arguments, which are the pattern, <br/>
+and the subject string. */</p>
+<p style="margin-top: 1em">if (argc - i != 2) <br/>
+{ <br/>
+printf("Exactly two arguments required: a regex and a
+subject string\n"); <br/>
+return 1; <br/>
+}</p>
+<p style="margin-top: 1em">/* Pattern and subject are char
+arguments, so they can be straightforwardly <br/>
+cast to PCRE2_SPTR because we are working in 8-bit code
+units. The subject <br/>
+length is cast to PCRE2_SIZE for completeness, though
+PCRE2_SIZE is in fact <br/>
+defined to be size_t. */</p>
+<p style="margin-top: 1em">pattern = (PCRE2_SPTR)argv[i];
+<br/>
+subject = (PCRE2_SPTR)argv[i+1]; <br/>
+subject_length = (PCRE2_SIZE)strlen((char *)subject);</p>
+<p style="margin-top: 1em">/*************************************************************************
+<br/>
+* Now we are going to compile the regular expression
+pattern, and handle * <br/>
+* any errors that are detected. * <br/>
+
+*************************************************************************/</p>
+<p style="margin-top: 1em">re = pcre2_compile( <br/>
+pattern, /* the pattern */ <br/>
+PCRE2_ZERO_TERMINATED, /* indicates pattern is
+zero-terminated */ <br/>
+0, /* default options */ <br/>
+&amp;errornumber, /* for error number */ <br/>
+&amp;erroroffset, /* for error offset */ <br/>
+NULL); /* use default compile context */</p>
+<p style="margin-top: 1em">/* Compilation failed: print the
+error message and exit. */</p>
+<p style="margin-top: 1em">if (re == NULL) <br/>
+{ <br/>
+PCRE2_UCHAR buffer[256]; <br/>
+pcre2_get_error_message(errornumber, buffer,
+sizeof(buffer)); <br/>
+printf("PCRE2 compilation failed at offset %d:
+%s\n", (int)erroroffset, <br/>
+buffer); <br/>
+return 1; <br/>
+}</p>
+<p style="margin-top: 1em">/*************************************************************************
+<br/>
+* If the compilation succeeded, we call PCRE2 again, in
+order to do a * <br/>
+* pattern match against the subject string. This does just
+ONE match. If * <br/>
+* further matching is needed, it will be done below. Before
+running the * <br/>
+* match we must set up a match_data block for holding the
+result. Using * <br/>
+* pcre2_match_data_create_from_pattern() ensures that the
+block is * <br/>
+* exactly the right size for the number of capturing
+parentheses in the * <br/>
+* pattern. If you need to know the actual size of a
+match_data block as * <br/>
+* a number of bytes, you can find it like this: * <br/>
+* * <br/>
+* PCRE2_SIZE match_data_size =
+pcre2_get_match_data_size(match_data); * <br/>
+
+*************************************************************************/</p>
+<p style="margin-top: 1em">match_data =
+pcre2_match_data_create_from_pattern(re, NULL);</p>
+<p style="margin-top: 1em">/* Now run the match. */</p>
+<p style="margin-top: 1em">rc = pcre2_match( <br/>
+re, /* the compiled pattern */ <br/>
+subject, /* the subject string */ <br/>
+subject_length, /* the length of the subject */ <br/>
+0, /* start at offset 0 in the subject */ <br/>
+0, /* default options */ <br/>
+match_data, /* block for storing the result */ <br/>
+NULL); /* use default match context */</p>
+<p style="margin-top: 1em">/* Matching failed: handle error
+cases */</p>
+<p style="margin-top: 1em">if (rc &lt; 0) <br/>
+{ <br/>
+switch(rc) <br/>
+{ <br/>
+case PCRE2_ERROR_NOMATCH: printf("No match\n");
+break; <br/>
+/* <br/>
+Handle other special cases if you like <br/>
+*/ <br/>
+default: printf("Matching error %d\n", rc); break;
+<br/>
+} <br/>
+pcre2_match_data_free(match_data); /* Release memory used
+for the match */ <br/>
+pcre2_code_free(re); /* data and the compiled pattern. */
+<br/>
+return 1; <br/>
+}</p>
+<p style="margin-top: 1em">/* Match succeeded. Get a
+pointer to the output vector, where string offsets <br/>
+are stored. */</p>
+<p style="margin-top: 1em">ovector =
+pcre2_get_ovector_pointer(match_data); <br/>
+printf("Match succeeded at offset %d\n",
+(int)ovector[0]);</p>
+<p style="margin-top: 1em">/*************************************************************************
+<br/>
+* We have found the first match within the subject string.
+If the output * <br/>
+* vector wasn’t big enough, say so. Then output any
+substrings that were * <br/>
+* captured. * <br/>
+
+*************************************************************************/</p>
+<p style="margin-top: 1em">/* The output vector
+wasn’t big enough. This should not happen, because we
+used <br/>
+pcre2_match_data_create_from_pattern() above. */</p>
+<p style="margin-top: 1em">if (rc == 0) <br/>
+printf("ovector was not big enough for all the captured
+substrings\n");</p>
+<p style="margin-top: 1em">/* Since release 10.38 PCRE2 has
+locked out the use of \K in lookaround <br/>
+assertions. However, there is an option to re-enable the old
+behaviour. If that <br/>
+is set, it is possible to run patterns such as /(?=.\K)/
+that use \K in an <br/>
+assertion to set the start of a match later than its end. In
+this demonstration <br/>
+program, we show how to detect this case, but it
+shouldn’t arise because the <br/>
+option is never set. */</p>
+<p style="margin-top: 1em">if (ovector[0] &gt; ovector[1])
+<br/>
+{ <br/>
+printf("\\K was used in an assertion to set the match
+start after its end.\n" <br/>
+"From end to start the match was: %.*s\n",
+(int)(ovector[0] - ovector[1]), <br/>
+(char *)(subject + ovector[1])); <br/>
+printf("Run abandoned\n"); <br/>
+pcre2_match_data_free(match_data); <br/>
+pcre2_code_free(re); <br/>
+return 1; <br/>
+}</p>
+<p style="margin-top: 1em">/* Show substrings stored in the
+output vector by number. Obviously, in a real <br/>
+application you might want to do things other than print
+them. */</p>
+<p style="margin-top: 1em">for (i = 0; i &lt; rc; i++) <br/>
+{ <br/>
+PCRE2_SPTR substring_start = subject + ovector[2*i]; <br/>
+PCRE2_SIZE substring_length = ovector[2*i+1] - ovector[2*i];
+<br/>
+printf("%2d: %.*s\n", i, (int)substring_length,
+(char *)substring_start); <br/>
+}</p>
+<p style="margin-top: 1em">/**************************************************************************
+<br/>
+* That concludes the basic part of this demonstration
+program. We have * <br/>
+* compiled a pattern, and performed a single match. The code
+that follows * <br/>
+* shows first how to access named substrings, and then how
+to code for * <br/>
+* repeated matches on the same subject. * <br/>
+
+**************************************************************************/</p>
+<p style="margin-top: 1em">/* See if there are any named
+substrings, and if so, show them by name. First <br/>
+we have to extract the count of named parentheses from the
+pattern. */</p>
+<p style="margin-top: 1em">(void)pcre2_pattern_info( <br/>
+re, /* the compiled pattern */ <br/>
+PCRE2_INFO_NAMECOUNT, /* get the number of named substrings
+*/ <br/>
+&amp;namecount); /* where to put the answer */</p>
+<p style="margin-top: 1em">if (namecount == 0)
+printf("No named substrings\n"); else <br/>
+{ <br/>
+PCRE2_SPTR tabptr; <br/>
+printf("Named substrings\n");</p>
+<p style="margin-top: 1em">/* Before we can access the
+substrings, we must extract the table for <br/>
+translating names to numbers, and the size of each entry in
+the table. */</p>
+<p style="margin-top: 1em">(void)pcre2_pattern_info( <br/>
+re, /* the compiled pattern */ <br/>
+PCRE2_INFO_NAMETABLE, /* address of the table */ <br/>
+&amp;name_table); /* where to put the answer */</p>
+<p style="margin-top: 1em">(void)pcre2_pattern_info( <br/>
+re, /* the compiled pattern */ <br/>
+PCRE2_INFO_NAMEENTRYSIZE, /* size of each entry in the table
+*/ <br/>
+&amp;name_entry_size); /* where to put the answer */</p>
+<p style="margin-top: 1em">/* Now we can scan the table
+and, for each entry, print the number, the name, <br/>
+and the substring itself. In the 8-bit library the number is
+held in two <br/>
+bytes, most significant first. */</p>
+<p style="margin-top: 1em">tabptr = name_table; <br/>
+for (i = 0; i &lt; namecount; i++) <br/>
+{ <br/>
+int n = (tabptr[0] &lt;&lt; 8) | tabptr[1]; <br/>
+printf("(%d) %*s: %.*s\n", n, name_entry_size - 3,
+tabptr + 2, <br/>
+(int)(ovector[2*n+1] - ovector[2*n]), subject +
+ovector[2*n]); <br/>
+tabptr += name_entry_size; <br/>
+} <br/>
+}</p>
+<p style="margin-top: 1em">/*************************************************************************
+<br/>
+* If the "-g" option was given on the command
+line, we want to continue * <br/>
+* to search for additional matches in the subject string, in
+a similar * <br/>
+* way to the /g option in Perl. This turns out to be
+trickier than you * <br/>
+* might think because of the possibility of matching an
+empty string. * <br/>
+* What happens is as follows: * <br/>
+* * <br/>
+* If the previous match was NOT for an empty string, we can
+just start * <br/>
+* the next match at the end of the previous one. * <br/>
+* * <br/>
+* If the previous match WAS for an empty string, we
+can’t do that, as it * <br/>
+* would lead to an infinite loop. Instead, a call of
+pcre2_match() is * <br/>
+* made with the PCRE2_NOTEMPTY_ATSTART and PCRE2_ANCHORED
+flags set. The * <br/>
+* first of these tells PCRE2 that an empty string at the
+start of the * <br/>
+* subject is not a valid match; other possibilities must be
+tried. The * <br/>
+* second flag restricts PCRE2 to one match attempt at the
+initial string * <br/>
+* position. If this match succeeds, an alternative to the
+empty string * <br/>
+* match has been found, and we can print it and proceed
+round the loop, * <br/>
+* advancing by the length of whatever was found. If this
+match does not * <br/>
+* succeed, we still stay in the loop, advancing by just one
+character. * <br/>
+* In UTF-8 mode, which can be set by (*UTF) in the pattern,
+this may be * <br/>
+* more than one byte. * <br/>
+* * <br/>
+* However, there is a complication concerned with newlines.
+When the * <br/>
+* newline convention is such that CRLF is a valid newline,
+we must * <br/>
+* advance by two characters rather than one. The newline
+convention can * <br/>
+* be set in the regex by (*CR), etc.; if not, we must find
+the default. * <br/>
+
+*************************************************************************/</p>
+<p style="margin-top: 1em">if (!find_all) /* Check for -g
+*/ <br/>
+{ <br/>
+pcre2_match_data_free(match_data); /* Release the memory
+that was used */ <br/>
+pcre2_code_free(re); /* for the match data and the pattern.
+*/ <br/>
+return 0; /* Exit the program. */ <br/>
+}</p>
+<p style="margin-top: 1em">/* Before running the loop,
+check for UTF-8 and whether CRLF is a valid newline <br/>
+sequence. First, find the options with which the regex was
+compiled and extract <br/>
+the UTF state. */</p>
+<p style="margin-top: 1em">(void)pcre2_pattern_info(re,
+PCRE2_INFO_ALLOPTIONS, &amp;option_bits); <br/>
+utf8 = (option_bits &amp; PCRE2_UTF) != 0;</p>
+<p style="margin-top: 1em">/* Now find the newline
+convention and see whether CRLF is a valid newline <br/>
+sequence. */</p>
+<p style="margin-top: 1em">(void)pcre2_pattern_info(re,
+PCRE2_INFO_NEWLINE, &amp;newline); <br/>
+crlf_is_newline = newline == PCRE2_NEWLINE_ANY || <br/>
+newline == PCRE2_NEWLINE_CRLF || <br/>
+newline == PCRE2_NEWLINE_ANYCRLF;</p>
+<p style="margin-top: 1em">/* Loop for second and
+subsequent matches */</p>
+<p style="margin-top: 1em">for (;;) <br/>
+{ <br/>
+uint32_t options = 0; /* Normally no options */ <br/>
+PCRE2_SIZE start_offset = ovector[1]; /* Start at end of
+previous match */</p>
+<p style="margin-top: 1em">/* If the previous match was for
+an empty string, we are finished if we are <br/>
+at the end of the subject. Otherwise, arrange to run another
+match at the <br/>
+same point to see if a non-empty match can be found. */</p>
+<p style="margin-top: 1em">if (ovector[0] == ovector[1])
+<br/>
+{ <br/>
+if (ovector[0] == subject_length) break; <br/>
+options = PCRE2_NOTEMPTY_ATSTART | PCRE2_ANCHORED; <br/>
+}</p>
+<p style="margin-top: 1em">/* If the previous match was not
+an empty string, there is one tricky case to <br/>
+consider. If a pattern contains \K within a lookbehind
+assertion at the <br/>
+start, the end of the matched string can be at the offset
+where the match <br/>
+started. Without special action, this leads to a loop that
+keeps on matching <br/>
+the same substring. We must detect this case and arrange to
+move the start on <br/>
+by one character. The pcre2_get_startchar() function returns
+the starting <br/>
+offset that was passed to pcre2_match(). */</p>
+<p style="margin-top: 1em">else <br/>
+{ <br/>
+PCRE2_SIZE startchar = pcre2_get_startchar(match_data); <br/>
+if (start_offset &lt;= startchar) <br/>
+{ <br/>
+if (startchar &gt;= subject_length) break; /* Reached end of
+subject. */ <br/>
+start_offset = startchar + 1; /* Advance by one character.
+*/ <br/>
+if (utf8) /* If UTF-8, it may be more */ <br/>
+{ /* than one code unit. */ <br/>
+for (; start_offset &lt; subject_length; start_offset++)
+<br/>
+if ((subject[start_offset] &amp; 0xc0) != 0x80) break; <br/>
+} <br/>
+} <br/>
+}</p>
+<p style="margin-top: 1em">/* Run the next matching
+operation */</p>
+<p style="margin-top: 1em">rc = pcre2_match( <br/>
+re, /* the compiled pattern */ <br/>
+subject, /* the subject string */ <br/>
+subject_length, /* the length of the subject */ <br/>
+start_offset, /* starting offset in the subject */ <br/>
+options, /* options */ <br/>
+match_data, /* block for storing the result */ <br/>
+NULL); /* use default match context */</p>
+<p style="margin-top: 1em">/* This time, a result of
+NOMATCH isn’t an error. If the value in
+"options" <br/>
+is zero, it just means we have found all possible matches,
+so the loop ends. <br/>
+Otherwise, it means we have failed to find a
+non-empty-string match at a <br/>
+point where there was a previous empty-string match. In this
+case, we do what <br/>
+Perl does: advance the matching position by one character,
+and continue. We <br/>
+do this by setting the "end of previous match"
+offset, because that is picked <br/>
+up at the top of the loop as the point at which to start
+again.</p>
+<p style="margin-top: 1em">There are two complications: (a)
+When CRLF is a valid newline sequence, and <br/>
+the current position is just before it, advance by an extra
+byte. (b) <br/>
+Otherwise we must ensure that we skip an entire UTF
+character if we are in <br/>
+UTF mode. */</p>
+<p style="margin-top: 1em">if (rc == PCRE2_ERROR_NOMATCH)
+<br/>
+{ <br/>
+if (options == 0) break; /* All matches found */ <br/>
+ovector[1] = start_offset + 1; /* Advance one code unit */
+<br/>
+if (crlf_is_newline &amp;&amp; /* If CRLF is a newline &amp;
+*/ <br/>
+start_offset &lt; subject_length - 1 &amp;&amp; /* we are at
+CRLF, */ <br/>
+subject[start_offset] == ’\r’ &amp;&amp; <br/>
+subject[start_offset + 1] == ’\n’) <br/>
+ovector[1] += 1; /* Advance by one more. */ <br/>
+else if (utf8) /* Otherwise, ensure we */ <br/>
+{ /* advance a whole UTF-8 */ <br/>
+while (ovector[1] &lt; subject_length) /* character. */ <br/>
+{ <br/>
+if ((subject[ovector[1]] &amp; 0xc0) != 0x80) break; <br/>
+ovector[1] += 1; <br/>
+} <br/>
+} <br/>
+continue; /* Go round the loop again */ <br/>
+}</p>
+<p style="margin-top: 1em">/* Other matching errors are not
+recoverable. */</p>
+<p style="margin-top: 1em">if (rc &lt; 0) <br/>
+{ <br/>
+printf("Matching error %d\n", rc); <br/>
+pcre2_match_data_free(match_data); <br/>
+pcre2_code_free(re); <br/>
+return 1; <br/>
+}</p>
+<p style="margin-top: 1em">/* Match succeeded */</p>
+<p style="margin-top: 1em">printf("\nMatch succeeded
+again at offset %d\n", (int)ovector[0]);</p>
+<p style="margin-top: 1em">/* The match succeeded, but the
+output vector wasn’t big enough. This <br/>
+should not happen. */</p>
+<p style="margin-top: 1em">if (rc == 0) <br/>
+printf("ovector was not big enough for all the captured
+substrings\n");</p>
+<p style="margin-top: 1em">/* We must guard against
+patterns such as /(?=.\K)/ that use \K in an <br/>
+assertion to set the start of a match later than its end. In
+this <br/>
+demonstration program, we just detect this case and give up.
+*/</p>
+<p style="margin-top: 1em">if (ovector[0] &gt; ovector[1])
+<br/>
+{ <br/>
+printf("\\K was used in an assertion to set the match
+start after its end.\n" <br/>
+"From end to start the match was: %.*s\n",
+(int)(ovector[0] - ovector[1]), <br/>
+(char *)(subject + ovector[1])); <br/>
+printf("Run abandoned\n"); <br/>
+pcre2_match_data_free(match_data); <br/>
+pcre2_code_free(re); <br/>
+return 1; <br/>
+}</p>
+<p style="margin-top: 1em">/* As before, show substrings
+stored in the output vector by number, and then <br/>
+also any named substrings. */</p>
+<p style="margin-top: 1em">for (i = 0; i &lt; rc; i++) <br/>
+{ <br/>
+PCRE2_SPTR substring_start = subject + ovector[2*i]; <br/>
+size_t substring_length = ovector[2*i+1] - ovector[2*i];
+<br/>
+printf("%2d: %.*s\n", i, (int)substring_length,
+(char *)substring_start); <br/>
+}</p>
+<p style="margin-top: 1em">if (namecount == 0)
+printf("No named substrings\n"); else <br/>
+{ <br/>
+PCRE2_SPTR tabptr = name_table; <br/>
+printf("Named substrings\n"); <br/>
+for (i = 0; i &lt; namecount; i++) <br/>
+{ <br/>
+int n = (tabptr[0] &lt;&lt; 8) | tabptr[1]; <br/>
+printf("(%d) %*s: %.*s\n", n, name_entry_size - 3,
+tabptr + 2, <br/>
+(int)(ovector[2*n+1] - ovector[2*n]), subject +
+ovector[2*n]); <br/>
+tabptr += name_entry_size; <br/>
+} <br/>
+} <br/>
+} /* End of loop to find second and subsequent matches
+*/</p>
+<p style="margin-top: 1em">printf("\n"); <br/>
+pcre2_match_data_free(match_data); <br/>
+pcre2_code_free(re); <br/>
+return 0; <br/>
+}</p>
+<p style="margin-top: 1em">/* End of pcre2demo.c */</p>
+<hr/>
+</body>
+</html>

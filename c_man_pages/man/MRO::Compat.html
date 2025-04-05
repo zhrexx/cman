@@ -1,0 +1,300 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:28 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>MRO::Compat</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">MRO::Compat</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Functions">Functions</a><br/>
+<a href="#mro::get_linear_isa($classname[, $type])">mro::get_linear_isa($classname[, $type])</a><br/>
+<a href="#mro::import">mro::import</a><br/>
+<a href="#mro::set_mro($classname, $type)">mro::set_mro($classname, $type)</a><br/>
+<a href="#mro::get_mro($classname)">mro::get_mro($classname)</a><br/>
+<a href="#mro::get_isarev($classname)">mro::get_isarev($classname)</a><br/>
+<a href="#mro::is_universal($classname)">mro::is_universal($classname)</a><br/>
+<a href="#mro::invalidate_all_method_caches">mro::invalidate_all_method_caches</a><br/>
+<a href="#mro::method_changed_in($classname)">mro::method_changed_in($classname)</a><br/>
+<a href="#mro::get_pkg_gen($classname)">mro::get_pkg_gen($classname)</a><br/>
+<a href="#USING C3">USING C3</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">MRO::Compat
+− mro::* interface compatibility for Perls &lt;
+5.9.5</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">package PPP; use
+base qw/Exporter/; <br/>
+package X; use base qw/PPP/; <br/>
+package Y; use base qw/PPP/; <br/>
+package Z; use base qw/PPP/; <br/>
+package FooClass; use base qw/X Y Z/; <br/>
+package main; <br/>
+use MRO::Compat; <br/>
+my $linear = mro::get_linear_isa('FooClass'); <br/>
+print join(q{, }, @$linear); <br/>
+# Prints: FooClass, X, PPP, Exporter, Y, Z</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+"mro" namespace provides several utilities for
+dealing with method resolution order and method caching in
+general in Perl 5.9.5 and higher.</p>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides those interfaces for earlier versions of Perl (back
+to 5.6.0 anyways).</p>
+<p style="margin-left:9%; margin-top: 1em">It is a harmless
+no−op to use this module on 5.9.5+. That is to say,
+code which properly uses MRO::Compat will work unmodified on
+both older Perls and 5.9.5+.</p>
+<p style="margin-left:9%; margin-top: 1em">If you're
+writing a piece of software that would like to use the parts
+of 5.9.5+'s mro:: interfaces that are supported here, and
+you want compatibility with older Perls, this is the module
+for you.</p>
+<p style="margin-left:9%; margin-top: 1em">Some parts of
+this code will work better and/or faster with Class::C3::XS
+installed (which is an optional prereq of Class::C3, which
+is in turn a prereq of this package), but it's not a
+requirement.</p>
+<p style="margin-left:9%; margin-top: 1em">This module
+never exports any functions. All calls must be fully
+qualified with the "mro::" prefix.</p>
+<p style="margin-left:9%; margin-top: 1em">The interface
+documentation here serves only as a quick reference of what
+the function basically does, and what differences between
+MRO::Compat and 5.9.5+ one should look out for. The main
+docs in 5.9.5's mro are the real interface docs, and contain
+a lot of other useful information.</p>
+<h2>Functions
+<a name="Functions"></a>
+</h2>
+<h3>mro::get_linear_isa($classname[, $type])
+<a name="mro::get_linear_isa($classname[, $type])"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns an
+arrayref which is the linearized "ISA" of the
+given class. Uses whichever MRO is currently in effect for
+that class by default, or the given MRO (either
+"c3" or "dfs" if specified as
+$type).</p>
+<p style="margin-left:9%; margin-top: 1em">The linearized
+ISA of a class is a single ordered list of all of the
+classes that would be visited in the process of resolving a
+method on the given class, starting with itself. It does not
+include any duplicate entries.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+"UNIVERSAL" (and any members of
+"UNIVERSAL"'s MRO) are not part of the MRO of a
+class, even though all classes implicitly inherit methods
+from "UNIVERSAL" and its parents.</p>
+<h3>mro::import
+<a name="mro::import"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This allows the
+"use mro 'dfs'" and "use mro 'c3'"
+syntaxes, providing you "use MRO::Compat" first.
+Please see the "USING C3" section for additional
+details.</p>
+<h3>mro::set_mro($classname, $type)
+<a name="mro::set_mro($classname, $type)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Sets the mro of
+$classname to one of the types "dfs" or
+"c3". Please see the "USING C3" section
+for additional details.</p>
+<h3>mro::get_mro($classname)
+<a name="mro::get_mro($classname)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns the MRO
+of the given class (either "c3" or
+"dfs").</p>
+<p style="margin-left:9%; margin-top: 1em">It considers any
+Class::C3−using class to have C3 MRO even before
+<b>Class::C3::initialize()</b> is called.</p>
+<h3>mro::get_isarev($classname)
+<a name="mro::get_isarev($classname)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns an
+arrayref of classes who are subclasses of the given
+classname. In other words, classes in whose @ISA hierarchy
+we appear, no matter how indirectly.</p>
+<p style="margin-left:9%; margin-top: 1em">This is much
+slower on pre−5.9.5 Perls with MRO::Compat than it is
+on 5.9.5+, as it has to search the entire package
+namespace.</p>
+<h3>mro::is_universal($classname)
+<a name="mro::is_universal($classname)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns a
+boolean status indicating whether or not the given classname
+is either "UNIVERSAL" itself, or one of
+"UNIVERSAL"'s parents by @ISA inheritance.</p>
+<p style="margin-left:9%; margin-top: 1em">Any class for
+which this function returns true is "universal" in
+the sense that all classes potentially inherit methods from
+it.</p>
+<h3>mro::invalidate_all_method_caches
+<a name="mro::invalidate_all_method_caches"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Increments
+"PL_sub_generation", which invalidates method
+caching in all packages.</p>
+<p style="margin-left:9%; margin-top: 1em">Please note that
+this is rarely necessary, unless you are dealing with a
+situation which is known to confuse Perl's method
+caching.</p>
+<h3>mro::method_changed_in($classname)
+<a name="mro::method_changed_in($classname)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Invalidates the
+method cache of any classes dependent on the given class. In
+MRO::Compat on pre−5.9.5 Perls, this is an alias for
+"mro::invalidate_all_method_caches" above, as
+pre−5.9.5 Perls have no other way to do this. It will
+still enforce the requirement that you pass it a classname,
+for compatibility.</p>
+<p style="margin-left:9%; margin-top: 1em">Please note that
+this is rarely necessary, unless you are dealing with a
+situation which is known to confuse Perl's method
+caching.</p>
+<h3>mro::get_pkg_gen($classname)
+<a name="mro::get_pkg_gen($classname)"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns an
+integer which is incremented every time a local method of or
+the @ISA of the given package changes on Perl 5.9.5+. On
+earlier Perls with this MRO::Compat module, it will probably
+increment a lot more often than necessary.</p>
+<h2>USING C3
+<a name="USING C3"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">While this
+module makes the 5.9.5+ syntaxes "use mro 'c3'"
+and "mro::set_mro("Foo", 'c3')"
+available on older Perls, it does so merely by passing off
+the work to Class::C3.</p>
+<p style="margin-left:9%; margin-top: 1em">It does not
+remove the need for you to call Class::C3::initialize(),
+Class::C3::reinitialize(), and/or Class::C3::uninitialize()
+at the appropriate times as documented in the Class::C3
+docs. These three functions are always provided by
+MRO::Compat, either via Class::C3 itself on older Perls, or
+directly as no−ops on 5.9.5+.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Class::C3</p>
+<p style="margin-left:9%; margin-top: 1em">mro</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Brandon L.
+Black, &lt;blblack@gmail.com&gt;</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2007−2008 Brandon L. Black
+&lt;blblack@gmail.com&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

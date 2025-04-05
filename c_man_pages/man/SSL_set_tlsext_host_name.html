@@ -1,0 +1,298 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:37 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SET_TLSEXT_SERVERNAME_CALLBACK</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SET_TLSEXT_SERVERNAME_CALLBACK</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_set_tlsext_servername_callback,
+SSL_CTX_set_tlsext_servername_arg, SSL_get_servername_type,
+SSL_get_servername, SSL_set_tlsext_host_name − handle
+server name indication (SNI)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+long SSL_CTX_set_tlsext_servername_callback(SSL_CTX *ctx,
+<br/>
+int (*cb)(SSL *s, int *al, void *arg)); <br/>
+long SSL_CTX_set_tlsext_servername_arg(SSL_CTX *ctx, void
+*arg); <br/>
+const char *SSL_get_servername(const SSL *s, const int
+type); <br/>
+int SSL_get_servername_type(const SSL *s); <br/>
+int SSL_set_tlsext_host_name(const SSL *s, const char
+*name);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+functionality provided by the servername callback is mostly
+superseded by the ClientHello callback, which can be set
+using <b>SSL_CTX_set_client_hello_cb()</b>. However, even
+where the ClientHello callback is used, the servername
+callback is still necessary in order to acknowledge the
+servername requested by the client.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_tlsext_servername_callback()</b>
+sets the application callback <b>cb</b> used by a server to
+perform any actions or configuration required based on the
+servername extension received in the incoming connection.
+When <b>cb</b> is NULL, SNI is not used.</p>
+<p style="margin-left:9%; margin-top: 1em">The servername
+callback should return one of the following values: <br/>
+SSL_TLSEXT_ERR_OK</p>
+<p style="margin-left:14%;">This is used to indicate that
+the servername requested by the client has been accepted.
+Typically a server will call <b>SSL_set_SSL_CTX()</b> in the
+callback to set up a different configuration for the
+selected servername in this case.</p>
+<p style="margin-left:9%;">SSL_TLSEXT_ERR_ALERT_FATAL</p>
+<p style="margin-left:14%;">In this case the servername
+requested by the client is not accepted and the handshake
+will be aborted. The value of the alert to be used should be
+stored in the location pointed to by the <b>al</b> parameter
+to the callback. By default this value is initialised to
+SSL_AD_UNRECOGNIZED_NAME.</p>
+<p style="margin-left:9%;">SSL_TLSEXT_ERR_ALERT_WARNING</p>
+<p style="margin-left:14%;">If this value is returned then
+the servername is not accepted by the server. However, the
+handshake will continue and send a warning alert instead.
+The value of the alert should be stored in the location
+pointed to by the <b>al</b> parameter as for
+SSL_TLSEXT_ERR_ALERT_FATAL above. Note that TLSv1.3 does not
+support warning alerts, so if TLSv1.3 has been negotiated
+then this return value is treated the same way as
+SSL_TLSEXT_ERR_NOACK.</p>
+<p style="margin-left:9%;">SSL_TLSEXT_ERR_NOACK</p>
+<p style="margin-left:14%;">This return value indicates
+that the servername is not accepted by the server. No alerts
+are sent and the server will not acknowledge the requested
+servername.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_tlsext_servername_arg()</b>
+sets a context−specific argument to be passed into the
+callback (via the <b>arg</b> parameter) for this
+<b>SSL_CTX</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The behaviour of
+<b>SSL_get_servername()</b> depends on a number of different
+factors. In particular note that in TLSv1.3 the servername
+is negotiated in every handshake. In TLSv1.2 the servername
+is only negotiated on initial handshakes and not on
+resumption handshakes. <br/>
+On the client, before the handshake</p>
+<p style="margin-left:14%;">If a servername has been set
+via a call to <b>SSL_set_tlsext_host_name()</b> then it will
+return that servername.</p>
+<p style="margin-left:14%; margin-top: 1em">If one has not
+been set, but a TLSv1.2 resumption is being attempted and
+the session from the original handshake had a servername
+accepted by the server then it will return that
+servername.</p>
+<p style="margin-left:14%; margin-top: 1em">Otherwise it
+returns NULL.</p>
+<p style="margin-left:9%;">On the client, during or after
+the handshake and a TLSv1.2 (or below) <br/>
+resumption occurred</p>
+<p style="margin-left:14%;">If the session from the
+original handshake had a servername accepted by the server
+then it will return that servername.</p>
+<p style="margin-left:14%; margin-top: 1em">Otherwise it
+returns the servername set via
+<b>SSL_set_tlsext_host_name()</b> or NULL if it was not
+called.</p>
+<p style="margin-left:9%;">On the client, during or after
+the handshake and a TLSv1.2 (or below) <br/>
+resumption did not occur</p>
+<p style="margin-left:14%;">It will return the servername
+set via <b>SSL_set_tlsext_host_name()</b> or NULL if it was
+not called.</p>
+<p style="margin-left:9%;">On the server, before the
+handshake</p>
+<p style="margin-left:14%;">The function will always return
+NULL before the handshake</p>
+<p style="margin-left:9%;">On the server, after the
+servername extension has been processed and a <br/>
+TLSv1.2 (or below) resumption occurred</p>
+<p style="margin-left:14%;">If a servername was accepted by
+the server in the original handshake then it will return
+that servername, or NULL otherwise.</p>
+<p style="margin-left:9%;">On the server, after the
+servername extension has been processed and a <br/>
+TLSv1.2 (or below) resumption did not occur</p>
+<p style="margin-left:14%;">The function will return the
+servername requested by the client in this handshake or NULL
+if none was requested.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that the
+ClientHello callback occurs before a servername extension
+from the client is processed. The servername, certificate
+and ALPN callbacks occur after a servername extension from
+the client is processed.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_servername_type()</b>
+returns the servername type or −1 if no servername is
+present. Currently the only supported type (defined in
+RFC3546) is <b>TLSEXT_NAMETYPE_host_name</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_tlsext_host_name()</b>
+sets the server name indication ClientHello extension to
+contain the value <b>name</b>. The type of server name
+indication extension is set to
+<b>TLSEXT_NAMETYPE_host_name</b> (defined in RFC3546).</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Several
+callbacks are executed during ClientHello processing,
+including the ClientHello, ALPN, and servername callbacks.
+The ClientHello callback is executed first, then the
+servername callback, followed by the ALPN callback.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_set_tlsext_host_name()</b> function should only be
+called on SSL objects that will act as clients; otherwise
+the configured <b>name</b> will be ignored.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_tlsext_servername_callback()</b>
+and <b>SSL_CTX_set_tlsext_servername_arg()</b> both always
+return 1 indicating success.
+<b>SSL_set_tlsext_host_name()</b> returns 1 on success, 0 in
+case of error.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_CTX_set_alpn_select_cb</b>(3),
+<b>SSL_get0_alpn_selected</b>(3),
+<b>SSL_CTX_set_client_hello_cb</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_servername()</b>
+historically provided some unexpected results in certain
+corner cases. This has been fixed from OpenSSL 1.1.1e.</p>
+<p style="margin-left:9%; margin-top: 1em">Prior to 1.1.1e,
+when the client requested a servername in an initial TLSv1.2
+handshake, the server accepted it, and then the client
+successfully resumed but set a different explicit servername
+in the second handshake then when called by the client it
+returned the servername from the second handshake. This has
+now been changed to return the servername requested in the
+original handshake.</p>
+<p style="margin-left:9%; margin-top: 1em">Also prior to
+1.1.1e, if the client sent a servername in the first
+handshake but the server did not accept it, and then a
+second handshake occurred where TLSv1.2 resumption was
+successful then when called by the server it returned the
+servername requested in the original handshake. This has now
+been changed to NULL.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2017−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:32 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SET_SESSION_TICKET_CB</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SET_SESSION_TICKET_CB</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_set_session_ticket_cb,
+SSL_SESSION_get0_ticket_appdata,
+SSL_SESSION_set1_ticket_appdata,
+SSL_CTX_generate_session_ticket_fn,
+SSL_CTX_decrypt_session_ticket_fn − manage session
+ticket application data</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+typedef int (*SSL_CTX_generate_session_ticket_fn)(SSL *s,
+void *arg); <br/>
+typedef SSL_TICKET_RETURN
+(*SSL_CTX_decrypt_session_ticket_fn)(SSL *s, SSL_SESSION
+*ss, <br/>
+const unsigned char *keyname, <br/>
+size_t keyname_len, <br/>
+SSL_TICKET_STATUS status, <br/>
+void *arg); <br/>
+int SSL_CTX_set_session_ticket_cb(SSL_CTX *ctx, <br/>
+SSL_CTX_generate_session_ticket_fn gen_cb, <br/>
+SSL_CTX_decrypt_session_ticket_fn dec_cb, <br/>
+void *arg); <br/>
+int SSL_SESSION_set1_ticket_appdata(SSL_SESSION *ss, const
+void *data, size_t len); <br/>
+int SSL_SESSION_get0_ticket_appdata(SSL_SESSION *ss, void
+**data, size_t *len);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_set_session_ticket_cb()</b>
+sets the application callbacks <b>gen_cb</b> and
+<b>dec_cb</b> that are used by a server to set and get
+application data stored with a session, and placed into a
+session ticket. Either callback function may be set to NULL.
+The value of <b>arg</b> is passed to the callbacks.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>gen_cb</b> is
+the application defined callback invoked when a session
+ticket is about to be created. The application can call
+<b>SSL_SESSION_set1_ticket_appdata()</b> at this time to add
+application data to the session ticket. The value of
+<b>arg</b> is the same as that given to
+<b>SSL_CTX_set_session_ticket_cb()</b>. The <b>gen_cb</b>
+callback is defined as type
+<b>SSL_CTX_generate_session_ticket_fn</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>dec_cb</b> is
+the application defined callback invoked after session
+ticket decryption has been attempted and any session ticket
+application data is available. If ticket decryption was
+successful then the <b>ss</b> argument contains the session
+data. The <b>keyname</b> and <b>keyname_len</b> arguments
+identify the key used to decrypt the session ticket. The
+<b>status</b> argument is the result of the ticket
+decryption. See the "NOTES" section below for
+further details. The value of <b>arg</b> is the same as that
+given to <b>SSL_CTX_set_session_ticket_cb()</b>. The
+<b>dec_cb</b> callback is defined as type
+<b>SSL_CTX_decrypt_session_ticket_fn</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_SESSION_set1_ticket_appdata()</b>
+sets the application data specified by <b>data</b> and
+<b>len</b> into <b>ss</b> which is then placed into any
+generated session tickets. It can be called at any time
+before a session ticket is created to update the data placed
+into the session ticket. However, given that sessions and
+tickets are created by the handshake, the <b>gen_cb</b> is
+provided to notify the application that a session ticket is
+about to be generated.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_SESSION_get0_ticket_appdata()</b>
+assigns <b>data</b> to the session ticket application data
+and assigns <b>len</b> to the length of the session ticket
+application data from <b>ss</b>. The application data can be
+set via <b>SSL_SESSION_set1_ticket_appdata()</b> or by a
+session ticket. NULL will be assigned to <b>data</b> and 0
+will be assigned to <b>len</b> if there is no session ticket
+application data. <b>SSL_SESSION_get0_ticket_appdata()</b>
+can be called any time after a session has been created. The
+<b>dec_cb</b> is provided to notify the application that a
+session ticket has just been decrypted.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">When the
+<b>dec_cb</b> callback is invoked, the SSL_SESSION <b>ss</b>
+has not yet been assigned to the SSL <b>s</b>. The
+<b>status</b> indicates the result of the ticket decryption.
+The callback must check the <b>status</b> value before
+performing any action, as it is called even if ticket
+decryption fails.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>keyname</b> and <b>keyname_len</b> arguments to
+<b>dec_cb</b> may be used to identify the key that was used
+to encrypt the session ticket.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>status</b> argument can be any of these values: <br/>
+SSL_TICKET_EMPTY</p>
+<p style="margin-left:14%;">Empty ticket present. No ticket
+data will be used and a new ticket should be sent to the
+client. This only occurs in TLSv1.2 or below. In TLSv1.3 it
+is not valid for a client to send an empty ticket.</p>
+<p style="margin-left:9%;">SSL_TICKET_NO_DECRYPT</p>
+<p style="margin-left:14%;">The ticket couldn't be
+decrypted. No ticket data will be used and a new ticket
+should be sent to the client.</p>
+<p style="margin-left:9%;">SSL_TICKET_SUCCESS</p>
+<p style="margin-left:14%;">A ticket was successfully
+decrypted, any session ticket application data should be
+available. A new ticket should not be sent to the
+client.</p>
+<p style="margin-left:9%;">SSL_TICKET_SUCCESS_RENEW</p>
+<p style="margin-left:14%;">Same as
+<b>SSL_TICKET_SUCCESS</b>, but a new ticket should be sent
+to the client.</p>
+<p style="margin-left:9%; margin-top: 1em">The return value
+can be any of these values: <br/>
+SSL_TICKET_RETURN_ABORT</p>
+<p style="margin-left:14%;">The handshake should be
+aborted, either because of an error or because of some
+policy. Note that in TLSv1.3 a client may send more than one
+ticket in a single handshake. Therefore, just because one
+ticket is unacceptable it does not mean that all of them
+are. For this reason this option should be used with
+caution.</p>
+<p style="margin-left:9%;">SSL_TICKET_RETURN_IGNORE</p>
+<p style="margin-left:14%;">Do not use a ticket (if one was
+available). Do not send a renewed ticket to the client.</p>
+<p style="margin-left:9%;">SSL_TICKET_RETURN_IGNORE_RENEW</p>
+<p style="margin-left:14%;">Do not use a ticket (if one was
+available). Send a renewed ticket to the client.</p>
+<p style="margin-left:14%; margin-top: 1em">If the callback
+does not wish to change the default ticket behaviour then it
+should return this value if <b>status</b> is
+<b>SSL_TICKET_EMPTY</b> or <b>SSL_TICKET_NO_DECRYPT</b>.</p>
+<p style="margin-left:9%;">SSL_TICKET_RETURN_USE</p>
+<p style="margin-left:14%;">Use the ticket. Do not send a
+renewed ticket to the client. It is an error for the
+callback to return this value if <b>status</b> has a value
+other than <b>SSL_TICKET_SUCCESS</b> or
+<b>SSL_TICKET_SUCCESS_RENEW</b>.</p>
+<p style="margin-left:14%; margin-top: 1em">If the callback
+does not wish to change the default ticket behaviour then it
+should return this value if <b>status</b> is
+<b>SSL_TICKET_SUCCESS</b>.</p>
+<p style="margin-left:9%;">SSL_TICKET_RETURN_USE_RENEW</p>
+<p style="margin-left:14%;">Use the ticket. Send a renewed
+ticket to the client. It is an error for the callback to
+return this value if <b>status</b> has a value other than
+<b>SSL_TICKET_SUCCESS</b> or
+<b>SSL_TICKET_SUCCESS_RENEW</b>.</p>
+<p style="margin-left:14%; margin-top: 1em">If the callback
+does not wish to change the default ticket behaviour then it
+should return this value if <b>status</b> is
+<b>SSL_TICKET_SUCCESS_RENEW</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">If <b>status</b>
+has the value <b>SSL_TICKET_EMPTY</b> or
+<b>SSL_TICKET_NO_DECRYPT</b> then no session data will be
+available and the callback must not use the <b>ss</b>
+argument. If <b>status</b> has the value
+<b>SSL_TICKET_SUCCESS</b> or <b>SSL_TICKET_SUCCESS_RENEW</b>
+then the application can call
+<b>SSL_SESSION_get0_ticket_appdata()</b> using the session
+provided in the <b>ss</b> argument to retrieve the
+application data.</p>
+<p style="margin-left:9%; margin-top: 1em">When the
+<b>gen_cb</b> callback is invoked, the
+<b>SSL_get_session()</b> function can be used to retrieve
+the SSL_SESSION for
+<b>SSL_SESSION_set1_ticket_appdata()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">By default, in
+TLSv1.2 and below, a new session ticket is not issued on a
+successful resumption and therefore <b>gen_cb</b> will not
+be called. In TLSv1.3 the default behaviour is to always
+issue a new ticket on resumption. In both cases this
+behaviour can be changed if a ticket key callback is in use
+(see <b>SSL_CTX_set_tlsext_ticket_key_cb</b>(3)).</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_CTX_set_session_ticket_cb()</b>,
+<b>SSL_SESSION_set1_ticket_appdata()</b> and
+<b>SSL_SESSION_get0_ticket_appdata()</b> functions return 1
+on success and 0 on failure.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>gen_cb</b> callback must return 1 to continue the
+connection. A return of 0 will terminate the connection with
+an INTERNAL_ERROR alert.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>dec_cb</b> callback must return a value as described in
+"NOTES" above.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_get_session</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_CTX_set_session_ticket_cb()</b>,
+<b>SSL_SESSION_set1_ticket_appdata()</b> and
+<b>SSL_SESSION_get_ticket_appdata()</b> functions were added
+in OpenSSL 1.1.1.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2017−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

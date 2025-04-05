@@ -1,0 +1,228 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:45 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OCSP_REQUEST_NEW</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OCSP_REQUEST_NEW</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OCSP_REQUEST_new,
+OCSP_REQUEST_free, OCSP_request_add0_id, OCSP_request_sign,
+OCSP_request_add1_cert, OCSP_request_onereq_count,
+OCSP_request_onereq_get0 − OCSP request functions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ocsp.h&gt; <br/>
+OCSP_REQUEST *OCSP_REQUEST_new(void); <br/>
+void OCSP_REQUEST_free(OCSP_REQUEST *req); <br/>
+OCSP_ONEREQ *OCSP_request_add0_id(OCSP_REQUEST *req,
+OCSP_CERTID *cid); <br/>
+int OCSP_request_sign(OCSP_REQUEST *req, <br/>
+X509 *signer, EVP_PKEY *key, const EVP_MD *dgst, <br/>
+STACK_OF(X509) *certs, unsigned long flags); <br/>
+int OCSP_request_add1_cert(OCSP_REQUEST *req, X509 *cert);
+<br/>
+int OCSP_request_onereq_count(OCSP_REQUEST *req); <br/>
+OCSP_ONEREQ *OCSP_request_onereq_get0(OCSP_REQUEST *req, int
+i);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_REQUEST_new()</b>
+allocates and returns an empty <b>OCSP_REQUEST</b>
+structure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_REQUEST_free()</b>
+frees up the request structure <b>req</b>. If the argument
+is NULL, nothing is done.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_request_add0_id()</b>
+adds certificate ID <b>cid</b> to <b>req</b>. It returns the
+<b>OCSP_ONEREQ</b> structure added so an application can add
+additional extensions to the request. The <b>id</b>
+parameter <b>MUST NOT</b> be freed up after the
+operation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_request_sign()</b>
+signs OCSP request <b>req</b> using certificate
+<b>signer</b>, private key <b>key</b>, digest <b>dgst</b>
+and additional certificates <b>certs</b>. If the
+<b>flags</b> option <b>OCSP_NOCERTS</b> is set then no
+certificates will be included in the request.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_request_add1_cert()</b>
+adds certificate <b>cert</b> to request <b>req</b>. The
+application is responsible for freeing up <b>cert</b> after
+use.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_request_onereq_count()</b>
+returns the total number of <b>OCSP_ONEREQ</b> structures in
+<b>req</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_request_onereq_get0()</b>
+returns an internal pointer to the <b>OCSP_ONEREQ</b>
+contained in <b>req</b> of index <b>i</b>. The index value
+<b>i</b> runs from 0 to OCSP_request_onereq_count(req)
+− 1.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_REQUEST_new()</b>
+returns an empty <b>OCSP_REQUEST</b> structure or
+<b>NULL</b> if an error occurred.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_request_add0_id()</b>
+returns the <b>OCSP_ONEREQ</b> structure containing
+<b>cid</b> or <b>NULL</b> if an error occurred.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_request_sign()</b>
+and <b>OCSP_request_add1_cert()</b> return 1 for success and
+0 for failure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_request_onereq_count()</b>
+returns the total number of <b>OCSP_ONEREQ</b> structures in
+<b>req</b> and −1 on error.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_request_onereq_get0()</b>
+returns a pointer to an <b>OCSP_ONEREQ</b> structure or
+<b>NULL</b> if the index value is out or range.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">An OCSP request
+structure contains one or more <b>OCSP_ONEREQ</b> structures
+corresponding to each certificate.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OCSP_request_onereq_count()</b>
+and <b>OCSP_request_onereq_get0()</b> are mainly used by
+OCSP responders.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Create an
+<b>OCSP_REQUEST</b> structure for certificate <b>cert</b>
+with issuer <b>issuer</b>:</p>
+<p style="margin-left:9%; margin-top: 1em">OCSP_REQUEST
+*req; <br/>
+OCSP_ID *cid; <br/>
+req = OCSP_REQUEST_new(); <br/>
+if (req == NULL) <br/>
+/* error */ <br/>
+cid = OCSP_cert_to_id(EVP_sha1(), cert, issuer); <br/>
+if (cid == NULL) <br/>
+/* error */ <br/>
+if (OCSP_REQUEST_add0_id(req, cid) == NULL) <br/>
+/* error */ <br/>
+/* Do something with req, e.g. query responder */ <br/>
+OCSP_REQUEST_free(req);</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>crypto</b>(7),
+<b>OCSP_cert_to_id</b>(3),
+<b>OCSP_request_add1_nonce</b>(3),
+<b>OCSP_resp_find_status</b>(3),
+<b>OCSP_response_status</b>(3),
+<b>OCSP_sendreq_new</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2015−2024 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

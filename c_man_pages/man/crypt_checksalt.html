@@ -1,0 +1,172 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:22 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title></title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<hr/>
+<p><i>CRYPT_CHECKSALT</i>(3) Library Functions Manual
+<i>CRYPT_CHECKSALT</i>(3)</p>
+<p style="margin-top: 1em"><b>NAME</b></p>
+<p style="margin-left:9%;">crypt_checksalt — validate
+a crypt setting string</p>
+<p style="margin-top: 1em"><b>LIBRARY</b></p>
+<p style="margin-left:9%;">Crypt Library (libcrypt,
+−lcrypt)</p>
+<p style="margin-top: 1em"><b>SYNOPSIS</b></p>
+<p style="margin-left:9%;"><b>#include
+&lt;crypt.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>int</i></p>
+<p><b>crypt_checksalt</b>(<i>const char *setting</i>);</p>
+<p style="margin-top: 1em"><b>DESCRIPTION</b></p>
+<p style="margin-left:9%;"><b>crypt_checksalt</b> checks
+the <i>setting</i> string against the system configuration
+and reports whether the hashing method and parameters it
+specifies are acceptable. It is intended to be used by
+programs such as <i>login</i>(1) to determine whether the
+user’s passphrase should be re-hashed using the
+currently preferred hashing method.</p>
+<p style="margin-top: 1em"><b>RETURN VALUES</b></p>
+<p style="margin-left:9%;">The return value is 0 if there
+is nothing wrong with this setting. Otherwise, it is one of
+the following constants:</p>
+<p style="margin-top: 1em">CRYPT_SALT_OK</p>
+<p style="margin-left:17%;"><i>setting</i> is a fully
+correct setting string. This constant is guaranteed to equal
+0.</p>
+<p style="margin-top: 1em">CRYPT_SALT_INVALID</p>
+<p style="margin-left:17%;"><i>setting</i> is not a valid
+setting string; either it specifies a hashing method that is
+not known to this version of libxcrypt, or it specifies
+invalid parameters for the method.</p>
+<p style="margin-top: 1em">CRYPT_SALT_METHOD_DISABLED (Not
+implemented, yet)</p>
+<p style="margin-left:17%;"><i>setting</i> specifies a
+hashing method that is no longer allowed to be used at all;
+<b>crypt</b> will fail if passed this <i>setting</i>. Manual
+intervention will be required to reactivate the user’s
+account.</p>
+<p style="margin-top: 1em">CRYPT_SALT_METHOD_LEGACY</p>
+<p style="margin-left:17%;"><i>setting</i> specifies a
+hashing method that is no longer considered strong enough
+for use with new passphrases. <b>crypt</b> will still
+authenticate a passphrase against this setting, but if
+authentication succeeds, the passphrase should be re-hashed
+using the currently preferred method.</p>
+<p style="margin-top: 1em">CRYPT_SALT_TOO_CHEAP (Not
+implemented, yet)</p>
+<p style="margin-left:17%;"><i>setting</i> specifies cost
+parameters that are considered too cheap for use with new
+passphrases. <b>crypt</b> will still authenticate a
+passphrase against this setting, but if authentication
+succeeds, the passphrase should be re-hashed using the
+currently preferred method.</p>
+<p style="margin-top: 1em"><b>FEATURE TEST MACROS</b></p>
+<p style="margin-left:9%;">&lt;<i>crypt.h</i>&gt; will
+define the macro CRYPT_CHECKSALT_AVAILABLE if
+<b>crypt_checksalt</b> is available in the current version
+of libxcrypt.</p>
+<p style="margin-top: 1em"><b>BUGS</b></p>
+<p style="margin-left:9%;">Since full configurability is
+not yet implemented, the current implementation will only
+ever return <b>CRYPT_SALT_OK (0)</b> or
+<b>CRYPT_SALT_INVALID</b> when invoked.</p>
+<p style="margin-top: 1em"><b>PORTABILITY NOTES</b></p>
+<p style="margin-left:9%;">The function
+<b>crypt_checksalt</b> is not part of any standard. It was
+added to libxcrypt in version 4.3.0.</p>
+<p style="margin-top: 1em"><b>ATTRIBUTES</b></p>
+<p style="margin-left:9%;">For an explanation of the terms
+used in this section, see <i>attributes</i>(7).</p>
+<p style="margin-top: 1em"><b>SEE ALSO</b></p>
+<p style="margin-left:9%;"><i>crypt</i>(3),
+<i>crypt_gensalt</i>(3), <i>crypt</i>(5) libxcrypt November
+8, 2018 <i>CRYPT_CHECKSALT</i>(3)</p>
+<hr/>
+</body>
+</html>

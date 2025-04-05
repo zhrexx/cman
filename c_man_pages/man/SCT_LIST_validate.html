@@ -1,0 +1,243 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:38 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SCT_VALIDATE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SCT_VALIDATE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SCT_validate,
+SCT_LIST_validate, SCT_get_validation_status − checks
+Signed Certificate Timestamps (SCTs) are valid</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ct.h&gt; <br/>
+typedef enum { <br/>
+SCT_VALIDATION_STATUS_NOT_SET, <br/>
+SCT_VALIDATION_STATUS_UNKNOWN_LOG, <br/>
+SCT_VALIDATION_STATUS_VALID, <br/>
+SCT_VALIDATION_STATUS_INVALID, <br/>
+SCT_VALIDATION_STATUS_UNVERIFIED, <br/>
+SCT_VALIDATION_STATUS_UNKNOWN_VERSION <br/>
+} sct_validation_status_t; <br/>
+int SCT_validate(SCT *sct, const CT_POLICY_EVAL_CTX *ctx);
+<br/>
+int SCT_LIST_validate(const STACK_OF(SCT) *scts,
+CT_POLICY_EVAL_CTX *ctx); <br/>
+sct_validation_status_t SCT_get_validation_status(const SCT
+*sct);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_validate()</b>
+will check that an SCT is valid and verify its signature.
+<b>SCT_LIST_validate()</b> performs the same checks on an
+entire stack of SCTs. The result of the validation checks
+can be obtained by passing the SCT to
+<b>SCT_get_validation_status()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">A
+CT_POLICY_EVAL_CTX must be provided that specifies:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="2%"></td>
+<td width="50%">
+<p>The certificate the SCT was issued for.</p></td>
+<td width="38%">
+</td></tr>
+</table>
+<p style="margin-left:12%; margin-top: 1em">Failure to
+provide the certificate will result in the validation status
+being SCT_VALIDATION_STATUS_UNVERIFIED.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="2%"></td>
+<td width="39%">
+<p style="margin-top: 1em">The issuer of that
+certificate.</p> </td>
+<td width="49%">
+</td></tr>
+</table>
+<p style="margin-left:12%; margin-top: 1em">This is only
+required if the SCT was issued for a pre−certificate
+(see RFC 6962). If it is required but not provided, the
+validation status will be
+SCT_VALIDATION_STATUS_UNVERIFIED.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="2%"></td>
+<td width="76%">
+<p style="margin-top: 1em">A CTLOG_STORE that contains the
+CT log that issued this SCT.</p></td>
+<td width="12%">
+</td></tr>
+</table>
+<p style="margin-left:12%; margin-top: 1em">If the SCT was
+issued by a log that is not in this CTLOG_STORE, the
+validation status will be
+SCT_VALIDATION_STATUS_UNKNOWN_LOG.</p>
+<p style="margin-left:9%; margin-top: 1em">If the SCT is of
+an unsupported version (only v1 is currently supported), the
+validation status will be
+SCT_VALIDATION_STATUS_UNKNOWN_VERSION.</p>
+<p style="margin-left:9%; margin-top: 1em">If the SCT's
+signature is incorrect, its timestamp is in the future
+(relative to the time in CT_POLICY_EVAL_CTX), or if it is
+otherwise invalid, the validation status will be
+SCT_VALIDATION_STATUS_INVALID.</p>
+<p style="margin-left:9%; margin-top: 1em">If all checks
+pass, the validation status will be
+SCT_VALIDATION_STATUS_VALID.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A return value
+of 0 from <b>SCT_LIST_validate()</b> should not be
+interpreted as a failure. At a minimum, only one valid SCT
+may provide sufficient confidence that a certificate has
+been publicly logged.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_validate()</b>
+returns a negative integer if an internal error occurs, 0 if
+the SCT fails validation, or 1 if the SCT passes
+validation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_LIST_validate()</b>
+returns a negative integer if an internal error occurs, 0 if
+any of SCTs fails validation, or 1 if they all pass
+validation.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SCT_get_validation_status()</b>
+returns the validation status of the SCT. If
+<b>SCT_validate()</b> or <b>SCT_LIST_validate()</b> have not
+been passed that SCT, the returned value will be
+SCT_VALIDATION_STATUS_NOT_SET.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ct</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+were added in OpenSSL 1.1.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright 2016
+The OpenSSL Project Authors. All Rights Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

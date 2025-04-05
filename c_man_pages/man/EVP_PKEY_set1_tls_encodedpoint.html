@@ -1,0 +1,258 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:50 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>EVP_PKEY_SET1_ENCODED_PUBLIC_KEY</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">EVP_PKEY_SET1_ENCODED_PUBLIC_KEY</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Set up a peer's EVP_PKEY ready for a key exchange operation">Set up a peer's EVP_PKEY ready for a key exchange operation</a><br/>
+<a href="#Get an encoded public key to send to a peer">Get an encoded public key to send to a peer</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">EVP_PKEY_set1_encoded_public_key,
+EVP_PKEY_get1_encoded_public_key,
+EVP_PKEY_set1_tls_encodedpoint,
+EVP_PKEY_get1_tls_encodedpoint − functions to set and
+get public key data within an EVP_PKEY</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+int EVP_PKEY_set1_encoded_public_key(EVP_PKEY *pkey, <br/>
+const unsigned char *pub, size_t publen); <br/>
+size_t EVP_PKEY_get1_encoded_public_key(EVP_PKEY *pkey,
+unsigned char **ppub);</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions have been deprecated since OpenSSL 3.0, and can be
+hidden entirely by defining <b>OPENSSL_API_COMPAT</b> with a
+suitable version value, see
+<b>openssl_user_macros</b>(7):</p>
+<p style="margin-left:9%; margin-top: 1em">int
+EVP_PKEY_set1_tls_encodedpoint(EVP_PKEY *pkey, <br/>
+const unsigned char *pt, size_t ptlen); <br/>
+size_t EVP_PKEY_get1_tls_encodedpoint(EVP_PKEY *pkey,
+unsigned char **ppt);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_set1_encoded_public_key()</b>
+can be used to set the public key value within an existing
+EVP_PKEY object. For the built−in OpenSSL algorithms
+this currently only works for those that support key
+exchange. Parameters are not set as part of this operation,
+so typically an application will create an EVP_PKEY first,
+set the parameters on it, and then call this function. For
+example setting the parameters might be done using
+<b>EVP_PKEY_copy_parameters</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">The format for
+the encoded public key will depend on the algorithm in use.
+For DH it should be encoded as a positive integer in
+big−endian form. For EC is should be a point
+conforming to Sec. 2.3.4 of the SECG SEC 1 ("Elliptic
+Curve Cryptography") standard. For X25519 and X448 it
+should be encoded in a format as defined by RFC7748.</p>
+<p style="margin-left:9%; margin-top: 1em">The key to be
+updated is supplied in <b>pkey</b>. The buffer containing
+the encoded key is pointed to be <b>pub</b>. The length of
+the buffer is supplied in <b>publen</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_get1_encoded_public_key()</b>
+does the equivalent operation except that the encoded public
+key is returned to the application. The key containing the
+public key data is supplied in <b>pkey</b>. A buffer
+containing the encoded key will be allocated and stored in
+<b>*ppub</b>. The length of the encoded public key is
+returned by the function. The application is responsible for
+freeing the allocated buffer.</p>
+<p style="margin-left:9%; margin-top: 1em">The macro
+<b>EVP_PKEY_set1_tls_encodedpoint()</b> is deprecated and
+simply calls <b>EVP_PKEY_set1_encoded_public_key()</b> with
+all the same arguments. New applications should use
+<b>EVP_PKEY_set1_encoded_public_key()</b> instead.</p>
+<p style="margin-left:9%; margin-top: 1em">The macro
+<b>EVP_PKEY_get1_tls_encodedpoint()</b> is deprecated and
+simply calls <b>EVP_PKEY_get1_encoded_public_key()</b> with
+all the same arguments. New applications should use
+<b>EVP_PKEY_get1_encoded_public_key()</b> instead.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_set1_encoded_public_key()</b>
+returns 1 for success and 0 or a negative value for
+failure.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_get1_encoded_public_key()</b>
+returns the length of the encoded key or 0 for failure.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See
+<b>EVP_PKEY_derive_init</b>(3) and <b>EVP_PKEY_derive</b>(3)
+for information about performing a key exchange
+operation.</p>
+<h3>Set up a peer's EVP_PKEY ready for a key exchange operation
+<a name="Set up a peer's EVP_PKEY ready for a key exchange operation"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+int exchange(EVP_PKEY *ourkey, unsigned char *peer_pub,
+size_t peer_pub_len) <br/>
+{ <br/>
+EVP_PKEY *peerkey = EVP_PKEY_new(); <br/>
+if (peerkey == NULL || EVP_PKEY_copy_parameters(peerkey,
+ourkey) &lt;= 0) <br/>
+return 0; <br/>
+if (EVP_PKEY_set1_encoded_public_key(peerkey, peer_pub, <br/>
+peer_pub_len) &lt;= 0) <br/>
+return 0; <br/>
+/* Do the key exchange here */ <br/>
+EVP_PKEY_free(peerkey); <br/>
+return 1; <br/>
+}</p>
+<h3>Get an encoded public key to send to a peer
+<a name="Get an encoded public key to send to a peer"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+int get_encoded_pub_key(EVP_PKEY *ourkey) <br/>
+{ <br/>
+unsigned char *pubkey; <br/>
+size_t pubkey_len; <br/>
+pubkey_len = EVP_PKEY_get1_encoded_public_key(ourkey,
+&amp;pubkey); <br/>
+if (pubkey_len == 0) <br/>
+return 0; <br/>
+/* <br/>
+* Send the encoded public key stored in the buffer at
+"pubkey" and of <br/>
+* length pubkey_len, to the peer. <br/>
+*/ <br/>
+OPENSSL_free(pubkey); <br/>
+return 1; <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_new</b>(3),
+<b>EVP_PKEY_copy_parameters</b>(3),
+<b>EVP_PKEY_derive_init</b>(3), <b>EVP_PKEY_derive</b>(3),
+<b>EVP_PKEY−DH</b>(7), <b>EVP_PKEY−EC</b>(7),
+<b>EVP_PKEY−X25519</b>(7),
+<b>EVP_PKEY−X448</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_set1_encoded_public_key()</b>
+and <b>EVP_PKEY_get1_encoded_public_key()</b> were added in
+OpenSSL 3.0.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_set1_tls_encodedpoint()</b>
+and <b>EVP_PKEY_get1_tls_encodedpoint()</b> were deprecated
+in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright 2020
+The OpenSSL Project Authors. All Rights Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

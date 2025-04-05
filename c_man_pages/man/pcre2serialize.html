@@ -1,0 +1,325 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:39 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PCRE2SERIALIZE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">PCRE2SERIALIZE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SAVING AND RE-USING PRECOMPILED PCRE2 PATTERNS">SAVING AND RE-USING PRECOMPILED PCRE2 PATTERNS</a><br/>
+<a href="#SECURITY CONCERNS">SECURITY CONCERNS</a><br/>
+<a href="#SAVING COMPILED PATTERNS">SAVING COMPILED PATTERNS</a><br/>
+<a href="#RE-USING PRECOMPILED PATTERNS">RE-USING PRECOMPILED PATTERNS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#REVISION">REVISION</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">PCRE2 -
+Perl-compatible regular expressions (revised API)</p>
+<h2>SAVING AND RE-USING PRECOMPILED PCRE2 PATTERNS
+<a name="SAVING AND RE-USING PRECOMPILED PCRE2 PATTERNS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>int32_t
+pcre2_serialize_decode(pcre2_code **</b><i>codes</i><b>,
+<br/>
+int32_t</b> <i>number_of_codes</i><b>, const uint8_t
+*</b><i>bytes</i><b>, <br/>
+pcre2_general_context *</b><i>gcontext</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int32_t
+pcre2_serialize_encode(const pcre2_code
+**</b><i>codes</i><b>, <br/>
+int32_t</b> <i>number_of_codes</i><b>, uint8_t
+**</b><i>serialized_bytes</i><b>, <br/>
+PCRE2_SIZE *</b><i>serialized_size</i><b>,
+pcre2_general_context *</b><i>gcontext</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+pcre2_serialize_free(uint8_t *</b><i>bytes</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int32_t
+pcre2_serialize_get_number_of_codes(const uint8_t
+*</b><i>bytes</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em">If you are
+running an application that uses a large number of regular
+expression patterns, it may be useful to store them in a
+precompiled form instead of having to compile them every
+time the application is run. However, if you are using the
+just-in-time optimization feature, it is not possible to
+save and reload the JIT data, because it is
+position-dependent. The host on which the patterns are
+reloaded must be running the same version of PCRE2, with the
+same code unit width, and must also have the same
+endianness, pointer width and PCRE2_SIZE type. For example,
+patterns compiled on a 32-bit system using PCRE2’s
+16-bit library cannot be reloaded on a 64-bit system, nor
+can they be reloaded using the 8-bit library.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+"serialization" in PCRE2 does not convert compiled
+patterns to an abstract format like Java or .NET
+serialization. The serialized output is really just a
+bytecode dump, which is why it can only be reloaded in the
+same environment as the one that created it. Hence the
+restrictions mentioned above. Applications that are not
+statically linked with a fixed version of PCRE2 must be
+prepared to recompile patterns from their sources, in order
+to be immune to PCRE2 upgrades.</p>
+<h2>SECURITY CONCERNS
+<a name="SECURITY CONCERNS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The facility for
+saving and restoring compiled patterns is intended for use
+within individual applications. As such, the data supplied
+to <b>pcre2_serialize_decode()</b> is expected to be trusted
+data, not data from arbitrary external sources. There is
+only some simple consistency checking, not complete
+validation of what is being re-loaded. Corrupted data may
+cause undefined results. For example, if the length field of
+a pattern in the serialized data is corrupted, the
+deserializing code may read beyond the end of the byte
+stream that is passed to it.</p>
+<h2>SAVING COMPILED PATTERNS
+<a name="SAVING COMPILED PATTERNS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Before compiled
+patterns can be saved they must be serialized, which in
+PCRE2 means converting the pattern to a stream of bytes. A
+single byte stream may contain any number of compiled
+patterns, but they must all use the same character tables. A
+single copy of the tables is included in the byte stream
+(its size is 1088 bytes). For more details of character
+tables, see the section on locale support in the
+<b>pcre2api</b> documentation.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+<b>pcre2_serialize_encode()</b> creates a serialized byte
+stream from a list of compiled patterns. Its first two
+arguments specify the list, being a pointer to a vector of
+pointers to compiled patterns, and the length of the vector.
+The third and fourth arguments point to variables which are
+set to point to the created byte stream and its length,
+respectively. The final argument is a pointer to a general
+context, which can be used to specify custom memory
+management functions. If this argument is NULL,
+<b>malloc()</b> is used to obtain memory for the byte
+stream. The yield of the function is the number of
+serialized patterns, or one of the following negative error
+codes:</p>
+<p style="margin-left:9%; margin-top: 1em">PCRE2_ERROR_BADDATA
+the number of patterns is zero or less <br/>
+PCRE2_ERROR_BADMAGIC mismatch of id bytes in one of the
+patterns <br/>
+PCRE2_ERROR_NOMEMORY memory allocation failed <br/>
+PCRE2_ERROR_MIXEDTABLES the patterns do not all use the same
+tables <br/>
+PCRE2_ERROR_NULL the 1st, 3rd, or 4th argument is NULL</p>
+<p style="margin-left:9%; margin-top: 1em">PCRE2_ERROR_BADMAGIC
+means either that a pattern’s code has been corrupted,
+or that a slot in the vector does not point to a compiled
+pattern.</p>
+<p style="margin-left:9%; margin-top: 1em">Once a set of
+patterns has been serialized you can save the data in any
+appropriate manner. Here is sample code that compiles two
+patterns and writes them to a file. It assumes that the
+variable <i>fd</i> refers to a file that is open for output.
+The error checking that should be present in a real
+application has been omitted for simplicity.</p>
+<p style="margin-left:9%; margin-top: 1em">int errorcode;
+<br/>
+uint8_t *bytes; <br/>
+PCRE2_SIZE erroroffset; <br/>
+PCRE2_SIZE bytescount; <br/>
+pcre2_code *list_of_codes[2]; <br/>
+list_of_codes[0] = pcre2_compile("first pattern",
+<br/>
+PCRE2_ZERO_TERMINATED, 0, &amp;errorcode, &amp;erroroffset,
+NULL); <br/>
+list_of_codes[1] = pcre2_compile("second pattern",
+<br/>
+PCRE2_ZERO_TERMINATED, 0, &amp;errorcode, &amp;erroroffset,
+NULL); <br/>
+errorcode = pcre2_serialize_encode(list_of_codes, 2,
+&amp;bytes, <br/>
+&amp;bytescount, NULL); <br/>
+errorcode = fwrite(bytes, 1, bytescount, fd);</p>
+<p style="margin-left:9%; margin-top: 1em">Note that the
+serialized data is binary data that may contain any of the
+256 possible byte values. On systems that make a distinction
+between binary and non-binary data, be sure that the file is
+opened for binary output.</p>
+<p style="margin-left:9%; margin-top: 1em">Serializing a
+set of patterns leaves the original data untouched, so they
+can still be used for matching. Their memory must eventually
+be freed in the usual way by calling
+<b>pcre2_code_free()</b>. When you have finished with the
+byte stream, it too must be freed by calling
+<b>pcre2_serialize_free()</b>. If this function is called
+with a NULL argument, it returns immediately without doing
+anything.</p>
+<h2>RE-USING PRECOMPILED PATTERNS
+<a name="RE-USING PRECOMPILED PATTERNS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">In order to
+re-use a set of saved patterns you must first make the
+serialized byte stream available in main memory (for
+example, by reading from a file). The management of this
+memory block is up to the application. You can use the
+<b>pcre2_serialize_get_number_of_codes()</b> function to
+find out how many compiled patterns are in the serialized
+data without actually decoding the patterns:</p>
+<p style="margin-left:9%; margin-top: 1em">uint8_t *bytes =
+&lt;serialized data&gt;; <br/>
+int32_t number_of_codes =
+pcre2_serialize_get_number_of_codes(bytes);</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pcre2_serialize_decode()</b> function reads a byte stream
+and recreates the compiled patterns in new memory blocks,
+setting pointers to them in a vector. The first two
+arguments are a pointer to a suitable vector and its length,
+and the third argument points to a byte stream. The final
+argument is a pointer to a general context, which can be
+used to specify custom memory management functions for the
+decoded patterns. If this argument is NULL, <b>malloc()</b>
+and <b>free()</b> are used. After deserialization, the byte
+stream is no longer needed and can be discarded.</p>
+<p style="margin-left:9%; margin-top: 1em">pcre2_code
+*list_of_codes[2]; <br/>
+uint8_t *bytes = &lt;serialized data&gt;; <br/>
+int32_t number_of_codes = <br/>
+pcre2_serialize_decode(list_of_codes, 2, bytes, NULL);</p>
+<p style="margin-left:9%; margin-top: 1em">If the vector is
+not large enough for all the patterns in the byte stream, it
+is filled with those that fit, and the remainder are
+ignored. The yield of the function is the number of decoded
+patterns, or one of the following negative error codes:</p>
+<p style="margin-left:9%; margin-top: 1em">PCRE2_ERROR_BADDATA
+second argument is zero or less <br/>
+PCRE2_ERROR_BADMAGIC mismatch of id bytes in the data <br/>
+PCRE2_ERROR_BADMODE mismatch of code unit size or PCRE2
+version <br/>
+PCRE2_ERROR_BADSERIALIZEDDATA other sanity check failure
+<br/>
+PCRE2_ERROR_MEMORY memory allocation failed <br/>
+PCRE2_ERROR_NULL first or third argument is NULL</p>
+<p style="margin-left:9%; margin-top: 1em">PCRE2_ERROR_BADMAGIC
+may mean that the data is corrupt, or that it was compiled
+on a system with different endianness.</p>
+<p style="margin-left:9%; margin-top: 1em">Decoded patterns
+can be used for matching in the usual way, and must be freed
+by calling <b>pcre2_code_free()</b>. However, be aware that
+there is a potential race issue if you are using multiple
+patterns that were decoded from a single byte stream in a
+multithreaded application. A single copy of the character
+tables is used by all the decoded patterns and a reference
+count is used to arrange for its memory to be automatically
+freed when the last pattern is freed, but there is no
+locking on this reference count. Therefore, if you want to
+call <b>pcre2_code_free()</b> for these patterns in
+different threads, you must arrange your own locking, and
+ensure that <b>pcre2_code_free()</b> cannot be called by two
+threads at the same time.</p>
+<p style="margin-left:9%; margin-top: 1em">If a pattern was
+processed by <b>pcre2_jit_compile()</b> before being
+serialized, the JIT data is discarded and so is no longer
+available after a save/restore cycle. You can, however,
+process a restored pattern with <b>pcre2_jit_compile()</b>
+if you wish.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Philip Hazel
+<br/>
+Retired from University Computing Service <br/>
+Cambridge, England.</p>
+<h2>REVISION
+<a name="REVISION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Last updated: 27
+June 2018 <br/>
+Copyright (c) 1997-2018 University of Cambridge.</p>
+<hr/>
+</body>
+</html>

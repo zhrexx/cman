@@ -1,0 +1,154 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:51:28 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SDL_enabled_assert</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SDL_enabled_assert</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#HEADER FILE">HEADER FILE</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SDL_enabled_assert
+− The macro used when an assertion is enabled.</p>
+<h2>HEADER FILE
+<a name="HEADER FILE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Defined in
+SDL3/SDL_assert.h</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+"SDL3/SDL.h"</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>#define
+SDL_enabled_assert(condition) .BI</b>
+<i>do</i><b>{</b><i>.BI</i> <b>while ( !(condition) ) {
+.BI</b>
+<i>static</i><b>struct</b><i>SDL_AssertData</i><b>sdl_assert_data</b><i>=</i><b>{</b><i>0,</i><b>0,</b><i>#condition,</i><b>0,</b><i>0,</i><b>0,</b><i>0</i><b>};</b><i>.BI</i>
+<b>const SDL_AssertState sdl_assert_state =
+SDL_ReportAssertion(&amp;sdl_assert_data, SDL_FUNCTION,
+SDL_FILE, SDL_LINE); .BI</b>
+<i>if</i><b>(sdl_assert_state</b><i>==</i><b>SDL_ASSERTION_RETRY)</b><i>{</i><b>.BI</b>
+<i>continue; /* go again. */ .BI</i>
+<b>}</b><i>else</i><b>if</b><i>(sdl_assert_state</i><b>==</b><i>SDL_ASSERTION_BREAK)</i><b>{</b><i>.BI</i>
+<b>SDL_AssertBreakpoint(); .BI</b> <i>}</i><b>.BI</b>
+<i>break; /* not retrying. */ .BI</i> <b>}</b><i>.BI</i>
+<b>} while (SDL_NULL_WHILE_LOOP_CONDITION)</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This isn’t
+for direct use by apps, but this is the code that is
+inserted when an <b>SDL_assert</b> <br/>
+is enabled.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>do</b>{}<b>while(0)</b> avoids dangling else
+problems:</p>
+<p style="margin-left:18%; margin-top: 1em">if (x)
+SDL_assert(y); else blah();</p>
+<p style="margin-left:9%; margin-top: 1em">... without the
+do/while, the "else" could attach to this
+macro’s "if". We try to handle just the
+minimum we need here in a macro...the loop, the static vars,
+and break points. The heavy lifting is handled in</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SDL_ReportAssertion</b>
+().</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This macro is
+available since SDL 3.2.0.</p>
+<hr/>
+</body>
+</html>

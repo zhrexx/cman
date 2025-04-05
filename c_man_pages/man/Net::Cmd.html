@@ -1,0 +1,364 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:37 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Net::Cmd</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Net::Cmd</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Public Methods">Public Methods</a><br/>
+<a href="#Protected Methods">Protected Methods</a><br/>
+<a href="#Pseudo Responses">Pseudo Responses</a><br/>
+<a href="#EXPORTS">EXPORTS</a><br/>
+<a href="#KNOWN BUGS">KNOWN BUGS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href="#LICENCE">LICENCE</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#DATE">DATE</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Net::Cmd −
+Network Command class (as used by FTP, SMTP etc)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Net::Cmd;
+<br/>
+@ISA = qw(Net::Cmd);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Net::Cmd"
+is a collection of methods that can be inherited by a
+sub−class of "IO::Socket::INET". These
+methods implement the functionality required for a command
+based protocol, for example FTP and SMTP.</p>
+<p style="margin-left:9%; margin-top: 1em">If your
+sub−class does not also derive from
+"IO::Socket::INET" or similar (e.g.
+"IO::Socket::IP", "IO::Socket::INET6" or
+"IO::Socket::SSL") then you must provide the
+following methods by other means yourself: close() and
+timeout().</p>
+<h3>Public Methods
+<a name="Public Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These methods
+provide a user interface to the "Net::Cmd" object.
+<br/>
+debug($level)</p>
+<p style="margin-left:14%;">Set the level of debug
+information for this object. If $level is not given then the
+current state is returned. Otherwise the state is changed to
+$level and the previous state returned.</p>
+<p style="margin-left:14%; margin-top: 1em">Different
+packages may implement different levels of debug but a
+non−zero value results in copies of all commands and
+responses also being sent to STDERR.</p>
+<p style="margin-left:14%; margin-top: 1em">If $level is
+"undef" then the debug level will be set to the
+default debug level for the class.</p>
+<p style="margin-left:14%; margin-top: 1em">This method can
+also be called as a <i>static</i> method to set/get the
+default debug level for a given class.</p>
+<p style="margin-left:9%;">message()</p>
+<p style="margin-left:14%;">Returns the text message
+returned from the last command. In a scalar context it
+returns a single string, in a list context it will return
+each line as a separate element. (See "PSEUDO
+RESPONSES" below.)</p>
+<p style="margin-left:9%;">code()</p>
+<p style="margin-left:14%;">Returns the 3−digit code
+from the last command. If a command is pending then the
+value 0 is returned. (See "PSEUDO RESPONSES"
+below.)</p>
+<p style="margin-left:9%;">ok()</p>
+<p style="margin-left:14%;">Returns non−zero if the
+last code value was greater than zero and less than 400.
+This holds true for most command servers. Servers where this
+does not hold may override this method.</p>
+<p style="margin-left:9%;">status()</p>
+<p style="margin-left:14%;">Returns the most significant
+digit of the current status code. If a command is pending
+then "CMD_PENDING" is returned.</p>
+<p style="margin-left:9%;">datasend($data)</p>
+<p style="margin-left:14%;">Send data to the remote server,
+converting LF to CRLF. Any line starting with a '.' will be
+prefixed with another '.'. $data may be an array or a
+reference to an array. The $data passed in must be encoded
+by the caller to octets of whatever encoding is required,
+e.g. by using the Encode module's encode() function.</p>
+<p style="margin-left:9%;">dataend()</p>
+<p style="margin-left:14%;">End the sending of data to the
+remote server. This is done by ensuring that the data
+already sent ends with CRLF then sending '.CRLF' to end the
+transmission. Once this data has been sent
+"dataend" calls "response" and returns
+true if "response" returns CMD_OK.</p>
+<h3>Protected Methods
+<a name="Protected Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">These methods
+are not intended to be called by the user, but used or
+over−ridden by a sub−class of
+"Net::Cmd" <br/>
+"debug_print($dir, $text)"</p>
+<p style="margin-left:14%;">Print debugging information.
+$dir denotes the direction <i>true</i> being data being sent
+to the server. Calls "debug_text" before printing
+to STDERR.</p>
+<p style="margin-left:9%;">"debug_text($dir,
+$text)"</p>
+<p style="margin-left:14%;">This method is called to print
+debugging information. $text is the text being sent. The
+method should return the text to be printed.</p>
+<p style="margin-left:14%; margin-top: 1em">This is
+primarily meant for the use of modules such as FTP where
+passwords are sent, but we do not want to display them in
+the debugging information.</p>
+<p style="margin-left:9%;">"command($cmd[, $args, ...
+])"</p>
+<p style="margin-left:14%;">Send a command to the command
+server. All arguments are first joined with a space
+character and CRLF is appended, this string is then sent to
+the command server.</p>
+<p style="margin-left:14%; margin-top: 1em">Returns undef
+upon failure.</p>
+<p style="margin-left:9%;">unsupported()</p>
+<p style="margin-left:14%;">Sets the status code to 580 and
+the response text to 'Unsupported command'. Returns
+zero.</p>
+<p style="margin-left:9%;">response()</p>
+<p style="margin-left:14%;">Obtain a response from the
+server. Upon success the most significant digit of the
+status code is returned. Upon failure, timeout etc.,
+<i>CMD_ERROR</i> is returned.</p>
+<p style="margin-left:9%;">parse_response($text)</p>
+<p style="margin-left:14%;">This method is called by
+"response" as a method with one argument. It
+should return an array of 2 values, the 3−digit status
+code and a flag which is true when this is part of a
+multi−line response and this line is not the last.</p>
+<p style="margin-left:9%;">getline()</p>
+<p style="margin-left:14%;">Retrieve one line, delimited by
+CRLF, from the remote server. Returns <i>undef</i> upon
+failure.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>NOTE</b>: If
+you do use this method for any reason, please remember to
+add some "debug_print" calls into your method.</p>
+<p style="margin-left:9%;">ungetline($text)</p>
+<p style="margin-left:14%;">Unget a line of text from the
+server.</p>
+<p style="margin-left:9%;">rawdatasend($data)</p>
+<p style="margin-left:14%;">Send data to the remote server
+without performing any conversions. $data is a scalar. As
+with datasend(), the $data passed in must be encoded by the
+caller to octets of whatever encoding is required, e.g. by
+using the Encode module's encode() function.</p>
+<p style="margin-left:9%;">read_until_dot()</p>
+<p style="margin-left:14%;">Read data from the remote
+server until a line consisting of a single '.'. Any lines
+starting with '..' will have one of the '.'s removed.</p>
+<p style="margin-left:14%; margin-top: 1em">Returns a
+reference to a list containing the lines, or <i>undef</i>
+upon failure.</p>
+<p style="margin-left:9%;">tied_fh()</p>
+<p style="margin-left:14%;">Returns a filehandle tied to
+the Net::Cmd object. After issuing a command, you may read
+from this filehandle using <b>read()</b> or &lt;&gt;. The
+filehandle will return EOF when the final dot is
+encountered. Similarly, you may write to the filehandle in
+order to send data to the server after issuing a command
+that expects data to be written.</p>
+<p style="margin-left:14%; margin-top: 1em">See the
+Net::POP3 and Net::SMTP modules for examples of this.</p>
+<h3>Pseudo Responses
+<a name="Pseudo Responses"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Normally the
+values returned by message() and code() are obtained from
+the remote server, but in a few circumstances, as detailed
+below, "Net::Cmd" will return values that it sets.
+You can alter this behavior by overriding
+<b>DEF_REPLY_CODE()</b> to specify a different default reply
+code, or overriding one of the specific error handling
+methods below. <br/>
+Initial value</p>
+<p style="margin-left:14%;">Before any command has executed
+or if an unexpected error occurs code() will return
+"421" (temporary connection failure) and message()
+will return undef.</p>
+<p style="margin-left:9%;">Connection closed</p>
+<p style="margin-left:14%;">If the underlying
+"IO::Handle" is closed, or if there are any read
+or write failures, the file handle will be forced closed,
+and code() will return "421" (temporary connection
+failure) and message() will return "[$pkg] Connection
+closed" (where $pkg is the name of the class that
+subclassed "Net::Cmd"). The
+<b>_set_status_closed()</b> method can be overridden to set
+a different message (by calling <b>set_status()</b>) or
+otherwise trap this error.</p>
+<p style="margin-left:9%;">Timeout</p>
+<p style="margin-left:14%;">If there is a read or write
+timeout code() will return "421" (temporary
+connection failure) and message() will return "[$pkg]
+Timeout" (where $pkg is the name of the class that
+subclassed "Net::Cmd"). The
+<b>_set_status_timeout()</b> method can be overridden to set
+a different message (by calling <b>set_status()</b>) or
+otherwise trap this error.</p>
+<h2>EXPORTS
+<a name="EXPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+symbols are, or can be, exported by this module: <br/>
+Default Exports</p>
+<p style="margin-left:14%;">"CMD_INFO",
+"CMD_OK", "CMD_MORE",
+"CMD_REJECT", "CMD_ERROR",
+"CMD_PENDING".</p>
+<p style="margin-left:14%; margin-top: 1em">(These
+correspond to possible results of response() and
+status().)</p>
+<p style="margin-left:9%;">Optional Exports</p>
+<p style="margin-left:14%;"><i>None</i>.</p>
+<p style="margin-left:9%;">Export Tags</p>
+<p style="margin-left:14%;"><i>None</i>.</p>
+<h2>KNOWN BUGS
+<a name="KNOWN BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See
+&lt;https://rt.cpan.org/Dist/Display.html?Status=Active&amp;Queue=libnet&gt;.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Graham Barr
+&lt;gbarr@pobox.com &lt;mailto:gbarr@pobox.com&gt;&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">Steve Hay
+&lt;shay@cpan.org &lt;mailto:shay@cpan.org&gt;&gt; is now
+maintaining libnet as of version 1.22_02.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+1995−2006 Graham Barr. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2013−2016, 2020, 2022 Steve Hay. All rights
+reserved.</p>
+<h2>LICENCE
+<a name="LICENCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself, i.e. under the terms of
+either the GNU General Public License or the Artistic
+License, as specified in the <i>LICENCE</i> file.</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Version 3.15</p>
+<h2>DATE
+<a name="DATE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">20 March
+2023</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See the
+<i>Changes</i> file.</p>
+<hr/>
+</body>
+</html>

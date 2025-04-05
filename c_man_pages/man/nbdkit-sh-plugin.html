@@ -1,0 +1,807 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:35 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>nbdkit-sh-plugin</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">nbdkit-sh-plugin</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#If you have been given an nbdkit sh plugin">If you have been given an nbdkit sh plugin</a><br/>
+<a href="#Inline shell scripts">Inline shell scripts</a><br/>
+<a href="#WRITING AN NBDKIT SH PLUGIN">WRITING AN NBDKIT SH PLUGIN</a><br/>
+<a href="#Programming model">Programming model</a><br/>
+<a href="#Exit codes">Exit codes</a><br/>
+<a href="#Temporary directory">Temporary directory</a><br/>
+<a href="#Handles">Handles</a><br/>
+<a href="#Performance">Performance</a><br/>
+<a href="#Methods">Methods</a><br/>
+<a href="#Missing callbacks">Missing callbacks</a><br/>
+<a href="#FILES">FILES</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">nbdkit−sh−plugin
+− nbdkit shell, script or executable plugin</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">nbdkit sh
+/path/to/script [arguments...]</p>
+<p style="margin-left:9%; margin-top: 1em">nbdkit sh
+− &lt;&lt;'EOF' <br/>
+... shell script ... <br/>
+EOF</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"nbdkit−sh−plugin"
+allows you to write plugins for <b>nbdkit</b>(1) using
+arbitrary scripting languages, including shells like
+<b>bash</b>(1), <b>dash</b>(1), <b>csh</b>(1), <b>zsh</b>(1)
+etc., other scripting environments, or any executable.</p>
+<p style="margin-left:9%; margin-top: 1em">Note if you want
+to use an established scripting language like Perl or
+Python, then nbdkit has specific plugins to handle those
+languages and those will be more efficient (see
+<b>nbdkit</b>(1) for a complete list).</p>
+<p style="margin-left:9%; margin-top: 1em">To use shell
+script fragments from the nbdkit command line (rather than a
+separate script) see
+<b>nbdkit−eval−plugin</b>(1).</p>
+<h3>If you have been given an nbdkit sh plugin
+<a name="If you have been given an nbdkit sh plugin"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Assuming you
+have a shell script which is an nbdkit plugin, you run it
+like this:</p>
+<p style="margin-left:9%; margin-top: 1em">nbdkit sh
+/path/to/script</p>
+<p style="margin-left:9%; margin-top: 1em">You may have to
+add further "key=value" arguments to the command
+line. The script must be executable ("chmod
++x").</p>
+<h3>Inline shell scripts
+<a name="Inline shell scripts"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">It is also
+possible to write a shell script plugin "inline"
+using "−" as the name of the script, like
+this:</p>
+<p style="margin-left:9%; margin-top: 1em">nbdkit sh
+− &lt;&lt;'EOF' <br/>
+case "$1" in <br/>
+get_size) echo 1M ;; <br/>
+pread) dd if=/dev/zero count=$3 iflag=count_bytes ;; <br/>
+*) exit 2 ;; <br/>
+esac <br/>
+EOF</p>
+<p style="margin-left:9%; margin-top: 1em">By default the
+inline script runs under <i>/bin/sh</i>. You can add a
+shebang ("#!") to use other scripting languages.
+Of course, reading an inline script from stdin is
+incompatible with the <i>−s</i>
+(<i>−−single</i>) mode of nbdkit that connects a
+client on stdin.</p>
+<h2>WRITING AN NBDKIT SH PLUGIN
+<a name="WRITING AN NBDKIT SH PLUGIN"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For example
+plugins written in Bash, see:
+https://gitlab.com/nbdkit/nbdkit/blob/master/plugins/sh/examples/</p>
+<p style="margin-left:9%; margin-top: 1em">Broadly
+speaking, nbdkit shell plugins work like C ones, so you
+should read <b>nbdkit−plugin</b>(3) first.</p>
+<h3>Programming model
+<a name="Programming model"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This plugin has
+a simple programming model: For every plugin method that
+needs to be called, the external script is invoked with
+parameters describing the method and its arguments. The
+first parameter is always the method name. For example:</p>
+<p style="margin-left:9%; margin-top: 1em">/path/to/script
+config file disk.img <br/>
+│ │ │ <br/>
+│ │ └─ value ($3) <br/>
+│ └── key ($2) <br/>
+method ($1)</p>
+<p style="margin-left:9%; margin-top: 1em">/path/to/script
+pread &lt;handle&gt; &lt;count&gt; &lt;offset&gt; <br/>
+│ │ │ │ <br/>
+│ │ │ └─ offset in bytes ($4)
+<br/>
+│ │ └── request size in bytes
+($3) <br/>
+method ($1) └── handle ($2) ─ see
+"Handles" below</p>
+<p style="margin-left:9%; margin-top: 1em">Scripts should
+ignore extra parameters that they don't understand since we
+may add new parameters in future.</p>
+<h3>Exit codes
+<a name="Exit codes"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The script
+should exit with specific exit codes:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>0</p></td>
+<td width="4%"></td>
+<td width="48%">
+<p>The method was executed successfully.</p></td>
+<td width="38%">
+</td></tr>
+</table>
+<p style="margin-left:9%;">1 and 16−255</p>
+<p style="margin-left:14%;">There was an error. The script
+may print on stderr an errno name, optionally followed by
+whitespace and a message, for example:</p>
+<p style="margin-left:14%; margin-top: 1em">echo 'ENOSPC
+Out of space' &gt;&amp;2 <br/>
+exit 1</p>
+<p style="margin-left:14%; margin-top: 1em">or if you don't
+need the log message:</p>
+<p style="margin-left:14%; margin-top: 1em">echo ENOSPC
+&gt;&amp;2 <br/>
+exit 1</p>
+<p style="margin-left:14%; margin-top: 1em">If the script
+doesn't print anything or the output cannot be parsed then
+nbdkit assumes error "EIO". Note that output to
+stderr is ignored if the command succeeds, so it is
+acceptable to output a potential error message prefix prior
+to attempting a command which will add further details if a
+failure occurs.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>2</p></td>
+<td width="4%"></td>
+<td width="78%">
+<p>The requested method is not supported by the script.</p></td>
+<td width="8%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>3</p></td>
+<td width="4%"></td>
+<td width="78%">
+<p>For methods which return booleans, this code indicates
+false.</p> </td>
+<td width="8%">
+</td></tr>
+</table>
+<p style="margin-left:9%;">4 and 5</p>
+<p style="margin-left:14%;">Triggers a call to the C
+function <b>nbdkit_shutdown</b>(3), which requests an
+asynchronous exit of the nbdkit server (disconnecting all
+clients). The client will usually get a response before
+shutdown is complete (although this is racy); so once the
+shutdown is requested, code 4 then behaves like code 0
+(stderr is ignored, and the server tries to return success),
+and code 5 behaves like code 1 (the server tries to return
+an error to the client parsed from stderr, although a
+missing error defaults to "ESHUTDOWN" instead of
+"EIO").</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>6</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Triggers a call to the C function
+<b>nbdkit_disconnect</b>(3) with "force" set to
+true, which requests an abrupt disconnect of the current
+client. The contents of stderr are irrelevant with this
+status, since the client will not get a response.</p></td></tr>
+</table>
+<p style="margin-left:9%;">7 and 8</p>
+<p style="margin-left:14%;">Triggers a call to the C
+function <b>nbdkit_disconnect</b>(3) with "force"
+set to false, which requests a soft disconnect of the
+current client (future client requests are rejected with
+"ESHUTDOWN" without calling into the plugin, but
+current requests may complete). Since the client will likely
+get the response to this command, code 7 then behaves like
+code 0 (stderr is ignored, and the server tries to return
+success), and code 8 behaves like code 1 (the server tries
+to return an error to the client parsed from stderr,
+although a missing error defaults to "ESHUTDOWN"
+instead of "EIO").</p>
+<p style="margin-left:9%;">9−15</p>
+<p style="margin-left:14%;">These exit codes are reserved
+for future use. Note that versions of nbdkit &lt; 1.34
+documented that codes 8 through 15 behaved like code 1;
+although it is unlikely that many scripts relied on this
+similarity in practice.</p>
+<p style="margin-left:9%; margin-top: 1em">In nbdkit &gt;
+1.34, it is possible to probe whether additional exit codes
+have been assigned meaning, by looking for the line
+<b>max_known_status=</b> in the output of <b>nbdkit
+−−dump−plugin sh</b>. If this line is not
+present, exit codes 4 and above behave like status 1.</p>
+<h3>Temporary directory
+<a name="Temporary directory"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A fresh script
+is invoked for each method call (ie. scripts are stateless),
+so if the script needs to store state it has to store it
+somewhere in the filesystem in a format and location which
+is left up to the author of the script.</p>
+<p style="margin-left:9%; margin-top: 1em">However nbdkit
+helps by creating a randomly named, empty directory for the
+script. This directory persists for the lifetime of nbdkit
+and is deleted when nbdkit exits. The name of the directory
+is passed to each script invocation in the $tmpdir
+environment variable.</p>
+<h3>Handles
+<a name="Handles"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Handles are
+arbitrary strings, but it is best to limit them to short
+alphanumeric strings.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Per−connection
+state</i></p>
+<p style="margin-left:9%; margin-top: 1em">The temporary
+directory described above can be used for state for the
+lifetime of the nbdkit instance (across multiple
+connections). If you want to store state per connection then
+one way to do it is to create a randomly named subdirectory
+under the temporary directory:</p>
+<p style="margin-left:9%; margin-top: 1em">case
+"$1" in <br/>
+... <br/>
+open) <br/>
+mktemp −d $tmpdir/handle−XXXXXX ;;</p>
+<p style="margin-left:9%; margin-top: 1em">The handle will
+be the subdirectory name, returned to the script as $2 in
+all connected calls (eg. "pread",
+"get_size"). You can delete the subdirectory
+explicitly in "close":</p>
+<p style="margin-left:9%; margin-top: 1em">case
+"$1" in <br/>
+... <br/>
+close) <br/>
+rm −rf "$2" ;;</p>
+<p style="margin-left:9%; margin-top: 1em">or rely on
+nbdkit deleting the whole temporary directory including all
+per−handle subdirectories when it exits.</p>
+<h3>Performance
+<a name="Performance"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This plugin has
+to fork on every request, so performance will never be
+great. For best performance, consider using the
+<b>nbdkit−plugin</b>(3) API directly. Having said
+that, if you have a sh plugin and want to improve
+performance then the following tips may help: <br/>
+Relax the thread model.</p>
+<p style="margin-left:14%;">The default
+"thread_model" is
+"serialize_all_requests" meaning that two
+instances of the script can never be running at the same
+time. This is safe but slow. If your script is safe to be
+called in parallel, set this to "parallel".</p>
+<p style="margin-left:9%;">Implement the "zero"
+method.</p>
+<p style="margin-left:14%;">If the "zero" method
+is not implemented then nbdkit will fall back to using
+"pwrite" which is considerably slower because
+nbdkit has to send blocks of zeroes to the script.</p>
+<p style="margin-left:9%;">You don't have to write shell
+scripts.</p>
+<p style="margin-left:14%;">This plugin can run any
+external binary, not only shell scripts. You should get more
+performance by rewriting the shell script as a program in a
+compiled language.</p>
+<h3>Methods
+<a name="Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This just
+documents the arguments to the script corresponding to each
+plugin method, and any way that they differ from the C
+callbacks. In all other respects they work the same way as
+the C callbacks, so you should go and read
+<b>nbdkit−plugin</b>(3). <br/>
+"load"</p>
+<p style="margin-left:14%;">/path/to/script load</p>
+<p style="margin-left:9%;">"unload"</p>
+<p style="margin-left:14%;">/path/to/script unload</p>
+<p style="margin-left:14%; margin-top: 1em">This is called
+just before nbdkit exits. Errors from this method are
+ignored.</p>
+<p style="margin-left:9%;">"dump_plugin"</p>
+<p style="margin-left:14%;">/path/to/script dump_plugin</p>
+<p style="margin-left:9%;">"config"</p>
+<p style="margin-left:14%;">/path/to/script config
+&lt;key&gt; &lt;value&gt;</p>
+<p style="margin-left:9%;">"config_complete"</p>
+<p style="margin-left:14%;">/path/to/script
+config_complete</p>
+<p style="margin-left:9%;">"magic_config_key"</p>
+<p style="margin-left:14%;">/path/to/script
+magic_config_key</p>
+<p style="margin-left:14%; margin-top: 1em">If a magic
+config key is needed, this should echo it to stdout. See
+"Magic parameters" in <b>nbdkit</b>(1).</p>
+<p style="margin-left:9%;">"thread_model"</p>
+<p style="margin-left:14%;">/path/to/script
+thread_model</p>
+<p style="margin-left:14%; margin-top: 1em">On success this
+should print the desired thread model of the script, one of
+"serialize_connections",
+"serialize_all_requests",
+"serialize_requests", or "parallel".</p>
+<p style="margin-left:14%; margin-top: 1em">This method is
+<i>not</i> required; if omitted, then the plugin will be
+executed under the safe "serialize_all_requests"
+model. However, this means that this method <b>must</b> be
+provided if you want to use the "parallel" or
+"serialize_requests" model. Even then your request
+may be restricted for other reasons; look for
+"thread_model" in the output of "nbdkit
+−−dump−plugin sh script" to see what
+actually gets selected.</p>
+<p style="margin-left:14%; margin-top: 1em">If an error
+occurs, the script should output an error message and exit
+with status 1; unrecognized output is ignored.</p>
+<p style="margin-left:9%;">"get_ready"</p>
+<p style="margin-left:14%;">/path/to/script get_ready</p>
+<p style="margin-left:9%;">"after_fork"</p>
+<p style="margin-left:14%;">/path/to/script after_fork</p>
+<p style="margin-left:9%;">"preconnect"</p>
+<p style="margin-left:14%;">/path/to/script preconnect
+&lt;readonly&gt;</p>
+<p style="margin-left:9%;">"list_exports"</p>
+<p style="margin-left:14%;">/path/to/script list_exports
+&lt;readonly&gt; &lt;tls&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"readonly" and "tls" parameters will be
+"true" or "false".</p>
+<p style="margin-left:14%; margin-top: 1em">The first line
+of output informs nbdkit how to parse the rest of the
+output, the remaining lines then supply the inputs of the C
+"nbdkit_add_export" function (see
+<b>nbdkit−plugin</b>(3)), as follows: <br/>
+NAMES</p>
+<p style="margin-left:19%;">The remaining output provides
+one export name per line, and no export will be given a
+description. For convenience, this form is also assumed if
+the first output line does not match one of the recognized
+parse modes.</p>
+<p style="margin-left:14%;">INTERLEAVED</p>
+<p style="margin-left:19%;">The remaining output provides
+pairs of lines, the first line being an export name, and the
+second the corresponding description.</p>
+<p style="margin-left:14%;">NAMES+DESCRIPTIONS</p>
+<p style="margin-left:19%;">The number of remaining lines
+is counted, with the first half being used as export names,
+and the second half providing descriptions to pair with
+names from the first half.</p>
+<p style="margin-left:19%; margin-top: 1em">An example of
+using this form to list files in the current directory,
+followed by their <b>ls</b>(1) long description, would
+be:</p>
+<p style="margin-left:19%; margin-top: 1em">echo
+NAMES+DESCRIPTIONS <br/>
+ls <br/>
+ls −l</p>
+<p style="margin-left:14%; margin-top: 1em">Note that other
+output modes might be introduced in the future; in
+particular, none of the existing modes allow a literal
+newline in an export name or description, although this
+could be possible under a new mode supporting escape
+sequences.</p>
+<p style="margin-left:14%; margin-top: 1em">This method is
+<i>not</i> required; if it is absent, the list of exports
+advertised by nbdkit will be the single name result of
+"default_export" and no description.</p>
+<p style="margin-left:9%;">"default_export"</p>
+<p style="margin-left:14%;">/path/to/script default_export
+&lt;readonly&gt; &lt;tls&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"readonly" and "tls" parameters will be
+"true" or "false".</p>
+<p style="margin-left:14%; margin-top: 1em">On success this
+should print a name on stdout to use in place of the default
+export "", then exit with code 0. For convenience,
+the output can be any of the list forms recognized by
+"list_exports", in which case the first listed
+export name is used, and where an empty list uses
+"". Given the current set of recognized export
+lists, it is not possible for the resulting name to include
+a newline.</p>
+<p style="margin-left:14%; margin-top: 1em">This method is
+<i>not</i> required; if it is absent, the default export
+name will be the empty string, "".</p>
+<p style="margin-left:9%;">"open"</p>
+<p style="margin-left:14%;">/path/to/script open
+&lt;readonly&gt; &lt;exportname&gt; &lt;tls&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"readonly" parameter will be "true" or
+"false". The "exportname" parameter, if
+present, is the export name passed to the server from the
+client. The "tls" parameter, if present, will be
+"true" or "false" depending on whether
+the client is using TLS.</p>
+<p style="margin-left:14%; margin-top: 1em">On success this
+should print the handle (any string) on stdout and exit with
+code 0. If the handle ends with a newline character then the
+newline is removed.</p>
+<p style="margin-left:14%; margin-top: 1em">Unlike C
+plugins, this method is <i>not</i> required. If omitted then
+the handle will be "" (empty string).</p>
+<p style="margin-left:9%;">"close"</p>
+<p style="margin-left:14%;">/path/to/script close
+&lt;handle&gt;</p>
+<p style="margin-left:9%;">"export_description"</p>
+<p style="margin-left:14%;">/path/to/script
+export_description &lt;handle&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The script
+should print a human−readable description of the disk
+image on stdout. If the description ends with a newline
+character then the newline is removed.</p>
+<p style="margin-left:14%; margin-top: 1em">This method is
+<i>not</i> required; if it is absent, no export description
+will be provided to the client.</p>
+<p style="margin-left:9%;">"get_size"</p>
+<p style="margin-left:14%;">/path/to/script get_size
+&lt;handle&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The script
+should print the size of the disk image on stdout. You can
+print the size in bytes, or use any format understood by
+<b>nbdkit_parse_size</b>(3) such as "1M".</p>
+<p style="margin-left:14%; margin-top: 1em">This method is
+required.</p>
+<p style="margin-left:9%;">"block_size"</p>
+<p style="margin-left:14%;">/path/to/script block_size
+&lt;handle&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">This script
+should print three numbers on stdout, separated by
+whitespace. These are (in order) the minimum block size, the
+preferred block size, and the maximum block size. You can
+print the sizes in bytes or use any format understood by
+<b>nbdkit_parse_size</b>(3) such as "1M".</p>
+<p style="margin-left:9%;">"can_write" <br/>
+"can_flush" <br/>
+"can_trim" <br/>
+"can_zero" <br/>
+"can_extents"</p>
+<p style="margin-left:14%;">Unlike in other languages, you
+<b>must</b> provide the "can_*" methods otherwise
+they are assumed to all return false and your
+"pwrite", "flush", "trim",
+"zero" and "extents" methods will never
+be called. The reason for this is obscure: In other
+languages we can detect if (eg) a "pwrite" method
+is defined and synthesize an appropriate response if no
+actual "can_write" method is defined. However
+detecting if methods are present without running them is not
+possible with this plugin.</p>
+<p style="margin-left:14%; margin-top: 1em">/path/to/script
+can_write &lt;handle&gt; <br/>
+/path/to/script can_flush &lt;handle&gt; <br/>
+/path/to/script can_trim &lt;handle&gt; <br/>
+/path/to/script can_zero &lt;handle&gt; <br/>
+/path/to/script can_extents &lt;handle&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The script
+should exit with code 0 for true or code 3 for false.</p>
+<p style="margin-left:9%;">"is_rotational" <br/>
+"can_fast_zero"</p>
+<p style="margin-left:14%;">/path/to/script is_rotational
+&lt;handle&gt; <br/>
+/path/to/script can_fast_zero &lt;handle&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The script
+should exit with code 0 for true or code 3 for false.</p>
+<p style="margin-left:9%;">"can_fua" <br/>
+"can_cache"</p>
+<p style="margin-left:14%;">/path/to/script can_fua
+&lt;handle&gt; <br/>
+/path/to/script can_cache &lt;handle&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">These control
+Forced Unit Access (FUA) and caching behaviour of the core
+server.</p>
+<p style="margin-left:14%; margin-top: 1em">Unlike the
+other "can_*" callbacks, these two are <i>not</i>
+a boolean. They must print either "none",
+"emulate" or "native" to stdout. The
+meaning of these is described in
+<b>nbdkit−plugin</b>(3). Furthermore, you <b>must</b>
+provide a "can_cache" method if you desire the
+"cache" callback to be utilized, similar to the
+reasoning behind requiring "can_write" to utilize
+"pwrite".</p>
+<p style="margin-left:9%;">"can_multi_conn"</p>
+<p style="margin-left:14%;">/path/to/script can_multi_conn
+&lt;handle&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The script
+should exit with code 0 for true or code 3 for false.</p>
+<p style="margin-left:9%;">"pread"</p>
+<p style="margin-left:14%;">/path/to/script pread
+&lt;handle&gt; &lt;count&gt; &lt;offset&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The script
+should print the requested binary data on stdout. Exactly
+"count" bytes must be printed.</p>
+<p style="margin-left:14%; margin-top: 1em">This method is
+required.</p>
+<p style="margin-left:9%;">"pwrite"</p>
+<p style="margin-left:14%;">/path/to/script pwrite
+&lt;handle&gt; &lt;count&gt; &lt;offset&gt;
+&lt;flags&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The script
+should read the binary data to be written from stdin.</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"flags" parameter can be an empty string or
+"fua". In the future, a comma−separated list
+of flags may be present.</p>
+<p style="margin-left:14%; margin-top: 1em">Unlike in other
+languages, if you provide a "pwrite" method you
+<b>must</b> also provide a "can_write" method
+which exits with code 0 (true).</p>
+<p style="margin-left:9%;">"flush"</p>
+<p style="margin-left:14%;">/path/to/script flush
+&lt;handle&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">Unlike in other
+languages, if you provide a "flush" method you
+<b>must</b> also provide a "can_flush" method
+which exits with code 0 (true).</p>
+<p style="margin-left:9%;">"trim"</p>
+<p style="margin-left:14%;">/path/to/script trim
+&lt;handle&gt; &lt;count&gt; &lt;offset&gt;
+&lt;flags&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"flags" parameter can be an empty string or
+"fua". In the future, a comma−separated list
+of flags may be present.</p>
+<p style="margin-left:14%; margin-top: 1em">Unlike in other
+languages, if you provide a "trim" method you
+<b>must</b> also provide a "can_trim" method which
+exits with code 0 (true).</p>
+<p style="margin-left:9%;">"zero"</p>
+<p style="margin-left:14%;">/path/to/script zero
+&lt;handle&gt; &lt;count&gt; &lt;offset&gt;
+&lt;flags&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"flags" parameter can be an empty string or a
+comma−separated list of the flags: "fua",
+"may_trim", and "fast" (eg.
+"", "fua", "fua,may_trim,fast"
+are some of the 8 possible values).</p>
+<p style="margin-left:14%; margin-top: 1em">Unlike in other
+languages, if you provide a "zero" method you
+<b>must</b> also provide a "can_zero" method which
+exits with code 0 (true).</p>
+<p style="margin-left:14%; margin-top: 1em">To trigger a
+fallback to "pwrite" on a normal zero request, or
+to respond quickly to the "fast" flag that a
+specific zero request is no faster than a corresponding
+write, the script must output "ENOTSUP" or
+"EOPNOTSUPP" to stderr (possibly followed by a
+description of the problem) before exiting with code 1
+(failure).</p>
+<p style="margin-left:9%;">"extents"</p>
+<p style="margin-left:14%;">/path/to/script extents
+&lt;handle&gt; &lt;count&gt; &lt;offset&gt;
+&lt;flags&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"flags" parameter can be an empty string or
+"req_one".</p>
+<p style="margin-left:14%; margin-top: 1em">This must
+print, one per line on stdout, a list of one or more extents
+in the format:</p>
+<p style="margin-left:14%; margin-top: 1em">offset length
+type</p>
+<p style="margin-left:14%; margin-top: 1em">which
+correspond to the inputs of the C
+"nbdkit_add_extent" function (see
+<b>nbdkit−plugin</b>(3)). The "offset" and
+"length" fields may use any format understood by
+<b>nbdkit_parse_size</b>(3). The optional "type"
+field may be an integer, missing (same as 0), or a
+comma−separated list of the words "hole" and
+"zero". An example of a valid set of extents
+covering a "10M" disk where the first megabyte
+only is allocated data:</p>
+<p style="margin-left:14%; margin-top: 1em">0 1M <br/>
+1M 9M hole,zero</p>
+<p style="margin-left:14%; margin-top: 1em">Unlike in other
+languages, if you provide an "extents" method you
+<b>must</b> also provide a "can_extents" method
+which exits with code 0 (true).</p>
+<p style="margin-left:9%;">"cache"</p>
+<p style="margin-left:14%;">/path/to/script cache
+&lt;handle&gt; &lt;count&gt; &lt;offset&gt;</p>
+<p style="margin-left:14%; margin-top: 1em">Unlike in other
+languages, if you provide a "cache" method you
+<b>must</b> also provide a "can_cache" method
+which prints "native" and exits with code 0
+(true).</p>
+<h3>Missing callbacks
+<a name="Missing callbacks"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Missing:
+"name", "version", "longname",
+"description", "config_help"</p>
+<p style="margin-left:14%;">These are not yet
+supported.</p>
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>$plugindir/nbdkit−sh−plugin.so</i></p>
+<p style="margin-left:14%;">The plugin.</p>
+<p style="margin-left:14%; margin-top: 1em">Use
+"nbdkit −−dump−config" to find
+the location of $plugindir.</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"nbdkit−sh−plugin"
+first appeared in nbdkit 1.8.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>nbdkit</b>(1),
+<b>nbdkit−plugin</b>(3),
+<b>nbdkit−eval−plugin</b>(1),
+<b>nbdkit−cc−plugin</b>(1).</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Richard W.M.
+Jones</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright Red
+Hat</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Redistribution
+and use in source and binary forms, with or without
+modification, are permitted provided that the following
+conditions are met:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Redistributions of source code must retain the above
+copyright notice, this list of conditions and the following
+disclaimer.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following
+disclaimer in the documentation and/or other materials
+provided with the distribution.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Neither the name of Red Hat nor the names of its
+contributors may be used to endorse or promote products
+derived from this software without specific prior written
+permission.</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">THIS SOFTWARE IS
+PROVIDED BY RED HAT AND CONTRIBUTORS ''AS IS'' AND ANY
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+RED HAT OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.</p>
+<hr/>
+</body>
+</html>

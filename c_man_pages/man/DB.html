@@ -1,0 +1,363 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:43:13 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>DB</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">DB</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Global Variables">Global Variables</a><br/>
+<a href="#API Methods">API Methods</a><br/>
+<a href="#Client Callback Methods">Client Callback Methods</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">DB −
+programmatic interface to the Perl debugging API</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">package CLIENT;
+<br/>
+use DB; <br/>
+@ISA = qw(DB); <br/>
+# these (inherited) methods can be called by the client <br/>
+CLIENT−&gt;register() # register a client package name
+<br/>
+CLIENT−&gt;done() # de−register from the
+debugging API <br/>
+CLIENT−&gt;skippkg('hide::hide') # ask DB not to stop
+in this package <br/>
+CLIENT−&gt;cont([WHERE]) # run some more (until BREAK
+or <br/>
+# another breakpointt) <br/>
+CLIENT−&gt;step() # single step <br/>
+CLIENT−&gt;next() # step over <br/>
+CLIENT−&gt;ret() # return from current subroutine <br/>
+CLIENT−&gt;backtrace() # return the call stack
+description <br/>
+CLIENT−&gt;ready() # call when client setup is done
+<br/>
+CLIENT−&gt;trace_toggle() # toggle subroutine call
+trace mode <br/>
+CLIENT−&gt;subs([SUBS]) # return subroutine
+information <br/>
+CLIENT−&gt;files() # return list of all files known to
+DB <br/>
+CLIENT−&gt;lines() # return lines in currently loaded
+file <br/>
+CLIENT−&gt;loadfile(FILE,LINE) # load a file and let
+other clients know <br/>
+CLIENT−&gt;lineevents() # return info on lines with
+actions <br/>
+CLIENT−&gt;set_break([WHERE],[COND]) <br/>
+CLIENT−&gt;set_tbreak([WHERE]) <br/>
+CLIENT−&gt;clr_breaks([LIST]) <br/>
+CLIENT−&gt;set_action(WHERE,ACTION) <br/>
+CLIENT−&gt;clr_actions([LIST]) <br/>
+CLIENT−&gt;evalcode(STRING) # eval STRING in executing
+code's context <br/>
+CLIENT−&gt;prestop([STRING]) # execute in code context
+before stopping <br/>
+CLIENT−&gt;poststop([STRING])# execute in code context
+before resuming <br/>
+# These methods will be called at the appropriate times.
+<br/>
+# Stub versions provided do nothing. <br/>
+# None of these can block. <br/>
+CLIENT−&gt;init() # called when debug API inits itself
+<br/>
+CLIENT−&gt;stop(FILE,LINE) # when execution stops <br/>
+CLIENT−&gt;idle() # while stopped (can be a client
+event loop) <br/>
+CLIENT−&gt;cleanup() # just before exit <br/>
+CLIENT−&gt;output(LIST) # called to print any output
+that <br/>
+# the API must show</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Perl debug
+information is frequently required not just by debuggers,
+but also by modules that need some "special"
+information to do their job properly, like profilers.</p>
+<p style="margin-left:9%; margin-top: 1em">This module
+abstracts and provides all of the hooks into Perl internal
+debugging functionality, so that various implementations of
+Perl debuggers (or packages that want to simply get at the
+"privileged" debugging data) can all benefit from
+the development of this common code. Currently used by Swat,
+the perl/Tk GUI debugger.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that
+multiple "front-ends" can latch into this
+debugging API simultaneously. This is intended to facilitate
+things like debugging with a command line and GUI at the
+same time, debugging debuggers etc. [Sounds nice, but this
+needs some serious support −− GSAR]</p>
+<p style="margin-left:9%; margin-top: 1em">In particular,
+this API does <b>not</b> provide the following
+functions:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="42%">
+<p>data display</p></td>
+<td width="44%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="42%">
+<p>command processing</p></td>
+<td width="44%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="42%">
+<p>command alias management</p></td>
+<td width="44%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="42%">
+<p>user interface (tty or graphical)</p></td>
+<td width="44%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">These are
+intended to be services performed by the clients of this
+API.</p>
+<p style="margin-left:9%; margin-top: 1em">This module
+attempts to be squeaky clean w.r.t "use strict;"
+and when warnings are enabled.</p>
+<h3>Global Variables
+<a name="Global Variables"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+"public" global names can be read by clients of
+this API. Beware that these should be considered
+"readonly". <br/>
+$DB::sub</p>
+<p style="margin-left:19%;">Name of current executing
+subroutine.</p>
+<p style="margin-left:9%;">%DB::sub</p>
+<p style="margin-left:19%;">The keys of this hash are the
+names of all the known subroutines. Each value is an encoded
+string that has the <b>sprintf</b>(3) format
+"("%s:%d−%d", filename, fromline,
+toline)".</p>
+<p style="margin-left:9%;">$DB::single</p>
+<p style="margin-left:19%;">Single-step flag. Will be true
+if the API will stop at the next statement.</p>
+<p style="margin-left:9%;">$DB::signal</p>
+<p style="margin-left:19%;">Signal flag. Will be set to a
+true value if a signal was caught. Clients may check for
+this flag to abort time-consuming operations.</p>
+<p style="margin-left:9%;">$DB::trace</p>
+<p style="margin-left:19%;">This flag is set to true if the
+API is tracing through subroutine calls.</p>
+<p style="margin-left:9%;">@DB::args</p>
+<p style="margin-left:19%;">Contains the arguments of
+current subroutine, or the @ARGV array if in the toplevel
+context.</p>
+<p style="margin-left:9%;">@DB::dbline</p>
+<p style="margin-left:19%;">List of lines in currently
+loaded file.</p>
+<p style="margin-left:9%;">%DB::dbline</p>
+<p style="margin-left:19%;">Actions in current file (keys
+are line numbers). The values are strings that have the
+<b>sprintf</b>(3) format "("%s\000%s",
+breakcondition, actioncode)".</p>
+<p style="margin-left:9%;">$DB::package</p>
+<p style="margin-left:19%;">Package namespace of currently
+executing code.</p>
+<p style="margin-left:9%;">$DB::filename</p>
+<p style="margin-left:19%;">Currently loaded filename.</p>
+<p style="margin-left:9%;">$DB::subname</p>
+<p style="margin-left:19%;">Fully qualified name of
+currently executing subroutine.</p>
+<p style="margin-left:9%;">$DB::lineno</p>
+<p style="margin-left:19%;">Line number that will be
+executed next.</p>
+<h3>API Methods
+<a name="API Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+are methods in the DB base class. A client must access these
+methods by inheritance (*not* by calling them directly),
+since the API keeps track of clients through the inheritance
+mechanism. <br/>
+CLIENT−&gt;<b>register()</b></p>
+<p style="margin-left:19%;">register a client
+object/package</p>
+<p style="margin-left:9%;">CLIENT−&gt;evalcode(STRING)</p>
+<p style="margin-left:19%;">eval STRING in executing code
+context</p>
+<p style="margin-left:9%;">CLIENT−&gt;skippkg(’D::hide’)</p>
+<p style="margin-left:19%;">ask DB not to stop in these
+packages</p>
+<p style="margin-left:9%;">CLIENT−&gt;<b>run()</b></p>
+<p style="margin-left:19%;">run some more (until a breakpt
+is reached)</p>
+<p style="margin-left:9%;">CLIENT−&gt;<b>step()</b></p>
+<p style="margin-left:19%;">single step</p>
+<p style="margin-left:9%;">CLIENT−&gt;<b>next()</b></p>
+<p style="margin-left:19%;">step over</p>
+<p style="margin-left:9%;">CLIENT−&gt;<b>done()</b></p>
+<p style="margin-left:19%;">de-register from the debugging
+API</p>
+<h3>Client Callback Methods
+<a name="Client Callback Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+"virtual" methods can be defined by the client.
+They will be called by the API at appropriate points. Note
+that unless specified otherwise, the debug API only defines
+empty, non-functional default versions of these methods.
+<br/>
+CLIENT−&gt;<b>init()</b></p>
+<p style="margin-left:19%;">Called after debug API inits
+itself.</p>
+<p style="margin-left:9%;">CLIENT−&gt;prestop([STRING])</p>
+<p style="margin-left:19%;">Usually inherited from DB
+package. If no arguments are passed, returns the prestop
+action string.</p>
+<p style="margin-left:9%;">CLIENT−&gt;<b>stop()</b></p>
+<p style="margin-left:19%;">Called when execution stops (w/
+args file, line).</p>
+<p style="margin-left:9%;">CLIENT−&gt;<b>idle()</b></p>
+<p style="margin-left:19%;">Called while stopped (can be a
+client event loop).</p>
+<p style="margin-left:9%;">CLIENT−&gt;poststop([STRING])</p>
+<p style="margin-left:19%;">Usually inherited from DB
+package. If no arguments are passed, returns the poststop
+action string.</p>
+<p style="margin-left:9%;">CLIENT−&gt;evalcode(STRING)</p>
+<p style="margin-left:19%;">Usually inherited from DB
+package. Ask for a STRING to be "eval"−ed in
+executing code context.</p>
+<p style="margin-left:9%;">CLIENT−&gt;<b>cleanup()</b></p>
+<p style="margin-left:19%;">Called just before exit.</p>
+<p style="margin-left:9%;">CLIENT−&gt;output(LIST)</p>
+<p style="margin-left:19%;">Called when API must show a
+message (warnings, errors etc.).</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The interface
+defined by this module is missing some of the later
+additions to perl’s debugging functionality. As such,
+this interface should be considered highly experimental and
+subject to change.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Gurusamy Sarathy
+gsar@activestate.com</p>
+<p style="margin-left:9%; margin-top: 1em">This code
+heavily adapted from an early version of perl5db.pl
+attributable to Larry Wall and the Perl Porters.</p>
+<hr/>
+</body>
+</html>

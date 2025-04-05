@@ -1,0 +1,332 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:03 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LIBUNWIND−PTRACE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LIBUNWIND−PTRACE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#THREAD SAFETY">THREAD SAFETY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#FILES">FILES</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind−ptrace
+−− ptrace() support in libunwind</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;libunwind−ptrace.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">unw_accessors_t
+_UPT_accessors;</p>
+<p style="margin-left:9%; margin-top: 1em">void
+*_UPT_create(pid_t); <br/>
+void _UPT_destroy(void *);</p>
+<p style="margin-left:9%; margin-top: 1em">int
+_UPT_find_proc_info(unw_addr_space_t, unw_word_t,
+unw_proc_info_t *, int, void *); <br/>
+void _UPT_put_unwind_info(unw_addr_space_t, unw_proc_info_t
+*, void *); <br/>
+int _UPT_get_dyn_info_list_addr(unw_addr_space_t, unw_word_t
+*, void *); <br/>
+int _UPT_access_mem(unw_addr_space_t, unw_word_t, unw_word_t
+*, int, void *); <br/>
+int _UPT_access_reg(unw_addr_space_t, unw_regnum_t,
+unw_word_t *, int, void *); <br/>
+int _UPT_access_fpreg(unw_addr_space_t, unw_regnum_t,
+unw_fpreg_t *, int, void *); <br/>
+int _UPT_get_proc_name(unw_addr_space_t, unw_word_t, char *,
+size_t, unw_word_t *, void *); <br/>
+int _UPT_resume(unw_addr_space_t, unw_cursor_t *, void
+*);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The ptrace(2)
+system call makes it possible for a process to gain access
+to the machine state and virtual memory of <i>another</i>
+process. With the right set of callback routines, it is
+therefore possible to hook up libunwind to another process
+via ptrace(2). While it’s not very difficult to do so
+directly, libunwind further facilitates this task by
+providing ready−to−use callbacks for this
+purpose. The routines and variables implementing this
+facility use a name prefix of _UPT, which is stands for
+‘‘unwind via ptrace’’.</p>
+<p style="margin-left:9%; margin-top: 1em">An application
+that wants to use the libunwind ptrace remote needs to take
+the folowing steps.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>1.</p></td>
+<td width="6%"></td>
+<td width="82%">
+<p>Create a new libunwind address space that represents the
+target process. This is done by calling
+unw_create_addr_space(). In many cases, the application will
+simply want to pass the address of _UPT_accessors as the
+first argument to this routine. Doing so will ensure that
+libunwind will be able to properly unwind the target
+process.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>2.</p></td>
+<td width="6%"></td>
+<td width="82%">
+<p>Turn on ptrace mode on the target process, either by
+forking a new process, invoking PTRACE_TRACEME, and then
+starting the target program (via execve(2)), or by directly
+attaching to an already running process (via
+PTRACE_ATTACH).</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>3.</p></td>
+<td width="6%"></td>
+<td width="82%">
+<p>Once the process−ID (pid) of the target process is
+known, a UPT info structure can be created by calling
+_UPT_create(), passing the pid of the target process as the
+only argument.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p>4.</p></td>
+<td width="6%"></td>
+<td width="82%">
+<p>The opaque pointer returned then needs to be passed as
+the ‘‘argument’’ pointer (third
+argument) to unw_init_remote().</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">In special
+circumstances, an application may prefer to use only
+portions of the libunwind ptrace remote. For this reason,
+the individual callback routines (_UPT_find_proc_info(),
+_UPT_put_unwind_info(), etc.) are also available for direct
+use. Of course, the addresses of these routines could also
+be picked up from _UPT_accessors, but doing so would prevent
+static initialization. Also, when using _UPT_accessors,
+<i>all</i> the callback routines will be linked into the
+application, even if they are never actually called.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+_UPT_resume() routine can be used to resume execution of the
+target process. It simply invokes ptrace(2) with a command
+value of PTRACE_CONT.</p>
+<p style="margin-left:9%; margin-top: 1em">When the
+application is done using libunwind on the target process,
+_UPT_destroy() needs to be called, passing it the opaque
+pointer that was returned by the call to _UPT_create(). This
+ensures that all memory and other resources are freed
+up.</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Since ptrace(2)
+works within a single machine only, the libunwind ptrace
+remote by definition is not available in libunwind versions
+configured for cross−unwinding.</p>
+<h2>THREAD SAFETY
+<a name="THREAD SAFETY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The libunwind
+ptrace remote assumes that a single UPT info structure is
+never shared between threads. Because of this, no explicit
+locking is used. As long as only one thread uses a UPT info
+structure at any given time, this facility is
+thread−safe.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">_UPT_create()
+may return a NULL pointer if it fails to create the UPT info
+structure for any reason. For the current implementation,
+the only reason this call may fail is when the system is out
+of memory.</p>
+<h2>FILES
+<a name="FILES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">libunwind−ptrace.h</p>
+<p style="margin-left:18%;">Header file to include when
+using the interface defined by this library.</p>
+<p style="margin-left:9%;"><b>−l</b>unwind−ptrace
+<b>−l</b>unwind−generic</p>
+<p style="margin-left:18%;">Linker switches to add when
+building a program that uses the functions defined by this
+library.</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;libunwind−ptrace.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">int <br/>
+main (int argc, char **argv) <br/>
+{ <br/>
+if (argc != 2) { <br/>
+fprintf (stderr, "usage: %s PID\n", argv[0]); <br/>
+exit (EXIT_FAILURE); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">char *endptr;
+<br/>
+pid_t target_pid = strtoul (argv[1], &amp;endptr, 10); <br/>
+if (target_pid == 0 &amp;&amp; argv[1] == endptr) { <br/>
+fprintf (stderr, "usage: %s PID\n", argv[0]); <br/>
+exit (EXIT_FAILURE); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">unw_addr_space_t
+as = unw_create_addr_space (&amp;_UPT_accessors, 0); <br/>
+if (!as) { <br/>
+fprintf (stderr, "unw_create_addr_space()
+failed"); <br/>
+exit (EXIT_FAILURE); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">void *ui =
+_UPT_create (target_pid); <br/>
+if (!ui) { <br/>
+fprintf (stderr, "_UPT_create() failed"); <br/>
+exit (EXIT_FAILURE); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">unw_cursor_t
+cursor; <br/>
+int ret = unw_init_remote (&amp;cursor, as, ui); <br/>
+if (ret &lt; 0) { <br/>
+fprintf (stderr, "unw_init_remote() failed:
+ret=%d\n", ret); <br/>
+exit (EXIT_FAILURE); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">do { <br/>
+unw_proc_info_t pi; <br/>
+ret = unw_get_proc_info (&amp;cursor, &amp;pi); <br/>
+if (ret == −UNW_ENOINFO) { <br/>
+fprintf (stdout, "no info\n"); <br/>
+} else if (ret &gt;= 0) { <br/>
+printf ("\tproc=%#016lx−%#016lx\thandler=%#016lx
+lsda=%#016lx", <br/>
+(long) pi.start_ip, (long) pi.end_ip, <br/>
+(long) pi.handler, (long) pi.lsda); <br/>
+} <br/>
+ret = unw_step (&amp;cursor); <br/>
+} while (ret &gt; 0); <br/>
+if (ret &lt; 0) { <br/>
+fprintf (stderr, "unwind failed with ret=%d\n",
+ret); <br/>
+exit (EXIT_FAILURE); <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">_UPT_destroy
+(ui); <br/>
+unw_destroy_addr_space (as); <br/>
+exit (EXIT_SUCCESS); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">execve(2),
+libunwind(3libunwind), ptrace(2)</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">David
+Mosberger−Tang <br/>
+Email: <b>dmosberger@gmail.com</b> <br/>
+WWW: <b>http://www.nongnu.org/libunwind/</b>.</p>
+<hr/>
+</body>
+</html>

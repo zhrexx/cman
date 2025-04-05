@@ -1,0 +1,210 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:00 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>lib::core::only</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">lib::core::only</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CAVEATS">CAVEATS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">lib::core::only
+− Remove all non−core paths from @INC to avoid
+site/vendor dirs</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+lib::core::only; # now @INC contains only the two core
+directories</p>
+<p style="margin-left:9%; margin-top: 1em">To get only the
+core directories plus the ones for the local::lib in
+scope:</p>
+<p style="margin-left:9%; margin-top: 1em">$ perl
+−mlocal::lib −Mlib::core::only
+−Mlocal::lib=˜/perl5 myscript.pl</p>
+<p style="margin-left:9%; margin-top: 1em">To attempt to do
+a self−contained build (but note this will not
+reliably propagate into subprocesses, see the CAVEATS
+below):</p>
+<p style="margin-left:9%; margin-top: 1em">$
+PERL5OPT='−mlocal::lib −Mlib::core::only
+−Mlocal::lib=˜/perl5' cpan</p>
+<p style="margin-left:9%; margin-top: 1em">Please note that
+it is necessary to use "local::lib" twice for this
+to work. First so that "lib::core::only" doesn't
+prevent "local::lib" from loading (it's not
+currently in core) and then again after
+"lib::core::only" so that the local paths are not
+removed.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">lib::core::only
+is simply a shortcut to say "please reduce my @INC to
+only the core lib and archlib (architecture−specific
+lib) directories of this perl".</p>
+<p style="margin-left:9%; margin-top: 1em">You might want
+to do this to ensure a local::lib contains only the code you
+need, or to test an App::FatPacker tree, or to avoid known
+bad vendor packages.</p>
+<p style="margin-left:9%; margin-top: 1em">You might want
+to use this to try and install a self−contained tree
+of perl modules. Be warned that that probably won't work
+(see "CAVEATS").</p>
+<p style="margin-left:9%; margin-top: 1em">This module was
+extracted from local::lib's
+−−self−contained feature, and contains the
+only part that ever worked. I apologise to anybody who
+thought anything else did.</p>
+<h2>CAVEATS
+<a name="CAVEATS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This does
+<b>not</b> propagate properly across perl invocations like
+local::lib's stuff does. It can't. It's only a module
+import, so it <b>only affects the specific perl VM instance
+in which you load and import() it</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">If you want to
+cascade it across invocations, you can set the PERL5OPT
+environment variable to '−Mlib::core::only' and it'll
+sort of work. But be aware that taint mode ignores this, so
+some modules' build and test code probably will as well.</p>
+<p style="margin-left:9%; margin-top: 1em">You also need to
+be aware that perl's command line options are not processed
+in order − −I options take effect before
+−M options, so</p>
+<p style="margin-left:9%; margin-top: 1em">perl
+−Mlib::core::only −Ilib</p>
+<p style="margin-left:9%; margin-top: 1em">is unlike to do
+what you want − it's exactly equivalent to:</p>
+<p style="margin-left:9%; margin-top: 1em">perl
+−Mlib::core::only</p>
+<p style="margin-left:9%; margin-top: 1em">If you want to
+combine a core−only @INC with additional paths, you
+need to add the additional paths using −M options and
+the lib module:</p>
+<p style="margin-left:9%; margin-top: 1em">perl
+−Mlib::core::only −Mlib=lib <br/>
+# or if you're trying to test compiled code: <br/>
+perl −Mlib::core::only −Mblib</p>
+<p style="margin-left:9%; margin-top: 1em">For more
+information on the impossibility of sanely propagating this
+across module builds without help from the build program,
+see
+&lt;http://www.shadowcat.co.uk/blog/matt−s−trout/tainted−love&gt;
+− and for ways to achieve the old
+−−self−contained feature's results, look
+at App::FatPacker's tree function, and at App::cpanminus's
+−−local−lib−contained feature.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Matt S. Trout
+&lt;mst@shadowcat.co.uk&gt;</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software under the same terms as perl itself.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">(c) 2010 the
+lib::core::only "AUTHOR" as specified above.</p>
+<hr/>
+</body>
+</html>

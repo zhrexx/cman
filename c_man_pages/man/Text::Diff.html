@@ -1,0 +1,487 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:11 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Text::Diff</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Text::Diff</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#OPTIONS">OPTIONS</a><br/>
+<a href="#Formatting Classes">Formatting Classes</a><br/>
+<a href="#Text::Diff::Base">Text::Diff::Base</a><br/>
+<a href="#Text::Diff::Unified">Text::Diff::Unified</a><br/>
+<a href="#Text::Diff::Table">Text::Diff::Table</a><br/>
+<a href="#Text::Diff::Context">Text::Diff::Context</a><br/>
+<a href="#Text::Diff::OldStyle">Text::Diff::OldStyle</a><br/>
+<a href="#LIMITATIONS">LIMITATIONS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#REPOSITORY">REPOSITORY</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Text::Diff
+− Perform diffs on files and record sets</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use Text::Diff;
+<br/>
+## Mix and match filenames, strings, file handles, producer
+subs, <br/>
+## or arrays of records; returns diff in a string. <br/>
+## WARNING: can return B&lt;large&gt; diffs for large files.
+<br/>
+my $diff = diff "file1.txt",
+"file2.txt", { STYLE =&gt; "Context" };
+<br/>
+my $diff = diff \$string1, \$string2, \%options; <br/>
+my $diff = diff \*FH1, \*FH2; <br/>
+my $diff = diff \&amp;reader1, \&amp;reader2; <br/>
+my $diff = diff \@records1, \@records2; <br/>
+## May also mix input types: <br/>
+my $diff = diff \@records1, "file_B.txt";</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">diff() provides
+a basic set of services akin to the GNU "diff"
+utility. It is not anywhere near as feature complete as GNU
+"diff", but it is better integrated with Perl and
+available on all platforms. It is often faster than shelling
+out to a system's "diff" executable for small
+files, and generally slower on larger files.</p>
+<p style="margin-left:9%; margin-top: 1em">Relies on
+Algorithm::Diff for, well, the algorithm. This may not
+produce the same exact diff as a system's local
+"diff" executable, but it will be a valid diff and
+comprehensible by "patch". We haven't seen any
+differences between Algorithm::Diff's logic and GNU
+"diff"'s, but we have not examined them to make
+sure they are indeed identical.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note</b>: If
+you don't want to import the "diff" function, do
+one of the following:</p>
+<p style="margin-left:9%; margin-top: 1em">use Text::Diff
+(); <br/>
+require Text::Diff;</p>
+<p style="margin-left:9%; margin-top: 1em">That's a pretty
+rare occurrence, so diff() is exported by default.</p>
+<p style="margin-left:9%; margin-top: 1em">If you pass a
+filename, but the file can't be read, then diff() will
+"croak".</p>
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">diff() takes two
+parameters from which to draw input and a set of options to
+control its output. The options are: <br/>
+FILENAME_A, MTIME_A, FILENAME_B, MTIME_B</p>
+<p style="margin-left:14%;">The name of the file and the
+modification time "files".</p>
+<p style="margin-left:14%; margin-top: 1em">These are
+filled in automatically for each file when diff() is passed
+a filename, unless a defined value is passed in.</p>
+<p style="margin-left:14%; margin-top: 1em">If a filename
+is not passed in and FILENAME_A and FILENAME_B are not
+provided or are "undef", the header will not be
+printed.</p>
+<p style="margin-left:14%; margin-top: 1em">Unused on
+"OldStyle" diffs.</p>
+<p style="margin-left:9%;">OFFSET_A, OFFSET_B</p>
+<p style="margin-left:14%;">The index of the first line /
+element. These default to 1 for all parameter types except
+ARRAY references, for which the default is 0. This is
+because ARRAY references are presumed to be data structures,
+while the others are line−oriented text.</p>
+<p style="margin-left:9%;">STYLE</p>
+<p style="margin-left:14%;">"Unified",
+"Context", "OldStyle", or an object or
+class reference for a class providing file_header(),
+hunk_header(), hunk(), hunk_footer() and file_footer()
+methods. The two <b>footer()</b> methods are provided for
+overloading only; none of the formats provide them.</p>
+<p style="margin-left:14%; margin-top: 1em">Defaults to
+"Unified" (unlike standard "diff", but
+Unified is what's most often used in submitting patches and
+is the most human readable of the three.</p>
+<p style="margin-left:14%; margin-top: 1em">If the package
+indicated by the STYLE has no hunk() method, diff() will
+load it automatically (lazy loading). Since all such
+packages should inherit from "Text::Diff::Base",
+this should be marvy.</p>
+<p style="margin-left:14%; margin-top: 1em">Styles may be
+specified as class names ("STYLE =&gt; 'Foo'"), in
+which case they will be new()ed with no parameters, or as
+objects ("STYLE =&gt; Foo−&gt;new").</p>
+<p style="margin-left:9%;">CONTEXT</p>
+<p style="margin-left:14%;">How many lines before and after
+each diff to display. Ignored on old−style diffs.
+Defaults to 3.</p>
+<p style="margin-left:9%;">OUTPUT</p>
+<p style="margin-left:14%;">Examples and their equivalent
+subroutines:</p>
+<p style="margin-left:14%; margin-top: 1em">OUTPUT =&gt;
+\*FOOHANDLE, # like: sub { print FOOHANDLE shift() } <br/>
+OUTPUT =&gt; \$output, # like: sub { $output .= shift } <br/>
+OUTPUT =&gt; \@output, # like: sub { push @output, shift }
+<br/>
+OUTPUT =&gt; sub { $output .= shift },</p>
+<p style="margin-left:14%; margin-top: 1em">If no
+"OUTPUT" is supplied, returns the diffs in a
+string. If "OUTPUT" is a "CODE" ref, it
+will be called once with the (optional) file header, and
+once for each hunk body with the text to emit. If
+"OUTPUT" is an IO::Handle, output will be emitted
+to that handle.</p>
+<p style="margin-left:9%;">FILENAME_PREFIX_A,
+FILENAME_PREFIX_B</p>
+<p style="margin-left:14%;">The string to print before the
+filename in the header. Unused on "OldStyle"
+diffs. Defaults are "−−−",
+"+++" for Unified and "***",
+"+++" for Context.</p>
+<p style="margin-left:9%;">KEYGEN, KEYGEN_ARGS</p>
+<p style="margin-left:14%;">These are passed to
+"traverse_sequences" in Algorithm::Diff.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note</b>: if
+neither "FILENAME_" option is defined, the header
+will not be printed. If at least one is present, the other
+and both "MTIME_" options must be present or
+"Use of undefined variable" warnings will be
+generated (except on "OldStyle" diffs, which
+ignores these options).</p>
+<h2>Formatting Classes
+<a name="Formatting Classes"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+implement the output formats. They are grouped in to classes
+so diff() can use class names to call the correct set of
+output routines and so that you may inherit from them
+easily. There are no constructors or instance methods for
+these classes, though subclasses may provide them if need
+be.</p>
+<p style="margin-left:9%; margin-top: 1em">Each class has
+file_header(), hunk_header(), hunk(), and footer() methods
+identical to those documented in the
+"Text::Diff::Unified" section. header() is called
+before the hunk() is first called, footer() afterwards. The
+default footer function is an empty method provided for
+overloading:</p>
+<p style="margin-left:9%; margin-top: 1em">sub footer {
+return "End of patch\n" }</p>
+<p style="margin-left:9%; margin-top: 1em">Some output
+formats are provided by external modules (which are loaded
+automatically), such as Text::Diff::Table. These are are
+documented here to keep the documentation simple.</p>
+<h3>Text::Diff::Base
+<a name="Text::Diff::Base"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns
+"" for all methods (other than new()).</p>
+<h3>Text::Diff::Unified
+<a name="Text::Diff::Unified"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">−−−
+A Mon Nov 12 23:49:30 2001 <br/>
++++ B Mon Nov 12 23:49:30 2001 <br/>
+@@ −2,13 +2,13 @@ <br/>
+2 <br/>
+3 <br/>
+4 <br/>
+−5d <br/>
++5a <br/>
+6 <br/>
+7 <br/>
+8 <br/>
+9 <br/>
++9a <br/>
+10 <br/>
+11 <br/>
+−11d <br/>
+12 <br/>
+13 <br/>
+Text::Diff::Unified::file_header</p>
+<p style="margin-left:14%;">$s =
+Text::Diff::Unified−&gt;file_header( $options );</p>
+<p style="margin-left:14%; margin-top: 1em">Returns a
+string containing a unified header. The sole parameter is
+the "options" hash passed in to diff(), containing
+at least:</p>
+<p style="margin-left:14%; margin-top: 1em">FILENAME_A
+=&gt; $fn1, <br/>
+MTIME_A =&gt; $mtime1, <br/>
+FILENAME_B =&gt; $fn2, <br/>
+MTIME_B =&gt; $mtime2</p>
+<p style="margin-left:14%; margin-top: 1em">May also
+contain</p>
+<p style="margin-left:14%; margin-top: 1em">FILENAME_PREFIX_A
+=&gt; "−−−", <br/>
+FILENAME_PREFIX_B =&gt; "+++",</p>
+<p style="margin-left:14%; margin-top: 1em">to override the
+default prefixes (default values shown).</p>
+<p style="margin-left:9%;">Text::Diff::Unified::hunk_header</p>
+<p style="margin-left:14%;">Text::Diff::Unified−&gt;hunk_header(
+\@ops, $options );</p>
+<p style="margin-left:14%; margin-top: 1em">Returns a
+string containing the heading of one hunk of unified
+diff.</p>
+<p style="margin-left:9%;">Text::Diff::Unified::hunk</p>
+<p style="margin-left:14%;">Text::Diff::Unified−&gt;hunk(
+\@seq_a, \@seq_b, \@ops, $options );</p>
+<p style="margin-left:14%; margin-top: 1em">Returns a
+string containing the output of one hunk of unified
+diff.</p>
+<h3>Text::Diff::Table
+<a name="Text::Diff::Table"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">+−−+−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−+−−+−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−+
+<br/>
+| |../Test−Differences−0.2/MANIFEST |
+|../Test−Differences/MANIFEST | <br/>
+| |Thu Dec 13 15:38:49 2001 | |Sat Dec 15 02:09:44 2001 |
+<br/>
+
++−−+−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−+−−+−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−+
+<br/>
+| | * 1|Changes * <br/>
+| 1|Differences.pm | 2|Differences.pm | <br/>
+| 2|MANIFEST | 3|MANIFEST | <br/>
+| | * 4|MANIFEST.SKIP * <br/>
+| 3|Makefile.PL | 5|Makefile.PL | <br/>
+| | * 6|t/00escape.t * <br/>
+| 4|t/00flatten.t | 7|t/00flatten.t | <br/>
+| 5|t/01text_vs_data.t | 8|t/01text_vs_data.t | <br/>
+| 6|t/10test.t | 9|t/10test.t | <br/>
+
++−−+−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−+−−+−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−+</p>
+<p style="margin-left:9%; margin-top: 1em">This format also
+goes to some pains to highlight "invisible"
+characters on differing elements by selectively escaping
+whitespace:</p>
+<p style="margin-left:9%; margin-top: 1em">+−−+−−−−−−−−−−−−−−−−−−−−−−−−−−+−−−−−−−−−−−−−−−−−−−−−−−−−−+
+<br/>
+| |demo_ws_A.txt |demo_ws_B.txt | <br/>
+| |Fri Dec 21 08:36:32 2001 |Fri Dec 21 08:36:50 2001 | <br/>
+
++−−+−−−−−−−−−−−−−−−−−−−−−−−−−−+−−−−−−−−−−−−−−−−−−−−−−−−−−+
+<br/>
+| 1|identical |identical | <br/>
+* 2| spaced in | also spaced in * <br/>
+* 3|embedded space |embedded tab * <br/>
+| 4|identical |identical | <br/>
+* 5| spaced in |\ttabbed in * <br/>
+* 6|trailing spaces\s\s\n |trailing tabs\t\t\n * <br/>
+| 7|identical |identical | <br/>
+* 8|lf line\n |crlf line\r\n * <br/>
+* 9|embedded ws |embedded\tws * <br/>
+
++−−+−−−−−−−−−−−−−−−−−−−−−−−−−−+−−−−−−−−−−−−−−−−−−−−−−−−−−+</p>
+<p style="margin-left:9%; margin-top: 1em">See
+Text::Diff::Table for more details, including how the
+whitespace escaping works.</p>
+<h3>Text::Diff::Context
+<a name="Text::Diff::Context"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">*** A Mon Nov 12
+23:49:30 2001 <br/>
+−−− B Mon Nov 12 23:49:30 2001 <br/>
+*************** <br/>
+*** 2,14 **** <br/>
+2 <br/>
+3 <br/>
+4 <br/>
+! 5d <br/>
+6 <br/>
+7 <br/>
+8 <br/>
+9 <br/>
+10 <br/>
+11 <br/>
+− 11d <br/>
+12 <br/>
+13 <br/>
+−−− 2,14 −−−− <br/>
+2 <br/>
+3 <br/>
+4 <br/>
+! 5a <br/>
+6 <br/>
+7 <br/>
+8 <br/>
+9 <br/>
++ 9a <br/>
+10 <br/>
+11 <br/>
+12 <br/>
+13</p>
+<p style="margin-left:9%; margin-top: 1em">Note:
+hunk_header() returns only
+"***************\n".</p>
+<h3>Text::Diff::OldStyle
+<a name="Text::Diff::OldStyle"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">5c5 <br/>
+&lt; 5d <br/>
+−−− <br/>
+&gt; 5a <br/>
+9a10 <br/>
+&gt; 9a <br/>
+12d12 <br/>
+&lt; 11d</p>
+<p style="margin-left:9%; margin-top: 1em">Note: no
+file_header().</p>
+<h2>LIMITATIONS
+<a name="LIMITATIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Must suck both
+input files entirely in to memory and store them with a
+normal amount of Perlish overhead (one array location) per
+record. This is implied by the implementation of
+Algorithm::Diff, which takes two arrays. If Algorithm::Diff
+ever offers an incremental mode, this can be changed
+(contact the maintainers of Algorithm::Diff and
+"Text::Diff" if you need this; it shouldn't be too
+terribly hard to tie arrays in this fashion).</p>
+<p style="margin-left:9%; margin-top: 1em">Does not provide
+most of the more refined GNU "diff" options:
+recursive directory tree scanning, ignoring blank lines /
+whitespace, etc., etc. These can all be added as time
+permits and need arises, many are rather easy; patches quite
+welcome.</p>
+<p style="margin-left:9%; margin-top: 1em">Uses closures
+internally, this may lead to leaks on Perl versions 5.6.1
+and prior if used many times over a process' life time.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Algorithm::Diff
+− the underlying implementation of the diff algorithm
+used by "Text::Diff".</p>
+<p style="margin-left:9%; margin-top: 1em">YAML::Diff
+− find difference between two YAML documents.</p>
+<p style="margin-left:9%; margin-top: 1em">HTML::Differences
+− find difference between two HTML documents. This
+uses a more sane approach than HTML::Diff.</p>
+<p style="margin-left:9%; margin-top: 1em">XML::Diff
+− find difference between two XML documents.</p>
+<p style="margin-left:9%; margin-top: 1em">Array::Diff
+− find the differences between two Perl arrays.</p>
+<p style="margin-left:9%; margin-top: 1em">Hash::Diff
+− find the differences between two Perl hashes.</p>
+<p style="margin-left:9%; margin-top: 1em">Data::Diff
+− find difference between two arbitrary data
+structures.</p>
+<h2>REPOSITORY
+<a name="REPOSITORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">&lt;https://github.com/neilbowers/Text−Diff&gt;</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Adam Kennedy
+&lt;adamk@cpan.org&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">Barrie Slaymaker
+&lt;barries@slaysys.com&gt;</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Some parts
+copyright 2009 Adam Kennedy.</p>
+<p style="margin-left:9%; margin-top: 1em">Copyright 2001
+Barrie Slaymaker. All Rights Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">You may use this
+under the terms of either the Artistic License or GNU Public
+License v 2.0 or greater.</p>
+<hr/>
+</body>
+</html>

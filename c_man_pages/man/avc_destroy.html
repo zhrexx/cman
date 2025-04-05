@@ -1,0 +1,216 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:31 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>avc_open</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">avc_open</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#OPTIONS">OPTIONS</a><br/>
+<a href="#KERNEL STATUS PAGE">KERNEL STATUS PAGE</a><br/>
+<a href="#NETLINK NOTIFICATION">NETLINK NOTIFICATION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">avc_open,
+avc_destroy, avc_reset, avc_cleanup − userspace
+SELinux AVC setup and teardown</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;selinux/selinux.h&gt; <br/>
+#include &lt;selinux/avc.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+avc_open(const struct selinux_opt *</b><i>options</i><b>,
+unsigned</b> <i>nopt</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+avc_destroy(void);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+avc_reset(void);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+avc_cleanup(void);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>avc_open</b>()
+initializes the userspace AVC and must be called before any
+other AVC operation can be performed.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>avc_destroy</b>()
+destroys the userspace AVC, freeing all internal memory
+structures. After this call has been made, <b>avc_open</b>()
+must be called again before any AVC operations can be
+performed. <b>avc_destroy</b>() also closes the SELinux
+status page, which might have been opened manually by
+<b>selinux_status_open</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>avc_reset</b>()
+flushes the userspace AVC, causing it to forget any cached
+access decisions. The userspace AVC normally calls this
+function automatically when needed, see <b>NETLINK
+NOTIFICATION</b> below.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>avc_cleanup</b>()
+attempts to free unused memory within the userspace AVC, but
+does not flush any cached access decisions. Under normal
+operation, calling this function should not be
+necessary.</p>
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The userspace
+AVC obeys callbacks set via <b>selinux_set_callback</b>(3),
+in particular the logging and audit callbacks.</p>
+<p style="margin-left:9%; margin-top: 1em">The options
+which may be passed to <b>avc_open</b>() include the
+following: <b><br/>
+AVC_OPT_SETENFORCE</b></p>
+<p style="margin-left:18%;">This option forces the
+userspace AVC into enforcing mode if the option value is
+non-NULL; permissive mode otherwise. The system enforcing
+mode will be ignored.</p>
+<h2>KERNEL STATUS PAGE
+<a name="KERNEL STATUS PAGE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux kernel
+version 2.6.37 supports the SELinux kernel status page,
+enabling userspace applications to <b>mmap</b>(2) SELinux
+status state in read-only mode to avoid system calls during
+the cache hit code path.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>avc_open</b>()
+calls <b>selinux_status_open</b>(3) to initialize the
+selinux status state.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>avc_has_perm</b>(3)
+and <b>selinux_check_access</b>(3) both check for status
+updates through calls to <b>selinux_status_updated</b>(3) at
+the start of each permission query and take the appropriate
+action.</p>
+<p style="margin-left:9%; margin-top: 1em">Two status types
+are currently implemented. <b>setenforce</b> events will
+change the effective enforcing state used within the AVC,
+and <b>policyload</b> events will result in a cache
+flush.</p>
+<h2>NETLINK NOTIFICATION
+<a name="NETLINK NOTIFICATION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">In the event
+that the kernel status page is not successfully
+<b>mmap</b>(2)’ed the AVC will default to the netlink
+fallback mechanism, which opens a netlink socket for
+receiving status updates. <b>setenforce</b> and
+<b>policyload</b> events will have the same results as for
+the status page implementation, but all status update checks
+will now require a system call.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Functions with a
+return value return zero on success. On error, −1 is
+returned and <i>errno</i> is set appropriately.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Eamon Walsh
+&lt;ewalsh@tycho.nsa.gov&gt;</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>selinux</b>(8),
+<b>selinux_check_access</b>(3), <b>avc_has_perm</b>(3),
+<b>avc_context_to_sid</b>(3), <b>avc_cache_stats</b>(3),
+<b>avc_add_callback</b>(3), <b>selinux_status_open</b>(3),
+<b>selinux_status_updated</b>(3),
+<b>selinux_set_callback</b>(3),
+<b>security_compute_av</b>(3)</p>
+<hr/>
+</body>
+</html>

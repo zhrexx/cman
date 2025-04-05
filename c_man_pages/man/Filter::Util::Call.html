@@ -1,0 +1,581 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:16 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Call</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Call</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#use Filter::Util::Call">use Filter::Util::Call</a><br/>
+<a href="#import()">import()</a><br/>
+<a href="#filter_add()">filter_add()</a><br/>
+<a href="#filter() and anonymous sub">filter() and anonymous sub</a><br/>
+<a href="#LIMITATIONS">LIMITATIONS</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Example 1: A simple filter.">Example 1: A simple filter.</a><br/>
+<a href="#Example 2: Using the context">Example 2: Using the context</a><br/>
+<a href="#Example 3: Using the context within the filter">Example 3: Using the context within the filter</a><br/>
+<a href="#Example 4: Using filter_del">Example 4: Using filter_del</a><br/>
+<a href="#Filter::Simple">Filter::Simple</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#DATE">DATE</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Filter::Util::Call
+− Perl Source Filter Utility Module</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Filter::Util::Call ;</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides you with the framework to write <i>Source
+Filters</i> in Perl.</p>
+<p style="margin-left:9%; margin-top: 1em">An alternate
+interface to Filter::Util::Call is now available. See
+Filter::Simple for more details.</p>
+<p style="margin-left:9%; margin-top: 1em">A <i>Perl Source
+Filter</i> is implemented as a Perl module. The structure of
+the module can take one of two broadly similar formats. To
+distinguish between them, the first will be referred to as
+<i>method filter</i> and the second as <i>closure
+filter</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a
+skeleton for the <i>method filter</i>:</p>
+<p style="margin-left:9%; margin-top: 1em">package MyFilter
+; <br/>
+use Filter::Util::Call ; <br/>
+sub import <br/>
+{ <br/>
+my($type, @arguments) = @_ ; <br/>
+filter_add([]) ; <br/>
+} <br/>
+sub filter <br/>
+{ <br/>
+my($self) = @_ ; <br/>
+my($status) ; <br/>
+$status = filter_read() ; <br/>
+$status ; <br/>
+} <br/>
+1 ;</p>
+<p style="margin-left:9%; margin-top: 1em">and this is the
+equivalent skeleton for the <i>closure filter</i>:</p>
+<p style="margin-left:9%; margin-top: 1em">package MyFilter
+; <br/>
+use Filter::Util::Call ; <br/>
+sub import <br/>
+{ <br/>
+my($type, @arguments) = @_ ; <br/>
+filter_add( <br/>
+sub <br/>
+{ <br/>
+my($status) ; <br/>
+$status = filter_read() ; <br/>
+$status ; <br/>
+} ) <br/>
+} <br/>
+1 ;</p>
+<p style="margin-left:9%; margin-top: 1em">To make use of
+either of the two filter modules above, place the line below
+in a Perl source file.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+MyFilter;</p>
+<p style="margin-left:9%; margin-top: 1em">In fact, the
+skeleton modules shown above are fully functional <i>Source
+Filters</i>, albeit fairly useless ones. All they does is
+filter the source stream without modifying it at all.</p>
+<p style="margin-left:9%; margin-top: 1em">As you can see
+both modules have a broadly similar structure. They both
+make use of the "Filter::Util::Call" module and
+both have an "import" method. The difference
+between them is that the <i>method filter</i> requires a
+<i>filter</i> method, whereas the <i>closure filter</i> gets
+the equivalent of a <i>filter</i> method with the anonymous
+sub passed to <i>filter_add</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">To make proper
+use of the <i>closure filter</i> shown above you need to
+have a good understanding of the concept of a
+<i>closure</i>. See perlref for more details on the
+mechanics of <i>closures</i>.</p>
+<h3>use Filter::Util::Call
+<a name="use Filter::Util::Call"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions are exported by
+"Filter::Util::Call":</p>
+<p style="margin-left:9%; margin-top: 1em">filter_add()
+<br/>
+filter_read() <br/>
+filter_read_exact() <br/>
+filter_del()</p>
+<h3>import()
+<a name="import()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+"import" method is used to create an instance of
+the filter. It is called indirectly by Perl when it
+encounters the "use MyFilter" line in a source
+file (See "import" in perlfunc for more details on
+"import").</p>
+<p style="margin-left:9%; margin-top: 1em">It will always
+have at least one parameter automatically passed by Perl
+− this corresponds to the name of the package. In the
+example above it will be "MyFilter".</p>
+<p style="margin-left:9%; margin-top: 1em">Apart from the
+first parameter, import can accept an optional list of
+parameters. These can be used to pass parameters to the
+filter. For example:</p>
+<p style="margin-left:9%; margin-top: 1em">use MyFilter
+qw(a b c) ;</p>
+<p style="margin-left:9%; margin-top: 1em">will result in
+the @_ array having the following values:</p>
+<p style="margin-left:9%; margin-top: 1em">@_ [0] =&gt;
+"MyFilter" <br/>
+@_ [1] =&gt; "a" <br/>
+@_ [2] =&gt; "b" <br/>
+@_ [3] =&gt; "c"</p>
+<p style="margin-left:9%; margin-top: 1em">Before
+terminating, the "import" function must explicitly
+install the filter by calling "filter_add".</p>
+<h3>filter_add()
+<a name="filter_add()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The function,
+"filter_add", actually installs the filter. It
+takes one parameter which should be a reference. The kind of
+reference used will dictate which of the two filter types
+will be used.</p>
+<p style="margin-left:9%; margin-top: 1em">If a CODE
+reference is used then a <i>closure filter</i> will be
+assumed.</p>
+<p style="margin-left:9%; margin-top: 1em">If a CODE
+reference is not used, a <i>method filter</i> will be
+assumed. In a <i>method filter</i>, the reference can be
+used to store context information. The reference will be
+<i>blessed</i> into the package by "filter_add",
+unless the reference was already blessed.</p>
+<p style="margin-left:9%; margin-top: 1em">See the filters
+at the end of this documents for examples of using context
+information using both <i>method filters</i> and <i>closure
+filters</i>.</p>
+<h3>filter() and anonymous sub
+<a name="filter() and anonymous sub"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Both the
+"filter" method used with a <i>method filter</i>
+and the anonymous sub used with a <i>closure filter</i> is
+where the main processing for the filter is done.</p>
+<p style="margin-left:9%; margin-top: 1em">The big
+difference between the two types of filter is that the
+<i>method filter</i> uses the object passed to the method to
+store any context data, whereas the <i>closure filter</i>
+uses the lexical variables that are maintained by the
+closure.</p>
+<p style="margin-left:9%; margin-top: 1em">Note that the
+single parameter passed to the <i>method filter</i>, $self,
+is the same reference that was passed to
+"filter_add" blessed into the filter's package.
+See the example filters later on for details of using
+$self.</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a list
+of the common features of the anonymous sub and the filter()
+method.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="3%">
+<p><b>$_</b></p></td>
+<td width="3%"></td>
+<td width="77%">
+<p>Although $_ doesn't actually appear explicitly in the
+sample filters above, it is implicitly used in a number of
+places.</p> </td>
+<td width="8%">
+</td></tr>
+</table>
+<p style="margin-left:15%; margin-top: 1em">Firstly, when
+either "filter" or the anonymous sub are called, a
+local copy of $_ will automatically be created. It will
+always contain the empty string at this point.</p>
+<p style="margin-left:15%; margin-top: 1em">Next, both
+"filter_read" and "filter_read_exact"
+will append any source data that is read to the end of
+$_.</p>
+<p style="margin-left:15%; margin-top: 1em">Finally, when
+"filter" or the anonymous sub are finished
+processing, they are expected to return the filtered source
+using $_.</p>
+<p style="margin-left:15%; margin-top: 1em">This implicit
+use of $_ greatly simplifies the filter.</p>
+<p style="margin-left:9%;"><b>$status</b></p>
+<p style="margin-left:15%;">The status value that is
+returned by the user's "filter" method or
+anonymous sub and the "filter_read" and
+"read_exact" functions take the same set of
+values, namely:</p>
+<p style="margin-left:15%; margin-top: 1em">&lt; 0 Error
+<br/>
+= 0 EOF <br/>
+&gt; 0 OK</p>
+<p style="margin-left:9%;"><b>filter_read</b> and
+<b>filter_read_exact</b></p>
+<p style="margin-left:15%;">These functions are used by the
+filter to obtain either a line or block from the next filter
+in the chain or the actual source file if there aren't any
+other filters.</p>
+<p style="margin-left:15%; margin-top: 1em">The function
+"filter_read" takes two forms:</p>
+<p style="margin-left:15%; margin-top: 1em">$status =
+filter_read() ; <br/>
+$status = filter_read($size) ;</p>
+<p style="margin-left:15%; margin-top: 1em">The first form
+is used to request a <i>line</i>, the second requests a
+<i>block</i>.</p>
+<p style="margin-left:15%; margin-top: 1em">In line mode,
+"filter_read" will append the next source line to
+the end of the $_ scalar.</p>
+<p style="margin-left:15%; margin-top: 1em">In block mode,
+"filter_read" will append a block of data which is
+&lt;= $size to the end of the $_ scalar. It is important to
+emphasise the that "filter_read" will not
+necessarily read a block which is <i>precisely</i> $size
+bytes.</p>
+<p style="margin-left:15%; margin-top: 1em">If you need to
+be able to read a block which has an exact size, you can use
+the function "filter_read_exact". It works
+identically to "filter_read" in block mode, except
+it will try to read a block which is exactly $size bytes in
+length. The only circumstances when it will not return a
+block which is $size bytes long is on EOF or error.</p>
+<p style="margin-left:15%; margin-top: 1em">It is
+<i>very</i> important to check the value of $status after
+<i>every</i> call to "filter_read" or
+"filter_read_exact".</p>
+<p style="margin-left:9%;"><b>filter_del</b></p>
+<p style="margin-left:15%;">The function,
+"filter_del", is used to disable the current
+filter. It does not affect the running of the filter. All it
+does is tell Perl not to call filter any more.</p>
+<p style="margin-left:15%; margin-top: 1em">See
+"Example 4: Using filter_del" for details.</p>
+<p style="margin-left:9%;"><i>real_import</i></p>
+<p style="margin-left:15%;">Internal function which adds
+the filter, based on the filter_add argument type.</p>
+<p style="margin-left:9%;"><b><i>unimport()</i></b></p>
+<p style="margin-left:15%;">May be used to disable a
+filter, but is rarely needed. See filter_del.</p>
+<h2>LIMITATIONS
+<a name="LIMITATIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">See
+"LIMITATIONS" in perlfilter for an overview of the
+general problems filtering code in a textual
+line−level only. <br/>
+__DATA__ is ignored</p>
+<p style="margin-left:14%;">The content from the __DATA__
+block is not filtered. This is a serious limitation, e.g.
+for the Switch module. See
+&lt;http://search.cpan.org/perldoc?Switch#LIMITATIONS&gt;
+for more.</p>
+<p style="margin-left:9%;">Max. codesize limited to
+32−bit</p>
+<p style="margin-left:14%;">Currently internal buffer
+lengths are limited to 32−bit only.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Here are a few
+examples which illustrate the key concepts − as such
+most of them are of little practical use.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"examples" sub−directory has copies of all
+these filters implemented both as <i>method filters</i> and
+as <i>closure filters</i>.</p>
+<h3>Example 1: A simple filter.
+<a name="Example 1: A simple filter."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Below is a
+<i>method filter</i> which is hard−wired to replace
+all occurrences of the string "Joe" to
+"Jim". Not particularly Useful, but it is the
+first example and I wanted to keep it simple.</p>
+<p style="margin-left:9%; margin-top: 1em">package Joe2Jim
+; <br/>
+use Filter::Util::Call ; <br/>
+sub import <br/>
+{ <br/>
+my($type) = @_ ; <br/>
+filter_add(bless []) ; <br/>
+} <br/>
+sub filter <br/>
+{ <br/>
+my($self) = @_ ; <br/>
+my($status) ; <br/>
+s/Joe/Jim/g <br/>
+if ($status = filter_read()) &gt; 0 ; <br/>
+$status ; <br/>
+} <br/>
+1 ;</p>
+<p style="margin-left:9%; margin-top: 1em">Here is an
+example of using the filter:</p>
+<p style="margin-left:9%; margin-top: 1em">use Joe2Jim ;
+<br/>
+print "Where is Joe?\n" ;</p>
+<p style="margin-left:9%; margin-top: 1em">And this is what
+the script above will print:</p>
+<p style="margin-left:9%; margin-top: 1em">Where is
+Jim?</p>
+<h3>Example 2: Using the context
+<a name="Example 2: Using the context"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The previous
+example was not particularly useful. To make it more general
+purpose we will make use of the context data and allow any
+arbitrary <i>from</i> and <i>to</i> strings to be used. This
+time we will use a <i>closure filter</i>. To reflect its
+enhanced role, the filter is called "Subst".</p>
+<p style="margin-left:9%; margin-top: 1em">package Subst ;
+<br/>
+use Filter::Util::Call ; <br/>
+use Carp ; <br/>
+sub import <br/>
+{ <br/>
+croak("usage: use Subst qw(from to)") <br/>
+unless @_ == 3 ; <br/>
+my ($self, $from, $to) = @_ ; <br/>
+filter_add( <br/>
+sub <br/>
+{ <br/>
+my ($status) ; <br/>
+s/$from/$to/ <br/>
+if ($status = filter_read()) &gt; 0 ; <br/>
+$status ; <br/>
+}) <br/>
+} <br/>
+1 ;</p>
+<p style="margin-left:9%; margin-top: 1em">and is used like
+this:</p>
+<p style="margin-left:9%; margin-top: 1em">use Subst qw(Joe
+Jim) ; <br/>
+print "Where is Joe?\n" ;</p>
+<h3>Example 3: Using the context within the filter
+<a name="Example 3: Using the context within the filter"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Here is a filter
+which a variation of the "Joe2Jim" filter. As well
+as substituting all occurrences of "Joe" to
+"Jim" it keeps a count of the number of
+substitutions made in the context object.</p>
+<p style="margin-left:9%; margin-top: 1em">Once EOF is
+detected ($status is zero) the filter will insert an extra
+line into the source stream. When this extra line is
+executed it will print a count of the number of
+substitutions actually made. Note that $status is set to 1
+in this case.</p>
+<p style="margin-left:9%; margin-top: 1em">package Count ;
+<br/>
+use Filter::Util::Call ; <br/>
+sub filter <br/>
+{ <br/>
+my ($self) = @_ ; <br/>
+my ($status) ; <br/>
+if (($status = filter_read()) &gt; 0 ) { <br/>
+s/Joe/Jim/g ; <br/>
+++ $$self ; <br/>
+} <br/>
+elsif ($$self &gt;= 0) { # EOF <br/>
+$_ = "print q[Made ${$self} substitutions\n]" ;
+<br/>
+$status = 1 ; <br/>
+$$self = −1 ; <br/>
+} <br/>
+$status ; <br/>
+} <br/>
+sub import <br/>
+{ <br/>
+my ($self) = @_ ; <br/>
+my ($count) = 0 ; <br/>
+filter_add(\$count) ; <br/>
+} <br/>
+1 ;</p>
+<p style="margin-left:9%; margin-top: 1em">Here is a script
+which uses it:</p>
+<p style="margin-left:9%; margin-top: 1em">use Count ; <br/>
+print "Hello Joe\n" ; <br/>
+print "Where is Joe\n" ;</p>
+<p style="margin-left:9%; margin-top: 1em">Outputs:</p>
+<p style="margin-left:9%; margin-top: 1em">Hello Jim <br/>
+Where is Jim <br/>
+Made 2 substitutions</p>
+<h3>Example 4: Using filter_del
+<a name="Example 4: Using filter_del"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Another
+variation on a theme. This time we will modify the
+"Subst" filter to allow a starting and stopping
+pattern to be specified as well as the <i>from</i> and
+<i>to</i> patterns. If you know the <i>vi</i> editor, it is
+the equivalent of this command:</p>
+<p style="margin-left:9%; margin-top: 1em">:/start/,/stop/s/from/to/</p>
+<p style="margin-left:9%; margin-top: 1em">When used as a
+filter we want to invoke it like this:</p>
+<p style="margin-left:9%; margin-top: 1em">use NewSubst
+qw(start stop from to) ;</p>
+<p style="margin-left:9%; margin-top: 1em">Here is the
+module.</p>
+<p style="margin-left:9%; margin-top: 1em">package NewSubst
+; <br/>
+use Filter::Util::Call ; <br/>
+use Carp ; <br/>
+sub import <br/>
+{ <br/>
+my ($self, $start, $stop, $from, $to) = @_ ; <br/>
+my ($found) = 0 ; <br/>
+croak("usage: use Subst qw(start stop from to)")
+<br/>
+unless @_ == 5 ; <br/>
+filter_add( <br/>
+sub <br/>
+{ <br/>
+my ($status) ; <br/>
+if (($status = filter_read()) &gt; 0) { <br/>
+$found = 1 <br/>
+if $found == 0 and /$start/ ; <br/>
+if ($found) { <br/>
+s/$from/$to/ ; <br/>
+filter_del() if /$stop/ ; <br/>
+} <br/>
+} <br/>
+$status ; <br/>
+} ) <br/>
+} <br/>
+1 ;</p>
+<h2>Filter::Simple
+<a name="Filter::Simple"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If you intend
+using the Filter::Call functionality, I would strongly
+recommend that you check out Damian Conway's excellent
+Filter::Simple module. Damian's module provides a much
+cleaner interface than Filter::Util::Call. Although it
+doesn't allow the fine control that Filter::Util::Call does,
+it should be adequate for the majority of applications. It's
+available at</p>
+<p style="margin-left:9%; margin-top: 1em">http://search.cpan.org/dist/Filter−Simple/</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Paul
+Marquess</p>
+<h2>DATE
+<a name="DATE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">26th January
+1996</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (c)
+1995−2011 Paul Marquess. All rights reserved.
+Copyright (c) 2011−2014, 2018−2022 Reini Urban.
+All rights reserved. Copyright (c) 2014−2017 cPanel
+Inc. All rights reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

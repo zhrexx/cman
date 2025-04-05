@@ -1,0 +1,547 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:19 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OSSL_PARAM</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OSSL_PARAM</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Functional support">Functional support</a><br/>
+<a href="#OSSL_PARAM fields">OSSL_PARAM fields</a><br/>
+<a href="#Supported types">Supported types</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OSSL_PARAM
+− a structure to pass or request object parameters</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/core.h&gt; <br/>
+typedef struct ossl_param_st OSSL_PARAM; <br/>
+struct ossl_param_st { <br/>
+const char *key; /* the name of the parameter */ <br/>
+unsigned int data_type; /* declare what kind of content is
+in data */ <br/>
+void *data; /* value being passed in or out */ <br/>
+size_t data_size; /* data size */ <br/>
+size_t return_size; /* returned size */ <br/>
+};</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_PARAM</b>
+is a type that allows passing arbitrary data for some object
+between two parties that have no or very little shared
+knowledge about their respective internal structures for
+that object.</p>
+<p style="margin-left:9%; margin-top: 1em">A typical usage
+example could be an application that wants to set some
+parameters for an object, or wants to find out some
+parameters of an object.</p>
+<p style="margin-left:9%; margin-top: 1em">Arrays of this
+type can be used for the following purposes:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="44%">
+<p>Setting parameters for some object</p></td>
+<td width="42%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The caller sets
+up the <b>OSSL_PARAM</b> array and calls some function (the
+<i>setter</i>) that has intimate knowledge about the object
+that can take the data from the <b>OSSL_PARAM</b> array and
+assign them in a suitable form for the internal structure of
+the object.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="42%">
+<p style="margin-top: 1em">Request parameters of some
+object</p> </td>
+<td width="44%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The caller (the
+<i>requester</i>) sets up the <b>OSSL_PARAM</b> array and
+calls some function (the <i>responder</i>) that has intimate
+knowledge about the object, which can take the internal data
+of the object and copy (possibly convert) that to the memory
+prepared by the <i>requester</i> and pointed at with the
+<b>OSSL_PARAM</b> <i>data</i>.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="37%">
+<p style="margin-top: 1em">Request parameter
+descriptors</p> </td>
+<td width="49%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The caller gets
+an array of constant <b>OSSL_PARAM</b>, which describe
+available parameters and some of their properties; name,
+data type and expected data size. For a detailed description
+of each field for this use, see the field descriptions
+below.</p>
+<p style="margin-left:14%; margin-top: 1em">The caller may
+then use the information from this descriptor array to build
+up its own <b>OSSL_PARAM</b> array to pass down to a
+<i>setter</i> or <i>responder</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Normally, the
+order of the an <b>OSSL_PARAM</b> array is not relevant.
+However, if the <i>responder</i> can handle multiple
+elements with the same key, those elements must be handled
+in the order they are in.</p>
+<p style="margin-left:9%; margin-top: 1em">An
+<b>OSSL_PARAM</b> array must have a terminating element,
+where <i>key</i> is NULL. The usual full terminating
+template is:</p>
+<p style="margin-left:9%; margin-top: 1em">{ NULL, 0, NULL,
+0, 0 }</p>
+<p style="margin-left:9%; margin-top: 1em">This can also be
+specified using <b>OSSL_PARAM_END</b>(3).</p>
+<h3>Functional support
+<a name="Functional support"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Libcrypto offers
+a limited set of helper functions to handle
+<b>OSSL_PARAM</b> items and arrays, please see
+<b>OSSL_PARAM_get_int</b>(3). Developers are free to extend
+or replace those as they see fit.</p>
+<h3>OSSL_PARAM fields
+<a name="OSSL_PARAM fields"></a>
+</h3>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p style="margin-top: 1em"><i>key</i></p></td>
+<td width="1%"></td>
+<td width="69%">
+<p style="margin-top: 1em">The identity of the parameter in
+the form of a string.</p></td>
+<td width="17%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">In an
+<b>OSSL_PARAM</b> array, an item with this field set to NULL
+is considered a terminating item.</p>
+<p style="margin-left:9%;"><i>data_type</i></p>
+<p style="margin-left:14%;">The <i>data_type</i> is a value
+that describes the type and organization of the data. See
+"Supported types" below for a description of the
+types.</p>
+<p style="margin-left:9%;"><i>data <br/>
+data_size</i></p>
+<p style="margin-left:14%;"><i>data</i> is a pointer to the
+memory where the parameter data is (when setting parameters)
+or shall (when requesting parameters) be stored, and
+<i>data_size</i> is its size in bytes. The organization of
+the data depends on the parameter type and flag.</p>
+<p style="margin-left:14%; margin-top: 1em">The
+<i>data_size</i> needs special attention with the parameter
+type <b>OSSL_PARAM_UTF8_STRING</b> in relation to C strings.
+When setting parameters, the size should be set to the
+length of the string, not counting the terminating NUL byte.
+When requesting parameters, the size should be set to the
+size of the buffer to be populated, which should accommodate
+enough space for a terminating NUL byte.</p>
+<p style="margin-left:14%; margin-top: 1em">When
+<i>requesting parameters</i>, it's acceptable for
+<i>data</i> to be NULL. This can be used by the
+<i>requester</i> to figure out dynamically exactly how much
+buffer space is needed to store the parameter data. In this
+case, <i>data_size</i> is ignored.</p>
+<p style="margin-left:14%; margin-top: 1em">When the
+<b>OSSL_PARAM</b> is used as a parameter descriptor,
+<i>data</i> should be ignored. If <i>data_size</i> is zero,
+it means that an arbitrary data size is accepted, otherwise
+it specifies the maximum size allowed.</p>
+<p style="margin-left:9%;"><i>return_size</i></p>
+<p style="margin-left:14%;">When an array of
+<b>OSSL_PARAM</b> is used to request data, the
+<i>responder</i> must set this field to indicate size of the
+parameter data, including padding as the case may be. In
+case the <i>data_size</i> is an unsuitable size for the
+data, the <i>responder</i> must still set this field to
+indicate the minimum data size required. (further notes on
+this in "NOTES" below).</p>
+<p style="margin-left:14%; margin-top: 1em">When the
+<b>OSSL_PARAM</b> is used as a parameter descriptor,
+<i>return_size</i> should be ignored.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>NOTE:</b></p>
+<p style="margin-left:9%; margin-top: 1em">The key names
+and associated types are defined by the entity that offers
+these parameters, i.e. names for parameters provided by the
+OpenSSL libraries are defined by the libraries, and names
+for parameters provided by providers are defined by those
+providers, except for the pointer form of strings (see data
+type descriptions below). Entities that want to set or
+request parameters need to know what those keys are and of
+what type, any functionality between those two entities
+should remain oblivious and just pass the <b>OSSL_PARAM</b>
+array along.</p>
+<h3>Supported types
+<a name="Supported types"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>data_type</i> field can be one of the following types:
+<b><br/>
+OSSL_PARAM_INTEGER <br/>
+OSSL_PARAM_UNSIGNED_INTEGER</b></p>
+<p style="margin-left:14%;">The parameter data is an
+integer (signed or unsigned) of arbitrary length, organized
+in native form, i.e. most significant byte first on
+Big−Endian systems, and least significant byte first
+on Little−Endian systems.</p>
+<p style="margin-left:9%;"><b>OSSL_PARAM_REAL</b></p>
+<p style="margin-left:14%;">The parameter data is a
+floating point value in native form.</p>
+<p style="margin-left:9%;"><b>OSSL_PARAM_UTF8_STRING</b></p>
+<p style="margin-left:14%;">The parameter data is a
+printable string.</p>
+<p style="margin-left:9%;"><b>OSSL_PARAM_OCTET_STRING</b></p>
+<p style="margin-left:14%;">The parameter data is an
+arbitrary string of bytes.</p>
+<p style="margin-left:9%;"><b>OSSL_PARAM_UTF8_PTR</b></p>
+<p style="margin-left:14%;">The parameter data is a pointer
+to a printable string.</p>
+<p style="margin-left:14%; margin-top: 1em">The difference
+between this and <b>OSSL_PARAM_UTF8_STRING</b> is that
+<i>data</i> doesn't point directly at the data, but to a
+pointer that points to the data.</p>
+<p style="margin-left:14%; margin-top: 1em">If there is any
+uncertainty about which to use,
+<b>OSSL_PARAM_UTF8_STRING</b> is almost certainly the
+correct choice.</p>
+<p style="margin-left:14%; margin-top: 1em">This is used to
+indicate that constant data is or will be passed, and there
+is therefore no need to copy the data that is passed, just
+the pointer to it.</p>
+<p style="margin-left:14%; margin-top: 1em"><i>data_size</i>
+must be set to the size of the data, not the size of the
+pointer to the data. If this is used in a parameter request,
+<i>data_size</i> is not relevant. However, the
+<i>responder</i> will set <i>return_size</i> to the size of
+the data.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that the
+use of this type is <b>fragile</b> and can only be safely
+used for data that remains constant and in a constant
+location for a long enough duration (such as the
+life−time of the entity that offers these
+parameters).</p>
+<p style="margin-left:9%;"><b>OSSL_PARAM_OCTET_PTR</b></p>
+<p style="margin-left:14%;">The parameter data is a pointer
+to an arbitrary string of bytes.</p>
+<p style="margin-left:14%; margin-top: 1em">The difference
+between this and <b>OSSL_PARAM_OCTET_STRING</b> is that
+<i>data</i> doesn't point directly at the data, but to a
+pointer that points to the data.</p>
+<p style="margin-left:14%; margin-top: 1em">If there is any
+uncertainty about which to use,
+<b>OSSL_PARAM_OCTET_STRING</b> is almost certainly the
+correct choice.</p>
+<p style="margin-left:14%; margin-top: 1em">This is used to
+indicate that constant data is or will be passed, and there
+is therefore no need to copy the data that is passed, just
+the pointer to it.</p>
+<p style="margin-left:14%; margin-top: 1em"><i>data_size</i>
+must be set to the size of the data, not the size of the
+pointer to the data. If this is used in a parameter request,
+<i>data_size</i> is not relevant. However, the
+<i>responder</i> will set <i>return_size</i> to the size of
+the data.</p>
+<p style="margin-left:14%; margin-top: 1em">Note that the
+use of this type is <b>fragile</b> and can only be safely
+used for data that remains constant and in a constant
+location for a long enough duration (such as the
+life−time of the entity that offers these
+parameters).</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Both when
+setting and requesting parameters, the functions that are
+called will have to decide what is and what is not an error.
+The recommended behaviour is:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>Keys that a <i>setter</i> or <i>responder</i> doesn't
+recognise should simply be ignored. That in itself isn't an
+error.</p> </td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>If the keys that a called <i>setter</i> recognises form
+a consistent enough set of data, that call should
+succeed.</p> </td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>Apart from the <i>return_size</i>, a <i>responder</i>
+must never change the fields of an <b>OSSL_PARAM</b>. To
+return a value, it should change the contents of the memory
+that <i>data</i> points at.</p></td>
+<td width="1%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="85%">
+<p>If the data type for a key that it's associated with is
+incorrect, the called function may return an error.</p></td>
+<td width="1%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The called
+function may also try to convert the data to a suitable form
+(for example, it's plausible to pass a large number as an
+octet string, so even though a given key is defined as an
+<b>OSSL_PARAM_UNSIGNED_INTEGER</b>, is plausible to pass the
+value as an <b>OSSL_PARAM_OCTET_STRING</b>), but this is in
+no way mandatory.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p style="margin-top: 1em">If <i>data</i> for a
+<b>OSSL_PARAM_OCTET_STRING</b> or a
+<b>OSSL_PARAM_UTF8_STRING</b> is NULL, the <i>responder</i>
+should set <i>return_size</i> to the size of the item to be
+returned and return success. Later the responder will be
+called again with <i>data</i> pointing at the place for the
+value to be put.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>If a <i>responder</i> finds that some data sizes are too
+small for the requested data, it must set <i>return_size</i>
+for each such <b>OSSL_PARAM</b> item to the minimum required
+size, and eventually return an error.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>For the integer type parameters
+(<b>OSSL_PARAM_UNSIGNED_INTEGER</b> and
+<b>OSSL_PARAM_INTEGER</b>), a <i>responder</i> may choose to
+return an error if the <i>data_size</i> isn't a suitable
+size (even if <i>data_size</i> is bigger than needed). If
+the <i>responder</i> finds the size suitable, it must fill
+all <i>data_size</i> bytes and ensure correct padding for
+the native endianness, and set <i>return_size</i> to the
+same value as <i>data_size</i>.</p></td></tr>
+</table>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A couple of
+examples to just show how <b>OSSL_PARAM</b> arrays could be
+set up.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Example
+1</i></p>
+<p style="margin-left:9%; margin-top: 1em">This example is
+for setting parameters on some object:</p>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/core.h&gt; <br/>
+const char *foo = "some string"; <br/>
+size_t foo_l = strlen(foo); <br/>
+const char bar[] = "some other string"; <br/>
+OSSL_PARAM set[] = { <br/>
+{ "foo", OSSL_PARAM_UTF8_PTR, &amp;foo, foo_l, 0
+}, <br/>
+{ "bar", OSSL_PARAM_UTF8_STRING, (void *)&amp;bar,
+sizeof(bar) − 1, 0 }, <br/>
+{ NULL, 0, NULL, 0, 0 } <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em"><i>Example
+2</i></p>
+<p style="margin-left:9%; margin-top: 1em">This example is
+for requesting parameters on some object:</p>
+<p style="margin-left:9%; margin-top: 1em">const char *foo
+= NULL; <br/>
+size_t foo_l; <br/>
+char bar[1024]; <br/>
+size_t bar_l; <br/>
+OSSL_PARAM request[] = { <br/>
+{ "foo", OSSL_PARAM_UTF8_PTR, &amp;foo, 0
+/*irrelevant*/, 0 }, <br/>
+{ "bar", OSSL_PARAM_UTF8_STRING, &amp;bar,
+sizeof(bar), 0 }, <br/>
+{ NULL, 0, NULL, 0, 0 } <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">A
+<i>responder</i> that receives this array (as <i>params</i>
+in this example) could fill in the parameters like this:</p>
+<p style="margin-left:9%; margin-top: 1em">/* OSSL_PARAM
+*params */ <br/>
+int i; <br/>
+for (i = 0; params[i].key != NULL; i++) { <br/>
+if (strcmp(params[i].key, "foo") == 0) { <br/>
+*(char **)params[i].data = "foo value"; <br/>
+params[i].return_size = 9; /* length of "foo
+value" string */ <br/>
+} else if (strcmp(params[i].key, "bar") == 0) {
+<br/>
+memcpy(params[i].data, "bar value", 10); <br/>
+params[i].return_size = 9; /* length of "bar
+value" string */ <br/>
+} <br/>
+/* Ignore stuff we don't know */ <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>openssl−core.h</b>(7),
+<b>OSSL_PARAM_get_int</b>(3), <b>OSSL_PARAM_dup</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_PARAM</b>
+was added in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2019−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:17 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>pthread_cancel</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">pthread_cancel</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#VERSIONS">VERSIONS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Program source">Program source</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">pthread_cancel
+− send a cancelation request to a thread</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX threads
+library (<i>libpthread</i>, <i>−lpthread</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;pthread.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+pthread_cancel(pthread_t</b> <i>thread</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>pthread_cancel</b>() function sends a cancelation request
+to the thread <i>thread</i>. Whether and when the target
+thread reacts to the cancelation request depends on two
+attributes that are under the control of that thread: its
+cancelability <i>state</i> and <i>type</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">A thread’s
+cancelability state, determined by
+<b>pthread_setcancelstate</b>(3), can be <i>enabled</i> (the
+default for new threads) or <i>disabled</i>. If a thread has
+disabled cancelation, then a cancelation request remains
+queued until the thread enables cancelation. If a thread has
+enabled cancelation, then its cancelability type determines
+when cancelation occurs.</p>
+<p style="margin-left:9%; margin-top: 1em">A thread’s
+cancelation type, determined by
+<b>pthread_setcanceltype</b>(3), may be either
+<i>asynchronous</i> or <i>deferred</i> (the default for new
+threads). Asynchronous cancelability means that the thread
+can be canceled at any time (usually immediately, but the
+system does not guarantee this). Deferred cancelability
+means that cancelation will be delayed until the thread next
+calls a function that is a <i>cancelation point</i>. A list
+of functions that are or may be cancelation points is
+provided in <b>pthreads</b>(7).</p>
+<p style="margin-left:9%; margin-top: 1em">When a
+cancelation requested is acted on, the following steps occur
+for <i>thread</i> (in this order):</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>(1)</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p>Cancelation clean-up handlers are popped (in the reverse
+of the order in which they were pushed) and called. (See
+<b>pthread_cleanup_push</b>(3).)</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>(2)</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p>Thread-specific data destructors are called, in an
+unspecified order. (See <b>pthread_key_create</b>(3).)</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>(3)</p></td>
+<td width="2%"></td>
+<td width="85%">
+<p>The thread is terminated. (See
+<b>pthread_exit</b>(3).)</p> </td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">The above steps
+happen asynchronously with respect to the
+<b>pthread_cancel</b>() call; the return status of
+<b>pthread_cancel</b>() merely informs the caller whether
+the cancelation request was successfully queued.</p>
+<p style="margin-left:9%; margin-top: 1em">After a canceled
+thread has terminated, a join with that thread using
+<b>pthread_join</b>(3) obtains <b>PTHREAD_CANCELED</b> as
+the thread’s exit status. (Joining with a thread is
+the only way to know that cancelation has completed.)</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success,
+<b>pthread_cancel</b>() returns 0; on error, it returns a
+nonzero error number.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="6%">
+<p style="margin-top: 1em"><b>ESRCH</b></p></td>
+<td width="3%"></td>
+<td width="56%">
+<p style="margin-top: 1em">No thread with the ID
+<i>thread</i> could be found.</p></td>
+<td width="26%">
+</td></tr>
+</table>
+<h2>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For an
+explanation of the terms used in this section, see
+<b>attributes</b>(7).</p>
+<h2>VERSIONS
+<a name="VERSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On Linux,
+cancelation is implemented using signals. Under the NPTL
+threading implementation, the first real-time signal (i.e.,
+signal 32) is used for this purpose. On LinuxThreads, the
+second real-time signal is used, if real-time signals are
+available, otherwise <b>SIGUSR2</b> is used.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2008.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">glibc 2.0
+POSIX.1-2001.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The program
+below creates a thread and then cancels it. The main thread
+joins with the canceled thread to check that its exit status
+was <b>PTHREAD_CANCELED</b>. The following shell session
+shows what happens when we run the program:</p>
+<p style="margin-left:14%; margin-top: 1em">$ ./a.out <br/>
+thread_func(): started; cancelation disabled <br/>
+main(): sending cancelation request <br/>
+thread_func(): about to enable cancelation <br/>
+main(): thread was canceled</p>
+<h3>Program source
+<a name="Program source"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;errno.h&gt; <br/>
+#include &lt;pthread.h&gt; <br/>
+#include &lt;stdio.h&gt; <br/>
+#include &lt;stdlib.h&gt; <br/>
+#include &lt;unistd.h&gt; <br/>
+#define handle_error_en(en, msg) \ <br/>
+do { errno = en; perror(msg); exit(EXIT_FAILURE); } while
+(0) <br/>
+static void * <br/>
+thread_func(void *ignored_argument) <br/>
+{ <br/>
+int s; <br/>
+/* Disable cancelation for a while, so that we don't <br/>
+immediately react to a cancelation request. */ <br/>
+s = pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+<br/>
+if (s != 0) <br/>
+handle_error_en(s, "pthread_setcancelstate"); <br/>
+printf("%s(): started; cancelation disabled\n",
+__func__); <br/>
+sleep(5); <br/>
+printf("%s(): about to enable cancelation\n",
+__func__); <br/>
+s = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+<br/>
+if (s != 0) <br/>
+handle_error_en(s, "pthread_setcancelstate"); <br/>
+/* sleep() is a cancelation point. */ <br/>
+sleep(1000); /* Should get canceled while we sleep */ <br/>
+/* Should never get here. */ <br/>
+printf("%s(): not canceled!\n", __func__); <br/>
+return NULL; <br/>
+} <br/>
+int <br/>
+main(void) <br/>
+{ <br/>
+pthread_t thr; <br/>
+void *res; <br/>
+int s; <br/>
+/* Start a thread and then send it a cancelation request. */
+<br/>
+s = pthread_create(&amp;thr, NULL, &amp;thread_func, NULL);
+<br/>
+if (s != 0) <br/>
+handle_error_en(s, "pthread_create"); <br/>
+sleep(2); /* Give thread a chance to get started */ <br/>
+printf("%s(): sending cancelation request\n",
+__func__); <br/>
+s = pthread_cancel(thr); <br/>
+if (s != 0) <br/>
+handle_error_en(s, "pthread_cancel"); <br/>
+/* Join with thread to see what its exit status was. */ <br/>
+s = pthread_join(thr, &amp;res); <br/>
+if (s != 0) <br/>
+handle_error_en(s, "pthread_join"); <br/>
+if (res == PTHREAD_CANCELED) <br/>
+printf("%s(): thread was canceled\n", __func__);
+<br/>
+else <br/>
+printf("%s(): thread wasn't canceled (shouldn't
+happen!)\n", <br/>
+__func__); <br/>
+exit(EXIT_SUCCESS); <br/>
+}</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cleanup_push</b>(3),
+<b>pthread_create</b>(3), <b>pthread_exit</b>(3),
+<b>pthread_join</b>(3), <b>pthread_key_create</b>(3),
+<b>pthread_setcancelstate</b>(3),
+<b>pthread_setcanceltype</b>(3),
+<b>pthread_testcancel</b>(3), <b>pthreads</b>(7)</p>
+<hr/>
+</body>
+</html>

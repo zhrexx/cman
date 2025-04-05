@@ -1,0 +1,193 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:17 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>pthread_cleanup_push_defer_np</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">pthread_cleanup_push_defer_np</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">pthread_cleanup_push_defer_np,
+pthread_cleanup_pop_restore_np − push and pop thread
+cancelation clean-up handlers while saving cancelability
+type</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX threads
+library (<i>libpthread</i>, <i>−lpthread</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;pthread.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>void
+pthread_cleanup_push_defer_np(void
+(*</b><i>routine</i><b>)(void *), void *</b><i>arg</i><b>);
+<br/>
+void pthread_cleanup_pop_restore_np(int</b>
+<i>execute</i><b>);</b></p>
+<p style="margin-left:4%; margin-top: 1em">Feature Test
+Macro Requirements for glibc (see
+<b>feature_test_macros</b>(7)):</p>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cleanup_push_defer_np</b>(),
+<b>pthread_cleanup_pop_defer_np</b>(): <br/>
+_GNU_SOURCE</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+are the same as <b>pthread_cleanup_push</b>(3) and
+<b>pthread_cleanup_pop</b>(3), except for the differences
+noted on this page.</p>
+<p style="margin-left:9%; margin-top: 1em">Like
+<b>pthread_cleanup_push</b>(3),
+<b>pthread_cleanup_push_defer_np</b>() pushes <i>routine</i>
+onto the thread’s stack of cancelation clean-up
+handlers. In addition, it also saves the thread’s
+current cancelability type, and sets the cancelability type
+to "deferred" (see
+<b>pthread_setcanceltype</b>(3)); this ensures that
+cancelation clean-up will occur even if the thread’s
+cancelability type was "asynchronous" before the
+call.</p>
+<p style="margin-left:9%; margin-top: 1em">Like
+<b>pthread_cleanup_pop</b>(3),
+<b>pthread_cleanup_pop_restore_np</b>() pops the top-most
+clean-up handler from the thread’s stack of
+cancelation clean-up handlers. In addition, it restores the
+thread’s cancelability type to its value at the time
+of the matching <b>pthread_cleanup_push_defer_np</b>().</p>
+<p style="margin-left:9%; margin-top: 1em">The caller must
+ensure that calls to these functions are paired within the
+same function, and at the same lexical nesting level. Other
+restrictions apply, as described in
+<b>pthread_cleanup_push</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">This sequence of
+calls:</p>
+<p style="margin-left:14%; margin-top: 1em">pthread_cleanup_push_defer_np(routine,
+arg); <br/>
+pthread_cleanup_pop_restore_np(execute);</p>
+<p style="margin-left:9%; margin-top: 1em">is equivalent to
+(but shorter and more efficient than):</p>
+<p style="margin-left:14%; margin-top: 1em">int oldtype;
+<br/>
+pthread_cleanup_push(routine, arg); <br/>
+pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED,
+&amp;oldtype); <br/>
+... <br/>
+pthread_setcanceltype(oldtype, NULL); <br/>
+pthread_cleanup_pop(execute);</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">GNU; hence the
+suffix "_np" (nonportable) in the names.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">glibc 2.0</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>pthread_cancel</b>(3),
+<b>pthread_cleanup_push</b>(3),
+<b>pthread_setcancelstate</b>(3),
+<b>pthread_testcancel</b>(3), <b>pthreads</b>(7)</p>
+<hr/>
+</body>
+</html>

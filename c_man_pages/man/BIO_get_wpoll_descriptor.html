@@ -1,0 +1,231 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:39 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BIO_GET_RPOLL_DESCRIPTOR</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">BIO_GET_RPOLL_DESCRIPTOR</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">BIO_get_rpoll_descriptor,
+BIO_get_wpoll_descriptor − obtain a structure which
+can be used to determine when a BIO object can next be read
+or written</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/bio.h&gt; <br/>
+typedef struct bio_poll_descriptor_st { <br/>
+uint32_t type; <br/>
+union { <br/>
+int fd; <br/>
+void *custom; <br/>
+uintptr_t custom_ui; <br/>
+} value; <br/>
+} BIO_POLL_DESCRIPTOR; <br/>
+int BIO_get_rpoll_descriptor(BIO *b, BIO_POLL_DESCRIPTOR
+*desc); <br/>
+int BIO_get_wpoll_descriptor(BIO *b, BIO_POLL_DESCRIPTOR
+*desc);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_rpoll_descriptor()</b>
+and <b>BIO_get_wpoll_descriptor()</b>, on success, fill
+<i>*desc</i> with a poll descriptor. A poll descriptor is a
+tagged union structure which represents some kind of OS or
+non−OS resource which can be used to synchronise on
+I/O availability events.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_rpoll_descriptor()</b>
+outputs a descriptor which can be used to determine when the
+BIO can (potentially) next be read, and
+<b>BIO_get_wpoll_descriptor()</b> outputs a descriptor which
+can be used to determine when the BIO can (potentially) next
+be written.</p>
+<p style="margin-left:9%; margin-top: 1em">It is
+permissible for <b>BIO_get_rpoll_descriptor()</b> and
+<b>BIO_get_wpoll_descriptor()</b> to output the same
+descriptor.</p>
+<p style="margin-left:9%; margin-top: 1em">Poll descriptors
+can represent different kinds of information. A typical kind
+of resource which might be represented by a poll descriptor
+is an OS file descriptor which can be used with APIs such as
+<b>select()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">The kinds of
+poll descriptor defined by OpenSSL are: <br/>
+BIO_POLL_DESCRIPTOR_TYPE_NONE</p>
+<p style="margin-left:14%;">Represents the absence of a
+valid poll descriptor. It may be used by
+<b>BIO_get_rpoll_descriptor()</b> or
+<b>BIO_get_wpoll_descriptor()</b> to indicate that the BIO
+is not pollable for readability or writeability
+respectively.</p>
+<p style="margin-left:14%; margin-top: 1em">For this type,
+no field within the <i>value</i> field of the
+<b>BIO_POLL_DESCRIPTOR</b> is valid.</p>
+<p style="margin-left:9%;">BIO_POLL_DESCRIPTOR_TYPE_SOCK_FD</p>
+<p style="margin-left:14%;">The poll descriptor represents
+an OS socket resource. The field <i>value.fd</i> in the
+<b>BIO_POLL_DESCRIPTOR</b> is valid if it is not set to
+−1.</p>
+<p style="margin-left:14%; margin-top: 1em">The resource is
+whatever kind of handle is used by a given OS to represent
+sockets, which may vary by OS. For example, on Windows, the
+value is a <b>SOCKET</b> for use with the Winsock API. On
+POSIX−like platforms, it is a file descriptor.</p>
+<p style="margin-left:14%; margin-top: 1em">Where a poll
+descriptor of this type is output by
+<b>BIO_get_rpoll_descriptor()</b>, it should be polled for
+readability to determine when the BIO might next be able to
+successfully complete a <b>BIO_read()</b> operation;
+likewise, where a poll descriptor of this type is output by
+<b>BIO_get_wpoll_descriptor()</b>, it should be polled for
+writeability to determine when the BIO might next be able to
+successfully complete a <b>BIO_write()</b> operation.</p>
+<p style="margin-left:9%;">BIO_POLL_DESCRIPTOR_CUSTOM_START</p>
+<p style="margin-left:14%;">Type values beginning with this
+value (inclusive) are reserved for application allocation
+for custom poll descriptor types. Any of the definitions in
+the union field <i>value</i> can be used by the application
+arbitrarily as opaque values.</p>
+<p style="margin-left:9%; margin-top: 1em">Because poll
+descriptors are a tagged union structure, they can represent
+different kinds of information. New types of poll descriptor
+may be defined, including by applications, according to
+their needs.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The functions
+<b>BIO_get_rpoll_descriptor()</b> and
+<b>BIO_get_wpoll_descriptor()</b> return 1 on success and 0
+on failure.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+are permitted to succeed and initialise <i>*desc</i> with a
+poll descriptor of type <b>BIO_POLL_DESCRIPTOR_TYPE_NONE</b>
+to indicate that the BIO is not pollable for readability or
+writeability respectively.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_handle_events</b>(3),
+<b>SSL_get_event_timeout</b>(3),
+<b>SSL_get_rpoll_descriptor</b>(3),
+<b>SSL_get_wpoll_descriptor</b>(3), <b>bio</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>SSL_get_rpoll_descriptor()</b> and
+<b>SSL_get_wpoll_descriptor()</b> functions were added in
+OpenSSL 3.2.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2022−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

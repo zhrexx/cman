@@ -1,0 +1,279 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:23 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OSSL_SELF_TEST_NEW</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">OSSL_SELF_TEST_NEW</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">OSSL_SELF_TEST_new,
+OSSL_SELF_TEST_free, OSSL_SELF_TEST_onbegin,
+OSSL_SELF_TEST_oncorrupt_byte, OSSL_SELF_TEST_onend −
+functionality to trigger a callback during a self test</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/self_test.h&gt; <br/>
+OSSL_SELF_TEST *OSSL_SELF_TEST_new(OSSL_CALLBACK *cb, void
+*cbarg); <br/>
+void OSSL_SELF_TEST_free(OSSL_SELF_TEST *st); <br/>
+void OSSL_SELF_TEST_onbegin(OSSL_SELF_TEST *st, const char
+*type, <br/>
+const char *desc); <br/>
+int OSSL_SELF_TEST_oncorrupt_byte(OSSL_SELF_TEST *st,
+unsigned char *bytes); <br/>
+void OSSL_SELF_TEST_onend(OSSL_SELF_TEST *st, int ret);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These methods
+are intended for use by provider implementers, to display
+diagnostic information during self testing.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_SELF_TEST_new()</b>
+allocates an opaque <b>OSSL_SELF_TEST</b> object that has a
+callback and callback argument associated with it.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback
+<i>cb</i> may be triggered multiple times by a self test to
+indicate different phases.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_SELF_TEST_free()</b>
+frees the space allocated by <b>OSSL_SELF_TEST_new()</b>. If
+the argument is NULL, nothing is done.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_SELF_TEST_onbegin()</b>
+may be inserted at the start of a block of self test code.
+It can be used for diagnostic purposes. If this method is
+called the callback <i>cb</i> will receive the following
+<b>OSSL_PARAM</b>(3) object. <br/>
+"st−phase"
+(<b>OSSL_PROV_PARAM_SELF_TEST_PHASE</b>) &lt;UTF8
+string&gt;</p>
+<p style="margin-left:14%;">The value is the string
+"Start"</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_SELF_TEST_oncorrupt_byte()</b>
+may be inserted just after the known answer is calculated,
+but before the self test compares the result. The first byte
+in the passed in array of <i>bytes</i> will be corrupted if
+the callback returns 0, otherwise it leaves the array
+unaltered. It can be used for failure testing. The
+<i>type</i> and <i>desc</i> can be used to identify an
+individual self test to target for failure testing. If this
+method is called the callback <i>cb</i> will receive the
+following <b>OSSL_PARAM</b>(3) object. <br/>
+"st−phase"
+(<b>OSSL_PROV_PARAM_SELF_TEST_PHASE</b>) &lt;UTF8
+string&gt;</p>
+<p style="margin-left:14%;">The value is the string
+"Corrupt"</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_SELF_TEST_onend()</b>
+may be inserted at the end of a block of self test code just
+before cleanup to indicate if the test passed or failed. It
+can be used for diagnostic purposes. If this method is
+called the callback <i>cb</i> will receive the following
+<b>OSSL_PARAM</b>(3) object. <br/>
+"st−phase"
+(<b>OSSL_PROV_PARAM_SELF_TEST_PHASE</b>) &lt;UTF8
+string&gt;</p>
+<p style="margin-left:14%;">The value of the string is
+"Pass" if <i>ret</i> is non zero, otherwise it has
+the value "Fail".</p>
+<p style="margin-left:9%; margin-top: 1em">After the
+callback <i>cb</i> has been called the values that were set
+by <b>OSSL_SELF_TEST_onbegin()</b> for <i>type</i> and
+<i>desc</i> are set to the value "None".</p>
+<p style="margin-left:9%; margin-top: 1em">If
+<b>OSSL_SELF_TEST_onbegin()</b>,
+<b>OSSL_SELF_TEST_oncorrupt_byte()</b> or
+<b>OSSL_SELF_TEST_onend()</b> is called the following
+additional <b>OSSL_PARAM</b>(3) are passed to the callback.
+<br/>
+"st−type"
+(<b>OSSL_PROV_PARAM_SELF_TEST_TYPE</b>) &lt;UTF8
+string&gt;</p>
+<p style="margin-left:14%;">The value is setup by the
+<i>type</i> passed to <b>OSSL_SELF_TEST_onbegin()</b>. This
+allows the callback to identify the type of test being
+run.</p>
+<p style="margin-left:9%;">"st−desc"
+(<b>OSSL_PROV_PARAM_SELF_TEST_DESC</b>) &lt;UTF8
+string&gt;</p>
+<p style="margin-left:14%;">The value is setup by the
+<i>type</i> passed to <b>OSSL_SELF_TEST_onbegin()</b>. This
+allows the callback to identify the sub category of the test
+being run.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_SELF_TEST_new()</b>
+returns the allocated <b>OSSL_SELF_TEST</b> object, or NULL
+if it fails.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_SELF_TEST_oncorrupt_byte()</b>
+returns 1 if corruption occurs, otherwise it returns 0.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">A single self
+test could be set up in the following way:</p>
+<p style="margin-left:9%; margin-top: 1em">OSSL_SELF_TEST
+*st = NULL; <br/>
+OSSL_CALLBACK *cb; <br/>
+void *cbarg; <br/>
+int ok = 0; <br/>
+unsigned char out[EVP_MAX_MD_SIZE]; <br/>
+unsigned int out_len = 0; <br/>
+EVP_MD_CTX *ctx = EVP_MD_CTX_new(); <br/>
+EVP_MD *md = EVP_MD_fetch(libctx, t−&gt;algorithm,
+NULL); <br/>
+/* <br/>
+* Retrieve the callback − will be NULL if not set by
+the application via <br/>
+* OSSL_SELF_TEST_set_callback(). <br/>
+*/ <br/>
+OSSL_SELF_TEST_get_callback(libctx, &amp;cb, &amp;cbarg);
+<br/>
+st = OSSL_SELF_TEST_new(cb, cb_arg); <br/>
+/* Trigger the optional callback */ <br/>
+OSSL_SELF_TEST_onbegin(st, OSSL_SELF_TEST_TYPE_KAT_DIGEST,
+<br/>
+OSSL_SELF_TEST_DESC_MD_SHA2); <br/>
+if (!EVP_DigestInit_ex(ctx, md, NULL) <br/>
+|| !EVP_DigestUpdate(ctx, pt, pt_len) <br/>
+|| !EVP_DigestFinal(ctx, out, &amp;out_len)) <br/>
+goto err; <br/>
+/* Optional corruption − If the application callback
+returns 0 */ <br/>
+OSSL_SELF_TEST_oncorrupt_byte(st, out); <br/>
+if (out_len != t−&gt;expected_len <br/>
+|| memcmp(out, t−&gt;expected, out_len) != 0) <br/>
+goto err; <br/>
+ok = 1; <br/>
+err: <br/>
+OSSL_SELF_TEST_onend(st, ok); <br/>
+EVP_MD_free(md); <br/>
+EVP_MD_CTX_free(ctx);</p>
+<p style="margin-left:9%; margin-top: 1em">Multiple self
+test's can be set up in a similar way by repeating the
+pattern of <b>OSSL_SELF_TEST_onbegin()</b>,
+<b>OSSL_SELF_TEST_oncorrupt_byte()</b>,
+<b>OSSL_SELF_TEST_onend()</b> for each test.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>OSSL_SELF_TEST_set_callback</b>(3),
+<b>openssl−core.h</b>(7),
+<b>OSSL_PROVIDER−FIPS</b>(7)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The functions
+described here were added in OpenSSL 3.0.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2020−2024 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

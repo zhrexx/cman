@@ -1,0 +1,248 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:57 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Exporter::Tiny::Manual::Etc</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Exporter::Tiny::Manual::Etc</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Utility Functions">Utility Functions</a><br/>
+<a href="#History">History</a><br/>
+<a href="#Obligatory Exporter Comparison">Obligatory Exporter Comparison</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENCE">COPYRIGHT AND LICENCE</a><br/>
+<a href="#DISCLAIMER OF WARRANTIES">DISCLAIMER OF WARRANTIES</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Exporter::Tiny::Manual::Etc
+− odds and ends</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<h3>Utility Functions
+<a name="Utility Functions"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Exporter::Tiny
+is itself an exporter!</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+are really for internal use, but can be exported if you need
+them: <br/>
+mkopt(\@array)</p>
+<p style="margin-left:14%;">Similar to "mkopt"
+from Data::OptList. It doesn't support all the fancy options
+that Data::OptList does ("moniker",
+"require_unique", "must_be" and
+"name_test") but runs about 50% faster.</p>
+<p style="margin-left:9%;">mkopt_hash(\@array)</p>
+<p style="margin-left:14%;">Similar to
+"mkopt_hash" from Data::OptList. See also
+"mkopt".</p>
+<h3>History
+<a name="History"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Type::Library
+had a bunch of custom exporting code which poked coderefs
+into its caller's stash. It needed this to be something more
+powerful than most exporters so that it could switch between
+exporting Moose, Mouse and Moo−compatible objects on
+request. Sub::Exporter would have been capable, but had too
+many dependencies for the Type::Tiny project.</p>
+<p style="margin-left:9%; margin-top: 1em">Meanwhile
+Type::Utils, Types::TypeTiny and Test::TypeTiny each used
+the venerable Exporter.pm. However, this meant they were
+unable to use the features like Sub::Exporter−style
+function renaming which I'd built into Type::Library:</p>
+<p style="margin-left:9%; margin-top: 1em">## import
+"Str" but rename it to "String". <br/>
+use Types::Standard "Str" =&gt; { −as =&gt;
+"String" };</p>
+<p style="margin-left:9%; margin-top: 1em">And so I decided
+to factor out code that could be shared by all
+Type−Tiny's exporters into a single place:
+Exporter::TypeTiny.</p>
+<p style="margin-left:9%; margin-top: 1em">As of version
+0.026, Exporter::TypeTiny was also made available as
+Exporter::Tiny, distributed independently on CPAN.
+CHOCOLATEBOY had convinced me that it was mature enough to
+live a life of its own.</p>
+<p style="margin-left:9%; margin-top: 1em">As of version
+0.030, Type−Tiny depends on Exporter::Tiny and
+Exporter::TypeTiny is being phased out.</p>
+<h3>Obligatory Exporter Comparison
+<a name="Obligatory Exporter Comparison"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Exporting is
+unlikely to be your application's performance bottleneck,
+but nonetheless here are some comparisons.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Comparative
+sizes according to Devel::SizeMe:</b></p>
+<p style="margin-left:9%; margin-top: 1em">Exporter 217.1Kb
+<br/>
+Sub::Exporter::Progressive 263.2Kb <br/>
+Exporter::Tiny 267.7Kb <br/>
+Exporter + Exporter::Heavy 281.5Kb <br/>
+Exporter::Renaming 406.2Kb <br/>
+Sub::Exporter 701.0Kb</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Performance
+exporting a single sub:</b></p>
+<p style="margin-left:9%; margin-top: 1em">Rate SubExp
+ExpTiny SubExpProg ExpPM <br/>
+SubExp 2489/s −− −56% −85%
+−88% <br/>
+ExpTiny 5635/s 126% −− −67% −72%
+<br/>
+SubExpProg 16905/s 579% 200% −− −16% <br/>
+ExpPM 20097/s 707% 257% 19% −−</p>
+<p style="margin-left:9%; margin-top: 1em">(Exporter::Renaming
+globally changes the behaviour of Exporter.pm, so could not
+be included in the same benchmarks.)</p>
+<p style="margin-left:9%; margin-top: 1em"><b>(Non−Core)
+Dependencies:</b></p>
+<p style="margin-left:9%; margin-top: 1em">Exporter
+−1 <br/>
+Exporter::Renaming 0 <br/>
+Exporter::Tiny 0 <br/>
+Sub::Exporter::Progressive 0 <br/>
+Sub::Exporter 3</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Features:</b></p>
+<p style="margin-left:9%; margin-top: 1em">ExpPM ExpTiny
+SubExp SubExpProg <br/>
+Can export code symbols............. Yes Yes Yes Yes <br/>
+Can export non−code symbols......... Yes Yes <br/>
+Groups/tags......................... Yes Yes Yes Yes <br/>
+Export by regexp.................... Yes Yes <br/>
+Bang prefix......................... Yes Yes <br/>
+Allows renaming of subs............. Yes Yes Maybe <br/>
+Install code into scalar refs....... Yes Yes Maybe <br/>
+Can be passed an "into" parameter... Yes Yes Maybe
+<br/>
+Can be passed an "installer" sub.... Yes Yes Maybe
+<br/>
+Config avoids package variables..... Yes <br/>
+Supports generators................. Yes Yes <br/>
+Sane API for generators............. Yes Yes <br/>
+Unimport............................ Yes</p>
+<p style="margin-left:9%; margin-top: 1em">(Certain
+Sub::Exporter::Progressive features are only available if
+Sub::Exporter is installed.)</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">&lt;https://exportertiny.github.io/&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">Exporter::Shiny,
+Exporter::Tiny.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Toby Inkster
+&lt;tobyink@cpan.org&gt;.</p>
+<h2>COPYRIGHT AND LICENCE
+<a name="COPYRIGHT AND LICENCE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This software is
+copyright (c) 2013−2014, 2017, 2022−2023 by Toby
+Inkster.</p>
+<p style="margin-left:9%; margin-top: 1em">This is free
+software; you can redistribute it and/or modify it under the
+same terms as the Perl 5 programming language system
+itself.</p>
+<h2>DISCLAIMER OF WARRANTIES
+<a name="DISCLAIMER OF WARRANTIES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">THIS PACKAGE IS
+PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE
+IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A
+PARTICULAR PURPOSE.</p>
+<hr/>
+</body>
+</html>

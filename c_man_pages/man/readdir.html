@@ -1,0 +1,232 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:50:25 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>readdir</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">readdir</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#VERSIONS">VERSIONS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">readdir −
+read directory entry</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;sys/syscall.h&gt;</b> /* Definition of <b>SYS_*</b>
+constants */ <b><br/>
+#include &lt;unistd.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+syscall(SYS_readdir, unsigned int</b> <i>fd</i><b>, <br/>
+struct old_linux_dirent *</b><i>dirp</i><b>, unsigned
+int</b> <i>count</i><b>);</b></p>
+<p style="margin-left:9%; margin-top: 1em"><i>Note</i>:
+There is no definition of <b>struct old_linux_dirent</b>;
+see NOTES.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This is not the
+function you are interested in. Look at <b>readdir</b>(3)
+for the POSIX conforming C library interface. This page
+documents the bare kernel system call interface, which is
+superseded by <b>getdents</b>(2).</p>
+<p style="margin-left:9%; margin-top: 1em"><b>readdir</b>()
+reads one <i>old_linux_dirent</i> structure from the
+directory referred to by the file descriptor <i>fd</i> into
+the buffer pointed to by <i>dirp</i>. The argument
+<i>count</i> is ignored; at most one <i>old_linux_dirent</i>
+structure is read.</p>
+<p style="margin-left:9%; margin-top: 1em">The
+<i>old_linux_dirent</i> structure is declared (privately in
+Linux kernel file <b>fs/readdir.c</b>) as follows:</p>
+<p style="margin-left:14%; margin-top: 1em">struct
+old_linux_dirent { <br/>
+unsigned long d_ino; /* inode number */ <br/>
+unsigned long d_offset; /* offset to this
+<i>old_linux_dirent</i> */ <br/>
+unsigned short d_namlen; /* length of this <i>d_name</i> */
+<br/>
+char d_name[1]; /* filename (null−terminated) */ <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em"><i>d_ino</i> is
+an inode number. <i>d_offset</i> is the distance from the
+start of the directory to this <i>old_linux_dirent</i>.
+<i>d_reclen</i> is the size of <i>d_name</i>, not counting
+the terminating null byte ('\0'). <i>d_name</i> is a
+null-terminated filename.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success, 1 is
+returned. On end of directory, 0 is returned. On error,
+−1 is returned, and <i>errno</i> is set to indicate
+the error.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EBADF</b></p></td>
+<td width="1%"></td>
+<td width="77%">
+<p style="margin-top: 1em">Invalid file descriptor
+<i>fd</i>.</p> </td>
+<td width="5%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EFAULT</b></p></td>
+<td width="1%"></td>
+<td width="77%">
+<p>Argument points outside the calling process’s
+address space.</p></td>
+<td width="5%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="77%">
+<p>Result buffer is too small.</p></td>
+<td width="5%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOENT</b></p></td>
+<td width="1%"></td>
+<td width="77%">
+<p>No such directory.</p></td>
+<td width="5%">
+</td></tr>
+</table>
+<p style="margin-left:9%;"><b>ENOTDIR</b></p>
+<p style="margin-left:18%;">File descriptor does not refer
+to a directory.</p>
+<h2>VERSIONS
+<a name="VERSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">You will need to
+define the <i>old_linux_dirent</i> structure yourself.
+However, probably you should use <b>readdir</b>(3)
+instead.</p>
+<p style="margin-left:9%; margin-top: 1em">This system call
+does not exist on x86-64.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Linux.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>getdents</b>(2),
+<b>readdir</b>(3)</p>
+<hr/>
+</body>
+</html>

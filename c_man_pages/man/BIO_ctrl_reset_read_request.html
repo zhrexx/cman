@@ -1,0 +1,340 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:35 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BIO_S_BIO</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">BIO_S_BIO</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#WARNINGS">WARNINGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">BIO_s_bio,
+BIO_make_bio_pair, BIO_destroy_bio_pair, BIO_shutdown_wr,
+BIO_set_write_buf_size, BIO_get_write_buf_size,
+BIO_new_bio_pair, BIO_get_write_guarantee,
+BIO_ctrl_get_write_guarantee, BIO_get_read_request,
+BIO_ctrl_get_read_request, BIO_ctrl_reset_read_request
+− BIO pair BIO</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/bio.h&gt; <br/>
+const BIO_METHOD *BIO_s_bio(void); <br/>
+int BIO_make_bio_pair(BIO *b1, BIO *b2); <br/>
+int BIO_destroy_bio_pair(BIO *b); <br/>
+int BIO_shutdown_wr(BIO *b); <br/>
+int BIO_set_write_buf_size(BIO *b, long size); <br/>
+size_t BIO_get_write_buf_size(BIO *b, long size); <br/>
+int BIO_new_bio_pair(BIO **bio1, size_t writebuf1, BIO
+**bio2, size_t writebuf2); <br/>
+int BIO_get_write_guarantee(BIO *b); <br/>
+size_t BIO_ctrl_get_write_guarantee(BIO *b); <br/>
+int BIO_get_read_request(BIO *b); <br/>
+size_t BIO_ctrl_get_read_request(BIO *b); <br/>
+int BIO_ctrl_reset_read_request(BIO *b);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_s_bio()</b>
+returns the method for a BIO pair. A BIO pair is a pair of
+source/sink BIOs where data written to either half of the
+pair is buffered and can be read from the other half. Both
+halves must usually by handled by the same application
+thread since no locking is done on the internal data
+structures.</p>
+<p style="margin-left:9%; margin-top: 1em">Since BIO chains
+typically end in a source/sink BIO it is possible to make
+this one half of a BIO pair and have all the data processed
+by the chain under application control.</p>
+<p style="margin-left:9%; margin-top: 1em">One typical use
+of BIO pairs is to place TLS/SSL I/O under application
+control, this can be used when the application wishes to use
+a non standard transport for TLS/SSL or the normal socket
+routines are inappropriate.</p>
+<p style="margin-left:9%; margin-top: 1em">Calls to
+<b>BIO_read_ex()</b> will read data from the buffer or
+request a retry if no data is available.</p>
+<p style="margin-left:9%; margin-top: 1em">Calls to
+<b>BIO_write_ex()</b> will place data in the buffer or
+request a retry if the buffer is full.</p>
+<p style="margin-left:9%; margin-top: 1em">The standard
+calls <b>BIO_ctrl_pending()</b> and
+<b>BIO_ctrl_wpending()</b> can be used to determine the
+amount of pending data in the read or write buffer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_reset()</b>
+clears any data in the write buffer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_make_bio_pair()</b>
+joins two separate BIOs into a connected pair.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_destroy_pair()</b>
+destroys the association between two connected BIOs. Freeing
+up any half of the pair will automatically destroy the
+association.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_shutdown_wr()</b>
+is used to close down a BIO <b>b</b>. After this call no
+further writes on BIO <b>b</b> are allowed (they will return
+an error). Reads on the other half of the pair will return
+any pending data or EOF when all pending data has been
+read.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_set_write_buf_size()</b>
+sets the write buffer size of BIO <b>b</b> to <b>size</b>.
+If the size is not initialized a default value is used. This
+is currently 17K, sufficient for a maximum size TLS
+record.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_write_buf_size()</b>
+returns the size of the write buffer.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_new_bio_pair()</b>
+combines the calls to <b>BIO_new()</b>,
+<b>BIO_make_bio_pair()</b> and
+<b>BIO_set_write_buf_size()</b> to create a connected pair
+of BIOs <b>bio1</b>, <b>bio2</b> with write buffer sizes
+<b>writebuf1</b> and <b>writebuf2</b>. If either size is
+zero then the default size is used.
+<b>BIO_new_bio_pair()</b> does not check whether <b>bio1</b>
+or <b>bio2</b> do point to some other BIO, the values are
+overwritten, <b>BIO_free()</b> is not called.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_write_guarantee()</b>
+and <b>BIO_ctrl_get_write_guarantee()</b> return the maximum
+length of data that can be currently written to the BIO.
+Writes larger than this value will return a value from
+<b>BIO_write_ex()</b> less than the amount requested or if
+the buffer is full request a retry.
+<b>BIO_ctrl_get_write_guarantee()</b> is a function whereas
+<b>BIO_get_write_guarantee()</b> is a macro.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_get_read_request()</b>
+and <b>BIO_ctrl_get_read_request()</b> return the amount of
+data requested, or the buffer size if it is less, if the
+last read attempt at the other half of the BIO pair failed
+due to an empty buffer. This can be used to determine how
+much data should be written to the BIO so the next read will
+succeed: this is most useful in TLS/SSL applications where
+the amount of data read is usually meaningful rather than
+just a buffer size. After a successful read this call will
+return zero. It also will return zero once new data has been
+written satisfying the read request or part of it. Note that
+<b>BIO_get_read_request()</b> never returns an amount larger
+than that returned by <b>BIO_get_write_guarantee()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_ctrl_reset_read_request()</b>
+can also be used to reset the value returned by
+<b>BIO_get_read_request()</b> to zero.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Both halves of a
+BIO pair should be freed. That is even if one half is
+implicit freed due to a <b>BIO_free_all()</b> or
+<b>SSL_free()</b> call the other half needs to be freed.</p>
+<p style="margin-left:9%; margin-top: 1em">When used in
+bidirectional applications (such as TLS/SSL) care should be
+taken to flush any data in the write buffer. This can be
+done by calling <b>BIO_pending()</b> on the other half of
+the pair and, if any data is pending, reading it and sending
+it to the underlying transport. This must be done before any
+normal processing (such as calling <b>select()</b> ) due to
+a request and <b>BIO_should_read()</b> being true.</p>
+<p style="margin-left:9%; margin-top: 1em">To see why this
+is important consider a case where a request is sent using
+<b>BIO_write_ex()</b> and a response read with
+<b>BIO_read_ex()</b>, this can occur during an TLS/SSL
+handshake for example. <b>BIO_write_ex()</b> will succeed
+and place data in the write buffer. <b>BIO_read_ex()</b>
+will initially fail and <b>BIO_should_read()</b> will be
+true. If the application then waits for data to be available
+on the underlying transport before flushing the write buffer
+it will never succeed because the request was never
+sent!</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_eof()</b>
+is true if no data is in the peer BIO and the peer BIO has
+been shutdown.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_make_bio_pair()</b>,
+<b>BIO_destroy_bio_pair()</b>, <b>BIO_shutdown_wr()</b>,
+<b>BIO_set_write_buf_size()</b>,
+<b>BIO_get_write_buf_size()</b>,
+<b>BIO_get_write_guarantee()</b>, and
+<b>BIO_get_read_request()</b> are implemented as macros.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>BIO_new_bio_pair()</b>
+returns 1 on success, with the new BIOs available in
+<b>bio1</b> and <b>bio2</b>, or 0 on failure, with NULL
+pointers stored into the locations for <b>bio1</b> and
+<b>bio2</b>. Check the error stack for more information.</p>
+<p style="margin-left:9%; margin-top: 1em">[XXXXX: More
+return values need to be added here]</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The BIO pair can
+be used to have full control over the network access of an
+application. The application can call <b>select()</b> on the
+socket as required without having to go through the
+SSL−interface.</p>
+<p style="margin-left:9%; margin-top: 1em">BIO
+*internal_bio, *network_bio; <br/>
+... <br/>
+BIO_new_bio_pair(&amp;internal_bio, 0, &amp;network_bio, 0);
+<br/>
+SSL_set_bio(ssl, internal_bio, internal_bio); <br/>
+SSL_operations(); /* e.g. SSL_read and SSL_write */ <br/>
+... <br/>
+application | TLS−engine <br/>
+| | <br/>
+
++−−−−−−−−−−&gt;
+SSL_operations() <br/>
+| /\ || <br/>
+| || \/ <br/>
+| BIO−pair (internal_bio) <br/>
+| BIO−pair (network_bio) <br/>
+| || /\ <br/>
+| \/ || <br/>
+
++−−−−−−−−−−−&lt;
+BIO_operations() <br/>
+| | <br/>
+| | <br/>
+socket <br/>
+... <br/>
+SSL_free(ssl); /* implicitly frees internal_bio */ <br/>
+BIO_free(network_bio); <br/>
+...</p>
+<p style="margin-left:9%; margin-top: 1em">As the BIO pair
+will only buffer the data and never directly access the
+connection, it behaves nonblocking and will return as soon
+as the write buffer is full or the read buffer is drained.
+Then the application has to flush the write buffer and/or
+fill the read buffer.</p>
+<p style="margin-left:9%; margin-top: 1em">Use the
+<b>BIO_ctrl_pending()</b>, to find out whether data is
+buffered in the BIO and must be transferred to the network.
+Use <b>BIO_ctrl_get_read_request()</b> to find out, how many
+bytes must be written into the buffer before the
+<b>SSL_operation()</b> can successfully be continued.</p>
+<h2>WARNINGS
+<a name="WARNINGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">As the data is
+buffered, <b>SSL_operation()</b> may return with an
+ERROR_SSL_WANT_READ condition, but there is still data in
+the write buffer. An application must not rely on the error
+value of <b>SSL_operation()</b> but must assure that the
+write buffer is always flushed first. Otherwise a deadlock
+may occur as the peer might be waiting for the data before
+being able to continue.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_set_bio</b>(3),
+<b>ssl</b>(7), <b>bio</b>(7), <b>BIO_should_retry</b>(3),
+<b>BIO_read_ex</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2000−2020 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

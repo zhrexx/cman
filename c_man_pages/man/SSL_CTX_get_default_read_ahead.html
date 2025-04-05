@@ -1,0 +1,193 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:12 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SSL_CTX_SET_READ_AHEAD</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">SSL_CTX_SET_READ_AHEAD</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">SSL_CTX_set_read_ahead,
+SSL_CTX_get_read_ahead, SSL_set_read_ahead,
+SSL_get_read_ahead, SSL_CTX_get_default_read_ahead −
+manage whether to read as many input bytes as possible</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/ssl.h&gt; <br/>
+void SSL_set_read_ahead(SSL *s, int yes); <br/>
+int SSL_get_read_ahead(const SSL *s); <br/>
+SSL_CTX_set_read_ahead(SSL_CTX *ctx, int yes); <br/>
+long SSL_CTX_get_read_ahead(SSL_CTX *ctx); <br/>
+long SSL_CTX_get_default_read_ahead(SSL_CTX *ctx);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_set_read_ahead()</b>
+and <b>SSL_set_read_ahead()</b> set whether we should read
+as many input bytes as possible (for nonblocking reads) or
+not. For example if <b>x</b> bytes are currently required by
+OpenSSL, but <b>y</b> bytes are available from the
+underlying BIO (where <b>y</b> &gt; <b>x</b>), then OpenSSL
+will read all <b>y</b> bytes into its buffer (providing that
+the buffer is large enough) if reading ahead is on, or
+<b>x</b> bytes otherwise. Setting the parameter <b>yes</b>
+to 0 turns reading ahead is off, other values turn it on.
+<b>SSL_CTX_set_default_read_ahead()</b> is identical to
+<b>SSL_CTX_set_read_ahead()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_CTX_get_read_ahead()</b>
+and <b>SSL_get_read_ahead()</b> indicate whether reading
+ahead has been set or not.
+<b>SSL_CTX_get_default_read_ahead()</b> is identical to
+<b>SSL_CTX_get_read_ahead()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">These functions
+cannot be used with QUIC SSL objects.
+<b>SSL_set_read_ahead()</b> has no effect if called on a
+QUIC SSL object.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">These functions
+have no impact when used with DTLS. The return values for
+<b>SSL_CTX_get_read_head()</b> and
+<b>SSL_get_read_ahead()</b> are undefined for DTLS. Setting
+<b>read_ahead</b> can impact the behaviour of the
+<b>SSL_pending()</b> function (see
+<b>SSL_pending</b>(3)).</p>
+<p style="margin-left:9%; margin-top: 1em">Since
+<b>SSL_read()</b> can return <b>SSL_ERROR_WANT_READ</b> for
+non−application data records, and
+<b>SSL_has_pending()</b> can't tell the difference between
+processed and unprocessed data, it's recommended that if
+read ahead is turned on that <b>SSL_MODE_AUTO_RETRY</b> is
+not turned off using <b>SSL_CTX_clear_mode()</b>. That will
+prevent getting <b>SSL_ERROR_WANT_READ</b> when there is
+still a complete record available that hasn't been
+processed.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+application wants to continue to use the underlying
+transport (e.g. TCP connection) after the SSL connection is
+finished using <b>SSL_shutdown()</b> reading ahead should be
+turned off. Otherwise the SSL structure might read data that
+it shouldn't.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>SSL_get_read_ahead()</b>
+and <b>SSL_CTX_get_read_ahead()</b> return 0 if reading
+ahead is off, and non zero otherwise.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ssl</b>(7),
+<b>SSL_pending</b>(3)</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2015−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>

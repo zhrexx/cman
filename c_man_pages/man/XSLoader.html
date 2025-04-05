@@ -1,0 +1,381 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:57:07 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>XSLoader</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">XSLoader</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href='#Migration from "DynaLoader"'>Migration from "DynaLoader"</a><br/>
+<a href="#Backward compatible boilerplate">Backward compatible boilerplate</a><br/>
+<a href="#Order of initialization: early load()">Order of initialization: early load()</a><br/>
+<a href="#The most hairy case">The most hairy case</a><br/>
+<a href="#DIAGNOSTICS">DIAGNOSTICS</a><br/>
+<a href="#LIMITATIONS">LIMITATIONS</a><br/>
+<a href="#KNOWN BUGS">KNOWN BUGS</a><br/>
+<a href="#BUGS">BUGS</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHORS">AUTHORS</a><br/>
+<a href="#COPYRIGHT &amp; LICENSE">COPYRIGHT &amp; LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">XSLoader −
+Dynamically load C libraries into Perl code</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Version 0.32</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">package
+YourPackage; <br/>
+require XSLoader; <br/>
+XSLoader::load(__PACKAGE__, $VERSION);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+defines a standard <i>simplified</i> interface to the
+dynamic linking mechanisms available on many platforms. Its
+primary purpose is to implement cheap automatic dynamic
+loading of Perl modules.</p>
+<p style="margin-left:9%; margin-top: 1em">For a more
+complicated interface, see DynaLoader. Many (most) features
+of "DynaLoader" are not implemented in
+"XSLoader", like for example the
+"dl_load_flags", not honored by
+"XSLoader".</p>
+<h3>Migration from "DynaLoader"
+<a name='Migration from "DynaLoader"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A typical module
+using DynaLoader starts like this:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+YourPackage; <br/>
+require DynaLoader; <br/>
+our @ISA = qw( OnePackage OtherPackage DynaLoader ); <br/>
+our $VERSION = '0.01'; <br/>
+__PACKAGE__−&gt;bootstrap($VERSION);</p>
+<p style="margin-left:9%; margin-top: 1em">Change this
+to</p>
+<p style="margin-left:9%; margin-top: 1em">package
+YourPackage; <br/>
+use XSLoader; <br/>
+our @ISA = qw( OnePackage OtherPackage ); <br/>
+our $VERSION = '0.01'; <br/>
+XSLoader::load(__PACKAGE__, $VERSION);</p>
+<p style="margin-left:9%; margin-top: 1em">In other words:
+replace "require DynaLoader" by "use
+XSLoader", remove "DynaLoader" from @ISA,
+change "bootstrap" by "XSLoader::load".
+Do not forget to quote the name of your package on the
+"XSLoader::load" line, and add comma
+(",") before the arguments ($VERSION above).</p>
+<p style="margin-left:9%; margin-top: 1em">Of course, if
+@ISA contained only "DynaLoader", there is no need
+to have the @ISA assignment at all; moreover, if instead of
+"our" one uses the more backward-compatible</p>
+<p style="margin-left:9%; margin-top: 1em">use vars
+qw($VERSION @ISA);</p>
+<p style="margin-left:9%; margin-top: 1em">one can remove
+this reference to @ISA together with the @ISA
+assignment.</p>
+<p style="margin-left:9%; margin-top: 1em">If no $VERSION
+was specified on the "bootstrap" line, the last
+line becomes</p>
+<p style="margin-left:9%; margin-top: 1em">XSLoader::load(__PACKAGE__);</p>
+<p style="margin-left:9%; margin-top: 1em">in which case it
+can be further simplified to</p>
+<p style="margin-left:9%; margin-top: 1em">XSLoader::load();</p>
+<p style="margin-left:9%; margin-top: 1em">as
+"load" will use "caller" to determine
+the package.</p>
+<h3>Backward compatible boilerplate
+<a name="Backward compatible boilerplate"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If you want to
+have your cake and eat it too, you need a more complicated
+boilerplate.</p>
+<p style="margin-left:9%; margin-top: 1em">package
+YourPackage; <br/>
+our @ISA = qw( OnePackage OtherPackage ); <br/>
+our $VERSION = '0.01'; <br/>
+eval { <br/>
+require XSLoader; <br/>
+XSLoader::load(__PACKAGE__, $VERSION); <br/>
+1; <br/>
+} or do { <br/>
+require DynaLoader; <br/>
+push @ISA, 'DynaLoader'; <br/>
+__PACKAGE__−&gt;bootstrap($VERSION); <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">The parentheses
+about XSLoader::load() arguments are needed since we
+replaced "use XSLoader" by "require", so
+the compiler does not know that a function XSLoader::load()
+is present.</p>
+<p style="margin-left:9%; margin-top: 1em">This boilerplate
+uses the low-overhead "XSLoader" if present; if
+used with an antique Perl which has no "XSLoader",
+it falls back to using "DynaLoader".</p>
+<h2>Order of initialization: early load()
+<a name="Order of initialization: early load()"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><i>Skip this
+section if the XSUB functions are supposed to be called from
+other modules only; read it only if you call your XSUBs from
+the code in your module, or have a "BOOT:" section
+in your XS file (see "The BOOT: Keyword" in
+perlxs). What is described here is equally applicable to the
+DynaLoader interface.</i></p>
+<p style="margin-left:9%; margin-top: 1em">A sufficiently
+complicated module using XS would have both Perl code
+(defined in <i>YourPackage.pm</i>) and XS code (defined in
+<i>YourPackage.xs</i>). If this Perl code makes calls into
+this XS code, and/or this XS code makes calls to the Perl
+code, one should be careful with the order of
+initialization.</p>
+<p style="margin-left:9%; margin-top: 1em">The call to
+XSLoader::load() (or bootstrap()) calls the module’s
+bootstrap code. For modules build by <i>xsubpp</i> (nearly
+all modules) this has three side effects:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>A sanity check is done to ensure that the versions of
+the <i>.pm</i> and the (compiled) <i>.xs</i> parts are
+compatible. If $VERSION was specified, this is used for the
+check. If not specified, it defaults to "$XS_VERSION //
+$VERSION" (in the module’s namespace)</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>the XSUBs are made accessible from Perl</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>if a "BOOT:" section was present in the
+<i>.xs</i> file, the code there is called.</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Consequently, if
+the code in the <i>.pm</i> file makes calls to these XSUBs,
+it is convenient to have XSUBs installed before the Perl
+code is defined; for example, this makes prototypes for
+XSUBs visible to this Perl code. Alternatively, if the
+"BOOT:" section makes calls to Perl functions (or
+uses Perl variables) defined in the <i>.pm</i> file, they
+must be defined prior to the call to XSLoader::load() (or
+bootstrap()).</p>
+<p style="margin-left:9%; margin-top: 1em">The first
+situation being much more frequent, it makes sense to
+rewrite the boilerplate as</p>
+<p style="margin-left:9%; margin-top: 1em">package
+YourPackage; <br/>
+use XSLoader; <br/>
+our ($VERSION, @ISA); <br/>
+BEGIN { <br/>
+@ISA = qw( OnePackage OtherPackage ); <br/>
+$VERSION = '0.01'; <br/>
+# Put Perl code used in the BOOT: section here <br/>
+XSLoader::load(__PACKAGE__, $VERSION); <br/>
+} <br/>
+# Put Perl code making calls into XSUBs here</p>
+<h3>The most hairy case
+<a name="The most hairy case"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If the
+interdependence of your "BOOT:" section and Perl
+code is more complicated than this (e.g., the
+"BOOT:" section makes calls to Perl functions
+which make calls to XSUBs with prototypes), get rid of the
+"BOOT:" section altogether. Replace it with a
+function onBOOT(), and call it like this:</p>
+<p style="margin-left:9%; margin-top: 1em">package
+YourPackage; <br/>
+use XSLoader; <br/>
+our ($VERSION, @ISA); <br/>
+BEGIN { <br/>
+@ISA = qw( OnePackage OtherPackage ); <br/>
+$VERSION = '0.01'; <br/>
+XSLoader::load(__PACKAGE__, $VERSION); <br/>
+} <br/>
+# Put Perl code used in onBOOT() function here; calls to
+XSUBs are <br/>
+# prototype−checked. <br/>
+onBOOT; <br/>
+# Put Perl initialization code assuming that XS is
+initialized here</p>
+<h2>DIAGNOSTICS
+<a name="DIAGNOSTICS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Can't find
+'%s' symbol in %s"</p>
+<p style="margin-left:14%;"><b>(F)</b> The bootstrap symbol
+could not be found in the extension module.</p>
+<p style="margin-left:9%;">"Can't load '%s' for module
+%s: %s"</p>
+<p style="margin-left:14%;"><b>(F)</b> The loading or
+initialisation of the extension module failed. The detailed
+error follows.</p>
+<p style="margin-left:9%;">"Undefined symbols present
+after loading %s: %s"</p>
+<p style="margin-left:14%;"><b>(W)</b> As the message says,
+some symbols stay undefined although the extension module
+was correctly loaded and initialised. The list of undefined
+symbols follows.</p>
+<h2>LIMITATIONS
+<a name="LIMITATIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">To reduce the
+overhead as much as possible, only one possible location is
+checked to find the extension DLL (this location is where
+"make install" would put the DLL). If not found,
+the search for the DLL is transparently delegated to
+"DynaLoader", which looks for the DLL along the
+@INC list.</p>
+<p style="margin-left:9%; margin-top: 1em">In particular,
+this is applicable to the structure of @INC used for testing
+not-yet-installed extensions. This means that running
+uninstalled extensions may have much more overhead than
+running the same extensions after "make
+install".</p>
+<h2>KNOWN BUGS
+<a name="KNOWN BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The new simpler
+way to call XSLoader::load() with no arguments at all does
+not work on Perl 5.8.4 and 5.8.5.</p>
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please report
+any bugs or feature requests via the <b>perlbug</b>(1)
+utility.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">DynaLoader</p>
+<h2>AUTHORS
+<a name="AUTHORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Ilya Zakharevich
+originally extracted "XSLoader" from
+"DynaLoader".</p>
+<p style="margin-left:9%; margin-top: 1em">CPAN version is
+currently maintained by Sébastien Aperghis-Tramoni
+&lt;sebastien@aperghis.net&gt;.</p>
+<p style="margin-left:9%; margin-top: 1em">Previous
+maintainer was Michael G Schwern
+&lt;schwern@pobox.com&gt;.</p>
+<h2>COPYRIGHT &amp; LICENSE
+<a name="COPYRIGHT &amp; LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+1990−2011 by Larry Wall and others.</p>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

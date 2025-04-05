@@ -1,0 +1,931 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:53:53 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TAP::Harness</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">TAP::Harness</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#VERSION">VERSION</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#Class Methods">Class Methods</a><br/>
+<a href="#Instance Methods">Instance Methods</a><br/>
+<a href="#CONFIGURING">CONFIGURING</a><br/>
+<a href="#Plugins">Plugins</a><br/>
+<a href='#"Module::Build"'>"Module::Build"</a><br/>
+<a href='#"ExtUtils::MakeMaker"'>"ExtUtils::MakeMaker"</a><br/>
+<a href='#"prove"'>"prove"</a><br/>
+<a href="#WRITING PLUGINS">WRITING PLUGINS</a><br/>
+<a href="#SUBCLASSING">SUBCLASSING</a><br/>
+<a href="#Methods">Methods</a><br/>
+<a href="#REPLACING">REPLACING</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">TAP::Harness
+− Run test scripts with statistics</p>
+<h2>VERSION
+<a name="VERSION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Version 3.50</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This is a simple
+test harness which allows tests to be run and results
+automatically aggregated and output to STDOUT.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+TAP::Harness; <br/>
+my $harness = TAP::Harness−&gt;new( \%args ); <br/>
+$harness−&gt;runtests(@tests);</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<h3>Class Methods
+<a name="Class Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>"new"</i></p>
+<p style="margin-left:9%; margin-top: 1em">my %args = (
+<br/>
+verbosity =&gt; 1, <br/>
+lib =&gt; [ 'lib', 'blib/lib', 'blib/arch' ], <br/>
+) <br/>
+my $harness = TAP::Harness−&gt;new( \%args );</p>
+<p style="margin-left:9%; margin-top: 1em">The constructor
+returns a new "TAP::Harness" object. It accepts an
+optional hashref whose allowed keys are:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="14%">
+<p>"verbosity"</p></td>
+<td width="72%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Set the
+verbosity level:</p>
+<p style="margin-left:14%; margin-top: 1em">1 verbose Print
+individual test results to STDOUT. <br/>
+0 normal <br/>
+−1 quiet Suppress some test output (mostly failures
+<br/>
+while tests are running). <br/>
+−2 really quiet Suppress everything but the tests
+summary. <br/>
+−3 silent Suppress everything.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"timer"</p></td>
+<td width="77%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Append run time
+for each test to output. Uses Time::HiRes if available.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p style="margin-top: 1em">"failures"</p></td>
+<td width="73%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Show test
+failures (this is a no−op if "verbose" is
+selected).</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p style="margin-top: 1em">"comments"</p></td>
+<td width="73%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Show test
+comments (this is a no−op if "verbose" is
+selected).</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="15%">
+<p style="margin-top: 1em">"show_count"</p></td>
+<td width="71%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Update the
+running test count during testing.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="14%">
+<p style="margin-top: 1em">"normalize"</p></td>
+<td width="72%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Set to a true
+value to normalize the TAP that is emitted in verbose
+modes.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="7%">
+<p style="margin-top: 1em">"lib"</p></td>
+<td width="79%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Accepts a
+scalar value or array ref of scalar values indicating which
+paths to allowed libraries should be included if Perl tests
+are executed. Naturally, this only makes sense in the
+context of tests written in Perl.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="13%">
+<p style="margin-top: 1em">"switches"</p></td>
+<td width="73%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Accepts a
+scalar value or array ref of scalar values indicating which
+switches should be included if Perl tests are executed.
+Naturally, this only makes sense in the context of tests
+written in Perl.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="14%">
+<p style="margin-top: 1em">"test_args"</p></td>
+<td width="72%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">A reference to
+an @INC style array of arguments to be passed to each test
+program.</p>
+<p style="margin-left:14%; margin-top: 1em">test_args =&gt;
+['foo', 'bar'],</p>
+<p style="margin-left:14%; margin-top: 1em">if you want to
+pass different arguments to each test then you should pass a
+hash of arrays, keyed by the alias for each test:</p>
+<p style="margin-left:14%; margin-top: 1em">test_args =&gt;
+{ <br/>
+my_test =&gt; ['foo', 'bar'], <br/>
+other_test =&gt; ['baz'], <br/>
+}</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"color"</p></td>
+<td width="77%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Attempt to
+produce color output.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"exec"</p></td>
+<td width="78%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Typically, Perl
+tests are run through this. However, anything which spits
+out TAP is fine. You can use this argument to specify the
+name of the program (and optional switches) to run your
+tests with:</p>
+<p style="margin-left:14%; margin-top: 1em">exec =&gt;
+['/usr/bin/ruby', '−w']</p>
+<p style="margin-left:14%; margin-top: 1em">You can also
+pass a subroutine reference in order to determine and return
+the proper program to run based on a given test script. The
+subroutine reference should expect the TAP::Harness object
+itself as the first argument, and the file name as the
+second argument. It should return an array reference
+containing the command to be run and including the test file
+name. It can also simply return "undef", in which
+case TAP::Harness will fall back on executing the test
+script in Perl:</p>
+<p style="margin-left:14%; margin-top: 1em">exec =&gt; sub
+{ <br/>
+my ( $harness, $test_file ) = @_; <br/>
+# Let Perl tests run. <br/>
+return undef if $test_file =˜ /[.]t$/; <br/>
+return [ qw( /usr/bin/ruby −w ), $test_file ] <br/>
+if $test_file =˜ /[.]rb$/; <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">If the
+subroutine returns a scalar with a newline or a filehandle,
+it will be interpreted as raw TAP or as a TAP stream,
+respectively.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"merge"</p></td>
+<td width="77%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">If
+"merge" is true the harness will create parsers
+that merge STDOUT and STDERR together for any processes they
+start.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="12%">
+<p style="margin-top: 1em">"sources"</p></td>
+<td width="74%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em"><i>NEW to
+3.18</i>.</p>
+<p style="margin-left:14%; margin-top: 1em">If set,
+"sources" must be a hashref containing the names
+of the TAP::Parser::SourceHandlers to load and/or configure.
+The values are a hash of configuration that will be
+accessible to the source handlers via "config_for"
+in TAP::Parser::Source.</p>
+<p style="margin-left:14%; margin-top: 1em">For
+example:</p>
+<p style="margin-left:14%; margin-top: 1em">sources =&gt; {
+<br/>
+Perl =&gt; { exec =&gt; '/path/to/custom/perl' }, <br/>
+File =&gt; { extensions =&gt; [ '.tap', '.txt' ] }, <br/>
+MyCustom =&gt; { some =&gt; 'config' }, <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em">The
+"sources" parameter affects how
+"source", "tap" and "exec"
+parameters are handled.</p>
+<p style="margin-left:14%; margin-top: 1em">For more
+details, see the "sources" parameter in
+"new" in TAP::Parser, TAP::Parser::Source, and
+TAP::Parser::IteratorFactory.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="23%">
+<p style="margin-top: 1em">"aggregator_class"</p> </td>
+<td width="63%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The name of the
+class to use to aggregate test results. The default is
+TAP::Parser::Aggregator.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="12%">
+<p style="margin-top: 1em">"version"</p></td>
+<td width="74%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em"><i>NEW to
+3.22</i>.</p>
+<p style="margin-left:14%; margin-top: 1em">Assume this TAP
+version for TAP::Parser instead of default TAP version
+12.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="22%">
+<p style="margin-top: 1em">"formatter_class"</p></td>
+<td width="64%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The name of the
+class to use to format output. The default is
+TAP::Formatter::Console, or TAP::Formatter::File if the
+output isn't a TTY.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="24%">
+<p style="margin-top: 1em">"multiplexer_class"</p> </td>
+<td width="62%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The name of the
+class to use to multiplex tests during parallel testing. The
+default is TAP::Parser::Multiplexer.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="18%">
+<p style="margin-top: 1em">"parser_class"</p></td>
+<td width="68%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The name of the
+class to use to parse TAP. The default is TAP::Parser.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="22%">
+<p style="margin-top: 1em">"scheduler_class"</p></td>
+<td width="64%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The name of the
+class to use to schedule test execution. The default is
+TAP::Parser::Scheduler.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="14%">
+<p style="margin-top: 1em">"formatter"</p></td>
+<td width="72%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">If set
+"formatter" must be an object that is capable of
+formatting the TAP output. See TAP::Formatter::Console for
+an example.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p style="margin-top: 1em">"errors"</p></td>
+<td width="76%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">If parse errors
+are found in the TAP output, a note of this will be made in
+the summary report. To see all of the parse errors, set this
+argument to true:</p>
+<p style="margin-left:14%; margin-top: 1em">errors =&gt;
+1</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="15%">
+<p style="margin-top: 1em">"directives"</p></td>
+<td width="71%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">If set to a
+true value, only test results with directives will be
+displayed. This overrides other settings such as
+"verbose" or "failures".</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="17%">
+<p style="margin-top: 1em">"ignore_exit"</p></td>
+<td width="69%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">If set to a
+true value instruct "TAP::Parser" to ignore exit
+and wait status from test scripts.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"jobs"</p></td>
+<td width="78%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">The maximum
+number of parallel tests to run at any time. Which tests can
+be run in parallel is controlled by "rules". The
+default is to run only one test at a time.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="9%">
+<p style="margin-top: 1em">"rules"</p></td>
+<td width="77%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">A reference to
+a hash of rules that control which tests may be executed in
+parallel. If no rules are declared and CPAN::Meta::YAML is
+available, "TAP::Harness" attempts to load rules
+from a YAML file specified by the "rulesfile"
+parameter. If no rules file exists, the default is for all
+tests to be eligible to be run in parallel.</p>
+<p style="margin-left:14%; margin-top: 1em">Here some
+simple examples. For the full details of the data structure
+and the related glob−style pattern matching, see
+"Rules data structure" in
+TAP::Parser::Scheduler.</p>
+<p style="margin-left:14%; margin-top: 1em"># Run all tests
+in sequence, except those starting with "p" <br/>
+$harness−&gt;rules({ <br/>
+par =&gt; 't/p*.t' <br/>
+}); <br/>
+# Equivalent YAML file <br/>
+−−− <br/>
+par: t/p*.t <br/>
+# Run all tests in parallel, except those starting with
+"p" <br/>
+$harness−&gt;rules({ <br/>
+seq =&gt; [ <br/>
+{ seq =&gt; 't/p*.t' }, <br/>
+{ par =&gt; '**' }, <br/>
+], <br/>
+}); <br/>
+# Equivalent YAML file <br/>
+−−− <br/>
+seq: <br/>
+− seq: t/p*.t <br/>
+− par: ** <br/>
+# Run some startup tests in sequence, then some parallel
+tests than some <br/>
+# teardown tests in sequence. <br/>
+$harness−&gt;rules({ <br/>
+seq =&gt; [ <br/>
+{ seq =&gt; 't/startup/*.t' }, <br/>
+{ par =&gt; ['t/a/*.t','t/b/*.t','t/c/*.t'], } <br/>
+{ seq =&gt; 't/shutdown/*.t' }, <br/>
+], <br/>
+}); <br/>
+# Equivalent YAML file <br/>
+−−− <br/>
+seq: <br/>
+− seq: t/startup/*.t <br/>
+− par: <br/>
+− t/a/*.t <br/>
+− t/b/*.t <br/>
+− t/c/*.t <br/>
+− seq: t/shutdown/*.t</p>
+<p style="margin-left:14%; margin-top: 1em">This is an
+experimental feature and the interface may change.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="15%">
+<p style="margin-top: 1em">"rulesfiles"</p></td>
+<td width="71%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">This specifies
+where to find a YAML file of test scheduling rules. If not
+provided, it looks for a default file to use. It first
+checks for a file given in the "HARNESS_RULESFILE"
+environment variable, then it checks for
+<i>testrules.yml</i> and then <i>t/testrules.yml</i>.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="10%">
+<p style="margin-top: 1em">"stdout"</p></td>
+<td width="76%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">A filehandle
+for catching standard output.</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="8%">
+<p style="margin-top: 1em">"trap"</p></td>
+<td width="78%">
+</td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">Attempt to
+print summary information if run is interrupted by SIGINT
+(Ctrl−C).</p>
+<p style="margin-left:9%; margin-top: 1em">Any keys for
+which the value is "undef" will be ignored.</p>
+<h3>Instance Methods
+<a name="Instance Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><i>"runtests"</i></p>
+<p style="margin-left:9%; margin-top: 1em">$harness−&gt;runtests(@tests);</p>
+<p style="margin-left:9%; margin-top: 1em">Accepts an array
+of @tests to be run. This should generally be the names of
+test files, but this is not required. Each element in @tests
+will be passed to TAP::Parser::new() as a
+"source". See TAP::Parser for more
+information.</p>
+<p style="margin-left:9%; margin-top: 1em">It is possible
+to provide aliases that will be displayed in place of the
+test name by supplying the test as a reference to an array
+containing "[ $test, $alias ]":</p>
+<p style="margin-left:9%; margin-top: 1em">$harness−&gt;runtests(
+[ 't/foo.t', 'Foo Once' ], <br/>
+[ 't/foo.t', 'Foo Twice' ] );</p>
+<p style="margin-left:9%; margin-top: 1em">Normally it is
+an error to attempt to run the same test twice. Aliases
+allow you to overcome this limitation by giving each run of
+the test a unique name.</p>
+<p style="margin-left:9%; margin-top: 1em">Tests will be
+run in the order found.</p>
+<p style="margin-left:9%; margin-top: 1em">If the
+environment variable "PERL_TEST_HARNESS_DUMP_TAP"
+is defined it should name a directory into which a copy of
+the raw TAP for each test will be written. TAP is written to
+files named for each test. Subdirectories will be created as
+needed.</p>
+<p style="margin-left:9%; margin-top: 1em">Returns a
+TAP::Parser::Aggregator containing the test results.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"summary"</i></p>
+<p style="margin-left:9%; margin-top: 1em">$harness−&gt;summary(
+$aggregator );</p>
+<p style="margin-left:9%; margin-top: 1em">Output the
+summary for a TAP::Parser::Aggregator.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"aggregate_tests"</i></p>
+<p style="margin-left:9%; margin-top: 1em">$harness−&gt;aggregate_tests(
+$aggregate, @tests );</p>
+<p style="margin-left:9%; margin-top: 1em">Run the named
+tests and display a summary of result. Tests will be run in
+the order found.</p>
+<p style="margin-left:9%; margin-top: 1em">Test results
+will be added to the supplied TAP::Parser::Aggregator.
+"aggregate_tests" may be called multiple times to
+run several sets of tests. Multiple
+"Test::Harness" instances may be used to pass
+results to a single aggregator so that different parts of a
+complex test suite may be run using different
+"TAP::Harness" settings. This is useful, for
+example, in the case where some tests should run in parallel
+but others are unsuitable for parallel execution.</p>
+<p style="margin-left:9%; margin-top: 1em">my $formatter =
+TAP::Formatter::Console−&gt;new; <br/>
+my $ser_harness = TAP::Harness−&gt;new( { formatter
+=&gt; $formatter } ); <br/>
+my $par_harness = TAP::Harness−&gt;new( <br/>
+{ formatter =&gt; $formatter, <br/>
+jobs =&gt; 9 <br/>
+} <br/>
+); <br/>
+my $aggregator = TAP::Parser::Aggregator−&gt;new; <br/>
+$aggregator−&gt;start(); <br/>
+$ser_harness−&gt;aggregate_tests( $aggregator,
+@ser_tests ); <br/>
+$par_harness−&gt;aggregate_tests( $aggregator,
+@par_tests ); <br/>
+$aggregator−&gt;stop(); <br/>
+$formatter−&gt;summary($aggregator);</p>
+<p style="margin-left:9%; margin-top: 1em">Note that for
+simpler testing requirements it will often be possible to
+replace the above code with a single call to
+"runtests".</p>
+<p style="margin-left:9%; margin-top: 1em">Each element of
+the @tests array is either:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p style="margin-top: 1em">•</p></td>
+<td width="4%"></td>
+<td width="67%">
+<p style="margin-top: 1em">the source name of a test to
+run</p> </td>
+<td width="19%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="67%">
+<p>a reference to a [ source name, display name ] array</p></td>
+<td width="19%">
+</td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">In the case of a
+perl test suite, typically <i>source names</i> are simply
+the file names of the test scripts to run.</p>
+<p style="margin-left:9%; margin-top: 1em">When you supply
+a separate display name it becomes possible to run a test
+more than once; the display name is effectively the alias by
+which the test is known inside the harness. The harness
+doesn't care if it runs the same test more than once when
+each invocation uses a different name.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"make_scheduler"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Called by the
+harness when it needs to create a TAP::Parser::Scheduler.
+Override in a subclass to provide an alternative scheduler.
+"make_scheduler" is passed the list of tests that
+was passed to "aggregate_tests".</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"jobs"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Gets or sets the
+number of concurrent test runs the harness is handling. By
+default, this value is 1 −− for parallel
+testing, this should be set higher.</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"make_parser"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Make a new
+parser and display formatter session. Typically used and/or
+overridden in subclasses.</p>
+<p style="margin-left:9%; margin-top: 1em">my ( $parser,
+$session ) = $harness−&gt;make_parser;</p>
+<p style="margin-left:9%; margin-top: 1em"><i>"finish_parser"</i></p>
+<p style="margin-left:9%; margin-top: 1em">Terminate use of
+a parser. Typically used and/or overridden in subclasses.
+The parser isn't destroyed as a result of this.</p>
+<h2>CONFIGURING
+<a name="CONFIGURING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"TAP::Harness"
+is designed to be easy to configure.</p>
+<h3>Plugins
+<a name="Plugins"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">"TAP::Parser"
+plugins let you change the way TAP is <i>input</i> to and
+<i>output</i> from the parser.</p>
+<p style="margin-left:9%; margin-top: 1em">TAP::Parser::SourceHandlers
+handle TAP <i>input</i>. You can configure them and load
+custom handlers using the "sources" parameter to
+"new".</p>
+<p style="margin-left:9%; margin-top: 1em">TAP::Formatters
+handle TAP <i>output</i>. You can load custom formatters by
+using the "formatter_class" parameter to
+"new". To configure a formatter, you currently
+need to instantiate it outside of TAP::Harness and pass it
+in with the "formatter" parameter to
+"new". This <i>may</i> be addressed by adding a
+<i>formatters</i> parameter to "new" in the
+future.</p>
+<h3>"Module::Build"
+<a name='"Module::Build"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Module::Build
+version 0.30 supports "TAP::Harness".</p>
+<p style="margin-left:9%; margin-top: 1em">To load
+"TAP::Harness" plugins, you'll need to use the
+"tap_harness_args" parameter to "new",
+typically from your "Build.PL". For example:</p>
+<p style="margin-left:9%; margin-top: 1em">Module::Build−&gt;new(
+<br/>
+module_name =&gt; 'MyApp', <br/>
+test_file_exts =&gt; [qw(.t .tap .txt)], <br/>
+use_tap_harness =&gt; 1, <br/>
+tap_harness_args =&gt; { <br/>
+sources =&gt; { <br/>
+MyCustom =&gt; {}, <br/>
+File =&gt; { <br/>
+extensions =&gt; ['.tap', '.txt'], <br/>
+}, <br/>
+}, <br/>
+formatter_class =&gt; 'TAP::Formatter::HTML', <br/>
+}, <br/>
+build_requires =&gt; { <br/>
+'Module::Build' =&gt; '0.30', <br/>
+'TAP::Harness' =&gt; '3.18', <br/>
+}, <br/>
+)−&gt;create_build_script;</p>
+<p style="margin-left:9%; margin-top: 1em">See
+"new"</p>
+<h3>"ExtUtils::MakeMaker"
+<a name='"ExtUtils::MakeMaker"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">ExtUtils::MakeMaker
+does not support TAP::Harness
+out−of−the−box.</p>
+<h3>"prove"
+<a name='"prove"'></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">prove supports
+"TAP::Harness" plugins, and has a plugin system of
+its own. See "FORMATTERS" in prove, "SOURCE
+HANDLERS" in prove and App::Prove for more details.</p>
+<h2>WRITING PLUGINS
+<a name="WRITING PLUGINS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If you can't
+configure "TAP::Harness" to do what you want, and
+you can't find an existing plugin, consider writing one.</p>
+<p style="margin-left:9%; margin-top: 1em">The two primary
+use cases supported by TAP::Harness for plugins are
+<i>input</i> and <i>output</i>: <br/>
+Customize how TAP gets into the parser</p>
+<p style="margin-left:12%;">To do this, you can either
+extend an existing TAP::Parser::SourceHandler, or write your
+own. It's a pretty simple API, and they can be loaded and
+configured using the "sources" parameter to
+"new".</p>
+<p style="margin-left:9%;">Customize how TAP results are
+output from the parser</p>
+<p style="margin-left:12%;">To do this, you can either
+extend an existing TAP::Formatter, or write your own.
+Writing formatters are a bit more involved than writing a
+<i>SourceHandler</i>, as you'll need to understand the
+TAP::Parser API. A good place to start is by understanding
+how "aggregate_tests" works.</p>
+<p style="margin-left:12%; margin-top: 1em">Custom
+formatters can be loaded configured using the
+"formatter_class" parameter to
+"new".</p>
+<h2>SUBCLASSING
+<a name="SUBCLASSING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If you can't
+configure "TAP::Harness" to do exactly what you
+want, and writing a plugin isn't an option, consider
+extending it. It is designed to be (mostly) easy to
+subclass, though the cases when sub−classing is
+necessary should be few and far between.</p>
+<h3>Methods
+<a name="Methods"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The following
+methods are ones you may wish to override if you want to
+subclass "TAP::Harness". <br/>
+"new" <br/>
+"runtests" <br/>
+"summary"</p>
+<h2>REPLACING
+<a name="REPLACING"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">If you like the
+"prove" utility and TAP::Parser but you want your
+own harness, all you need to do is write one and provide
+"new" and "runtests" methods. Then you
+can use the "prove" utility like so:</p>
+<p style="margin-left:9%; margin-top: 1em">prove
+−−harness My::Test::Harness</p>
+<p style="margin-left:9%; margin-top: 1em">Note that while
+"prove" accepts a list of tests (or things to be
+tested), "new" has a fairly rich set of arguments.
+You'll probably want to read over this code carefully to see
+how all of them are being used.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Test::Harness</p>
+<hr/>
+</body>
+</html>

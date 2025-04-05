@@ -1,0 +1,281 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:48 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ioctl_tty</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">ioctl_tty</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Get and set terminal attributes">Get and set terminal attributes</a><br/>
+<a href="#Locking the termios structure">Locking the termios structure</a><br/>
+<a href="#Get and set window size">Get and set window size</a><br/>
+<a href="#Sending a break">Sending a break</a><br/>
+<a href="#Software flow control">Software flow control</a><br/>
+<a href="#Buffer count and flushing">Buffer count and flushing</a><br/>
+<a href="#Faking input">Faking input</a><br/>
+<a href="#Redirecting console output">Redirecting console output</a><br/>
+<a href="#Controlling terminal">Controlling terminal</a><br/>
+<a href="#Process group and session ID">Process group and session ID</a><br/>
+<a href="#Exclusive mode">Exclusive mode</a><br/>
+<a href="#Line discipline">Line discipline</a><br/>
+<a href="#Pseudoterminal ioctls">Pseudoterminal ioctls</a><br/>
+<a href="#Modem control">Modem control</a><br/>
+<a href="#Marking a line as local">Marking a line as local</a><br/>
+<a href="#Linux-specific">Linux-specific</a><br/>
+<a href="#Kernel debugging">Kernel debugging</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">ioctl_tty
+− ioctls for terminals and serial lines</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;asm/termbits.h&gt;</b> /* Definition of constants */
+<b><br/>
+#include &lt;sys/ioctl.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+ioctl(int</b> <i>fd</i><b>, int</b> <i>op</i><b>,
+...);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>ioctl</b>(2) call for terminals and serial ports accepts
+many possible operation arguments. Most require a third
+argument, of varying type, here called <i>argp</i> or
+<i>arg</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">Use of
+<b>ioctl</b>() makes for nonportable programs. Use the POSIX
+interface described in <b>termios</b>(3) whenever
+possible.</p>
+<h3>Get and set terminal attributes
+<a name="Get and set terminal attributes"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TCGETS</b>(2const)
+<b><br/>
+TCSETS</b>(2const) <b><br/>
+TCSETSW</b>(2const) <b><br/>
+TCSETSF</b>(2const) <b><br/>
+TCGETS</b>(2const) <b><br/>
+TCSETS</b>(2const) <b><br/>
+TCSETSW</b>(2const) <b><br/>
+TCSETSF</b>(2const) <b><br/>
+TCGETS</b>(2const) <b><br/>
+TCSETS</b>(2const) <b><br/>
+TCSETSW</b>(2const) <b><br/>
+TCSETSF</b>(2const)</p>
+<h3>Locking the termios structure
+<a name="Locking the termios structure"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCGLCKTRMIOS</b>(2const)
+<b><br/>
+TIOCSLCKTRMIOS</b>(2const)</p>
+<h3>Get and set window size
+<a name="Get and set window size"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCGWINSZ</b>(2const)
+<b><br/>
+TIOCSWINSZ</b>(2const)</p>
+<h3>Sending a break
+<a name="Sending a break"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TCSBRK</b>(2const)
+<b><br/>
+TCSBRKP</b>(2const) <b><br/>
+TIOCSBRK</b>(2const) <b><br/>
+TIOCCBRK</b>(2const)</p>
+<h3>Software flow control
+<a name="Software flow control"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TCXONC</b>(2const)</p>
+<h3>Buffer count and flushing
+<a name="Buffer count and flushing"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>FIONREAD</b>(2const)
+<b><br/>
+TIOCINQ</b>(2const) <b><br/>
+TIOCOUTQ</b>(2const) <b><br/>
+TCFLSH</b>(2const) <b><br/>
+TIOCSERGETLSR</b>(2const)</p>
+<h3>Faking input
+<a name="Faking input"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCSTI</b>(2const)</p>
+<h3>Redirecting console output
+<a name="Redirecting console output"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCCONS</b>(2const)</p>
+<h3>Controlling terminal
+<a name="Controlling terminal"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCSCTTY</b>(2const)
+<b><br/>
+TIOCNOTTY</b>(2const)</p>
+<h3>Process group and session ID
+<a name="Process group and session ID"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCGPGRP</b>(2const)
+<b><br/>
+TIOCSPGRP</b>(2const) <b><br/>
+TIOCGSID</b>(2const)</p>
+<h3>Exclusive mode
+<a name="Exclusive mode"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCEXCL</b>(2const)
+<b><br/>
+TIOCGEXCL</b>(2const) <b><br/>
+TIOCNXCL</b>(2const)</p>
+<h3>Line discipline
+<a name="Line discipline"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCGETD</b>(2const)
+<b><br/>
+TIOCSETD</b>(2const)</p>
+<h3>Pseudoterminal ioctls
+<a name="Pseudoterminal ioctls"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCPKT</b>(2const)
+<b><br/>
+TIOCGPKT</b>(2const) <b><br/>
+TIOCSPTLCK</b>(2const) <b><br/>
+TIOCGPTLCK</b>(2const) <b><br/>
+TIOCGPTPEER</b>(2const)</p>
+<h3>Modem control
+<a name="Modem control"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCMGET</b>(2const)
+<b><br/>
+TIOCMSET</b>(2const) <b><br/>
+TIOCMBIC</b>(2const) <b><br/>
+TIOCMBIS</b>(2const) <b><br/>
+TIOCMIWAIT</b>(2const) <b><br/>
+TIOCGICOUNT</b>(2const)</p>
+<h3>Marking a line as local
+<a name="Marking a line as local"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCGSOFTCAR</b>(2const)
+<b><br/>
+TIOCSSOFTCAR</b>(2const)</p>
+<h3>Linux-specific
+<a name="Linux-specific"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">For the
+<b>TIOCLINUX</b>(2const) ioctl, see
+<b>ioctl_console</b>(2).</p>
+<h3>Kernel debugging
+<a name="Kernel debugging"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em"><b>TIOCTTYGSTRUCT</b>(2const)</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success, 0 is
+returned. On error, −1 is returned, and <i>errno</i>
+is set to indicate the error.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>ioctl</b>(2),
+<b>ldattach</b>(8), <b>ioctl_console</b>(2),
+<b>termios</b>(3), <b>pty</b>(7)</p>
+<hr/>
+</body>
+</html>

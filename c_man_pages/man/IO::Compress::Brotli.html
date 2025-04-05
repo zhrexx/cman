@@ -1,0 +1,214 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:47:41 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>IO::Compress::Brotli</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">IO::Compress::Brotli</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#One−shot interface">One−shot interface</a><br/>
+<a href="#Streaming interface">Streaming interface</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT AND LICENSE">COPYRIGHT AND LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Compress::Brotli
+− Write Brotli buffers/streams</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+IO::Compress::Brotli; <br/>
+# compress a buffer <br/>
+my $encoded = bro $encoded; <br/>
+# compress a stream <br/>
+my $bro = IO::Compress::Brotli−&gt;create; <br/>
+while(have_input()) { <br/>
+my $block = get_input_block(); <br/>
+my $encoded_block = $bro−&gt;compress($block); <br/>
+handle_output_block($encoded_block); <br/>
+} <br/>
+# Need to finish the steam <br/>
+handle_output_block($bro−&gt;finish());</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">IO::Compress::Brotli
+is a module that compressed Brotli buffers and streams.
+Despite its name, it is not a subclass of IO::Compress::Base
+and does not implement its interface. This will be rectified
+in a future release.</p>
+<h3>One−shot interface
+<a name="One−shot interface"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If you have the
+whole buffer in a Perl scalar use the <b>bro</b> function.
+<b><br/>
+bro</b>(<i>$input</i>)</p>
+<p style="margin-left:14%;">Takes a whole uncompressed
+buffer as input and returns the compressed data.</p>
+<p style="margin-left:14%; margin-top: 1em">Exported by
+default.</p>
+<h3>Streaming interface
+<a name="Streaming interface"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If you want to
+process the data in blocks use the object oriented
+interface. The available methods are: <br/>
+IO::Compress::Brotli−&gt;<b>create</b></p>
+<p style="margin-left:14%;">Returns a IO::Compress::Brotli
+instance. Please note that a single instance cannot be used
+to decompress multiple streams.</p>
+<p style="margin-left:9%;">$bro−&gt;<b>window</b>(<i>$window</i>)</p>
+<p style="margin-left:14%;">Sets the window parameter on
+the brotli encoder. Defaults to BROTLI_DEFAULT_WINDOW
+(22).</p>
+<p style="margin-left:9%;">$bro−&gt;<b>quality</b>(<i>$quality</i>)</p>
+<p style="margin-left:14%;">Sets the quality paremeter on
+the brotli encoder. Defaults to BROTLI_DEFAULT_QUALITY
+(11).</p>
+<p style="margin-left:9%;">$bro−&gt;<b>mode</b>(<i>$mode</i>)</p>
+<p style="margin-left:14%;">Sets the brotli encoder mode,
+which can be any of "generic", "text" or
+"font". Defaults to "generic".</p>
+<p style="margin-left:9%;">$bro−&gt;<b>compress</b>(<i>$block</i>)</p>
+<p style="margin-left:14%;">Takes the a block of
+uncompressed data and returns a block of compressed data.
+Dies on error.</p>
+<p style="margin-left:9%;">$bro−&gt;<b>flush</b>()</p>
+<p style="margin-left:14%;">Flushes any pending output from
+the encoder.</p>
+<p style="margin-left:9%;">$bro−&gt;<b>finish</b>()</p>
+<p style="margin-left:14%;">Tells the encoder to start the
+finish operation, and flushes any remaining compressed
+output.</p>
+<p style="margin-left:14%; margin-top: 1em">Once finish is
+called, the encoder cannot be used to compress any more
+content.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>NOTE</b>:
+Calling finish is <b>required</b>, or the output might
+remain unflushed, and the be missing termination marks.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Brotli
+Compressed Data Format Internet−Draft:
+&lt;https://www.ietf.org/id/draft−alakuijala−brotli−08.txt&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">Brotli source
+code: &lt;https://github.com/google/brotli/&gt;</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Marius
+Gavrilescu, &lt;marius@ieval.ro&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">The encoder
+bindings, modernisation of the decoder bindings and a clean
+up of the overall project were contributed by: <br/>
+Quim Rovira, &lt;quim@rovira.cat&gt; <br/>
+Ævar Arnfjörð Bjarmason,
+&lt;avarab@gmail.com&gt; <br/>
+Marcell Szathmári <br/>
+Mattia Barbon, &lt;mattia@barbon.org&gt;</p>
+<h2>COPYRIGHT AND LICENSE
+<a name="COPYRIGHT AND LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright (C)
+2015−2018 by Marius Gavrilescu</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself, either Perl version
+5.20.2 or, at your option, any later version of Perl 5 you
+may have available.</p>
+<hr/>
+</body>
+</html>

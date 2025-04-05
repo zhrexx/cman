@@ -1,0 +1,238 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:48:16 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LWP::Protocol</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">LWP::Protocol</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#METHODS">METHODS</a><br/>
+<a href="#new">new</a><br/>
+<a href="#create">create</a><br/>
+<a href="#implementor">implementor</a><br/>
+<a href="#request">request</a><br/>
+<a href="#collect">collect</a><br/>
+<a href="#collect_once">collect_once</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">LWP::Protocol
+− Base class for LWP protocols</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">package
+LWP::Protocol::foo; <br/>
+use parent qw(LWP::Protocol);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This class is
+used as the base class for all protocol implementations
+supported by the LWP library.</p>
+<p style="margin-left:9%; margin-top: 1em">When creating an
+instance of this class using LWP::Protocol::create($url),
+and you get an initialized subclass appropriate for that
+access method. In other words, the "create" in
+LWP::Protocol function calls the constructor for one of its
+subclasses.</p>
+<p style="margin-left:9%; margin-top: 1em">All derived
+"LWP::Protocol" classes need to override the
+request() method which is used to service a request. The
+overridden method can make use of the collect() method to
+collect together chunks of data as it is received.</p>
+<h2>METHODS
+<a name="METHODS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+methods and functions are provided:</p>
+<h3>new
+<a name="new"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $prot =
+LWP::Protocol−&gt;new();</p>
+<p style="margin-left:9%; margin-top: 1em">The
+LWP::Protocol constructor is inherited by subclasses. As
+this is a virtual base class this method should <b>not</b>
+be called directly.</p>
+<h3>create
+<a name="create"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $prot =
+LWP::Protocol::create($scheme)</p>
+<p style="margin-left:9%; margin-top: 1em">Create an object
+of the class implementing the protocol to handle the given
+scheme. This is a function, not a method. It is more an
+object factory than a constructor. This is the function user
+agents should use to access protocols.</p>
+<h3>implementor
+<a name="implementor"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $class =
+LWP::Protocol::implementor($scheme, [$class])</p>
+<p style="margin-left:9%; margin-top: 1em">Get and/or set
+implementor class for a scheme. Returns '' if the specified
+scheme is not supported.</p>
+<h3>request
+<a name="request"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$response =
+$protocol−&gt;request($request, $proxy, undef); <br/>
+$response = $protocol−&gt;request($request, $proxy,
+'/tmp/sss'); <br/>
+$response = $protocol−&gt;request($request, $proxy,
+\&amp;callback, 1024); <br/>
+$response = $protocol−&gt;request($request, $proxy,
+$fh);</p>
+<p style="margin-left:9%; margin-top: 1em">Dispatches a
+request over the protocol, and returns a response object.
+This method needs to be overridden in subclasses. Refer to
+LWP::UserAgent for description of the arguments.</p>
+<h3>collect
+<a name="collect"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">my $res =
+$prot−&gt;collect(undef, $response, $collector); #
+stored in $response <br/>
+my $res = $prot−&gt;collect($filename, $response,
+$collector); <br/>
+my $res = $prot−&gt;collect(sub { ... }, $response,
+$collector);</p>
+<p style="margin-left:9%; margin-top: 1em">Collect the
+content of a request, and process it appropriately into a
+scalar, file, or by calling a callback. If the first
+parameter is undefined, then the content is stored within
+the $response. If it's a simple scalar, then it's
+interpreted as a file name and the content is written to
+this file. If it's a code reference, then content is passed
+to this routine. If it is a filehandle, or similar, such as
+a File::Temp object, content will be written to it.</p>
+<p style="margin-left:9%; margin-top: 1em">The collector is
+a routine that will be called and which is responsible for
+returning pieces (as ref to scalar) of the content to
+process. The $collector signals "EOF" by returning
+a reference to an empty string.</p>
+<p style="margin-left:9%; margin-top: 1em">The return value
+is the HTTP::Response object reference.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Note:</b> We
+will only use the callback or file argument if
+"$response−&gt;is_success()". This avoids
+sending content data for redirects and authentication
+responses to the callback which would be confusing.</p>
+<h3>collect_once
+<a name="collect_once"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">$prot−&gt;collect_once($arg,
+$response, $content)</p>
+<p style="margin-left:9%; margin-top: 1em">Can be called
+when the whole response content is available as content.
+This will invoke "collect" in LWP::Protocol with a
+collector callback that returns a reference to $content the
+first time and an empty string the next.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Inspect the
+<i>LWP/Protocol/file.pm</i> and <i>LWP/Protocol/http.pm</i>
+files for examples of usage.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+1995−2001 Gisle Aas.</p>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

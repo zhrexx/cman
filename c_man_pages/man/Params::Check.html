@@ -1,0 +1,514 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:49:32 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Params::Check</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Params::Check</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#Template">Template</a><br/>
+<a href="#Functions">Functions</a><br/>
+<a href="#check( \%tmpl, \%args, [$verbose] );">check( \%tmpl, \%args, [$verbose] );</a><br/>
+<a href="#allow( $test_me, \@criteria );">allow( $test_me, \@criteria );</a><br/>
+<a href="#last_error()">last_error()</a><br/>
+<a href="#Global Variables">Global Variables</a><br/>
+<a href="#$Params::Check::VERBOSE">$Params::Check::VERBOSE</a><br/>
+<a href="#$Params::Check::STRICT_TYPE">$Params::Check::STRICT_TYPE</a><br/>
+<a href="#$Params::Check::ALLOW_UNKNOWN">$Params::Check::ALLOW_UNKNOWN</a><br/>
+<a href="#$Params::Check::STRIP_LEADING_DASHES">$Params::Check::STRIP_LEADING_DASHES</a><br/>
+<a href="#$Params::Check::NO_DUPLICATES">$Params::Check::NO_DUPLICATES</a><br/>
+<a href="#$Params::Check::PRESERVE_CASE">$Params::Check::PRESERVE_CASE</a><br/>
+<a href="#$Params::Check::ONLY_ALLOW_DEFINED">$Params::Check::ONLY_ALLOW_DEFINED</a><br/>
+<a href="#$Params::Check::SANITY_CHECK_TEMPLATE">$Params::Check::SANITY_CHECK_TEMPLATE</a><br/>
+<a href="#$Params::Check::WARNINGS_FATAL">$Params::Check::WARNINGS_FATAL</a><br/>
+<a href="#$Params::Check::CALLER_DEPTH">$Params::Check::CALLER_DEPTH</a><br/>
+<a href="#Acknowledgements">Acknowledgements</a><br/>
+<a href="#BUG REPORTS">BUG REPORTS</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Params::Check
+− A generic input parsing/checking mechanism.</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+Params::Check qw[check allow last_error]; <br/>
+sub fill_personal_info { <br/>
+my %hash = @_; <br/>
+my $x; <br/>
+my $tmpl = { <br/>
+firstname =&gt; { required =&gt; 1, defined =&gt; 1 }, <br/>
+lastname =&gt; { required =&gt; 1, store =&gt; \$x }, <br/>
+gender =&gt; { required =&gt; 1, <br/>
+allow =&gt; [qr/M/i, qr/F/i], <br/>
+}, <br/>
+married =&gt; { allow =&gt; [0,1] }, <br/>
+age =&gt; { default =&gt; 21, <br/>
+allow =&gt; qr/ˆ\d+$/, <br/>
+}, <br/>
+phone =&gt; { allow =&gt; [ sub { return 1 if /$valid_re/ },
+<br/>
+'1−800−PERL' ] <br/>
+}, <br/>
+id_list =&gt; { default =&gt; [], <br/>
+strict_type =&gt; 1 <br/>
+}, <br/>
+employer =&gt; { default =&gt; 'NSA', no_override =&gt; 1 },
+<br/>
+}; <br/>
+### check() returns a hashref of parsed args on success ###
+<br/>
+my $parsed_args = check( $tmpl, \%hash, $VERBOSE ) <br/>
+or die qw[Could not parse arguments!]; <br/>
+... other code here ... <br/>
+} <br/>
+my $ok = allow( $colour, [qw|blue green yellow|] ); <br/>
+my $error = Params::Check::last_error();</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Params::Check is
+a generic input parsing/checking mechanism.</p>
+<p style="margin-left:9%; margin-top: 1em">It allows you to
+validate input via a template. The only requirement is that
+the arguments must be named.</p>
+<p style="margin-left:9%; margin-top: 1em">Params::Check
+can do the following things for you:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Convert all keys to lowercase</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Check if all required arguments have been provided</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Set arguments that have not been provided to the
+default</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Weed out arguments that are not supported and warn about
+them to the user</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Validate the arguments given by the user based on
+strings, regexes, lists or even subroutines</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="86%">
+<p>Enforce type integrity if required</p></td></tr>
+</table>
+<p style="margin-left:9%; margin-top: 1em">Most of
+Params::Check's power comes from its template, which we'll
+discuss below:</p>
+<h2>Template
+<a name="Template"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">As you can see
+in the synopsis, based on your template, the arguments
+provided will be validated.</p>
+<p style="margin-left:9%; margin-top: 1em">The template can
+take a different set of rules per key that is used.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+rules are available: <br/>
+default</p>
+<p style="margin-left:14%;">This is the default value if
+none was provided by the user. This is also the type
+"strict_type" will look at when checking type
+integrity (see below).</p>
+<p style="margin-left:9%;">required</p>
+<p style="margin-left:14%;">A boolean flag that indicates
+if this argument was a required argument. If marked as
+required and not provided, <b>check()</b> will fail.</p>
+<p style="margin-left:9%;">strict_type</p>
+<p style="margin-left:14%;">This does a ref() check on the
+argument provided. The "ref" of the argument must
+be the same as the "ref" of the default value for
+this check to pass.</p>
+<p style="margin-left:14%; margin-top: 1em">This is very
+useful if you insist on taking an array reference as
+argument for example.</p>
+<p style="margin-left:9%;">defined</p>
+<p style="margin-left:14%;">If this template key is true,
+enforces that if this key is provided by user input, its
+value is "defined". This just means that the user
+is not allowed to pass "undef" as a value for this
+key and is equivalent to: <br/>
+allow =&gt; sub { defined $_[0] &amp;&amp; OTHER TESTS }</p>
+<p style="margin-left:9%;">no_override</p>
+<p style="margin-left:14%;">This allows you to specify
+"constants" in your template. ie, they keys that
+are not allowed to be altered by the user. It pretty much
+allows you to keep all your "configurable" data in
+one place; the "Params::Check" template.</p>
+<p style="margin-left:9%;">store</p>
+<p style="margin-left:14%;">This allows you to pass a
+reference to a scalar, in which the data will be stored:</p>
+<p style="margin-left:14%; margin-top: 1em">my $x; <br/>
+my $args = check(foo =&gt; { default =&gt; 1, store =&gt;
+\$x }, $input);</p>
+<p style="margin-left:14%; margin-top: 1em">This is
+basically shorthand for saying:</p>
+<p style="margin-left:14%; margin-top: 1em">my $args =
+check( { foo =&gt; { default =&gt; 1 }, $input ); <br/>
+my $x = $args−&gt;{foo};</p>
+<p style="margin-left:14%; margin-top: 1em">You can alter
+the global variable $Params::Check::NO_DUPLICATES to control
+whether the "store"'d key will still be present in
+your result set. See the "Global Variables"
+section below.</p>
+<p style="margin-left:9%;">allow</p>
+<p style="margin-left:14%;">A set of criteria used to
+validate a particular piece of data if it has to adhere to
+particular rules.</p>
+<p style="margin-left:14%; margin-top: 1em">See the allow()
+function for details.</p>
+<h2>Functions
+<a name="Functions"></a>
+</h2>
+<h3>check( \%tmpl, \%args, [$verbose] );
+<a name="check( \%tmpl, \%args, [$verbose] );"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This function is
+not exported by default, so you'll have to ask for it
+via:</p>
+<p style="margin-left:9%; margin-top: 1em">use
+Params::Check qw[check];</p>
+<p style="margin-left:9%; margin-top: 1em">or use its fully
+qualified name instead.</p>
+<p style="margin-left:9%; margin-top: 1em">"check"
+takes a list of arguments, as follows: <br/>
+Template</p>
+<p style="margin-left:14%;">This is a hash reference which
+contains a template as explained in the "SYNOPSIS"
+and "Template" section.</p>
+<p style="margin-left:9%;">Arguments</p>
+<p style="margin-left:14%;">This is a reference to a hash
+of named arguments which need checking.</p>
+<p style="margin-left:9%;">Verbose</p>
+<p style="margin-left:14%;">A boolean to indicate whether
+"check" should be verbose and warn about what went
+wrong in a check or not.</p>
+<p style="margin-left:14%; margin-top: 1em">You can enable
+this program wide by setting the package variable
+$Params::Check::VERBOSE to a true value. For details, see
+the section on "Global Variables" below.</p>
+<p style="margin-left:9%; margin-top: 1em">"check"
+will return when it fails, or a hashref with lowercase keys
+of parsed arguments when it succeeds.</p>
+<p style="margin-left:9%; margin-top: 1em">So a typical
+call to check would look like this:</p>
+<p style="margin-left:9%; margin-top: 1em">my $parsed =
+check( \%template, \%arguments, $VERBOSE ) <br/>
+or warn q[Arguments could not be parsed!];</p>
+<p style="margin-left:9%; margin-top: 1em">A lot of the
+behaviour of check() can be altered by setting package
+variables. See the section on "Global Variables"
+for details on this.</p>
+<h3>allow( $test_me, \@criteria );
+<a name="allow( $test_me, \@criteria );"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The function
+that handles the "allow" key in the template is
+also available for independent use.</p>
+<p style="margin-left:9%; margin-top: 1em">The function
+takes as first argument a key to test against, and as second
+argument any form of criteria that are also allowed by the
+"allow" key in the template.</p>
+<p style="margin-left:9%; margin-top: 1em">You can use the
+following types of values for allow: <br/>
+string</p>
+<p style="margin-left:14%;">The provided argument MUST be
+equal to the string for the validation to pass.</p>
+<p style="margin-left:9%;">regexp</p>
+<p style="margin-left:14%;">The provided argument MUST
+match the regular expression for the validation to pass.</p>
+<p style="margin-left:9%;">subroutine</p>
+<p style="margin-left:14%;">The provided subroutine MUST
+return true in order for the validation to pass and the
+argument accepted.</p>
+<p style="margin-left:14%; margin-top: 1em">(This is
+particularly useful for more complicated data).</p>
+<p style="margin-left:9%;">array ref</p>
+<p style="margin-left:14%;">The provided argument MUST
+equal one of the elements of the array ref for the
+validation to pass. An array ref can hold all the above
+values.</p>
+<p style="margin-left:9%; margin-top: 1em">It returns true
+if the key matched the criteria, or false otherwise.</p>
+<h3>last_error()
+<a name="last_error()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Returns a string
+containing all warnings and errors reported during the last
+time "check" was called.</p>
+<p style="margin-left:9%; margin-top: 1em">This is useful
+if you want to report then some other way than
+"carp"'ing when the verbose flag is on.</p>
+<p style="margin-left:9%; margin-top: 1em">It is exported
+upon request.</p>
+<h2>Global Variables
+<a name="Global Variables"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The behaviour of
+Params::Check can be altered by changing the following
+global variables:</p>
+<h3>$Params::Check::VERBOSE
+<a name="$Params::Check::VERBOSE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This controls
+whether Params::Check will issue warnings and explanations
+as to why certain things may have failed. If you set it to
+0, Params::Check will not output any warnings.</p>
+<p style="margin-left:9%; margin-top: 1em">The default is 1
+when warnings are enabled, 0 otherwise;</p>
+<h3>$Params::Check::STRICT_TYPE
+<a name="$Params::Check::STRICT_TYPE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This works like
+the "strict_type" option you can pass to
+"check", which will turn on
+"strict_type" globally for all calls to
+"check".</p>
+<p style="margin-left:9%; margin-top: 1em">The default is
+0;</p>
+<h3>$Params::Check::ALLOW_UNKNOWN
+<a name="$Params::Check::ALLOW_UNKNOWN"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If you set this
+flag, unknown options will still be present in the return
+value, rather than filtered out. This is useful if your
+subroutine is only interested in a few arguments, and wants
+to pass the rest on blindly to perhaps another
+subroutine.</p>
+<p style="margin-left:9%; margin-top: 1em">The default is
+0;</p>
+<h3>$Params::Check::STRIP_LEADING_DASHES
+<a name="$Params::Check::STRIP_LEADING_DASHES"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If you set this
+flag, all keys passed in the following manner:</p>
+<p style="margin-left:9%; margin-top: 1em">function(
+−key =&gt; 'val' );</p>
+<p style="margin-left:9%; margin-top: 1em">will have their
+leading dashes stripped.</p>
+<h3>$Params::Check::NO_DUPLICATES
+<a name="$Params::Check::NO_DUPLICATES"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If set to true,
+all keys in the template that are marked as to be stored in
+a scalar, will also be removed from the result set.</p>
+<p style="margin-left:9%; margin-top: 1em">Default is
+false, meaning that when you use "store" as a
+template key, "check" will put it both in the
+scalar you supplied, as well as in the hashref it
+returns.</p>
+<h3>$Params::Check::PRESERVE_CASE
+<a name="$Params::Check::PRESERVE_CASE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If set to true,
+Params::Check will no longer convert all keys from the user
+input to lowercase, but instead expect them to be in the
+case the template provided. This is useful when you want to
+use similar keys with different casing in your
+templates.</p>
+<p style="margin-left:9%; margin-top: 1em">Understand that
+this removes the case−insensitivity feature of this
+module.</p>
+<p style="margin-left:9%; margin-top: 1em">Default is
+0;</p>
+<h3>$Params::Check::ONLY_ALLOW_DEFINED
+<a name="$Params::Check::ONLY_ALLOW_DEFINED"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If set to true,
+Params::Check will require all values passed to be
+"defined". If you wish to enable this on a 'per
+key' basis, use the template option "defined"
+instead.</p>
+<p style="margin-left:9%; margin-top: 1em">Default is
+0;</p>
+<h3>$Params::Check::SANITY_CHECK_TEMPLATE
+<a name="$Params::Check::SANITY_CHECK_TEMPLATE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If set to true,
+Params::Check will sanity check templates, validating for
+errors and unknown keys. Although very useful for debugging,
+this can be somewhat slow in hot−code and large
+loops.</p>
+<p style="margin-left:9%; margin-top: 1em">To disable this
+check, set this variable to "false".</p>
+<p style="margin-left:9%; margin-top: 1em">Default is
+1;</p>
+<h3>$Params::Check::WARNINGS_FATAL
+<a name="$Params::Check::WARNINGS_FATAL"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">If set to true,
+Params::Check will "croak" when an error during
+template validation occurs, rather than return
+"false".</p>
+<p style="margin-left:9%; margin-top: 1em">Default is
+0;</p>
+<h3>$Params::Check::CALLER_DEPTH
+<a name="$Params::Check::CALLER_DEPTH"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">This global
+modifies the argument given to caller() by
+Params::Check::check() and is useful if you have a custom
+wrapper function around Params::Check::check(). The value
+must be an integer, indicating the number of wrapper
+functions inserted between the real function call and
+Params::Check::check().</p>
+<p style="margin-left:9%; margin-top: 1em">Example wrapper
+function, using a custom stacktrace:</p>
+<p style="margin-left:9%; margin-top: 1em">sub check { <br/>
+my ($template, $args_in) = @_; <br/>
+local $Params::Check::WARNINGS_FATAL = 1; <br/>
+local $Params::Check::CALLER_DEPTH =
+$Params::Check::CALLER_DEPTH + 1; <br/>
+my $args_out = Params::Check::check($template, $args_in);
+<br/>
+my_stacktrace(Params::Check::last_error) unless $args_out;
+<br/>
+return $args_out; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Default is
+0;</p>
+<h2>Acknowledgements
+<a name="Acknowledgements"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Thanks to
+Richard Soderberg for his performance improvements.</p>
+<h2>BUG REPORTS
+<a name="BUG REPORTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Please report
+bugs or other issues to
+&lt;bug−params−check@rt.cpan.org&gt;.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module by
+Jos Boumans &lt;kane@cpan.org&gt;.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This library is
+free software; you may redistribute and/or modify it under
+the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:41:04 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>Socket</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">Socket</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#CONSTANTS">CONSTANTS</a><br/>
+<a href="#PF_INET, PF_INET6, PF_UNIX, ...">PF_INET, PF_INET6, PF_UNIX, ...</a><br/>
+<a href="#AF_INET, AF_INET6, AF_UNIX, ...">AF_INET, AF_INET6, AF_UNIX, ...</a><br/>
+<a href="#SOCK_STREAM, SOCK_DGRAM, SOCK_RAW, ...">SOCK_STREAM, SOCK_DGRAM, SOCK_RAW, ...</a><br/>
+<a href="#SOCK_NONBLOCK. SOCK_CLOEXEC">SOCK_NONBLOCK. SOCK_CLOEXEC</a><br/>
+<a href="#SOL_SOCKET">SOL_SOCKET</a><br/>
+<a href="#SO_ACCEPTCONN, SO_BROADCAST, SO_ERROR, ...">SO_ACCEPTCONN, SO_BROADCAST, SO_ERROR, ...</a><br/>
+<a href="#IP_OPTIONS, IP_TOS, IP_TTL, ...">IP_OPTIONS, IP_TOS, IP_TTL, ...</a><br/>
+<a href="#IP_PMTUDISC_WANT, IP_PMTUDISC_DONT, ...">IP_PMTUDISC_WANT, IP_PMTUDISC_DONT, ...</a><br/>
+<a href="#IPTOS_LOWDELAY, IPTOS_THROUGHPUT, IPTOS_RELIABILITY, ...">IPTOS_LOWDELAY, IPTOS_THROUGHPUT, IPTOS_RELIABILITY, ...</a><br/>
+<a href="#MSG_BCAST, MSG_OOB, MSG_TRUNC, ...">MSG_BCAST, MSG_OOB, MSG_TRUNC, ...</a><br/>
+<a href="#SHUT_RD, SHUT_RDWR, SHUT_WR">SHUT_RD, SHUT_RDWR, SHUT_WR</a><br/>
+<a href="#INADDR_ANY, INADDR_BROADCAST, INADDR_LOOPBACK, INADDR_NONE">INADDR_ANY, INADDR_BROADCAST, INADDR_LOOPBACK, INADDR_NONE</a><br/>
+<a href="#IPPROTO_IP, IPPROTO_IPV6, IPPROTO_TCP, ...">IPPROTO_IP, IPPROTO_IPV6, IPPROTO_TCP, ...</a><br/>
+<a href="#TCP_CORK, TCP_KEEPALIVE, TCP_NODELAY, ...">TCP_CORK, TCP_KEEPALIVE, TCP_NODELAY, ...</a><br/>
+<a href="#IN6ADDR_ANY, IN6ADDR_LOOPBACK">IN6ADDR_ANY, IN6ADDR_LOOPBACK</a><br/>
+<a href="#IPV6_ADD_MEMBERSHIP, IPV6_MTU, IPV6_V6ONLY, ...">IPV6_ADD_MEMBERSHIP, IPV6_MTU, IPV6_V6ONLY, ...</a><br/>
+<a href="#STRUCTURE MANIPULATORS">STRUCTURE MANIPULATORS</a><br/>
+<a href="#$family = sockaddr_family $sockaddr">$family = sockaddr_family $sockaddr</a><br/>
+<a href="#$sockaddr = pack_sockaddr_in $port, $ip_address">$sockaddr = pack_sockaddr_in $port, $ip_address</a><br/>
+<a href="#($port, $ip_address) = unpack_sockaddr_in $sockaddr">($port, $ip_address) = unpack_sockaddr_in $sockaddr</a><br/>
+<a href="#$sockaddr = sockaddr_in $port, $ip_address">$sockaddr = sockaddr_in $port, $ip_address</a><br/>
+<a href="#($port, $ip_address) = sockaddr_in $sockaddr">($port, $ip_address) = sockaddr_in $sockaddr</a><br/>
+<a href="#$sockaddr = pack_sockaddr_in6 $port, $ip6_address, [$scope_id, [$flowinfo]]">$sockaddr = pack_sockaddr_in6 $port, $ip6_address, [$scope_id, [$flowinfo]]</a><br/>
+<a href="#($port, $ip6_address, $scope_id, $flowinfo) = unpack_sockaddr_in6 $sockaddr">($port, $ip6_address, $scope_id, $flowinfo) = unpack_sockaddr_in6 $sockaddr</a><br/>
+<a href="#$sockaddr = sockaddr_in6 $port, $ip6_address, [$scope_id, [$flowinfo]]">$sockaddr = sockaddr_in6 $port, $ip6_address, [$scope_id, [$flowinfo]]</a><br/>
+<a href="#($port, $ip6_address, $scope_id, $flowinfo) = sockaddr_in6 $sockaddr">($port, $ip6_address, $scope_id, $flowinfo) = sockaddr_in6 $sockaddr</a><br/>
+<a href="#$sockaddr = pack_sockaddr_un $path">$sockaddr = pack_sockaddr_un $path</a><br/>
+<a href="#($path) = unpack_sockaddr_un $sockaddr">($path) = unpack_sockaddr_un $sockaddr</a><br/>
+<a href="#$sockaddr = sockaddr_un $path">$sockaddr = sockaddr_un $path</a><br/>
+<a href="#($path) = sockaddr_un $sockaddr">($path) = sockaddr_un $sockaddr</a><br/>
+<a href="#$ip_mreq = pack_ip_mreq $multiaddr, $interface">$ip_mreq = pack_ip_mreq $multiaddr, $interface</a><br/>
+<a href="#($multiaddr, $interface) = unpack_ip_mreq $ip_mreq">($multiaddr, $interface) = unpack_ip_mreq $ip_mreq</a><br/>
+<a href="#$ip_mreq_source = pack_ip_mreq_source $multiaddr, $source, $interface">$ip_mreq_source = pack_ip_mreq_source $multiaddr, $source, $interface</a><br/>
+<a href="#($multiaddr, $source, $interface) = unpack_ip_mreq_source $ip_mreq">($multiaddr, $source, $interface) = unpack_ip_mreq_source $ip_mreq</a><br/>
+<a href="#$ipv6_mreq = pack_ipv6_mreq $multiaddr6, $ifindex">$ipv6_mreq = pack_ipv6_mreq $multiaddr6, $ifindex</a><br/>
+<a href="#($multiaddr6, $ifindex) = unpack_ipv6_mreq $ipv6_mreq">($multiaddr6, $ifindex) = unpack_ipv6_mreq $ipv6_mreq</a><br/>
+<a href="#FUNCTIONS">FUNCTIONS</a><br/>
+<a href="#$ip_address = inet_aton $string">$ip_address = inet_aton $string</a><br/>
+<a href="#$string = inet_ntoa $ip_address">$string = inet_ntoa $ip_address</a><br/>
+<a href="#$address = inet_pton $family, $string">$address = inet_pton $family, $string</a><br/>
+<a href="#$string = inet_ntop $family, $address">$string = inet_ntop $family, $address</a><br/>
+<a href="#($err, @result) = getaddrinfo $host, $service, [$hints]">($err, @result) = getaddrinfo $host, $service, [$hints]</a><br/>
+<a href="#($err, $hostname, $servicename) = getnameinfo $sockaddr, [$flags,[$xflags]]">($err, $hostname, $servicename) = getnameinfo $sockaddr, [$flags,[$xflags]]</a><br/>
+<a href="#getaddrinfo() / getnameinfo() ERROR CONSTANTS">getaddrinfo() / getnameinfo() ERROR CONSTANTS</a><br/>
+<a href="#EXAMPLES">EXAMPLES</a><br/>
+<a href="#Lookup for connect()">Lookup for connect()</a><br/>
+<a href="#Making a human−readable string out of an address">Making a human−readable string out of an address</a><br/>
+<a href="#Resolving hostnames into IP addresses">Resolving hostnames into IP addresses</a><br/>
+<a href="#Accessing socket options">Accessing socket options</a><br/>
+<a href="#AUTHOR">AUTHOR</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Socket"
+− networking constants and support functions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">"Socket"
+a low−level module used by, among other things, the
+IO::Socket family of modules. The following examples
+demonstrate some low−level uses but a practical
+program would likely use the higher−level API provided
+by "IO::Socket" or similar instead.</p>
+<p style="margin-left:9%; margin-top: 1em">use Socket
+qw(PF_INET SOCK_STREAM pack_sockaddr_in inet_aton); <br/>
+socket(my $socket, PF_INET, SOCK_STREAM, 0) <br/>
+or die "socket: $!"; <br/>
+my $port = getservbyname "echo", "tcp";
+<br/>
+connect($socket, pack_sockaddr_in($port,
+inet_aton("localhost"))) <br/>
+or die "connect: $!"; <br/>
+print $socket "Hello, world!\n"; <br/>
+print &lt;$socket&gt;;</p>
+<p style="margin-left:9%; margin-top: 1em">See also the
+"EXAMPLES" section.</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+provides a variety of constants, structure manipulators and
+other functions related to socket−based networking.
+The values and functions provided are useful when used in
+conjunction with Perl core functions such as
+<b>socket()</b>, <b>setsockopt()</b> and <b>bind()</b>. It
+also provides several other support functions, mostly for
+dealing with conversions of network addresses between
+human−readable and native binary forms, and for
+hostname resolver operations.</p>
+<p style="margin-left:9%; margin-top: 1em">Some constants
+and functions are exported by default by this module; but
+for backward−compatibility any recently−added
+symbols are not exported by default and must be requested
+explicitly. When an import list is provided to the "use
+Socket" line, the default exports are not automatically
+imported. It is therefore best practice to always to
+explicitly list all the symbols required.</p>
+<p style="margin-left:9%; margin-top: 1em">Also, some
+common socket "newline" constants are provided:
+the constants "CR", "LF", and
+"CRLF", as well as $CR, $LF, and $CRLF, which map
+to "\015", "\012", and
+"\015\012". If you do not want to use the literal
+characters in your programs, then use the constants provided
+here. They are not exported by default, but can be imported
+individually, and with the ":crlf" export tag:</p>
+<p style="margin-left:9%; margin-top: 1em">use Socket
+qw(:DEFAULT :crlf); <br/>
+$sock−&gt;print("GET / HTTP/1.0$CRLF");</p>
+<p style="margin-left:9%; margin-top: 1em">The entire
+<b>getaddrinfo()</b> subsystem can be exported using the tag
+":addrinfo"; this exports the <b>getaddrinfo()</b>
+and <b>getnameinfo()</b> functions, and all the
+"AI_*", "NI_*", "NIx_*" and
+"EAI_*" constants.</p>
+<h2>CONSTANTS
+<a name="CONSTANTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">In each of the
+following groups, there may be many more constants provided
+than just the ones given as examples in the section heading.
+If the heading ends "..." then this means there
+are likely more; the exact constants provided will depend on
+the OS and headers found at compile−time.</p>
+<h3>PF_INET, PF_INET6, PF_UNIX, ...
+<a name="PF_INET, PF_INET6, PF_UNIX, ..."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Protocol family
+constants to use as the first argument to <b>socket()</b> or
+the value of the "SO_DOMAIN" or
+"SO_FAMILY" socket option.</p>
+<h3>AF_INET, AF_INET6, AF_UNIX, ...
+<a name="AF_INET, AF_INET6, AF_UNIX, ..."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Address family
+constants used by the socket address structures, to pass to
+such functions as <b>inet_pton()</b> or
+<b>getaddrinfo()</b>, or are returned by such functions as
+<b>sockaddr_family()</b>.</p>
+<h3>SOCK_STREAM, SOCK_DGRAM, SOCK_RAW, ...
+<a name="SOCK_STREAM, SOCK_DGRAM, SOCK_RAW, ..."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Socket type
+constants to use as the second argument to <b>socket()</b>,
+or the value of the "SO_TYPE" socket option.</p>
+<h3>SOCK_NONBLOCK. SOCK_CLOEXEC
+<a name="SOCK_NONBLOCK. SOCK_CLOEXEC"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Linux−specific
+shortcuts to specify the "O_NONBLOCK" and
+"FD_CLOEXEC" flags during a socket(2) call.</p>
+<p style="margin-left:9%; margin-top: 1em">socket( my
+$sockh, PF_INET, SOCK_DGRAM|SOCK_NONBLOCK, 0 )</p>
+<h3>SOL_SOCKET
+<a name="SOL_SOCKET"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Socket option
+level constant for <b>setsockopt()</b> and
+<b>getsockopt()</b>.</p>
+<h3>SO_ACCEPTCONN, SO_BROADCAST, SO_ERROR, ...
+<a name="SO_ACCEPTCONN, SO_BROADCAST, SO_ERROR, ..."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Socket option
+name constants for <b>setsockopt()</b> and
+<b>getsockopt()</b> at the "SOL_SOCKET" level.</p>
+<h3>IP_OPTIONS, IP_TOS, IP_TTL, ...
+<a name="IP_OPTIONS, IP_TOS, IP_TTL, ..."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Socket option
+name constants for IPv4 socket options at the
+"IPPROTO_IP" level.</p>
+<h3>IP_PMTUDISC_WANT, IP_PMTUDISC_DONT, ...
+<a name="IP_PMTUDISC_WANT, IP_PMTUDISC_DONT, ..."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Socket option
+value constants for "IP_MTU_DISCOVER" socket
+option.</p>
+<h3>IPTOS_LOWDELAY, IPTOS_THROUGHPUT, IPTOS_RELIABILITY, ...
+<a name="IPTOS_LOWDELAY, IPTOS_THROUGHPUT, IPTOS_RELIABILITY, ..."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Socket option
+value constants for "IP_TOS" socket option.</p>
+<h3>MSG_BCAST, MSG_OOB, MSG_TRUNC, ...
+<a name="MSG_BCAST, MSG_OOB, MSG_TRUNC, ..."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Message flag
+constants for <b>send()</b> and <b>recv()</b>.</p>
+<h3>SHUT_RD, SHUT_RDWR, SHUT_WR
+<a name="SHUT_RD, SHUT_RDWR, SHUT_WR"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Direction
+constants for <b>shutdown()</b>.</p>
+<h3>INADDR_ANY, INADDR_BROADCAST, INADDR_LOOPBACK, INADDR_NONE
+<a name="INADDR_ANY, INADDR_BROADCAST, INADDR_LOOPBACK, INADDR_NONE"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Constants giving
+the special "AF_INET" addresses for wildcard,
+broadcast, local loopback, and invalid addresses.</p>
+<p style="margin-left:9%; margin-top: 1em">Normally
+equivalent to inet_aton('0.0.0.0'),
+inet_aton('255.255.255.255'), inet_aton('localhost') and
+inet_aton('255.255.255.255') respectively.</p>
+<h3>IPPROTO_IP, IPPROTO_IPV6, IPPROTO_TCP, ...
+<a name="IPPROTO_IP, IPPROTO_IPV6, IPPROTO_TCP, ..."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">IP protocol
+constants to use as the third argument to <b>socket()</b>,
+the level argument to <b>getsockopt()</b> or
+<b>setsockopt()</b>, or the value of the
+"SO_PROTOCOL" socket option.</p>
+<h3>TCP_CORK, TCP_KEEPALIVE, TCP_NODELAY, ...
+<a name="TCP_CORK, TCP_KEEPALIVE, TCP_NODELAY, ..."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Socket option
+name constants for TCP socket options at the
+"IPPROTO_TCP" level.</p>
+<h3>IN6ADDR_ANY, IN6ADDR_LOOPBACK
+<a name="IN6ADDR_ANY, IN6ADDR_LOOPBACK"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Constants giving
+the special "AF_INET6" addresses for wildcard and
+local loopback.</p>
+<p style="margin-left:9%; margin-top: 1em">Normally
+equivalent to inet_pton(AF_INET6, "::") and
+inet_pton(AF_INET6, "::1") respectively.</p>
+<h3>IPV6_ADD_MEMBERSHIP, IPV6_MTU, IPV6_V6ONLY, ...
+<a name="IPV6_ADD_MEMBERSHIP, IPV6_MTU, IPV6_V6ONLY, ..."></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Socket option
+name constants for IPv6 socket options at the
+"IPPROTO_IPV6" level.</p>
+<h2>STRUCTURE MANIPULATORS
+<a name="STRUCTURE MANIPULATORS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions convert between lists of Perl values and packed
+binary strings representing structures.</p>
+<h3>$family = sockaddr_family $sockaddr
+<a name="$family = sockaddr_family $sockaddr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes a packed
+socket address (as returned by <b>pack_sockaddr_in()</b>,
+<b>pack_sockaddr_un()</b> or the perl builtin functions
+<b>getsockname()</b> and <b>getpeername()</b>). Returns the
+address family tag. This will be one of the "AF_*"
+constants, such as "AF_INET" for a
+"sockaddr_in" addresses or "AF_UNIX" for
+a "sockaddr_un". It can be used to figure out what
+unpack to use for a sockaddr of unknown type.</p>
+<h3>$sockaddr = pack_sockaddr_in $port, $ip_address
+<a name="$sockaddr = pack_sockaddr_in $port, $ip_address"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes two
+arguments, a port number and an opaque string (as returned
+by <b>inet_aton()</b>, or a v−string). Returns the
+"sockaddr_in" structure with those arguments
+packed in and "AF_INET" filled in. For Internet
+domain sockets, this structure is normally what you need for
+the arguments in <b>bind()</b>, <b>connect()</b>, and
+<b>send()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">An undefined
+$port argument is taken as zero; an undefined $ip_address is
+considered a fatal error.</p>
+<h3>($port, $ip_address) = unpack_sockaddr_in $sockaddr
+<a name="($port, $ip_address) = unpack_sockaddr_in $sockaddr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes a
+"sockaddr_in" structure (as returned by
+<b>pack_sockaddr_in()</b>, <b>getpeername()</b> or
+<b>recv()</b>). Returns a list of two elements: the port and
+an opaque string representing the IP address (you can use
+<b>inet_ntoa()</b> to convert the address to the
+four−dotted numeric format). Will croak if the
+structure does not represent an "AF_INET"
+address.</p>
+<p style="margin-left:9%; margin-top: 1em">In scalar
+context will return just the IP address.</p>
+<h3>$sockaddr = sockaddr_in $port, $ip_address
+<a name="$sockaddr = sockaddr_in $port, $ip_address"></a>
+</h3>
+<h3>($port, $ip_address) = sockaddr_in $sockaddr
+<a name="($port, $ip_address) = sockaddr_in $sockaddr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A wrapper of
+<b>pack_sockaddr_in()</b> or <b>unpack_sockaddr_in()</b>. In
+list context, unpacks its argument and returns a list
+consisting of the port and IP address. In scalar context,
+packs its port and IP address arguments as a
+"sockaddr_in" and returns it.</p>
+<p style="margin-left:9%; margin-top: 1em">Provided largely
+for legacy compatibility; it is better to use
+<b>pack_sockaddr_in()</b> or <b>unpack_sockaddr_in()</b>
+explicitly.</p>
+<h3>$sockaddr = pack_sockaddr_in6 $port, $ip6_address, [$scope_id, [$flowinfo]]
+<a name="$sockaddr = pack_sockaddr_in6 $port, $ip6_address, [$scope_id, [$flowinfo]]"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes two to
+four arguments, a port number, an opaque string (as returned
+by <b>inet_pton()</b>), optionally a scope ID number, and
+optionally a flow label number. Returns the
+"sockaddr_in6" structure with those arguments
+packed in and "AF_INET6" filled in. IPv6
+equivalent of <b>pack_sockaddr_in()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">An undefined
+$port argument is taken as zero; an undefined $ip6_address
+is considered a fatal error.</p>
+<h3>($port, $ip6_address, $scope_id, $flowinfo) = unpack_sockaddr_in6 $sockaddr
+<a name="($port, $ip6_address, $scope_id, $flowinfo) = unpack_sockaddr_in6 $sockaddr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes a
+"sockaddr_in6" structure. Returns a list of four
+elements: the port number, an opaque string representing the
+IPv6 address, the scope ID, and the flow label. (You can use
+<b>inet_ntop()</b> to convert the address to the usual
+string format). Will croak if the structure does not
+represent an "AF_INET6" address.</p>
+<p style="margin-left:9%; margin-top: 1em">In scalar
+context will return just the IP address.</p>
+<h3>$sockaddr = sockaddr_in6 $port, $ip6_address, [$scope_id, [$flowinfo]]
+<a name="$sockaddr = sockaddr_in6 $port, $ip6_address, [$scope_id, [$flowinfo]]"></a>
+</h3>
+<h3>($port, $ip6_address, $scope_id, $flowinfo) = sockaddr_in6 $sockaddr
+<a name="($port, $ip6_address, $scope_id, $flowinfo) = sockaddr_in6 $sockaddr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A wrapper of
+<b>pack_sockaddr_in6()</b> or <b>unpack_sockaddr_in6()</b>.
+In list context, unpacks its argument according to
+<b>unpack_sockaddr_in6()</b>. In scalar context, packs its
+arguments according to <b>pack_sockaddr_in6()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">Provided largely
+for legacy compatibility; it is better to use
+<b>pack_sockaddr_in6()</b> or <b>unpack_sockaddr_in6()</b>
+explicitly.</p>
+<h3>$sockaddr = pack_sockaddr_un $path
+<a name="$sockaddr = pack_sockaddr_un $path"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes one
+argument, a pathname. Returns the "sockaddr_un"
+structure with that path packed in with "AF_UNIX"
+filled in. For "PF_UNIX" sockets, this structure
+is normally what you need for the arguments in
+<b>bind()</b>, <b>connect()</b>, and <b>send()</b>.</p>
+<h3>($path) = unpack_sockaddr_un $sockaddr
+<a name="($path) = unpack_sockaddr_un $sockaddr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes a
+"sockaddr_un" structure (as returned by
+<b>pack_sockaddr_un()</b>, <b>getpeername()</b> or
+<b>recv()</b>). Returns a list of one element: the pathname.
+Will croak if the structure does not represent an
+"AF_UNIX" address.</p>
+<h3>$sockaddr = sockaddr_un $path
+<a name="$sockaddr = sockaddr_un $path"></a>
+</h3>
+<h3>($path) = sockaddr_un $sockaddr
+<a name="($path) = sockaddr_un $sockaddr"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">A wrapper of
+<b>pack_sockaddr_un()</b> or <b>unpack_sockaddr_un()</b>. In
+a list context, unpacks its argument and returns a list
+consisting of the pathname. In a scalar context, packs its
+pathname as a "sockaddr_un" and returns it.</p>
+<p style="margin-left:9%; margin-top: 1em">Provided largely
+for legacy compatibility; it is better to use
+<b>pack_sockaddr_un()</b> or <b>unpack_sockaddr_un()</b>
+explicitly.</p>
+<p style="margin-left:9%; margin-top: 1em">These are only
+supported if your system has &lt;<i>sys/un.h</i>&gt;.</p>
+<h3>$ip_mreq = pack_ip_mreq $multiaddr, $interface
+<a name="$ip_mreq = pack_ip_mreq $multiaddr, $interface"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes an IPv4
+multicast address and optionally an interface address (or
+"INADDR_ANY"). Returns the "ip_mreq"
+structure with those arguments packed in. Suitable for use
+with the "IP_ADD_MEMBERSHIP" and
+"IP_DROP_MEMBERSHIP" sockopts.</p>
+<h3>($multiaddr, $interface) = unpack_ip_mreq $ip_mreq
+<a name="($multiaddr, $interface) = unpack_ip_mreq $ip_mreq"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes an
+"ip_mreq" structure. Returns a list of two
+elements; the IPv4 multicast address and interface
+address.</p>
+<h3>$ip_mreq_source = pack_ip_mreq_source $multiaddr, $source, $interface
+<a name="$ip_mreq_source = pack_ip_mreq_source $multiaddr, $source, $interface"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes an IPv4
+multicast address, source address, and optionally an
+interface address (or "INADDR_ANY"). Returns the
+"ip_mreq_source" structure with those arguments
+packed in. Suitable for use with the
+"IP_ADD_SOURCE_MEMBERSHIP" and
+"IP_DROP_SOURCE_MEMBERSHIP" sockopts.</p>
+<h3>($multiaddr, $source, $interface) = unpack_ip_mreq_source $ip_mreq
+<a name="($multiaddr, $source, $interface) = unpack_ip_mreq_source $ip_mreq"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes an
+"ip_mreq_source" structure. Returns a list of
+three elements; the IPv4 multicast address, source address
+and interface address.</p>
+<h3>$ipv6_mreq = pack_ipv6_mreq $multiaddr6, $ifindex
+<a name="$ipv6_mreq = pack_ipv6_mreq $multiaddr6, $ifindex"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes an IPv6
+multicast address and an interface number. Returns the
+"ipv6_mreq" structure with those arguments packed
+in. Suitable for use with the
+"IPV6_ADD_MEMBERSHIP" and
+"IPV6_DROP_MEMBERSHIP" sockopts.</p>
+<h3>($multiaddr6, $ifindex) = unpack_ipv6_mreq $ipv6_mreq
+<a name="($multiaddr6, $ifindex) = unpack_ipv6_mreq $ipv6_mreq"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes an
+"ipv6_mreq" structure. Returns a list of two
+elements; the IPv6 address and an interface number.</p>
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+<h3>$ip_address = inet_aton $string
+<a name="$ip_address = inet_aton $string"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes a string
+giving the name of a host, or a textual representation of an
+IP address and translates that to an packed binary address
+structure suitable to pass to <b>pack_sockaddr_in()</b>. If
+passed a hostname that cannot be resolved, returns
+"undef". For multi−homed hosts (hosts with
+more than one address), the first address found is
+returned.</p>
+<p style="margin-left:9%; margin-top: 1em">For portability
+do not assume that the result of <b>inet_aton()</b> is 32
+bits wide, in other words, that it would contain only the
+IPv4 address in network order.</p>
+<p style="margin-left:9%; margin-top: 1em">This
+IPv4−only function is provided largely for legacy
+reasons. Newly−written code should use
+<b>getaddrinfo()</b> or <b>inet_pton()</b> instead for IPv6
+support.</p>
+<h3>$string = inet_ntoa $ip_address
+<a name="$string = inet_ntoa $ip_address"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes a packed
+binary address structure such as returned by
+<b>unpack_sockaddr_in()</b> (or a v−string
+representing the four octets of the IPv4 address in network
+order) and translates it into a string of the form
+"d.d.d.d" where the "d"s are numbers
+less than 256 (the normal human−readable four dotted
+number notation for Internet addresses).</p>
+<p style="margin-left:9%; margin-top: 1em">This
+IPv4−only function is provided largely for legacy
+reasons. Newly−written code should use
+<b>getnameinfo()</b> or <b>inet_ntop()</b> instead for IPv6
+support.</p>
+<h3>$address = inet_pton $family, $string
+<a name="$address = inet_pton $family, $string"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes an address
+family (such as "AF_INET" or "AF_INET6")
+and a string containing a textual representation of an
+address in that family and translates that to an packed
+binary address structure.</p>
+<p style="margin-left:9%; margin-top: 1em">See also
+<b>getaddrinfo()</b> for a more powerful and flexible
+function to look up socket addresses given hostnames or
+textual addresses.</p>
+<h3>$string = inet_ntop $family, $address
+<a name="$string = inet_ntop $family, $address"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Takes an address
+family and a packed binary address structure and translates
+it into a human−readable textual representation of the
+address; typically in "d.d.d.d" form for
+"AF_INET" or "hhhh:hhhh::hhhh" form for
+"AF_INET6".</p>
+<p style="margin-left:9%; margin-top: 1em">See also
+<b>getnameinfo()</b> for a more powerful and flexible
+function to turn socket addresses into human−readable
+textual representations.</p>
+<h3>($err, @result) = getaddrinfo $host, $service, [$hints]
+<a name="($err, @result) = getaddrinfo $host, $service, [$hints]"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Given both a
+hostname and service name, this function attempts to resolve
+the host name into a list of network addresses, and the
+service name into a protocol and port number, and then
+returns a list of address structures suitable to
+<b>connect()</b> to it.</p>
+<p style="margin-left:9%; margin-top: 1em">Given just a
+host name, this function attempts to resolve it to a list of
+network addresses, and then returns a list of address
+structures giving these addresses.</p>
+<p style="margin-left:9%; margin-top: 1em">Given just a
+service name, this function attempts to resolve it to a
+protocol and port number, and then returns a list of address
+structures that represent it suitable to <b>bind()</b> to.
+This use should be combined with the "AI_PASSIVE"
+flag; see below.</p>
+<p style="margin-left:9%; margin-top: 1em">Given neither
+name, it generates an error.</p>
+<p style="margin-left:9%; margin-top: 1em">If present,
+$hints should be a reference to a hash, where the following
+keys are recognised: <br/>
+flags =&gt; INT</p>
+<p style="margin-left:14%;">A bitfield containing
+"AI_*" constants; see below.</p>
+<p style="margin-left:9%;">family =&gt; INT</p>
+<p style="margin-left:14%;">Restrict to only generating
+addresses in this address family</p>
+<p style="margin-left:9%;">socktype =&gt; INT</p>
+<p style="margin-left:14%;">Restrict to only generating
+addresses of this socket type</p>
+<p style="margin-left:9%;">protocol =&gt; INT</p>
+<p style="margin-left:14%;">Restrict to only generating
+addresses for this protocol</p>
+<p style="margin-left:9%; margin-top: 1em">The return value
+will be a list; the first value being an error indication,
+followed by a list of address structures (if no error
+occurred).</p>
+<p style="margin-left:9%; margin-top: 1em">The error value
+will be a dualvar; comparable to the "EAI_*" error
+constants, or printable as a human−readable error
+message string. If no error occurred it will be zero
+numerically and an empty string.</p>
+<p style="margin-left:9%; margin-top: 1em">Each value in
+the results list will be a hash reference containing the
+following fields: <br/>
+family =&gt; INT</p>
+<p style="margin-left:14%;">The address family (e.g.
+"AF_INET")</p>
+<p style="margin-left:9%;">socktype =&gt; INT</p>
+<p style="margin-left:14%;">The socket type (e.g.
+"SOCK_STREAM")</p>
+<p style="margin-left:9%;">protocol =&gt; INT</p>
+<p style="margin-left:14%;">The protocol (e.g.
+"IPPROTO_TCP")</p>
+<p style="margin-left:9%;">addr =&gt; STRING</p>
+<p style="margin-left:14%;">The address in a packed string
+(such as would be returned by <b>pack_sockaddr_in()</b>)</p>
+<p style="margin-left:9%;">canonname =&gt; STRING</p>
+<p style="margin-left:14%;">The canonical name for the host
+if the "AI_CANONNAME" flag was provided, or
+"undef" otherwise. This field will only be present
+on the first returned address.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+flag constants are recognised in the $hints hash. Other flag
+constants may exist as provided by the OS. <br/>
+AI_PASSIVE</p>
+<p style="margin-left:14%;">Indicates that this resolution
+is for a local <b>bind()</b> for a passive (i.e. listening)
+socket, rather than an active (i.e. connecting) socket.</p>
+<p style="margin-left:9%;">AI_CANONNAME</p>
+<p style="margin-left:14%;">Indicates that the caller
+wishes the canonical hostname ("canonname") field
+of the result to be filled in.</p>
+<p style="margin-left:9%;">AI_NUMERICHOST</p>
+<p style="margin-left:14%;">Indicates that the caller will
+pass a numeric address, rather than a hostname, and that
+<b>getaddrinfo()</b> must not perform a resolve operation on
+this name. This flag will prevent a possibly−slow
+network lookup operation, and instead return an error if a
+hostname is passed.</p>
+<h3>($err, $hostname, $servicename) = getnameinfo $sockaddr, [$flags,[$xflags]]
+<a name="($err, $hostname, $servicename) = getnameinfo $sockaddr, [$flags,[$xflags]]"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Given a packed
+socket address (such as from <b>getsockname()</b>,
+<b>getpeername()</b>, or returned by <b>getaddrinfo()</b> in
+a "addr" field), returns the hostname and symbolic
+service name it represents. $flags may be a bitmask of
+"NI_*" constants, or defaults to 0 if
+unspecified.</p>
+<p style="margin-left:9%; margin-top: 1em">The return value
+will be a list; the first value being an error condition,
+followed by the hostname and service name.</p>
+<p style="margin-left:9%; margin-top: 1em">The error value
+will be a dualvar; comparable to the "EAI_*" error
+constants, or printable as a human−readable error
+message string. The host and service names will be plain
+strings.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+flag constants are recognised as $flags. Other flag
+constants may exist as provided by the OS. <br/>
+NI_NUMERICHOST</p>
+<p style="margin-left:14%;">Requests that a
+human−readable string representation of the numeric
+address be returned directly, rather than performing a name
+resolve operation that may convert it into a hostname. This
+will also avoid potentially−blocking network IO.</p>
+<p style="margin-left:9%;">NI_NUMERICSERV</p>
+<p style="margin-left:14%;">Requests that the port number
+be returned directly as a number representation rather than
+performing a name resolve operation that may convert it into
+a service name.</p>
+<p style="margin-left:9%;">NI_NAMEREQD</p>
+<p style="margin-left:14%;">If a name resolve operation
+fails to provide a name, then this flag will cause
+<b>getnameinfo()</b> to indicate an error, rather than
+returning the numeric representation as a
+human−readable string.</p>
+<p style="margin-left:9%;">NI_DGRAM</p>
+<p style="margin-left:14%;">Indicates that the socket
+address relates to a "SOCK_DGRAM" socket, for the
+services whose name differs between TCP and UDP
+protocols.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+constants may be supplied as $xflags. <br/>
+NIx_NOHOST</p>
+<p style="margin-left:14%;">Indicates that the caller is
+not interested in the hostname of the result, so it does not
+have to be converted. "undef" will be returned as
+the hostname.</p>
+<p style="margin-left:9%;">NIx_NOSERV</p>
+<p style="margin-left:14%;">Indicates that the caller is
+not interested in the service name of the result, so it does
+not have to be converted. "undef" will be returned
+as the service name.</p>
+<h2>getaddrinfo() / getnameinfo() ERROR CONSTANTS
+<a name="getaddrinfo() / getnameinfo() ERROR CONSTANTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The following
+constants may be returned by <b>getaddrinfo()</b> or
+<b>getnameinfo()</b>. Others may be provided by the OS. <br/>
+EAI_AGAIN</p>
+<p style="margin-left:14%;">A temporary failure occurred
+during name resolution. The operation may be successful if
+it is retried later.</p>
+<p style="margin-left:9%;">EAI_BADFLAGS</p>
+<p style="margin-left:14%;">The value of the
+"flags" hint to <b>getaddrinfo()</b>, or the
+$flags parameter to <b>getnameinfo()</b> contains
+unrecognised flags.</p>
+<p style="margin-left:9%;">EAI_FAMILY</p>
+<p style="margin-left:14%;">The "family" hint to
+<b>getaddrinfo()</b>, or the family of the socket address
+passed to <b>getnameinfo()</b> is not supported.</p>
+<p style="margin-left:9%;">EAI_NODATA</p>
+<p style="margin-left:14%;">The host name supplied to
+<b>getaddrinfo()</b> did not provide any usable address
+data.</p>
+<p style="margin-left:9%;">EAI_NONAME</p>
+<p style="margin-left:14%;">The host name supplied to
+<b>getaddrinfo()</b> does not exist, or the address supplied
+to <b>getnameinfo()</b> is not associated with a host name
+and the "NI_NAMEREQD" flag was supplied.</p>
+<p style="margin-left:9%;">EAI_SERVICE</p>
+<p style="margin-left:14%;">The service name supplied to
+<b>getaddrinfo()</b> is not available for the socket type
+given in the $hints.</p>
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+<h3>Lookup for connect()
+<a name="Lookup for connect()"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>getaddrinfo()</b> function converts a hostname and a
+service name into a list of structures, each containing a
+potential way to <b>connect()</b> to the named service on
+the named host.</p>
+<p style="margin-left:9%; margin-top: 1em">use IO::Socket;
+<br/>
+use Socket qw(SOCK_STREAM getaddrinfo); <br/>
+my %hints = (socktype =&gt; SOCK_STREAM); <br/>
+my ($err, @res) = getaddrinfo("localhost",
+"echo", \%hints); <br/>
+die "Cannot getaddrinfo − $err" if $err;
+<br/>
+my $sock; <br/>
+foreach my $ai (@res) { <br/>
+my $candidate = IO::Socket−&gt;new(); <br/>
+$candidate−&gt;socket($ai−&gt;{family},
+$ai−&gt;{socktype}, $ai−&gt;{protocol}) <br/>
+or next; <br/>
+$candidate−&gt;connect($ai−&gt;{addr}) <br/>
+or next; <br/>
+$sock = $candidate; <br/>
+last; <br/>
+} <br/>
+die "Cannot connect to localhost:echo" unless
+$sock; <br/>
+$sock−&gt;print("Hello, world!\n"); <br/>
+print &lt;$sock&gt;;</p>
+<p style="margin-left:9%; margin-top: 1em">Because a list
+of potential candidates is returned, the "while"
+loop tries each in turn until it finds one that succeeds
+both the <b>socket()</b> and <b>connect()</b> calls.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+performs the work of the legacy functions
+<b>gethostbyname()</b>, <b>getservbyname()</b>,
+<b>inet_aton()</b> and <b>pack_sockaddr_in()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">In practice this
+logic is better performed by IO::Socket::IP.</p>
+<h3>Making a human−readable string out of an address
+<a name="Making a human−readable string out of an address"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>getnameinfo()</b> function converts a socket address,
+such as returned by <b>getsockname()</b> or
+<b>getpeername()</b>, into a pair of human−readable
+strings representing the address and service name.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+IO::Socket::IP; <br/>
+use Socket qw(getnameinfo); <br/>
+my $server = IO::Socket::IP−&gt;new(LocalPort =&gt;
+12345, Listen =&gt; 1) or <br/>
+die "Cannot listen − $@"; <br/>
+my $socket = $server−&gt;accept or die "accept:
+$!"; <br/>
+my ($err, $hostname, $servicename) =
+getnameinfo($socket−&gt;peername); <br/>
+die "Cannot getnameinfo − $err" if $err;
+<br/>
+print "The peer is connected from
+$hostname\n";</p>
+<p style="margin-left:9%; margin-top: 1em">Since in this
+example only the hostname was used, the redundant conversion
+of the port number into a service name may be omitted by
+passing the "NIx_NOSERV" flag.</p>
+<p style="margin-left:9%; margin-top: 1em">use Socket
+qw(getnameinfo NIx_NOSERV); <br/>
+my ($err, $hostname) =
+getnameinfo($socket−&gt;peername, 0, NIx_NOSERV);</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+performs the work of the legacy functions
+<b>unpack_sockaddr_in()</b>, <b>inet_ntoa()</b>,
+<b>gethostbyaddr()</b> and <b>getservbyport()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">In practice this
+logic is better performed by IO::Socket::IP.</p>
+<h3>Resolving hostnames into IP addresses
+<a name="Resolving hostnames into IP addresses"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">To turn a
+hostname into a human−readable plain IP address use
+<b>getaddrinfo()</b> to turn the hostname into a list of
+socket structures, then <b>getnameinfo()</b> on each one to
+make it a readable IP address again.</p>
+<p style="margin-left:9%; margin-top: 1em">use Socket
+qw(:addrinfo SOCK_RAW); <br/>
+my ($err, @res) = getaddrinfo($hostname, "",
+{socktype =&gt; SOCK_RAW}); <br/>
+die "Cannot getaddrinfo − $err" if $err;
+<br/>
+while( my $ai = shift @res ) { <br/>
+my ($err, $ipaddr) = getnameinfo($ai−&gt;{addr},
+NI_NUMERICHOST, NIx_NOSERV); <br/>
+die "Cannot getnameinfo − $err" if $err;
+<br/>
+print "$ipaddr\n"; <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">The
+"socktype" hint to <b>getaddrinfo()</b> filters
+the results to only include one socket type and protocol.
+Without this most OSes return three combinations, for
+"SOCK_STREAM", "SOCK_DGRAM" and
+"SOCK_RAW", resulting in triplicate output of
+addresses. The "NI_NUMERICHOST" flag to
+<b>getnameinfo()</b> causes it to return a
+string−formatted plain IP address, rather than reverse
+resolving it back into a hostname.</p>
+<p style="margin-left:9%; margin-top: 1em">This combination
+performs the work of the legacy functions
+<b>gethostbyname()</b> and <b>inet_ntoa()</b>.</p>
+<h3>Accessing socket options
+<a name="Accessing socket options"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">The many
+"SO_*" and other constants provide the socket
+option names for <b>getsockopt()</b> and
+<b>setsockopt()</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">use
+IO::Socket::INET; <br/>
+use Socket qw(SOL_SOCKET SO_RCVBUF IPPROTO_IP IP_TTL); <br/>
+my $socket = IO::Socket::INET−&gt;new(LocalPort =&gt;
+0, Proto =&gt; 'udp') <br/>
+or die "Cannot create socket: $@"; <br/>
+$socket−&gt;setsockopt(SOL_SOCKET, SO_RCVBUF, 64*1024)
+or <br/>
+die "setsockopt: $!"; <br/>
+print "Receive buffer is ",
+$socket−&gt;getsockopt(SOL_SOCKET, SO_RCVBUF), <br/>
+" bytes\n"; <br/>
+print "IP TTL is ",
+$socket−&gt;getsockopt(IPPROTO_IP, IP_TTL),
+"\n";</p>
+<p style="margin-left:9%; margin-top: 1em">As a
+convenience, IO::Socket's <b>setsockopt()</b> method will
+convert a number into a packed byte buffer, and
+<b>getsockopt()</b> will unpack a byte buffer of the correct
+size back into a number.</p>
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module was
+originally maintained in Perl core by the Perl 5
+Porters.</p>
+<p style="margin-left:9%; margin-top: 1em">It was extracted
+to dual−life on CPAN at version 1.95 by Paul Evans
+&lt;leonerd@leonerd.org.uk&gt;</p>
+<hr/>
+</body>
+</html>

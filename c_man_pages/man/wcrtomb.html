@@ -1,0 +1,195 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:54:46 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>wcrtomb</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">wcrtomb</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ATTRIBUTES">ATTRIBUTES</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">wcrtomb −
+convert a wide character to a multibyte sequence</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;wchar.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>size_t
+wcrtomb(char *restrict</b> <i>s</i><b>, wchar_t</b>
+<i>wc</i><b>, mbstate_t *restrict</b> <i>ps</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The main case
+for this function is when <i>s</i> is not NULL and <i>wc</i>
+is not a null wide character (L'\0'). In this case, the
+<b>wcrtomb</b>() function converts the wide character
+<i>wc</i> to its multibyte representation and stores it at
+the beginning of the character array pointed to by <i>s</i>.
+It updates the shift state <i>*ps</i>, and returns the
+length of said multibyte representation, that is, the number
+of bytes written at <i>s</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">A different case
+is when <i>s</i> is not NULL, but <i>wc</i> is a null wide
+character (L'\0'). In this case, the <b>wcrtomb</b>()
+function stores at the character array pointed to by
+<i>s</i> the shift sequence needed to bring <i>*ps</i> back
+to the initial state, followed by a '\0' byte. It updates
+the shift state <i>*ps</i> (i.e., brings it into the initial
+state), and returns the length of the shift sequence plus
+one, that is, the number of bytes written at <i>s</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">A third case is
+when <i>s</i> is NULL. In this case, <i>wc</i> is ignored,
+and the function effectively returns</p>
+<p style="margin-left:14%; margin-top: 1em">wcrtomb(buf,
+L'\0', ps)</p>
+<p style="margin-left:9%; margin-top: 1em">where <i>buf</i>
+is an internal anonymous buffer.</p>
+<p style="margin-left:9%; margin-top: 1em">In all of the
+above cases, if <i>ps</i> is NULL, a static anonymous state
+known only to the <b>wcrtomb</b>() function is used
+instead.</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>wcrtomb</b>() function returns the number of bytes that
+have been or would have been written to the byte array at
+<i>s</i>. If <i>wc</i> can not be represented as a multibyte
+sequence (according to the current locale),
+<i>(size_t) −1</i> is returned, and <i>errno</i>
+set to <b>EILSEQ</b>.</p>
+<h2>ATTRIBUTES
+<a name="ATTRIBUTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">For an
+explanation of the terms used in this section, see
+<b>attributes</b>(7).</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">C11,
+POSIX.1-2008.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2001,
+C99.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The behavior of
+<b>wcrtomb</b>() depends on the <b>LC_CTYPE</b> category of
+the current locale.</p>
+<p style="margin-left:9%; margin-top: 1em">Passing NULL as
+<i>ps</i> is not multithread safe.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>mbsinit</b>(3),
+<b>wcsrtombs</b>(3)</p>
+<hr/>
+</body>
+</html>

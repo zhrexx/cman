@@ -1,0 +1,243 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:45:13 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>fields</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">fields</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">fields −
+compile−time class fields</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">{ <br/>
+package Foo; <br/>
+use fields qw(foo bar _Foo_private); <br/>
+sub new { <br/>
+my Foo $self = shift; <br/>
+unless (ref $self) { <br/>
+$self = fields::new($self); <br/>
+$self−&gt;{_Foo_private} = "this is Foo's
+secret"; <br/>
+} <br/>
+$self−&gt;{foo} = 10; <br/>
+$self−&gt;{bar} = 20; <br/>
+return $self; <br/>
+} <br/>
+} <br/>
+my $var = Foo−&gt;new; <br/>
+$var−&gt;{foo} = 42; <br/>
+# this will generate a run−time error <br/>
+$var−&gt;{zap} = 42; <br/>
+# this will generate a compile−time error <br/>
+my Foo $foo = Foo−&gt;new; <br/>
+$foo−&gt;{zap} = 24; <br/>
+# subclassing <br/>
+{ <br/>
+package Bar; <br/>
+use base 'Foo'; <br/>
+use fields qw(baz _Bar_private); # not shared with Foo <br/>
+sub new { <br/>
+my $class = shift; <br/>
+my $self = fields::new($class); <br/>
+$self−&gt;SUPER::new(); # init base fields <br/>
+$self−&gt;{baz} = 10; # init own fields <br/>
+$self−&gt;{_Bar_private} = "this is Bar's
+secret"; <br/>
+return $self; <br/>
+} <br/>
+}</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+"fields" pragma enables compile-time and run-time
+verified class fields.</p>
+<p style="margin-left:9%; margin-top: 1em">NOTE: The
+current implementation keeps the declared fields in the
+%FIELDS hash of the calling package, but this may change in
+future versions. Do <b>not</b> update the %FIELDS hash
+directly, because it must be created at compile-time for it
+to be fully useful, as is done by this pragma.</p>
+<p style="margin-left:9%; margin-top: 1em">If a typed
+lexical variable (my Class $var) holding a reference is used
+to access a hash element and a package with the same name as
+the type has declared class fields using this pragma, then
+the hash key is verified at compile time. If the variables
+are not typed, access is only checked at run time.</p>
+<p style="margin-left:9%; margin-top: 1em">The related
+"base" pragma will combine fields from base
+classes and any fields declared using the "fields"
+pragma. This enables field inheritance to work properly.
+Inherited fields can be overridden but will generate a
+warning if warnings are enabled.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>Only valid
+for Perl 5.8.x and earlier:</b> Field names that start with
+an underscore character are made private to the class and
+are not visible to subclasses.</p>
+<p style="margin-left:9%; margin-top: 1em">Also, <b>in Perl
+5.8.x and earlier</b>, this pragma uses pseudo-hashes, the
+effect being that you can have objects with named fields
+which are as compact and as fast arrays to access, as long
+as the objects are accessed through properly typed
+variables.</p>
+<p style="margin-left:9%; margin-top: 1em">The following
+functions are supported:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="4%">
+<p>new</p></td>
+<td width="1%"></td>
+<td width="86%">
+<p><b>fields::new()</b> creates and blesses a hash of the
+fields declared using the "fields" pragma into the
+specified class. It is the recommended way to construct a
+fields-based object.</p></td></tr>
+</table>
+<p style="margin-left:14%; margin-top: 1em">This makes it
+possible to write a constructor like this:</p>
+<p style="margin-left:14%; margin-top: 1em">package
+Critter::Sounds; <br/>
+use fields qw(cat dog bird); <br/>
+sub new { <br/>
+my $self = shift; <br/>
+$self = fields::new($self) unless ref $self; <br/>
+$self−&gt;{cat} = 'meow'; # scalar element <br/>
+@$self{'dog','bird'} = ('bark','tweet'); # slice <br/>
+return $self; <br/>
+}</p>
+<p style="margin-left:9%;">phash</p>
+<p style="margin-left:14%;"><b>This function only works in
+Perl 5.8.x and earlier.</b> Pseudo-hashes were removed from
+Perl as of 5.10. Consider using restricted hashes or
+<b>fields::new()</b> instead (which itself uses restricted
+hashes under 5.10+). See Hash::Util. Using
+<b>fields::phash()</b> under 5.10 or higher will cause an
+error.</p>
+<p style="margin-left:14%; margin-top: 1em"><b>fields::phash()</b>
+can be used to create and initialize a plain (unblessed)
+pseudo-hash. This function should always be used instead of
+creating pseudo-hashes directly.</p>
+<p style="margin-left:14%; margin-top: 1em">If the first
+argument is a reference to an array, the pseudo-hash will be
+created with keys from that array. If a second argument is
+supplied, it must also be a reference to an array whose
+elements will be used as the values. If the second array
+contains less elements than the first, the trailing elements
+of the pseudo-hash will not be initialized. This makes it
+particularly useful for creating a pseudo-hash from
+subroutine arguments:</p>
+<p style="margin-left:14%; margin-top: 1em">sub dogtag {
+<br/>
+my $tag = fields::phash([qw(name rank ser_num)], [@_]); <br/>
+}</p>
+<p style="margin-left:14%; margin-top: 1em"><b>fields::phash()</b>
+also accepts a list of key-value pairs that will be used to
+construct the pseudo hash. Examples:</p>
+<p style="margin-left:14%; margin-top: 1em">my $tag =
+fields::phash(name =&gt; "Joe", <br/>
+rank =&gt; "captain", <br/>
+ser_num =&gt; 42); <br/>
+my $pseudohash = fields::phash(%args);</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">base,
+Hash::Util</p>
+<hr/>
+</body>
+</html>

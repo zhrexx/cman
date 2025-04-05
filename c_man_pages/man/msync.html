@@ -1,0 +1,229 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:40:51 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>msync</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">msync</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#LIBRARY">LIBRARY</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#ERRORS">ERRORS</a><br/>
+<a href="#VERSIONS">VERSIONS</a><br/>
+<a href="#STANDARDS">STANDARDS</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">msync −
+synchronize a file with a memory map</p>
+<h2>LIBRARY
+<a name="LIBRARY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Standard C
+library (<i>libc</i>, <i>−lc</i>)</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>#include
+&lt;sys/mman.h&gt;</b></p>
+<p style="margin-left:9%; margin-top: 1em"><b>int
+msync(void</b> <i>addr</i><b>[.</b><i>length</i><b>],
+size_t</b> <i>length</i><b>, int</b>
+<i>flags</i><b>);</b></p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>msync</b>()
+flushes changes made to the in-core copy of a file that was
+mapped into memory using <b>mmap</b>(2) back to the
+filesystem. Without use of this call, there is no guarantee
+that changes are written back before <b>munmap</b>(2) is
+called. To be more precise, the part of the file that
+corresponds to the memory area starting at <i>addr</i> and
+having length <i>length</i> is updated.</p>
+<p style="margin-left:9%; margin-top: 1em">The <i>flags</i>
+argument should specify exactly one of <b>MS_ASYNC</b> and
+<b>MS_SYNC</b>, and may additionally include the
+<b>MS_INVALIDATE</b> bit. These bits have the following
+meanings: <b><br/>
+MS_ASYNC</b></p>
+<p style="margin-left:18%;">Specifies that an update be
+scheduled, but the call returns immediately.</p>
+<p style="margin-left:9%;"><b>MS_SYNC</b></p>
+<p style="margin-left:18%;">Requests an update and waits
+for it to complete.</p>
+<p style="margin-left:9%;"><b>MS_INVALIDATE</b></p>
+<p style="margin-left:18%;">Asks to invalidate other
+mappings of the same file (so that they can be updated with
+the fresh values just written).</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">On success, zero
+is returned. On error, −1 is returned, and
+<i>errno</i> is set to indicate the error.</p>
+<h2>ERRORS
+<a name="ERRORS"></a>
+</h2>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p style="margin-top: 1em"><b>EBUSY</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p style="margin-top: 1em"><b>MS_INVALIDATE</b> was
+specified in <i>flags</i>, and a memory lock exists for the
+specified address range.</p></td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>EINVAL</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p><i>addr</i> is not a multiple of PAGESIZE; or any bit
+other than <b>MS_ASYNC</b> | <b>MS_INVALIDATE</b> |
+<b>MS_SYNC</b> is set in <i>flags</i>; or both
+<b>MS_SYNC</b> and <b>MS_ASYNC</b> are set in
+<i>flags</i>.</p> </td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="8%">
+<p><b>ENOMEM</b></p></td>
+<td width="1%"></td>
+<td width="82%">
+<p>The indicated memory (or part of it) was not mapped.</p></td></tr>
+</table>
+<h2>VERSIONS
+<a name="VERSIONS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">According to
+POSIX, either <b>MS_SYNC</b> or <b>MS_ASYNC</b> must be
+specified in <i>flags</i>, and indeed failure to include one
+of these flags will cause <b>msync</b>() to fail on some
+systems. However, Linux permits a call to <b>msync</b>()
+that specifies neither of these flags, with semantics that
+are (currently) equivalent to specifying <b>MS_ASYNC</b>.
+(Since Linux 2.6.19, <b>MS_ASYNC</b> is in fact a no-op,
+since the kernel properly tracks dirty pages and flushes
+them to storage as necessary.) Notwithstanding the Linux
+behavior, portable, future-proof applications should ensure
+that they specify either <b>MS_SYNC</b> or <b>MS_ASYNC</b>
+in <i>flags</i>.</p>
+<h2>STANDARDS
+<a name="STANDARDS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2008.</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">POSIX.1-2001.</p>
+<p style="margin-left:9%; margin-top: 1em">This call was
+introduced in Linux 1.3.21, and then used <b>EFAULT</b>
+instead of <b>ENOMEM</b>. In Linux 2.4.19, this was changed
+to the POSIX value <b>ENOMEM</b>.</p>
+<p style="margin-left:9%; margin-top: 1em">On POSIX systems
+on which <b>msync</b>() is available, both
+<b>_POSIX_MAPPED_FILES</b> and <b>_POSIX_SYNCHRONIZED_IO</b>
+are defined in <i>&lt;unistd.h&gt;</i> to a value greater
+than 0. (See also <b>sysconf</b>(3).)</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>mmap</b>(2)</p>
+<p style="margin-left:9%; margin-top: 1em">B.O.
+Gallmeister, POSIX.4, O’Reilly, pp. 128–129 and
+389–391.</p>
+<hr/>
+</body>
+</html>

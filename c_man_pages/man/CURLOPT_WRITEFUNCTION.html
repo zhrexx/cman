@@ -1,0 +1,258 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:50 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CURLOPT_WRITEFUNCTION</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CURLOPT_WRITEFUNCTION</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#DEFAULT">DEFAULT</a><br/>
+<a href="#PROTOCOLS">PROTOCOLS</a><br/>
+<a href="#EXAMPLE">EXAMPLE</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#AVAILABILITY">AVAILABILITY</a><br/>
+<a href="#RETURN VALUE">RETURN VALUE</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CURLOPT_WRITEFUNCTION
+− callback for writing received data</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;curl/curl.h&gt;</p>
+<p style="margin-left:9%; margin-top: 1em">size_t
+write_callback(char *ptr, size_t size, size_t nmemb, void
+*userdata);</p>
+<p style="margin-left:9%; margin-top: 1em">CURLcode
+curl_easy_setopt(CURL *handle, CURLOPT_WRITEFUNCTION,
+write_callback);</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Pass a pointer
+to your callback function, which should match the prototype
+shown above.</p>
+<p style="margin-left:9%; margin-top: 1em">This callback
+function gets called by libcurl as soon as there is data
+received that needs to be saved. For most transfers, this
+callback gets called many times and each invoke delivers
+another chunk of data. <i>ptr</i> points to the delivered
+data, and the size of that data is <i>nmemb</i>; <i>size</i>
+is always 1.</p>
+<p style="margin-left:9%; margin-top: 1em">The data passed
+to this function is not null−terminated.</p>
+<p style="margin-left:9%; margin-top: 1em">The callback
+function is passed as much data as possible in all invokes,
+but you must not make any assumptions. It may be one byte,
+it may be thousands. The maximum amount of body data that is
+passed to the write callback is defined in the curl.h header
+file: <i>CURL_MAX_WRITE_SIZE</i> (the usual default is 16K).
+If <i>CURLOPT_HEADER(3)</i> is enabled, which makes header
+data get passed to the write callback, you can get up to
+<i>CURL_MAX_HTTP_HEADER</i> bytes of header data passed into
+it. This usually means 100K.</p>
+<p style="margin-left:9%; margin-top: 1em">This function
+may be called with zero bytes data if the transferred file
+is empty.</p>
+<p style="margin-left:9%; margin-top: 1em">Set the
+<i>userdata</i> argument with the
+<i>CURLOPT_WRITEDATA(3)</i> option.</p>
+<p style="margin-left:9%; margin-top: 1em">Your callback
+should return the number of bytes actually taken care of. If
+that amount differs from the amount passed to your callback
+function, it signals an error condition to the library. This
+causes the transfer to get aborted and the libcurl function
+used returns <i>CURLE_WRITE_ERROR</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">You can also
+abort the transfer by returning CURL_WRITEFUNC_ERROR (added
+in 7.87.0), which makes <i>CURLE_WRITE_ERROR</i> get
+returned.</p>
+<p style="margin-left:9%; margin-top: 1em">If the callback
+function returns CURL_WRITEFUNC_PAUSE it pauses this
+transfer. See <i>curl_easy_pause(3)</i> for further
+details.</p>
+<p style="margin-left:9%; margin-top: 1em">Set this option
+to NULL to get the internal default function used instead of
+your callback. The internal default function writes the data
+to the FILE * given with <i>CURLOPT_WRITEDATA(3)</i>.</p>
+<p style="margin-left:9%; margin-top: 1em">This option does
+not enable HSTS, you need to use <i>CURLOPT_HSTS_CTRL(3)</i>
+to do that.</p>
+<h2>DEFAULT
+<a name="DEFAULT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">fwrite(3)</p>
+<h2>PROTOCOLS
+<a name="PROTOCOLS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This
+functionality affects all supported protocols</p>
+<h2>EXAMPLE
+<a name="EXAMPLE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;stdlib.h&gt; /* for realloc */ <br/>
+#include &lt;string.h&gt; /* for memcpy */</p>
+<p style="margin-left:9%; margin-top: 1em">struct memory {
+<br/>
+char *response; <br/>
+size_t size; <br/>
+};</p>
+<p style="margin-left:9%; margin-top: 1em">static size_t
+cb(char *data, size_t size, size_t nmemb, void *clientp)
+<br/>
+{ <br/>
+size_t realsize = size * nmemb; <br/>
+struct memory *mem = (struct memory *)clientp;</p>
+<p style="margin-left:9%; margin-top: 1em">char *ptr =
+realloc(mem-&gt;response, mem-&gt;size + realsize + 1); <br/>
+if(!ptr) <br/>
+return 0; /* out of memory! */</p>
+<p style="margin-left:9%; margin-top: 1em">mem-&gt;response
+= ptr; <br/>
+memcpy(&amp;(mem-&gt;response[mem-&gt;size]), data,
+realsize); <br/>
+mem-&gt;size += realsize; <br/>
+mem-&gt;response[mem-&gt;size] = 0;</p>
+<p style="margin-left:9%; margin-top: 1em">return realsize;
+<br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">int main(void)
+<br/>
+{ <br/>
+struct memory chunk = {0}; <br/>
+CURLcode res; <br/>
+CURL *curl = curl_easy_init(); <br/>
+if(curl) { <br/>
+/* send all data to this function */ <br/>
+curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, cb);</p>
+<p style="margin-left:9%; margin-top: 1em">/* we pass our
+’chunk’ struct to the callback function */ <br/>
+curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void
+*)&amp;chunk);</p>
+<p style="margin-left:9%; margin-top: 1em">/* send a
+request */ <br/>
+res = curl_easy_perform(curl);</p>
+<p style="margin-left:9%; margin-top: 1em">/* remember to
+free the buffer */ <br/>
+free(chunk.response);</p>
+<p style="margin-left:9%; margin-top: 1em">curl_easy_cleanup(curl);
+<br/>
+} <br/>
+}</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Support for the
+CURL_WRITEFUNC_PAUSE return code was added in version
+7.18.0.</p>
+<h2>AVAILABILITY
+<a name="AVAILABILITY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Added in curl
+7.1</p>
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This returns
+CURLE_OK.</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>CURLOPT_HEADERFUNCTION</b>(3),
+<b>CURLOPT_READFUNCTION</b>(3),
+<b>CURLOPT_WRITEDATA</b>(3)</p>
+<hr/>
+</body>
+</html>

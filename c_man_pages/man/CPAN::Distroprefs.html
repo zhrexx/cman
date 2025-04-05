@@ -1,0 +1,258 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:42:18 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CPAN::Distroprefs</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">CPAN::Distroprefs</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#INTERFACE">INTERFACE</a><br/>
+<a href="#RESULTS">RESULTS</a><br/>
+<a href="#Common">Common</a><br/>
+<a href="#Errors">Errors</a><br/>
+<a href="#Successes">Successes</a><br/>
+<a href="#PREFS">PREFS</a><br/>
+<a href="#LICENSE">LICENSE</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CPAN::Distroprefs
+−− read and match distroprefs</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">use
+CPAN::Distroprefs; <br/>
+my %info = (... distribution/environment info ...); <br/>
+my $finder = CPAN::Distroprefs−&gt;find($prefs_dir,
+\%ext_map); <br/>
+while (my $result = $finder−&gt;next) { <br/>
+die $result−&gt;as_string if
+$result−&gt;is_fatal; <br/>
+warn($result−&gt;as_string), next if
+$result−&gt;is_warning; <br/>
+for my $pref (@{ $result−&gt;prefs }) { <br/>
+if ($pref−&gt;matches(\%info)) { <br/>
+return $pref; <br/>
+} <br/>
+} <br/>
+}</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This module
+encapsulates reading Distroprefs and matching them against
+CPAN distributions.</p>
+<h2>INTERFACE
+<a name="INTERFACE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">my $finder =
+CPAN::Distroprefs−&gt;find($dir, \%ext_map); <br/>
+while (my $result = $finder−&gt;next) { ... }</p>
+<p style="margin-left:9%; margin-top: 1em">Build an
+iterator which finds distroprefs files in the tree below the
+given directory. Within the tree directories matching
+"m/ˆ[._]/" are pruned.</p>
+<p style="margin-left:9%; margin-top: 1em">%ext_map is a
+hashref whose keys are file extensions and whose values are
+modules used to load matching files:</p>
+<p style="margin-left:9%; margin-top: 1em">{ <br/>
+'yml' =&gt; 'YAML::Syck', <br/>
+'dd' =&gt; 'Data::Dumper', <br/>
+... <br/>
+}</p>
+<p style="margin-left:9%; margin-top: 1em">Each time
+"$finder−&gt;next" is called, the iterator
+returns one of two possible values:</p>
+<table border="0" cellpadding="0" cellspacing="0" frame="void" rules="none" width="100%">
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="74%">
+<p>a CPAN::Distroprefs::Result object</p></td>
+<td width="12%">
+</td></tr>
+<tr align="left" valign="top">
+<td width="9%"></td>
+<td width="1%">
+<p>•</p></td>
+<td width="4%"></td>
+<td width="74%">
+<p>"undef", indicating that no prefs files remain
+to be found</p></td>
+<td width="12%">
+</td></tr>
+</table>
+<h2>RESULTS
+<a name="RESULTS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">find() returns
+CPAN::Distroprefs::Result objects to indicate success or
+failure when reading a prefs file.</p>
+<h3>Common
+<a name="Common"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">All results
+share some common attributes:</p>
+<p style="margin-left:9%; margin-top: 1em"><i>type</i></p>
+<p style="margin-left:9%; margin-top: 1em">"success",
+"warning", or "fatal"</p>
+<p style="margin-left:9%; margin-top: 1em"><i>file</i></p>
+<p style="margin-left:9%; margin-top: 1em">the file from
+which these prefs were read, or to which this error refers
+(relative filename)</p>
+<p style="margin-left:9%; margin-top: 1em"><i>ext</i></p>
+<p style="margin-left:9%; margin-top: 1em">the file's
+extension, which determines how to load it</p>
+<p style="margin-left:9%; margin-top: 1em"><i>dir</i></p>
+<p style="margin-left:9%; margin-top: 1em">the directory
+the file was read from</p>
+<p style="margin-left:9%; margin-top: 1em"><i>abs</i></p>
+<p style="margin-left:9%; margin-top: 1em">the absolute
+path to the file</p>
+<h3>Errors
+<a name="Errors"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Error results
+(warning and fatal) contain:</p>
+<p style="margin-left:9%; margin-top: 1em"><i>msg</i></p>
+<p style="margin-left:9%; margin-top: 1em">the error
+message (usually either $! or a YAML error)</p>
+<h3>Successes
+<a name="Successes"></a>
+</h3>
+<p style="margin-left:9%; margin-top: 1em">Success results
+contain:</p>
+<p style="margin-left:9%; margin-top: 1em"><i>prefs</i></p>
+<p style="margin-left:9%; margin-top: 1em">an arrayref of
+CPAN::Distroprefs::Pref objects</p>
+<h2>PREFS
+<a name="PREFS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">CPAN::Distroprefs::Pref
+objects represent individual distroprefs documents. They are
+constructed automatically as part of "success"
+results from find().</p>
+<p style="margin-left:9%; margin-top: 1em"><i>data</i></p>
+<p style="margin-left:9%; margin-top: 1em">the pref
+information as a hashref, suitable for e.g. passing to
+Kwalify</p>
+<p style="margin-left:9%; margin-top: 1em"><i>match_attributes</i></p>
+<p style="margin-left:9%; margin-top: 1em">returns a list
+of the valid match attributes (see the Distroprefs section
+in CPAN)</p>
+<p style="margin-left:9%; margin-top: 1em">currently:
+"env perl perlconfig distribution module"</p>
+<p style="margin-left:9%; margin-top: 1em"><i>has_any_match</i></p>
+<p style="margin-left:9%; margin-top: 1em">true if this
+pref has a 'match' attribute at all</p>
+<p style="margin-left:9%; margin-top: 1em"><i>has_valid_subkeys</i></p>
+<p style="margin-left:9%; margin-top: 1em">true if this
+pref has a 'match' attribute and at least one valid match
+attribute</p>
+<p style="margin-left:9%; margin-top: 1em"><i>matches</i></p>
+<p style="margin-left:9%; margin-top: 1em">if
+($pref−&gt;matches(\%arg)) { ... }</p>
+<p style="margin-left:9%; margin-top: 1em">true if this
+pref matches the passed−in hashref, which must have a
+value for each of the "match_attributes"
+(above)</p>
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">This program is
+free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+<hr/>
+</body>
+</html>

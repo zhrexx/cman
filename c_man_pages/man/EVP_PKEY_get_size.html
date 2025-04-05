@@ -1,0 +1,212 @@
+<!-- Creator     : groff version 1.23.0 -->
+<!-- CreationDate: Sat Apr  5 19:44:44 2025 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta content="groff -Thtml, see www.gnu.org" name="generator"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="text/css" name="Content-Style"/>
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>EVP_PKEY_GET_SIZE</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>
+            :root {
+                --primary-color: #3498db;
+                --background-color: #f9f9f9;
+                --text-color: #333;
+                --code-bg: #f0f0f0;
+                --header-color: #2c3e50;
+                --link-color: #2980b9;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            h1, h2, h3, h4 {
+                color: var(--header-color);
+            }
+            h1 {
+                border-bottom: 2px solid var(--primary-color);
+                padding-bottom: 0.5rem;
+            }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 4px;
+                overflow-x: auto;
+            }
+            a {
+                color: var(--link-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .man-navigation {
+                background-color: #fff;
+                border-bottom: 1px solid #ddd;
+                padding: 0.5rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .section {
+                margin-top: 2rem;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --primary-color: #3498db;
+                    --background-color: #222;
+                    --text-color: #f0f0f0;
+                    --code-bg: #333;
+                    --header-color: #3498db;
+                    --link-color: #5dade2;
+                }
+            }
+            .back-to-index {
+                display: inline-block;
+                margin: 1rem 0;
+                padding: 0.5rem 1rem;
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: 4px;
+                text-decoration: none;
+            }
+            .back-to-index:hover {
+                background-color: var(--link-color);
+                text-decoration: none;
+            }
+        </style></head>
+<body><div><a class="back-to-index" href="../index.html">← Back to Index</a></div>
+<h1 align="center">EVP_PKEY_GET_SIZE</h1>
+<a href="#NAME">NAME</a><br/>
+<a href="#SYNOPSIS">SYNOPSIS</a><br/>
+<a href="#DESCRIPTION">DESCRIPTION</a><br/>
+<a href="#RETURN VALUES">RETURN VALUES</a><br/>
+<a href="#NOTES">NOTES</a><br/>
+<a href="#SEE ALSO">SEE ALSO</a><br/>
+<a href="#HISTORY">HISTORY</a><br/>
+<a href="#COPYRIGHT">COPYRIGHT</a><br/>
+<hr/>
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">EVP_PKEY_get_size,
+EVP_PKEY_get_bits, EVP_PKEY_get_security_bits,
+EVP_PKEY_bits, EVP_PKEY_security_bits, EVP_PKEY_size −
+EVP_PKEY information functions</p>
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">#include
+&lt;openssl/evp.h&gt; <br/>
+int EVP_PKEY_get_size(const EVP_PKEY *pkey); <br/>
+int EVP_PKEY_get_bits(const EVP_PKEY *pkey); <br/>
+int EVP_PKEY_get_security_bits(const EVP_PKEY *pkey); <br/>
+#define EVP_PKEY_bits EVP_PKEY_get_bits <br/>
+#define EVP_PKEY_security_bits EVP_PKEY_get_security_bits
+<br/>
+#define EVP_PKEY_size EVP_PKEY_get_size</p>
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_get_size()</b>
+returns the maximum suitable size for the output buffers for
+almost all operations that can be done with <i>pkey</i>.
+This corresponds to the provider parameter
+<b>OSSL_PKEY_PARAM_MAX_SIZE</b>. The primary documented use
+is with <b>EVP_SignFinal</b>(3) and <b>EVP_SealInit</b>(3),
+but it isn't limited there. The returned size is also large
+enough for the output buffer of <b>EVP_PKEY_sign</b>(3),
+<b>EVP_PKEY_encrypt</b>(3), <b>EVP_PKEY_decrypt</b>(3),
+<b>EVP_PKEY_derive</b>(3).</p>
+<p style="margin-left:9%; margin-top: 1em">It must be
+stressed that, unless the documentation for the operation
+that's being performed says otherwise, the size returned by
+<b>EVP_PKEY_get_size()</b> is only preliminary and not
+exact, so the final contents of the target buffer may be
+smaller. It is therefore crucial to take note of the size
+given back by the function that performs the operation, such
+as <b>EVP_PKEY_sign</b>(3) (the <i>siglen</i> argument will
+receive that length), to avoid bugs.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_get_bits()</b>
+returns the cryptographic length of the cryptosystem to
+which the key in <i>pkey</i> belongs, in bits. Note that the
+definition of cryptographic length is specific to the key
+cryptosystem. This length corresponds to the provider
+parameter <b>OSSL_PKEY_PARAM_BITS</b>.</p>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_get_security_bits()</b>
+returns the number of security bits of the given
+<i>pkey</i>, bits of security is defined in NIST
+SP800−57. This corresponds to the provider parameter
+<b>OSSL_PKEY_PARAM_SECURITY_BITS</b>.</p>
+<h2>RETURN VALUES
+<a name="RETURN VALUES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>EVP_PKEY_get_size()</b>,
+<b>EVP_PKEY_get_bits()</b> and
+<b>EVP_PKEY_get_security_bits()</b> return a positive
+number, or 0 if this size isn't available.</p>
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Most functions
+that have an output buffer and are mentioned with
+<b>EVP_PKEY_get_size()</b> have a functionality where you
+can pass NULL for the buffer and still pass a pointer to an
+integer and get the exact size that this function call
+delivers in the context that it's called in. This allows
+those functions to be called twice, once to find out the
+exact buffer size, then allocate the buffer in between, and
+call that function again actually output the data. For those
+functions, it isn't strictly necessary to call
+<b>EVP_PKEY_get_size()</b> to find out the buffer size, but
+may be useful in cases where it's desirable to know the
+upper limit in advance.</p>
+<p style="margin-left:9%; margin-top: 1em">It should also
+be especially noted that <b>EVP_PKEY_get_size()</b>
+shouldn't be used to get the output size for
+<b>EVP_DigestSignFinal()</b>, according to "NOTES"
+in <b>EVP_DigestSignFinal</b>(3).</p>
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em"><b>provider−keymgmt</b>(7),
+<b>EVP_SignFinal</b>(3), <b>EVP_SealInit</b>(3),
+<b>EVP_PKEY_sign</b>(3), <b>EVP_PKEY_encrypt</b>(3),
+<b>EVP_PKEY_decrypt</b>(3), <b>EVP_PKEY_derive</b>(3)</p>
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">The
+<b>EVP_PKEY_bits()</b>, <b>EVP_PKEY_security_bits()</b>, and
+<b>EVP_PKEY_size()</b> functions were renamed to include
+"get" in their names in OpenSSL 3.0, respectively.
+The old names are kept as non−deprecated alias
+macros.</p>
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+<p style="margin-left:9%; margin-top: 1em">Copyright
+2020−2023 The OpenSSL Project Authors. All Rights
+Reserved.</p>
+<p style="margin-left:9%; margin-top: 1em">Licensed under
+the Apache License 2.0 (the "License"). You may
+not use this file except in compliance with the License. You
+can obtain a copy in the file LICENSE in the source
+distribution or at
+&lt;https://www.openssl.org/source/license.html&gt;.</p>
+<hr/>
+</body>
+</html>
