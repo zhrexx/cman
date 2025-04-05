@@ -7,7 +7,6 @@ from bs4 import BeautifulSoup
 import json
 
 def get_c_man_pages():
-    """Gets all man pages related to C programming"""
     sections = ["2", "3"]
     c_pages = []
     
@@ -40,7 +39,6 @@ def get_c_man_pages():
     return c_pages
 
 def convert_man_to_html(man_entry, output_dir):
-    """Converts a man page to HTML"""
     name = man_entry['name']
     section = man_entry['section']
     
@@ -164,7 +162,6 @@ def convert_man_to_html(man_entry, output_dir):
         return False
 
 def create_index_page(man_pages, output_dir):
-    """Creates an index page with search functionality and performance optimizations"""
     html = """
     <!DOCTYPE html>
     <html lang="en">
@@ -253,6 +250,7 @@ def create_index_page(man_pages, output_dir):
                 display: flex;
                 justify-content: center;
                 gap: 1rem;
+                flex-wrap: wrap;
             }
 
             .filter-button {
@@ -268,6 +266,27 @@ def create_index_page(man_pages, output_dir):
                 background-color: var(--primary-color);
                 color: white;
                 border-color: var(--primary-color);
+            }
+            
+            .search-help {
+                font-size: 0.8rem;
+                margin-top: 0.5rem;
+                color: #666;
+                text-align: center;
+            }
+            
+            .search-options {
+                display: flex;
+                justify-content: center;
+                margin-top: 1rem;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .search-option {
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
             }
             
             .pagination {
@@ -361,6 +380,31 @@ def create_index_page(man_pages, output_dir):
                 color: #888;
             }
             
+            .sort-options {
+                display: flex;
+                justify-content: flex-end;
+                margin: 1rem 0;
+                gap: 0.5rem;
+            }
+            
+            .sort-label {
+                display: flex;
+                align-items: center;
+                font-size: 0.9rem;
+            }
+            
+            .sort-select {
+                padding: 0.3rem 0.5rem;
+                border-radius: 4px;
+                border: 1px solid #ddd;
+            }
+            
+            .highlight {
+                background-color: rgba(255, 255, 0, 0.3);
+                padding: 0 2px;
+                border-radius: 2px;
+            }
+            
             footer {
                 text-align: center;
                 margin-top: 3rem;
@@ -412,6 +456,15 @@ def create_index_page(man_pages, output_dir):
                     color: #aaa;
                 }
                 
+                .search-help {
+                    color: #aaa;
+                }
+                
+                .highlight {
+                    background-color: rgba(255, 255, 0, 0.2);
+                    color: #fff;
+                }
+                
                 footer {
                     color: #999;
                 }
@@ -452,6 +505,20 @@ def create_index_page(man_pages, output_dir):
         <div class="container">
             <div class="search-container">
                 <input type="text" id="searchBox" class="search-box" placeholder="Search for functions, headers, or keywords..." autocomplete="off">
+                <div class="search-help">
+                    <span>Search tips: Use quotes for exact function names (e.g., "printf"), prefix with @ for functions only</span>
+                </div>
+                <div class="search-options">
+                    <label class="search-option">
+                        <input type="checkbox" id="exactMatch"> Exact match
+                    </label>
+                    <label class="search-option">
+                        <input type="checkbox" id="nameOnly"> Search function names only
+                    </label>
+                    <label class="search-option">
+                        <input type="checkbox" id="highlightMatches" checked> Highlight matches
+                    </label>
+                </div>
                 <div class="filter-options">
                     <button class="filter-button active" data-section="all">All Sections</button>
                     <button class="filter-button" data-section="2">Section 2</button>
@@ -459,8 +526,17 @@ def create_index_page(man_pages, output_dir):
                 </div>
             </div>
             
+            <div class="sort-options">
+                <span class="sort-label">Sort by:</span>
+                <select id="sortSelect" class="sort-select">
+                    <option value="name-asc">Name (A-Z)</option>
+                    <option value="name-desc">Name (Z-A)</option>
+                    <option value="section-asc">Section (Ascending)</option>
+                    <option value="section-desc">Section (Descending)</option>
+                </select>
+            </div>
+            
             <div class="man-pages" id="manPages">
-                <!-- Man pages will be dynamically inserted here -->
                 <div class="loading-indicator">
                     <div class="spinner"></div>
                     <p>Loading manual pages...</p>
@@ -468,28 +544,31 @@ def create_index_page(man_pages, output_dir):
             </div>
             
             <div class="pagination" id="pagination">
-                <!-- Pagination controls will be inserted here -->
             </div>
         </div>
         
         <footer>
             <div class="container">
                 <p>Generated on <span id="genDate"></span></p>
-                <p>Total entries: <span id="totalEntries"></span></p>
+                <p>Total entries: <span id="totalEntries"></span> | Showing: <span id="shownEntries"></span></p>
             </div>
         </footer>
         
         <script>
-            // Store man pages data
             const allManPagesData = DATA_PLACEHOLDER;
             
-            // Pagination settings
             const PAGE_SIZE = 50;
             let currentPage = 1;
             let filteredPages = [...allManPagesData];
             let currentSection = 'all';
+            let currentSort = 'name-asc';
+            let searchQuery = '';
+            let searchOptions = {
+                exactMatch: false,
+                nameOnly: false,
+                highlightMatches: true
+            };
             
-            // Function to render a batch of man pages
             function renderManPages() {
                 const manPagesContainer = document.getElementById('manPages');
                 manPagesContainer.innerHTML = '';
@@ -497,28 +576,52 @@ def create_index_page(man_pages, output_dir):
                 if (filteredPages.length === 0) {
                     manPagesContainer.innerHTML = '<div class="no-results">No matching manual pages found.</div>';
                     updatePagination();
+                    document.getElementById('shownEntries').textContent = '0';
                     return;
                 }
                 
-                // Calculate start and end indices for the current page
                 const startIndex = (currentPage - 1) * PAGE_SIZE;
                 const endIndex = Math.min(startIndex + PAGE_SIZE, filteredPages.length);
                 const pageItems = filteredPages.slice(startIndex, endIndex);
                 
-                // Create a document fragment for better performance
                 const fragment = document.createDocumentFragment();
                 
                 pageItems.forEach(page => {
                     const card = document.createElement('div');
                     card.className = 'man-card';
                     
+                    let displayName = page.name;
+                    let displayDesc = page.description;
+                    
+                    if (searchOptions.highlightMatches && searchQuery.trim() !== '') {
+                        if (!searchOptions.exactMatch) {
+                            const keywords = searchQuery.toLowerCase().split(/\s+/).filter(kw => kw.length > 0);
+                            
+                            keywords.forEach(keyword => {
+                                if (!searchOptions.nameOnly) {
+                                    const re = new RegExp(`(${keyword})`, 'gi');
+                                    displayDesc = displayDesc.replace(re, '<span class="highlight">$1</span>');
+                                }
+                                
+                                const nameRe = new RegExp(`(${keyword})`, 'gi');
+                                displayName = displayName.replace(nameRe, '<span class="highlight">$1</span>');
+                            });
+                        } else if (searchOptions.exactMatch) {
+                            const query = searchQuery.toLowerCase();
+                            if (page.name.toLowerCase().includes(query)) {
+                                const re = new RegExp(`(${query})`, 'gi');
+                                displayName = displayName.replace(re, '<span class="highlight">$1</span>');
+                            }
+                        }
+                    }
+                    
                     card.innerHTML = `
                         <div class="man-card-header">
-                            ${page.name}
+                            ${displayName}
                             <span class="section-badge">Section ${page.section}</span>
                         </div>
                         <div class="man-card-body">
-                            <div class="description">${page.description}</div>
+                            <div class="description">${displayDesc}</div>
                             <a href="man/${page.name}.html" style="display:block; margin-top:1rem; color:var(--primary-color);">View Manual Page</a>
                         </div>
                     `;
@@ -528,9 +631,9 @@ def create_index_page(man_pages, output_dir):
                 
                 manPagesContainer.appendChild(fragment);
                 updatePagination();
+                document.getElementById('shownEntries').textContent = filteredPages.length;
             }
             
-            // Function to update pagination controls
             function updatePagination() {
                 const paginationContainer = document.getElementById('pagination');
                 const totalPages = Math.ceil(filteredPages.length / PAGE_SIZE);
@@ -542,18 +645,38 @@ def create_index_page(man_pages, output_dir):
                 
                 let paginationHTML = '';
                 
-                // Previous button
                 paginationHTML += `<button class="page-button" id="prevPage" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>`;
                 
-                // Page info
-                paginationHTML += `<div class="page-info">Page ${currentPage} of ${totalPages}</div>`;
+                const maxPageButtons = 5;
+                let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+                let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
                 
-                // Next button
+                if (endPage - startPage + 1 < maxPageButtons) {
+                    startPage = Math.max(1, endPage - maxPageButtons + 1);
+                }
+                
+                if (startPage > 1) {
+                    paginationHTML += `<button class="page-button" data-page="1">1</button>`;
+                    if (startPage > 2) {
+                        paginationHTML += `<span class="page-info">...</span>`;
+                    }
+                }
+                
+                for (let i = startPage; i <= endPage; i++) {
+                    paginationHTML += `<button class="page-button ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+                }
+                
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        paginationHTML += `<span class="page-info">...</span>`;
+                    }
+                    paginationHTML += `<button class="page-button" data-page="${totalPages}">${totalPages}</button>`;
+                }
+                
                 paginationHTML += `<button class="page-button" id="nextPage" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
                 
                 paginationContainer.innerHTML = paginationHTML;
                 
-                // Add event listeners
                 document.getElementById('prevPage')?.addEventListener('click', () => {
                     if (currentPage > 1) {
                         currentPage--;
@@ -569,35 +692,86 @@ def create_index_page(man_pages, output_dir):
                         renderManPages();
                     }
                 });
+                
+                document.querySelectorAll('.page-button[data-page]').forEach(button => {
+                    button.addEventListener('click', () => {
+                        currentPage = parseInt(button.dataset.page);
+                        scrollTo(0, 0);
+                        renderManPages();
+                    });
+                });
             }
             
-            // Function to filter pages based on search and section
             function filterPages() {
-                const query = document.getElementById('searchBox').value.toLowerCase();
+                searchQuery = document.getElementById('searchBox').value.trim();
+                searchOptions.exactMatch = document.getElementById('exactMatch').checked;
+                searchOptions.nameOnly = document.getElementById('nameOnly').checked;
+                
+                let query = searchQuery.toLowerCase();
+                
+                if (query.startsWith('@')) {
+                    searchOptions.nameOnly = true;
+                    query = query.substring(1);
+                }
+                
+                if (query.startsWith('"') && query.endsWith('"')) {
+                    searchOptions.exactMatch = true;
+                    query = query.slice(1, -1);
+                }
                 
                 filteredPages = allManPagesData.filter(page => {
-                    // Section filter
                     if (currentSection !== 'all' && page.section !== currentSection) {
                         return false;
                     }
                     
-                    // Search filter
-                    if (query.trim() !== '') {
-                        return (
-                            page.name.toLowerCase().includes(query) ||
-                            page.description.toLowerCase().includes(query)
-                        );
+                    if (query.trim() === '') {
+                        return true;
                     }
                     
-                    return true;
+                    if (searchOptions.exactMatch) {
+                        if (searchOptions.nameOnly) {
+                            return page.name.toLowerCase() === query;
+                        } else {
+                            return page.name.toLowerCase() === query || 
+                                   page.description.toLowerCase().includes(query);
+                        }
+                    } else {
+                        const keywords = query.split(/\s+/).filter(kw => kw.length > 0);
+                        
+                        if (searchOptions.nameOnly) {
+                            return keywords.every(keyword => 
+                                page.name.toLowerCase().includes(keyword)
+                            );
+                        } else {
+                            return keywords.every(keyword => 
+                                page.name.toLowerCase().includes(keyword) || 
+                                page.description.toLowerCase().includes(keyword)
+                            );
+                        }
+                    }
                 });
                 
-                // Reset to first page when filter changes
+                sortPages();
                 currentPage = 1;
                 renderManPages();
             }
             
-            // Initialize search functionality with debounce
+            function sortPages() {
+                const [field, direction] = currentSort.split('-');
+                
+                filteredPages.sort((a, b) => {
+                    let comparison = 0;
+                    
+                    if (field === 'name') {
+                        comparison = a.name.localeCompare(b.name);
+                    } else if (field === 'section') {
+                        comparison = a.section.localeCompare(b.section, undefined, { numeric: true });
+                    }
+                    
+                    return direction === 'asc' ? comparison : -comparison;
+                });
+            }
+            
             function initSearch() {
                 const searchBox = document.getElementById('searchBox');
                 let debounceTimeout;
@@ -607,38 +781,52 @@ def create_index_page(man_pages, output_dir):
                     debounceTimeout = setTimeout(filterPages, 300);
                 });
                 
-                // Set up section filter buttons
                 document.querySelectorAll('.filter-button').forEach(button => {
                     button.addEventListener('click', () => {
-                        // Update active state
                         document.querySelectorAll('.filter-button').forEach(btn => {
                             btn.classList.remove('active');
                         });
                         button.classList.add('active');
                         
-                        // Update filter and re-render
                         currentSection = button.dataset.section;
                         filterPages();
                     });
                 });
+                
+                document.getElementById('exactMatch').addEventListener('change', filterPages);
+                document.getElementById('nameOnly').addEventListener('change', filterPages);
+                document.getElementById('highlightMatches').addEventListener('change', () => {
+                    searchOptions.highlightMatches = document.getElementById('highlightMatches').checked;
+                    renderManPages();
+                });
+                
+                document.getElementById('sortSelect').addEventListener('change', () => {
+                    currentSort = document.getElementById('sortSelect').value;
+                    sortPages();
+                    renderManPages();
+                });
+                
+                searchBox.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        filterPages();
+                    }
+                });
             }
             
-            // Initialize the page
             function init() {
-                // Set generated date
                 document.getElementById('genDate').textContent = new Date().toLocaleDateString();
                 document.getElementById('totalEntries').textContent = allManPagesData.length;
+                document.getElementById('shownEntries').textContent = allManPagesData.length;
                 
-                // Initialize search and filters
+                sortPages();
                 initSearch();
                 
-                // Initial render (with a small delay to let the DOM settle)
                 setTimeout(() => {
                     renderManPages();
                 }, 100);
             }
             
-            // Start initialization when DOM is ready
             document.addEventListener('DOMContentLoaded', init);
         </script>
     </body>
